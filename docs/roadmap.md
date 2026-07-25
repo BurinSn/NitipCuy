@@ -1,10 +1,10 @@
 # NitipCuy Canonical Roadmap
 
-Last reviewed: 2026-07-25 17:07 WIB
+Last reviewed: 2026-07-25 17:15 WIB
 
 Current stage: Stage 1 - Platform foundation
 
-Current work item: Issue #3 architecture-foundation remediation; first hostile-review correction for published-trip runtime invariants
+Current work item: Issue #3 architecture-foundation remediation; identity acceptance reconciled with the deliberately deferred persisted account slice
 
 ## 1. Role, authority, and freshness contract
 
@@ -138,7 +138,7 @@ Pull-request head, hosted checks, annotations, reviews, and mergeability are vol
 ### Hostile-review remediation gate
 
 - [x] Correct published-trip runtime date, timestamp, service-mode, question-identity, and cross-offset chronology invariants with adversarial tests.
-- [ ] Reconcile the checked identity-to-internal-account acceptance claim with the deliberately deferred account slice.
+- [x] Reconcile identity acceptance as documented architecture direction while deferring mapping implementation to the first persisted account slice.
 - [ ] Add automated dependency-boundary enforcement.
 - [ ] Replace or defer the transaction abstraction so repository, audit, ledger, and outbox work can share one enforceable transaction.
 - [ ] Correct payment initiation, held-state, release, refund, and reconciliation contracts.

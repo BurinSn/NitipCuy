@@ -410,3 +410,29 @@ Do not present inference, provider marketing, provisional pricing, or a future i
 
 - The correction does not resolve the identity mapping, dependency enforcement, transaction scope, payment lifecycle, idempotency, evidence integrity, or domain-versus-projection findings.
 - IANA trip timezone identity and viewer-facing timezone labels remain separate model and experience work.
+
+## 2026-07-25 17:15 WIB - Acceptance criteria must distinguish direction from implementation
+
+### Verified
+
+- Issue #3's identity implementation checkbox contradicted its own scope and exclusions.
+  - Evidence: the issue requested identity and deny-by-default authorization direction without activating a provider, excluded real identity verification, and deferred the account vertical slice, while its checked criterion claimed identity subjects were already mapped to domain accounts.
+  - Impact: acceptance language must state whether a capability is selected, documented, contract-modeled, simulated, persisted, provider-verified, or production-enabled.
+- ADR 0003 already contained the correct identity sequence.
+  - Evidence: it selects external standards-based identity mapped to an internal account, separates login from seller verification and bank ownership, and states that the public architecture shell uses no login adapter.
+  - Impact: preserve that direction and implement mapping with the first persisted account slice rather than broadening issue #3.
+
+### Accepted
+
+- Identity mapping implementation remains deferred while its architecture direction stays binding.
+  - Evidence: BurinSN explicitly approved correcting the acceptance criterion instead of introducing account persistence into the architecture probe.
+  - Impact: issue #3 now checks documented direction only; the later account slice must implement provider-subject uniqueness, internal `AccountId`, assurance metadata, session revocation, and deny-by-default authorization.
+
+### Reusable learning
+
+- A checked acceptance criterion must never use present-tense implementation language for a future slice.
+- When a hostile review reopens material work, final-check and lifecycle-complete checkboxes must be reopened until the final corrective head exists.
+
+### No product-model change
+
+- The correction does not change NitipCuy's roles, service modes, rates, transaction fee, payment direction, logistics direction, moderation duties, or platform-first sequence.

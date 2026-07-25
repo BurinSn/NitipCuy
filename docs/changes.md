@@ -411,3 +411,38 @@ A session with no material change does not invent an entry. A session that makes
   - The remaining hostile-review findings still block merge.
 - Follow-up:
   - Run the final lifecycle and diff gates on the reconciled tree, commit and push this bounded correction, verify pull request #4 on the new exact head, then address the identity-to-internal-account acceptance mismatch as the next correction.
+
+## 2026-07-25 17:15 WIB - Identity acceptance reconciled with persisted-slice scope
+
+- Issue / PR: Issue #3; pull request #4
+- Product: NitipCuy
+- Type: Acceptance correction, scope control, GitHub metadata, and lifecycle reconciliation
+- Status: Second hostile-review correction applied; lifecycle commit, push, and hosted exact-head verification pending
+- Objective:
+  - Remove the false claim that issue #3 implements identity-subject-to-domain-account mapping without expanding the read-only architecture probe into account persistence or production identity integration.
+- Scope:
+  - Issue #3 acceptance criteria, pull request #4 description and approval state, and all four lifecycle documents.
+- Changes:
+  - Replaced the issue's implementation claim with the accepted architecture direction: external identity maps to an internal account, authorization is server-authoritative and deny-by-default, and mapping implementation belongs to the first persisted account slice.
+  - Left production identity-provider selection, account persistence, login, and protected mutations excluded from issue #3.
+  - Unchecked the issue's mechanical dependency-enforcement criterion because that separate hostile-review finding remains open.
+  - Reopened final exact-head verification and lifecycle reconciliation criteria until all corrective findings are complete.
+  - Updated the pull-request description from 13 to 18 tests, recorded the published-trip correction, distinguished the last verified correction checkpoint from final evidence, and replaced premature approval checkmarks with the live remediation gates.
+  - Removed identity mapping from the current merge-blocker list and made automated dependency-boundary enforcement the next bounded correction.
+- Impact:
+  - Issue #3, ADR 0003, code, exclusions, roadmap, and pull request now describe the same identity scope.
+  - The architecture remains provider-independent and avoids premature account or authentication implementation.
+  - Pull request #4 remains open, unapproved, and blocked by the remaining hostile-review findings.
+- Validation:
+  - Live issue #3 and pull request #4 bodies were retrieved before mutation.
+  - Issue #3 remains open and pull request #4 remained open and GitHub-mergeable at the last verified head.
+  - Application-quality run `30154018299` and lifecycle run `30154018297` passed without annotations on correction head `96a7ff9dc9a9a7542770f05070540f4cf7fb3ec1`.
+  - CodeRabbit remained rate-limited and provided no review object or findings.
+- Documentation:
+  - Updated `handoff.md`, `docs/changes.md`, `docs/roadmap.md`, and `docs/learning.md`.
+- Residual risks / exclusions:
+  - This is a governance and scope correction, not identity implementation.
+  - Automated dependency enforcement, transaction scope, payment lifecycle, idempotency, evidence integrity, projection boundaries, and final reconciliation remain open.
+  - Hosted workflows must run again after the lifecycle commit changes the pull-request head.
+- Follow-up:
+  - Validate lifecycle freshness and formatting, commit and push this correction, verify the new exact-head checks and annotations, then implement automated dependency-boundary enforcement.

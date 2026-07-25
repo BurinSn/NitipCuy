@@ -1,6 +1,6 @@
 # NitipCuy Cross-Session Handoff
 
-Last updated: 2026-07-25 17:07 WIB
+Last updated: 2026-07-25 17:15 WIB
 
 Handoff owner: Codex
 
@@ -94,10 +94,11 @@ The shell is a functional architecture probe. It is not a production UI and has 
 | Active issue | [#3 Establish web architecture and application foundation](https://github.com/BurinSn/NitipCuy/issues/3) |
 | Active branch | `feat/3-architecture-foundation` |
 | Pull request | [#4 feat: establish application architecture foundation](https://github.com/BurinSn/NitipCuy/pull/4) |
-| Pre-correction audited pull-request head | `c4988a621f7303acca23e5e9f93534acaed226bc` |
-| Checks at that checkpoint | Application quality run `30153169698` and lifecycle run `30153169703` passed |
+| Last audited pushed correction head | `96a7ff9dc9a9a7542770f05070540f4cf7fb3ec1` |
+| Checks at that checkpoint | Application quality run `30154018299` and lifecycle run `30154018297` passed without annotations |
 | Independent review at that checkpoint | None; CodeRabbit reported success only because review was rate-limited and created no review object or findings |
-| First hostile-review correction | Domain invariant code, tests, and lifecycle truth locally validated; retrieve Git to determine its current commit and push state |
+| First hostile-review correction | Published-trip runtime invariants committed, pushed, and hosted-verified |
+| Second hostile-review correction | Issue #3 identity acceptance and pull-request scope reconciled with the deliberately deferred persisted account implementation; lifecycle commit and hosted verification pending |
 | Live head, checks, reviews, and mergeability | Volatile; retrieve directly before any approval or merge action |
 | Merge authority | Not granted for issue #3; fresh BurinSN approval is required after exact-head evidence |
 | Branch protection | Unavailable for this private repository on the current GitHub plan |
@@ -109,6 +110,8 @@ The tracked handoff cannot contain its own final commit SHA. Copy immutable iden
 ## 6. Current work item
 
 Issue #3 owns the architecture and application-foundation slice. A direct hostile review found material implementation and acceptance gaps after the original technical checks passed. Pull request #4 is therefore in corrective review and is not ready for merge.
+
+The issue now states that external-identity-to-internal-account mapping and deny-by-default authorization are documented architecture directions. Mapping implementation is explicitly deferred to the first persisted account slice, matching the issue scope, exclusions, ADR 0003, current code, and roadmap.
 
 Implemented locally:
 
@@ -165,8 +168,8 @@ Hostile-review corrections already made:
 
 Still required before requesting merge:
 
-1. Complete lifecycle reconciliation and final verification for the first domain correction.
-2. Commit and push that bounded correction to pull request #4 and verify exact-head checks.
+1. Commit and push the identity acceptance and lifecycle reconciliation.
+2. Verify hosted checks and annotations on that exact head.
 3. Resolve each remaining hostile-review finding through the same branch, one coherent correction at a time.
 4. Reconcile issue #3 and pull-request claims after the final correction.
 5. Ask BurinSN for fresh merge approval only when no material finding remains.
@@ -179,14 +182,13 @@ No external blocker prevents continuing provider-independent development with mo
 
 The following internal findings block issue #3 merge:
 
-1. the checked identity-to-domain-account acceptance claim is not implemented and must be corrected or explicitly deferred;
-2. package dependency direction has no automated enforcement against cross-package relative imports;
-3. the transaction port cannot bind repository, audit, ledger, and outbox changes to one enforceable transaction;
-4. the payment port collapses asynchronous payment initiation and reconciliation directly into `HELD`;
-5. payment, logistics, and evidence mocks ignore their idempotency keys;
-6. evidence storage trusts a caller-supplied hash and models raw buffered content without a quarantine or verification lifecycle;
-7. the public `PublishedTrip` projection is not yet clearly separated from the future authoritative Trip aggregate;
-8. lifecycle, issue, and pull-request claims require reconciliation after every correction.
+1. package dependency direction has no automated enforcement against cross-package relative imports;
+2. the transaction port cannot bind repository, audit, ledger, and outbox changes to one enforceable transaction;
+3. the payment port collapses asynchronous payment initiation and reconciliation directly into `HELD`;
+4. payment, logistics, and evidence mocks ignore their idempotency keys;
+5. evidence storage trusts a caller-supplied hash and models raw buffered content without a quarantine or verification lifecycle;
+6. the public `PublishedTrip` projection is not yet clearly separated from the future authoritative Trip aggregate;
+7. lifecycle, issue, and pull-request claims require reconciliation after every correction.
 
 The following still block real-money pilot activation:
 
@@ -202,9 +204,9 @@ These are Stage 3 activation gates, not reasons to delay provider-independent pl
 
 ## 9. Exact next action
 
-Retrieve the live branch and pull-request state. If the first domain correction is not committed and pushed, review, commit, and push it, then verify pull request #4 on that exact head. If it is pushed and the lifecycle and application-quality checks pass without material annotations, begin the identity-to-internal-account acceptance correction. Do not request merge approval because the remaining findings above are still open.
+Retrieve the live branch, issue, and pull-request state. If the identity acceptance reconciliation is not committed and pushed, validate, commit, and push it, then verify pull request #4 on that exact head. If it is pushed and the lifecycle and application-quality checks pass without material annotations, begin automated dependency-boundary enforcement. Do not request merge approval because the remaining findings above are still open.
 
-After the first correction is durably verified, the next bounded correction is the mismatch between issue #3's checked identity-to-domain-account acceptance claim and the deliberately deferred account implementation.
+Do not add account persistence or a production identity provider to issue #3. Those belong to the first persisted account slice after this architecture issue is corrected and merged.
 
 Do not create another pull request.
 
