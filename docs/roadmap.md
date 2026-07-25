@@ -1,10 +1,10 @@
 # NitipCuy Canonical Roadmap
 
-Last reviewed: 2026-07-25 15:55 WIB
+Last reviewed: 2026-07-25 16:36 WIB
 
 Current stage: Stage 1 - Platform foundation
 
-Current work item: Issue #3 architecture and application foundation; local validation complete, pull request next
+Current work item: Issue #3 architecture and application foundation; pull request #4 exact-head review
 
 ## 1. Role, authority, and freshness contract
 
@@ -126,11 +126,12 @@ Status: In progress
 - [x] Local development, formatting, lint, strict type, unit test, build, audit, and PR-CI gates established.
 - [x] Working local shell implements public trip search, detail, and chronological public Q&A using simulated data.
 - [x] Exact-toolchain frozen install, peer, quality, production-audit, lifecycle, runtime, complete-diff, and security gates pass locally.
-- [ ] Issue #3 branch is committed, pushed, and opened as a pull request.
-- [ ] Hosted lifecycle and application-quality checks pass on the exact immutable pull-request head.
+- [x] Issue #3 branch is committed, pushed, and opened as pull request #4.
 - [ ] BurinSN gives fresh issue #3 merge approval after all evidence and findings are visible.
 
 The current architecture probe is deliberately public and read-only. It proves boundaries without prematurely combining identity selection, persistence, protected mutation, and UI behavior in one change.
+
+Pull-request head, hosted checks, annotations, reviews, and mergeability are volatile. Retrieve them directly. A missing, pending, skipped, warned, or failed lifecycle or application-quality result blocks approval by project policy.
 
 ### Next persisted vertical slice
 
@@ -235,7 +236,7 @@ The unresolved DOKU, logistics, policy, legal, and pilot items listed in Stage 3
 
 ### Now
 
-Commit and push the locally validated issue #3 foundation, then open and audit its pull request on the exact immutable head.
+Push the pull-request-state documentation checkpoint, then audit pull request #4's exact immutable head and resolve every material finding.
 
 ### Next
 

@@ -340,3 +340,19 @@ Do not present inference, provider marketing, provisional pricing, or a future i
 - Production identity-provider, Prisma, Neon, Vercel, DOKU, Biteship, and object-storage proofs remain separate governed work.
 - Visual design and browser-automation approval remain outside the architecture probe.
 - No new DOKU commercial, payment-method, settlement, or onboarding conclusion resulted from issue #3.
+
+## 2026-07-25 16:36 WIB - Pull-request review checkpoint
+
+### Verified
+
+- Opening pull request #4 started the lifecycle, application-quality, and CodeRabbit checks on implementation checkpoint `e1d0669e80430c3abc1f4ca4e94637c827bc3f37`.
+  - Evidence: live GitHub pull-request state at 16:36 WIB.
+  - Impact: updating lifecycle truth creates a newer head, so the first checkpoint's results cannot be reused as final exact-head evidence.
+
+### Reusable learning
+
+- Treat each lifecycle-state commit as a new review checkpoint. Wait for and inspect hosted evidence on the resulting immutable head rather than copying a result from its predecessor.
+
+### No new domain learning
+
+- Opening the pull request does not change the NitipCuy service modes, seller-rate rights, fee model, payment direction, logistics direction, moderation duties, or platform-first sequence.

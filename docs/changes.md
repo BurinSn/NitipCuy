@@ -308,3 +308,35 @@ A session with no material change does not invent an entry. A session that makes
   - Fresh BurinSN approval is still required before issue #3 can merge.
 - Follow-up:
   - Commit and push the branch, open the pull request, inspect hosted checks and findings on its immutable head, then request fresh BurinSN merge approval.
+
+## 2026-07-25 16:36 WIB - Architecture pull request opened
+
+- Issue / PR: Issue #3; pull request #4
+- Product: NitipCuy
+- Type: GitHub review-state transition
+- Status: Open; exact-head hosted review pending
+- Objective:
+  - Move the locally validated architecture foundation into its governed hosted review boundary.
+- Scope:
+  - Branch publication, pull-request metadata, all four lifecycle documents, and exact-head review instructions.
+- Changes:
+  - Committed the coherent architecture foundation at `e1d0669e80430c3abc1f4ca4e94637c827bc3f37`.
+  - Pushed branch `feat/3-architecture-foundation`.
+  - Opened pull request #4 against `main` with issue #3 closure metadata, scope, exclusions, risks, local evidence, and explicit approval gaps.
+  - Refreshed all four lifecycle documents for the pull-request transition.
+- Impact:
+  - Hosted automation and review now run against an immutable review boundary.
+  - The pull request remains unapproved and unmerged.
+- Validation:
+  - GitHub reported pull request #4 open and mergeable at the first pushed checkpoint.
+  - Lifecycle workflow passed on that checkpoint.
+  - Application quality remained in progress and CodeRabbit remained pending at 16:36 WIB.
+  - Those results are superseded when this lifecycle checkpoint changes the pull-request head and must be retrieved again.
+- Documentation:
+  - Updated `handoff.md`, `docs/changes.md`, `docs/roadmap.md`, and `docs/learning.md`.
+- Residual risks / exclusions:
+  - Hosted application evidence, annotations, review objects, and findings are not yet final for the resulting head.
+  - Branch protection remains unavailable on the current private-repository plan.
+  - No deployment, provider contact, real transaction, browser automation, or visual approval is included.
+- Follow-up:
+  - Push this documentation checkpoint, wait for hosted workflows and review on its exact head, inspect annotations and the complete diff, resolve findings, and request fresh BurinSN approval only when evidence is complete.
