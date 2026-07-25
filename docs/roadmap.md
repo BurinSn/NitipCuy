@@ -1,10 +1,10 @@
 # NitipCuy Canonical Roadmap
 
-Last updated: 2026-07-25 07:29 WIB
+Last updated: 2026-07-25 07:32 WIB
 
 Current stage: Stage 1 - Platform foundation
 
-Implementation status: Repository baseline in progress
+Implementation status: Repository baseline complete; architecture and application scaffolding next
 
 ## 1. Accepted foundation
 
@@ -46,7 +46,7 @@ Status: In progress
 
 Deliverables:
 
-- [ ] Commit and push the initial documentation and governance baseline.
+- [x] Commit and push the initial documentation and governance baseline.
 - [ ] Select and document the web-first application architecture and deployment target.
 - [ ] Define the first end-to-end vertical slice and acceptance criteria.
 - [ ] Define core domain entities, permissions, state machines, and provider-independent ports.
@@ -142,8 +142,7 @@ The following block real-money pilot launch, not platform development:
 
 ## 8. Exact next actions
 
-1. Complete and verify the private `BurinSn/NitipCuy` repository baseline on `main`.
-2. Create the first hosted implementation issue for architecture and project scaffolding.
-3. Decide the web-first stack, deployment target, identity approach, database, and provider-port boundaries in an ADR.
-4. Scaffold the application and implement the first local vertical slice.
-5. Defer Threads acquisition research until the platform can demonstrate real trip discovery and collect useful feedback.
+1. Create the first hosted implementation issue for architecture and project scaffolding.
+2. Decide the web-first stack, deployment target, identity approach, database, and provider-port boundaries in an ADR.
+3. Scaffold the application and implement the first local vertical slice.
+4. Defer Threads acquisition research until the platform can demonstrate real trip discovery and collect useful feedback.

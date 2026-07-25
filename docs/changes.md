@@ -27,7 +27,7 @@ This file is append-only.
 
 - Products: NitipCuy
 - Type: Product sequencing and repository governance
-- Status: Authorized
+- Status: Complete
 - Summary:
   - Corrected the roadmap so platform development begins before additional Threads research.
   - Moved Threads to the public-beta acquisition, promotion, recruitment, and feature-feedback stage.
@@ -38,5 +38,8 @@ This file is append-only.
   - Verified the authenticated GitHub user is `miclawrenceee`.
   - Verified all existing listed BurinSn product repositories are private and normally use `main`.
   - Verified `BurinSn/NitipCuy` did not exist before creation.
+  - Initial baseline commit `70b4c96a0df486b70e626434338e0b20dec7df1f` was pushed to `main`.
+  - Local `main`, local `origin/main`, GitHub `main`, and `git ls-remote` matched the exact baseline commit after push.
+  - GitHub reported the canonical repository as private, unarchived, and using `main`.
 - Follow-up:
-  - Push the initial baseline, then open the first architecture and application-scaffolding issue.
+  - Open the first architecture and application-scaffolding issue.

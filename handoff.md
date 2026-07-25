@@ -1,6 +1,6 @@
 # NitipCuy Cross-Session Handoff
 
-Last updated: 2026-07-25 07:29 WIB
+Last updated: 2026-07-25 07:32 WIB
 
 Handoff owner: Codex
 
@@ -12,7 +12,7 @@ Current stage: Platform foundation
 
 Current work item: Establish the repository baseline and begin the web-first platform
 
-Status: BurinSN changed the sequence to platform-first. Additional Threads research is no longer a build gate and is deferred to public-beta acquisition and feedback. The private `BurinSn/NitipCuy` repository has been created. The documentation now separates what can be built with mock provider ports from the DOKU, logistics, policy, and legal gates that block real-money launch. The initial baseline still needs its local Git commit, push, and exact post-push verification.
+Status: BurinSN changed the sequence to platform-first. Additional Threads research is no longer a build gate and is deferred to public-beta acquisition and feedback. The private `BurinSn/NitipCuy` repository is live on `main`. The one-time documentation and governance baseline was pushed as `70b4c96a0df486b70e626434338e0b20dec7df1f`, and local `main`, `origin/main`, `git ls-remote`, and GitHub matched that immutable commit. The documentation separates what can be built with mock provider ports from the DOKU, logistics, policy, and legal gates that block real-money launch.
 
 ## Mandatory resume order
 
@@ -53,7 +53,7 @@ Status: BurinSN changed the sequence to platform-first. Additional Threads resea
 
 ## Exact next action
 
-Commit and push the initial baseline to `BurinSn/NitipCuy` on `main`, verify the immutable commit and remote state, then create the first architecture and application-scaffolding issue. Do not contact DOKU, Biteship, Threads users, or other external parties without separate approval.
+Create the first hosted architecture and application-scaffolding issue. Its acceptance criteria must select and record the web-first stack, deployment target, identity approach, database, provider-independent payment and logistics boundaries, development gates, and first vertical slice before implementation. Do not contact DOKU, Biteship, Threads users, or other external parties without separate approval.
 
 ## Verification performed
 
@@ -62,4 +62,7 @@ Commit and push the initial baseline to `BurinSn/NitipCuy` on `main`, verify the
 - Planning documents distinguish accepted decisions, verified facts, proposals, assumptions, and open questions.
 - Verified the authenticated GitHub user and BurinSn private-repository convention.
 - Created the private `BurinSn/NitipCuy` GitHub repository.
+- Pushed baseline `70b4c96a0df486b70e626434338e0b20dec7df1f` to `main`.
+- Verified local `main`, `origin/main`, `git ls-remote`, and GitHub `main` matched the baseline.
+- Verified GitHub visibility is private and the repository is unarchived.
 - No provider account, external vendor message, payment movement, deployment, or public launch occurred.
