@@ -1,0 +1,31 @@
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Dependencies and build output
+node_modules/
+.next/
+dist/
+build/
+coverage/
+.turbo/
+
+# Test and runtime output
+test-results/
+playwright-report/
+*.log
+tmp/
+
+# Editors and operating systems
+.DS_Store
+.idea/
+.vscode/
+*.swp
+
+# Local agent and deployment state
+.claude/
+.vercel/
+session-data/
