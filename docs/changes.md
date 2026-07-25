@@ -264,3 +264,47 @@ A session with no material change does not invent an entry. A session that makes
   - Application architecture, scaffolding, providers, payments, deployment, and product scope remain excluded.
 - Follow-up:
   - Validate, commit, and push the upgrade; confirm an annotation-free exact-head run; post the final audit; and squash-merge under recorded BurinSN authority.
+
+## 2026-07-25 15:55 WIB - Application architecture foundation prepared
+
+- Issue / PR: Issue #3; pull request not yet opened at this checkpoint
+- Product: NitipCuy
+- Type: Architecture, application foundation, security, testing, and documentation
+- Status: Locally validated; commit and pull-request review pending
+- Objective:
+  - Establish a maintainable web-first platform foundation that can support NitipCuy marketplace behavior without coupling the core domain to a framework, ORM, identity vendor, payment provider, logistics provider, or host.
+- Scope:
+  - Architecture ADR and system boundaries; exact toolchain; modular workspace; public trip discovery proof; deterministic mocks; local and hosted quality gates; README, contributor, workflow, and lifecycle documentation.
+- Changes:
+  - Selected one deployable Next.js modular monolith with inward dependencies across domain, application, adapters, and web delivery.
+  - Pinned Node.js `24.18.0`, pnpm `11.17.0`, Next.js `16.2.11`, React `19.2.8`, TypeScript `6.0.3`, ESLint `9.39.5`, Prettier `3.9.6`, Turbo `2.10.6`, and Vitest `4.1.10`.
+  - Recorded PostgreSQL plus isolated future Prisma adapter, external passwordless identity, internal deny-by-default authorization, Vercel `sin1`, and Singapore PostgreSQL direction without provisioning anything.
+  - Added a published-trip domain model, public discovery use cases, in-memory repository, provider-neutral payment, logistics, identity-verification, evidence-storage, clock, identifier, transaction, audit, and outbox ports, and no-network mocks.
+  - Added an Indonesian read-only shell for destination/date search, trip detail, seller-defined terms, and chronological public Q&A using explicitly simulated data.
+  - Modeled both an origin-local departure date and an exact timezone-bearing departure timestamp so deadline and arrival rules compare actual instants.
+  - Added strict formatting, lint, type, unit, build, audit, and PR-CI gates with read-only permissions and immutable action references.
+  - Overrode vulnerable Next.js transitive `postcss` and `sharp` versions with exact patched versions after the production audit blocked the initial graph.
+  - Updated the README, architecture, quality, contributor, Git workflow, PR template, and all four mandatory lifecycle documents.
+- Impact:
+  - Future marketplace slices can develop and test domain behavior without production credentials, money, deliveries, or external-service availability.
+  - Public discovery and private transaction data have an explicit architectural boundary before identity or persistence is introduced.
+  - The platform shell demonstrates working product structure but remains visually provisional and non-production.
+- Validation:
+  - Exact Node.js `24.18.0` and pnpm `11.17.0` toolchain used through the local compatibility wrapper.
+  - `pnpm peers check` passed with no peer-dependency issues.
+  - `pnpm audit:prod` initially failed on vulnerable `postcss` and `sharp`; after reviewed exact overrides it passed with no known production vulnerabilities.
+  - `pnpm check` passed formatting, lint, strict type checking in four packages, 13 unit tests in three files, and the Next.js production build.
+  - Production build emitted `/`, `/_not-found`, and three generated `/trips/[tripId]` fixture paths plus the route proxy.
+  - Production HTTP probe returned `200` for home, filtered search, and a known trip; returned `404` for an unknown trip; and passed content assertions without a server fallback error.
+  - Frozen install, lifecycle freshness, `git diff --check`, workflow YAML, internal links, immutable action references, credential patterns, placeholders, dependency direction, provider SDK, unsafe `any`, console, source network, and complete-base-diff checks passed.
+  - GitHub verified that the checkout and setup-node action tags resolve to the exact immutable commits used by the workflows.
+- Documentation:
+  - Added ADR 0003, system architecture, and quality-gate documentation.
+  - Updated README, `AGENTS.md`, Git workflow, pull-request template, `handoff.md`, `docs/changes.md`, `docs/roadmap.md`, and `docs/learning.md`.
+- Residual risks / exclusions:
+  - The current Next.js release does not yet declare the overridden `sharp` major or patched `postcss` version in its own dependency graph; full build, runtime, and audit evidence is mandatory until upstream resolves the graph.
+  - No persistence, identity provider, protected mutation, account, private data, provider integration, browser automation, visual approval, preview, deployment, or real transaction is included.
+  - DOKU and Biteship remain conditional candidates, not implemented dependencies.
+  - Fresh BurinSN approval is still required before issue #3 can merge.
+- Follow-up:
+  - Commit and push the branch, open the pull request, inspect hosted checks and findings on its immutable head, then request fresh BurinSN merge approval.

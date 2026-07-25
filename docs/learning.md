@@ -290,3 +290,53 @@ Do not present inference, provider marketing, provisional pricing, or a future i
 ### No new domain learning
 
 - The correction changes CI compatibility only.
+
+## 2026-07-25 15:02 WIB - Architecture and dependency foundation learning
+
+### Verified
+
+- The newest individually published tool versions did not form a supported dependency graph.
+  - Evidence: TypeScript-ESLint rejected TypeScript 7 and transitive Next.js lint plugins rejected ESLint 10 during the exact installation.
+  - Impact: pin the newest mutually supported graph, keep peer checking fail-closed, and re-evaluate major upgrades as one compatibility change.
+- Next.js `16.2.11` resolved production `postcss` and `sharp` versions with known advisories.
+  - Evidence: `pnpm audit:prod` identified three high-severity findings in the initial production graph.
+  - Impact: exact workspace overrides to patched `postcss` `8.5.18` and `sharp` `0.35.3` are required for this baseline and must retain build, runtime, and audit evidence until Next.js publishes a supported patched graph.
+- Selecting the newest patched package can conflict with the package manager's minimum-release-age policy.
+  - Evidence: `postcss` `8.5.23` required a newly generated age exception, while patched `8.5.18` satisfied both advisories without an exception.
+  - Impact: use the oldest adequate patched release when it avoids bypassing supply-chain age policy and still passes the full graph.
+- Date-only trip departure is insufficient for cross-border deadline and arrival rules.
+  - Evidence: the first model compared a foreign trip date against hard-coded Jakarta midnight; offsets could produce the wrong ordering near a date boundary.
+  - Impact: preserve the origin-local date for display and filtering, pair it with an exact timezone-bearing timestamp, and compare business rules as instants.
+- Lexical ISO timestamp comparison is unsafe when timestamps carry different offsets.
+  - Evidence: `2026-08-10T09:30:00+08:00` sorts lexically after `2026-08-10T09:00:00+07:00` but represents an earlier instant.
+  - Impact: parse timestamps before chronological validation and keep a cross-offset regression test.
+- App Router `notFound()` can render the correct page with HTTP `200` after a streamed response begins.
+  - Evidence: the first production HTTP probe returned the not-found content with `200`, consistent with [Next.js streaming status semantics](https://nextjs.org/docs/14/app/api-reference/file-conventions/not-found); `dynamicParams = false` produced `404` but logged an internal fallback error for an unknown path.
+  - Impact: the static architecture probe publishes only generated fixture paths and rejects unknown fixture slugs through the route proxy before rendering; a persisted dynamic route must replace this fixture allowlist and retain explicit `404` runtime coverage.
+
+### Accepted
+
+- A modular monolith is the appropriate starting boundary for one product, one web client, and one operating developer.
+  - Evidence: no measured independent scaling, availability, ownership, or security boundary requires distributed services.
+  - Impact: keep one deployable and explicit internal packages; require a new ADR and measured trigger before extraction.
+- The architecture proof should remain public and read-only.
+  - Evidence: combining identity selection, persistence, protected mutation, moderation, and experience design into issue #3 would make the first review too broad.
+  - Impact: prove dependency direction and discovery first; implement the persisted account-to-public-Q&A slice in the next governed issue.
+- Provider unknowns belong behind ports rather than inside domain behavior.
+  - Evidence: deterministic payment and logistics mocks exercise platform intent without claiming DOKU or Biteship compatibility.
+  - Impact: DOKU, Biteship, identity, and hosting validation can change adapters without rewriting marketplace rules.
+
+### Failed approach
+
+- Declaring production audit success before running the dedicated audit.
+  - Evidence: the full format, lint, type, test, and build gate passed while the separate production audit still found vulnerable transitive packages.
+  - Impact: keep `pnpm audit:prod` as an explicit independent gate in local guidance and hosted CI.
+- Placing pnpm overrides in the root `package.json`.
+  - Evidence: pnpm `11.17.0` warned that `pnpm.overrides` there is ignored and requires workspace configuration.
+  - Impact: keep workspace-wide resolution policy in `pnpm-workspace.yaml` and fail on package-manager warnings.
+
+### Deferred
+
+- Production identity-provider, Prisma, Neon, Vercel, DOKU, Biteship, and object-storage proofs remain separate governed work.
+- Visual design and browser-automation approval remain outside the architecture probe.
+- No new DOKU commercial, payment-method, settlement, or onboarding conclusion resulted from issue #3.

@@ -1,6 +1,6 @@
 # NitipCuy Cross-Session Handoff
 
-Last updated: 2026-07-25 11:18 WIB
+Last updated: 2026-07-25 15:55 WIB
 
 Handoff owner: Codex
 
@@ -8,34 +8,25 @@ Product owner: BurinSN
 
 ## 1. Role, authority, and freshness contract
 
-This file is the single operational resume point. It answers:
+This file is the single operational resume point. It owns verified repository state, active bounded work, authority boundaries, blockers, verification, and the exact next action.
 
-- What is the verified repository state now?
-- What bounded work is active?
-- What is complete, partial, blocked, or unverified?
-- What authority has and has not been granted?
-- What exact action must happen next?
+It is current-state documentation, not history. Update it whenever the issue, branch, pull request, verification, blocker, approval, or next action changes. Verified live state overrides this file. Reconcile any mismatch before continuing.
 
-This file is current-state documentation, not an append-only history. Update it during every material work session and whenever the issue, branch, pull request, commit, verification result, blocker, authority boundary, or exact next action changes.
-
-The handoff is stale and work must stop when any live claim below disagrees with Git, GitHub, a connected provider, an accepted ADR, or current BurinSN direction. Verified live state wins. Reconcile this file before continuing.
-
-The handoff does not authorize a merge, deployment, provider contact, payment movement, production action, product-scope change, or external communication.
+This handoff never grants merge, deployment, provider contact, payment movement, production action, visual approval, or product-scope authority.
 
 ## 2. Mandatory resume protocol
 
-Before planning or changing the project:
+Before planning or changing NitipCuy:
 
 1. Read `AGENTS.md`.
 2. Read `docs/roadmap.md`.
 3. Read this handoff.
-4. Read the newest entry in `docs/changes.md`.
-5. Read the newest relevant entries in `docs/learning.md`.
-6. Read `docs/product/master-specification.md`.
-7. Read relevant ADRs and specialist documents.
-8. Read `docs/development/git-workflow.md` before Git or GitHub mutations.
-9. Verify local branch, status, head, remote tracking, open issue, open pull request, and CI state.
-10. Reconcile every mismatch before implementation.
+4. Read the newest `docs/changes.md` and relevant `docs/learning.md` entries.
+5. Read `docs/product/master-specification.md`.
+6. Read `docs/architecture/system-architecture.md`, relevant ADRs, and relevant specialist documents.
+7. Read `docs/development/git-workflow.md` before Git or GitHub mutation.
+8. Verify local branch, status, head, `origin/main`, issue, pull request, reviews, and exact-head checks.
+9. Reconcile every mismatch before implementation.
 
 Minimum local verification:
 
@@ -46,44 +37,50 @@ git rev-parse origin/main
 git log --oneline --decorate -5
 ```
 
-Do not inspect or expose `.env*`, credentials, private keys, identity documents, payment data, or production secrets while gathering context.
+Do not inspect or expose `.env*`, credentials, private keys, identity documents, payment data, customer addresses, or production secrets while gathering context.
 
 ## 3. Product compass
 
-NitipCuy is a standalone BurinSN marketplace for independent jastippers and customers. It is separate from BCN.
+NitipCuy is a standalone BurinSN marketplace for independent jastippers and customers. It is separate from BCN and uses `Cuy`, not `Coy`.
 
-The platform has two primary service modes:
+The two primary service modes are:
 
-1. **Shop for me**: the jastipper purchases an item for the customer.
+1. **Shop for me**: a jastipper purchases an item for the customer.
 2. **Carry my item**: the customer already owns or arranged the item and hires a jastipper to collect or carry it.
 
-Non-negotiable product boundaries:
+Non-negotiable boundaries:
 
-- Discovery is trip-first, route-aware, destination-aware, and timeline-aware.
-- Jastippers set their own item, service, kilogram, minimum, maximum, capacity, pickup, and delivery terms.
-- NitipCuy does not impose a mandatory seller rate.
-- Public discussion handles reusable trip, listing, and request questions.
-- Private communication handles addresses, identity data, receipts, disputes, and personal order details.
-- Addresses and final-delivery terms are known before paid commitment.
-- Only protected platform transactions receive platform protection and verified transaction reviews.
-- The revenue model is a disclosed transaction protection fee, not subscriptions or paid boosts.
-- The planning fee is 3 percent, minimum Rp15,000 and maximum Rp100,000, subject to provider and pilot economics.
-- Active risk scanning, evidence, enforcement, appeals, disputes, and reconciliation are platform responsibilities.
-- Severe prohibited conduct may be removed or suspended immediately without warning-first treatment.
-- NitipCuy is not designed to become the cross-border merchant, importer, customs broker, carrier, or legal seller of jastipper goods.
+- discovery is trip-first, route-aware, destination-aware, and timeline-aware;
+- jastippers set their own item, service, kilogram, minimum, maximum, capacity, pickup, and delivery terms;
+- NitipCuy does not impose a mandatory seller rate;
+- public discussion serves reusable questions; private surfaces hold addresses, identity, receipts, disputes, and order details;
+- address and final-delivery terms are known before paid commitment;
+- only protected completed platform transactions receive verified reviews;
+- revenue is a disclosed transaction protection fee, not subscriptions or paid boosts;
+- the planning fee remains 3 percent, minimum Rp15,000 and maximum Rp100,000, pending provider and pilot economics;
+- risk scanning, evidence, enforcement, appeals, disputes, and reconciliation remain platform responsibilities;
+- severe prohibited conduct can receive immediate takedown or suspension;
+- NitipCuy is not designed as the cross-border merchant, importer, customs broker, carrier, or legal seller of jastipper goods.
 
-The canonical product model is `docs/product/master-specification.md`. The binding accepted decisions are in `docs/decisions/`.
+The master product specification and accepted ADRs control detailed behavior.
 
-## 4. Delivery strategy
+## 4. Accepted architecture foundation
 
-Build the platform first.
+ADR 0003 selects:
 
-- Additional Threads market research is not a platform-development gate.
-- Threads is reserved for later jastipper acquisition, trip promotion, feature feedback, and workflow validation once there is a demonstrable platform.
-- DOKU is the conditional preferred payment provider.
-- Biteship is an unapproved logistics candidate.
-- DOKU, Biteship, legal, and policy unknowns block real-money pilot activation, not development against provider-independent mock ports.
-- Production-specific provider behavior must not leak into the core order, ledger, evidence, moderation, or dispute model.
+- a modular monolith with one deployable Next.js App Router web application;
+- framework-free `domain`, application-use-case and port, adapter, and delivery boundaries;
+- Node.js `24.x`, reproducible patch `24.18.0`, pnpm `11.17.0`, Next.js `16.2.11`, and the compatible pinned toolchain;
+- server components by default and a server-only composition root;
+- PostgreSQL authority with a future isolated Prisma adapter;
+- external passwordless or standards-based identity mapped to internal account IDs;
+- server-authoritative, deny-by-default authorization;
+- provider-independent payment, logistics, identity, evidence, repository, audit, and outbox contracts;
+- Vercel Node.js in `sin1` plus Singapore PostgreSQL as the intended first hosting posture, without provisioning or deployment authority.
+
+Issue #3 proves these boundaries with simulated public trip discovery, destination/date search, trip detail, chronological public Q&A, and deterministic platform-service mocks. It intentionally implements no account, protected mutation, address, private chat, database, real provider, or payment movement.
+
+The shell is a functional architecture probe. It is not a production UI and has no visual approval.
 
 ## 5. Verified repository state
 
@@ -91,131 +88,95 @@ Build the platform first.
 |---|---|
 | Local project | `/Users/miclawrencee/Workspace/NitipCuy` |
 | Canonical remote | `https://github.com/BurinSn/NitipCuy` |
-| Visibility | Private |
-| Default branch | `main` |
-| Verified `main` base | `6fe622733bdf457448ed0e8670ff5249ce3ca6fe` |
-| Active issue | `#1 Harden lifecycle documentation against stale state and product drift` |
-| Active branch | `docs/1-lifecycle-governance` |
-| Pull request | `#2 docs: enforce lifecycle documentation freshness` |
-| Last pushed checkpoint before this handoff edit | `f2c9800e1788b510bd5ed2d9537040ea0680f56d` |
-| Pull-request checks at that checkpoint | Lifecycle workflow passed with a checkout v4 Node.js 20 deprecation warning; CodeRabbit provided no review object or findings |
-| Live pull-request head and checks | Volatile; retrieve directly from GitHub before merge |
-| Merge authority | Granted by BurinSN on 2026-07-25, conditional on final exact-head audit and green lifecycle workflow |
+| Visibility / default branch | Private / `main` |
+| Verified `main` and issue #3 base | `fd9c98aefff199bb0e8ff954fa3a56e6764cf03a` |
+| Prior governance work | Issue #1 closed; pull request #2 squash-merged |
+| Active issue | [#3 Establish web architecture and application foundation](https://github.com/BurinSn/NitipCuy/issues/3) |
+| Active branch | `feat/3-architecture-foundation` |
+| Pull request | Not opened at this handoff checkpoint; verify live |
+| Merge authority | Not granted for issue #3; fresh BurinSN approval is required after exact-head evidence |
 | Branch protection | Unavailable for this private repository on the current GitHub plan |
 | Deployment | None |
 | Production providers | None activated |
 
-The earlier `70b4c96a0df486b70e626434338e0b20dec7df1f` commit is the first documentation baseline, not the current `main` tip. Future sessions must never treat it as current repository state.
-
-Do not hard-code a tracked handoff file's own containing commit as its current head: committing that claim immediately creates a newer head. The checkpoint above is timestamped evidence, not permission to skip live `git rev-parse` and GitHub verification.
+The tracked handoff cannot contain its own final commit SHA. Copy immutable identifiers only from direct Git or GitHub output and treat the table as a timestamped checkpoint, never as permission to skip live verification.
 
 ## 6. Current work item
 
-Issue #1 hardens the four lifecycle documents and their enforcement:
+Issue #3 owns the architecture and application-foundation slice.
 
-- `handoff.md`
-- `docs/changes.md`
-- `docs/roadmap.md`
-- `docs/learning.md`
+Implemented locally:
 
-In scope:
+- ADR 0003 and the supporting system-architecture document;
+- exact Node.js, pnpm, framework, compiler, lint, format, task, and test pins;
+- modular workspace packages for domain, application, adapters, and web delivery;
+- validated published-trip domain behavior, including origin-local departure date plus exact timezone-bearing departure timestamp;
+- read-only trip discovery and detail use cases;
+- deterministic in-memory repository plus mock payment, logistics, identity-verification, evidence-storage, clock, identifier, transaction, audit, and outbox adapters with no external calls;
+- a local Indonesian web shell with explicit simulated-data and inactive-transaction notices;
+- PR-only application-quality CI with read-only permission and immutable action references;
+- local quality-gate documentation and production dependency overrides for audited patched `postcss` and `sharp` versions.
 
-- define a unique role, authority, update trigger, and reading rule for each document;
-- reconcile product, sequencing, provider, risk, and repository truth;
-- remove ambiguity between historical and current claims;
-- enforce the four-file update requirement locally and in pull requests;
-- update contributor and pull-request governance;
-- hostile-review the complete documentation set for contradiction and drift.
+Deliberately excluded:
 
-Out of scope:
+- production or preview deployment;
+- visual approval or final experience design;
+- account creation, seller verification, protected authorization, and persistence;
+- real DOKU, Biteship, identity, storage, or database integration;
+- orders, money movement, delivery booking, customer PII, or production secrets;
+- provider outreach, Threads promotion, public launch, microservices, or event sourcing.
 
-- application architecture or scaffolding;
-- UI or visual design;
-- DOKU, Biteship, or Threads outreach;
-- provider onboarding, payment movement, deployment, or production changes;
-- new product-scope decisions.
+## 7. Verification checkpoint
 
-## 7. Current stage and next platform slice
+Verified locally with Node.js `24.18.0` and pnpm `11.17.0`:
 
-Current roadmap stage: Stage 1 - Platform foundation.
+- `pnpm peers check`: no peer-dependency issues;
+- `pnpm audit:prod`: no known production vulnerabilities after the explicit patched overrides;
+- `pnpm check`: format, lint, strict type checking, 13 unit tests, and production build passed;
+- Next.js production routes built for `/`, `/_not-found`, and three generated `/trips/[tripId]` fixture paths;
+- production HTTP probe returned `200` for home, filtered search, and a known trip, `404` for an unknown trip, passed content assertions, and emitted no fallback error;
+- lifecycle, diff, workflow YAML, internal-link, credential-pattern, placeholder, dependency-direction, provider-SDK, unsafe-`any`, console, and source-network scans passed;
+- workflow action tags resolve to their pinned immutable commits and both commits are verified by GitHub;
+- no external service or production credential was required.
 
-After issue #1 is merged, the next hosted issue must cover architecture and application scaffolding. It must decide and document:
+Hostile-review corrections already made:
 
-- web-first stack and deployment target;
-- identity and authorization direction;
-- database and migration direction;
-- provider-independent payment and logistics ports;
-- local development, quality, security, test, and CI gates;
-- the first vertical slice:
+- rejected TypeScript 7 and ESLint 10 because the installed peer graph does not support them;
+- removed a hard-coded Jakarta-midnight comparison from the trip timeline;
+- compare Q&A timestamps as real instants across timezone offsets;
+- removed false Turbo output warnings and the App-Router-only ESLint warning;
+- replaced vulnerable Next.js transitive `postcss` and `sharp` versions with audited patched overrides;
+- selected `postcss` `8.5.18` instead of a release inside the package-manager minimum-age window;
+- converted simulated trip details to build-time known paths and rejected unknown slugs before streamed rendering so missing trips return a quiet HTTP `404`, not a `200` or an internal fallback error.
 
-```text
-account
-  -> jastipper profile
-  -> trip publication
-  -> destination and date search
-  -> trip detail
-  -> public question and answer
-```
+Still required before requesting merge:
+
+1. Commit and push the coherent issue #3 branch.
+2. Open the pull request, inspect hosted checks and reviews on its exact immutable head, and resolve every material finding.
+3. Ask BurinSN for fresh issue #3 merge approval.
+
+Browser automation and visual approval were not performed and are not claimed.
 
 ## 8. Blockers and gates
 
-There is no external blocker to lifecycle governance, architecture, experience design, or building with mock providers.
+No external blocker prevents completing issue #3 or continuing later development with mocks.
 
-The following block real-money pilot launch:
+The following still block real-money pilot activation:
 
-1. Written DOKU Partner/Aggregator approval and complete commercial terms.
-2. Confirmed Hold plus Split channels, maximum hold, partial release, refund, reserve, and failure behavior.
-3. Approved logistics integration and exception model.
-4. Route-aware prohibited and restricted-item taxonomy.
-5. Cancellation, refund, dispute, insurance, loss, damage, and provider-cost allocation policy.
-6. Pilot route, category, value, weight, capacity, and participant boundaries.
-7. Legal, privacy, security, incident-response, and operational sign-off.
+1. written DOKU Partner/Aggregator approval and complete commercial terms;
+2. confirmed Hold plus Split channels, maximum hold, partial release, refund, reserve, and failure behavior;
+3. approved logistics integration and exception model;
+4. route-aware prohibited and restricted-item taxonomy;
+5. cancellation, refund, dispute, insurance, loss, damage, customs, and provider-cost allocation policy;
+6. bounded pilot route, category, value, weight, capacity, and participant rules;
+7. legal, privacy, security, incident-response, support, reconciliation, and operational sign-off.
 
-Do not convert a launch blocker into a reason to delay provider-independent platform work.
+These are Stage 3 activation gates, not reasons to delay provider-independent platform work.
 
-## 9. Verification and unresolved evidence
+## 9. Exact next action
 
-Verified:
+Commit and push the locally validated issue #3 foundation, then open the governed pull request and audit its exact immutable head.
 
-- local `main` and `origin/main` matched `6fe622733bdf457448ed0e8670ff5249ce3ca6fe` before branch creation;
-- the worktree was clean before issue #1 work;
-- GitHub repository visibility is private and default branch is `main`;
-- issue #1 exists and owns this bounded documentation hardening pass;
-- accepted product and payment decisions match the master specification, ADRs, and active Global Brain entries.
+If the pull request already exists when resuming, do not create another one. Retrieve its exact head, hosted checks, review objects, findings, mergeability, and complete base diff. Fix findings through the same branch and update all four lifecycle documents again.
 
-Volatile evidence that must always be retrieved live:
-
-- pull-request head;
-- lifecycle workflow state for that exact head;
-- review objects and findings;
-- mergeability and issue state;
-- post-merge `main` and branch state.
-
-Do not store a transient `pending`, `passed`, or current PR-head claim here as permanent current truth.
-
-Verified for issue #1:
-
-- local lifecycle check passed;
-- shell syntax check passed;
-- workflow YAML parsed;
-- internal links, formatting, naming, placeholder, and credential-pattern scans passed;
-- lifecycle authority, product-boundary, provider-boundary, Threads-sequencing, and historical-versus-current contradiction review passed;
-- branch-protection API returned `403`, so a green lifecycle check must be manually enforced as a merge policy.
-- `shellcheck` and `actionlint` were unavailable locally and were not claimed.
-- branch `docs/1-lifecycle-governance` content was committed and pushed at `db936aa94c525b8eeb2d48a20cf752eaac1dd419`;
-- pull request #2 was opened against `main`;
-- lifecycle state commit `d31b39bbbf7cf70d5e48c38ec8f58c49f187f619` was pushed;
-- the lifecycle workflow passed at that checkpoint;
-- CodeRabbit reported pass only because review was rate-limited, so no independent review was performed.
-- BurinSN reviewed the disclosed check and review limitations and explicitly authorized final correction, audit, and merge of pull request #2 on 2026-07-25.
-- The final full-diff audit found and corrected direct GitHub-context interpolation in the lifecycle workflow; the base ref now crosses into the shell through an environment variable.
-- The workflow pins `actions/checkout` v7.0.1 to verified immutable commit `3d3c42e5aac5ba805825da76410c181273ba90b1` rather than a moving tag or deprecated v4 runtime.
-
-## 10. Exact next action
-
-Resolve the transition from live state:
-
-- If pull request #2 is open, verify its exact head, lifecycle workflow, review objects, mergeability, and complete base diff; post the audit evidence; then squash-merge under the recorded BurinSN authority.
-- If pull request #2 is merged, verify `main`, issue #1 closure, and remote/local branch cleanup; then create the architecture and application-scaffolding issue as the next governed slice.
-
-Do not begin application scaffolding before the issue #1 merge and cleanup are verified.
+Do not merge issue #3, deploy, contact providers, move money, or claim visual approval without the corresponding fresh BurinSN authority.

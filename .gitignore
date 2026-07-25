@@ -12,6 +12,8 @@ dist/
 build/
 coverage/
 .turbo/
+*.tsbuildinfo
+.pnpm-store/
 
 # Test and runtime output
 test-results/

@@ -1,10 +1,10 @@
 # NitipCuy Canonical Roadmap
 
-Last reviewed: 2026-07-25 11:18 WIB
+Last reviewed: 2026-07-25 15:55 WIB
 
 Current stage: Stage 1 - Platform foundation
 
-Current work item: Issue #1 merge transition; architecture and application scaffolding next
+Current work item: Issue #3 architecture and application foundation; local validation complete, pull request next
 
 ## 1. Role, authority, and freshness contract
 
@@ -101,44 +101,56 @@ Status: Complete
 Exit evidence:
 
 - initial baseline `70b4c96a0df486b70e626434338e0b20dec7df1f`;
-- repository-state record `6fe622733bdf457448ed0e8670ff5249ce3ca6fe`.
+- repository-state record `6fe622733bdf457448ed0e8670ff5249ce3ca6fe`;
+- lifecycle-governance merge `fd9c98aefff199bb0e8ff954fa3a56e6764cf03a`.
 
 ## 7. Stage 1 - Platform foundation
 
 Status: In progress
 
-### Current slice
+### Completed governance slice
 
-- [x] Issue #1 hardens all four lifecycle documents.
-- [x] Local lifecycle freshness check passes.
-- [x] Pull request #2 opened against `main`.
-- [x] Pull-request lifecycle workflow demonstrated a passing run.
-- [x] Pull-request check result is manually enforced because private branch protection is unavailable on the current GitHub plan.
-- [x] Missing independent CodeRabbit review coverage disclosed to BurinSN.
-- [x] BurinSN explicitly authorized final correction, exact-head audit, and merge of pull request #2.
-- [x] Lifecycle workflow base-ref input hardened against direct GitHub-context interpolation in shell.
-- [x] External workflow action upgraded to supported checkout v7.0.1 and pinned to a verified immutable commit.
+- [x] Issue #1 and pull request #2 established the four-file lifecycle contract.
+- [x] Local and hosted lifecycle freshness checks were demonstrated.
+- [x] GitHub-context handling and workflow dependencies were hardened.
+- [x] Pull request #2 was owner-approved, squash-merged, and issue #1 closed.
+- [x] Branch-protection limitations remain explicitly enforced by project policy.
 
-Pull-request merge state is volatile and must be verified live. Once pull request #2 is confirmed merged and issue #1 is closed, the next slice below becomes current without changing the accepted roadmap order.
+### Current architecture slice
 
-### Next slice
+- [x] Issue #3 created with bounded acceptance and exclusions.
+- [x] Web-first stack, runtime, workspace shape, and deployment posture selected in ADR 0003.
+- [x] Identity, deny-by-default authorization, PostgreSQL, and migration direction recorded.
+- [x] Provider-independent payment, logistics, identity-verification, evidence-storage, clock, identifier, transaction, audit, and outbox ports implemented with deterministic mocks.
+- [x] Framework-free domain, application, adapter, and delivery boundaries established.
+- [x] Local development, formatting, lint, strict type, unit test, build, audit, and PR-CI gates established.
+- [x] Working local shell implements public trip search, detail, and chronological public Q&A using simulated data.
+- [x] Exact-toolchain frozen install, peer, quality, production-audit, lifecycle, runtime, complete-diff, and security gates pass locally.
+- [ ] Issue #3 branch is committed, pushed, and opened as a pull request.
+- [ ] Hosted lifecycle and application-quality checks pass on the exact immutable pull-request head.
+- [ ] BurinSN gives fresh issue #3 merge approval after all evidence and findings are visible.
 
-- [ ] Create the architecture and application-scaffolding issue.
-- [ ] Select and record the web-first stack and deployment target.
-- [ ] Select and record identity, authorization, database, and migration direction.
-- [ ] Define provider-independent payment and logistics ports.
-- [ ] Establish local development, formatting, linting, type, test, security, migration, build, and CI gates.
-- [ ] Scaffold a working local platform shell.
-- [ ] Implement the first vertical slice:
+The current architecture probe is deliberately public and read-only. It proves boundaries without prematurely combining identity selection, persistence, protected mutation, and UI behavior in one change.
+
+### Next persisted vertical slice
+
+- [ ] Create the persisted marketplace-foundation issue after issue #3 is merged.
+- [ ] Implement the first persisted vertical slice:
 
 ```text
 account
   -> jastipper profile
+  -> trip draft
+  -> moderation gate
   -> trip publication
   -> destination and date search
   -> trip detail
   -> public question and answer
 ```
+
+- [ ] Add the first PostgreSQL schema and reviewed migration through the isolated database adapter.
+- [ ] Add external-identity proof and protected server-authoritative mutations without storing passwords.
+- [ ] Add integration tests using disposable resources and explicit destructive-test guards.
 
 ### Experience slice
 
@@ -223,11 +235,11 @@ The unresolved DOKU, logistics, policy, legal, and pilot items listed in Stage 3
 
 ### Now
 
-If pull request #2 remains open, complete its exact-head audit and authorized merge. If it is merged, verify `main`, issue closure, and branch cleanup, then start the next slice.
+Commit and push the locally validated issue #3 foundation, then open and audit its pull request on the exact immutable head.
 
 ### Next
 
-Open the architecture and application-scaffolding issue and implement the first vertical slice through the governed branch and pull-request workflow.
+Obtain fresh owner approval for issue #3 after exact-head hosted evidence, then implement the persisted account-to-public-Q&A vertical slice through a new governed issue.
 
 ### Later
 
