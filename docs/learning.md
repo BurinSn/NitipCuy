@@ -174,3 +174,26 @@ Do not present inference, provider marketing, provisional pricing, or a future i
 ### No new domain learning
 
 - This state transition introduced no new jastip, payment, logistics, moderation, or commercial-model learning.
+
+## 2026-07-25 07:50 WIB - Review and self-referential state correction
+
+### Verified
+
+- The lifecycle pull-request workflow passed at checkpoint `d31b39bbbf7cf70d5e48c38ec8f58c49f187f619`.
+  - Evidence: GitHub pull request #2 check run.
+  - Impact: the local script is CI-compatible on the repository's hosted runner.
+- CodeRabbit's green status did not represent a completed review.
+  - Evidence: GitHub reported `Review rate limited`.
+  - Impact: record no independent review coverage and never translate a green integration status into review approval.
+
+### Corrected
+
+- A tracked handoff cannot truthfully embed the SHA of the commit that contains its latest state.
+  - Supersedes: the earlier `Verified branch head` field.
+  - Impact: record a timestamped predecessor or pushed checkpoint, then require direct live verification of the actual branch head.
+
+### Reusable learning
+
+- Never expand or reconstruct an abbreviated immutable identifier. Copy direct verification output.
+- Never call an integration status independent review coverage without a real review object or findings.
+- Avoid self-referential lifecycle claims that become stale by the act of committing them.

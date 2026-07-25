@@ -1,6 +1,6 @@
 # NitipCuy Cross-Session Handoff
 
-Last updated: 2026-07-25 07:48 WIB
+Last updated: 2026-07-25 07:50 WIB
 
 Handoff owner: Codex
 
@@ -96,15 +96,17 @@ Build the platform first.
 | Verified `main` base | `6fe622733bdf457448ed0e8670ff5249ce3ca6fe` |
 | Active issue | `#1 Harden lifecycle documentation against stale state and product drift` |
 | Active branch | `docs/1-lifecycle-governance` |
-| Verified branch head | `db936aa94c525b8eeb2d48a20cf752eaac1dd419` |
 | Pull request | `#2 docs: enforce lifecycle documentation freshness` |
-| Pull-request checks | Lifecycle workflow pending; CodeRabbit pending |
+| Last pushed checkpoint before this handoff edit | `d31b39bbbf7cf70d5e48c38ec8f58c49f187f619` |
+| Pull-request checks at that checkpoint | Lifecycle workflow passed; CodeRabbit was rate-limited and provided no review coverage |
 | Merge authority | Not granted |
 | Branch protection | Unavailable for this private repository on the current GitHub plan |
 | Deployment | None |
 | Production providers | None activated |
 
 The earlier `70b4c96a0df486b70e626434338e0b20dec7df1f` commit is the first documentation baseline, not the current `main` tip. Future sessions must never treat it as current repository state.
+
+Do not hard-code a tracked handoff file's own containing commit as its current head: committing that claim immediately creates a newer head. The checkpoint above is timestamped evidence, not permission to skip live `git rev-parse` and GitHub verification.
 
 ## 6. Current work item
 
@@ -182,9 +184,8 @@ Verified:
 
 Not yet verified for issue #1:
 
-- pull-request CI behavior;
-- CodeRabbit review outcome;
-- final pull-request check state;
+- final pull-request check state after this handoff update;
+- independent review coverage;
 - BurinSN merge decision.
 
 Verified for issue #1:
@@ -196,12 +197,14 @@ Verified for issue #1:
 - lifecycle authority, product-boundary, provider-boundary, Threads-sequencing, and historical-versus-current contradiction review passed;
 - branch-protection API returned `403`, so a green lifecycle check must be manually enforced as a merge policy.
 - `shellcheck` and `actionlint` were unavailable locally and were not claimed.
-- branch `docs/1-lifecycle-governance` was committed and pushed at `db936aa94c525b8eeb2d48a20cf752eaac1dd419`;
+- branch `docs/1-lifecycle-governance` content was committed and pushed at `db936aa94c525b8eeb2d48a20cf752eaac1dd419`;
 - pull request #2 was opened against `main`;
-- the lifecycle workflow and CodeRabbit review are pending.
+- lifecycle state commit `d31b39bbbf7cf70d5e48c38ec8f58c49f187f619` was pushed;
+- the lifecycle workflow passed at that checkpoint;
+- CodeRabbit reported pass only because review was rate-limited, so no independent review was performed.
 
 ## 10. Exact next action
 
-Wait for pull request #2's lifecycle workflow and CodeRabbit review to finish. Reconcile any findings, rerun the full local verification set, and report the exact immutable head and check state to BurinSN.
+Before any merge, retrieve pull request #2's live head, check state, and review state; report the exact evidence and missing independent review coverage to BurinSN; then obtain a fresh explicit decision for pull request #2.
 
 Do not merge without fresh explicit BurinSN approval for that pull request.

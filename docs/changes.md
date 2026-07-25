@@ -124,6 +124,9 @@ A session with no material change does not invent an entry. A session that makes
   - `shellcheck` and `actionlint` are unavailable locally; their specialist validation was not claimed.
   - Branch head `db936aa94c525b8eeb2d48a20cf752eaac1dd419` was pushed and pull request #2 was opened against `main`.
   - Lifecycle workflow and CodeRabbit review were pending at 07:48 WIB.
+  - Follow-up checkpoint `d31b39bbbf7cf70d5e48c38ec8f58c49f187f619` was pushed.
+  - Lifecycle workflow passed at that checkpoint.
+  - CodeRabbit reported pass because its review was rate-limited; it provided no independent review coverage.
 - Documentation:
   - Updated all four lifecycle documents plus `AGENTS.md` and the pull-request template.
 - Residual risks / exclusions:
@@ -131,4 +134,4 @@ A session with no material change does not invent an entry. A session that makes
   - GitHub cannot technically require the lifecycle check on the current private-repository plan. A green check is enforced by project policy and explicit merge approval.
   - No application architecture, scaffolding, provider contact, payment, logistics integration, deployment, or product-scope change is included.
 - Follow-up:
-  - Wait for pull request #2 checks and review, resolve findings, refresh all four lifecycle files, and request BurinSN merge approval.
+  - Push the final lifecycle-state update, verify the rerun on the live PR head, disclose the missing independent review coverage, and request BurinSN merge approval.

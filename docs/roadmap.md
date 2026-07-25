@@ -1,6 +1,6 @@
 # NitipCuy Canonical Roadmap
 
-Last reviewed: 2026-07-25 07:48 WIB
+Last reviewed: 2026-07-25 07:50 WIB
 
 Current stage: Stage 1 - Platform foundation
 
@@ -112,8 +112,9 @@ Status: In progress
 - [x] Issue #1 hardens all four lifecycle documents.
 - [x] Local lifecycle freshness check passes.
 - [x] Pull request #2 opened against `main`.
-- [ ] Pull-request lifecycle workflow passes.
+- [x] Pull-request lifecycle workflow demonstrated a passing run.
 - [ ] Pull-request check result is manually enforced because private branch protection is unavailable on the current GitHub plan.
+- [ ] Independent review coverage obtained or its absence explicitly accepted by BurinSN.
 - [ ] Issue #1 pull request is reviewed and receives explicit BurinSN merge approval.
 
 ### Next slice
@@ -218,7 +219,7 @@ The unresolved DOKU, logistics, policy, legal, and pilot items listed in Stage 3
 
 ### Now
 
-Finish pull request #2 checks and review, reconcile any findings across all four lifecycle documents, and obtain explicit BurinSN merge approval.
+Verify pull request #2 checks on its final live head, disclose that CodeRabbit was rate-limited and provided no independent review, and obtain explicit BurinSN merge approval.
 
 ### Next
 
