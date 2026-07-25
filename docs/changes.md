@@ -232,3 +232,35 @@ A session with no material change does not invent an entry. A session that makes
   - Application architecture, scaffolding, providers, payments, deployment, and product scope remain excluded.
 - Follow-up:
   - Validate, commit, and push the pin; wait for exact-head checks; post the final audit; and squash-merge under recorded BurinSN authority.
+
+## 2026-07-25 11:18 WIB - Deprecated checkout runtime upgraded
+
+- Issue / PR: Issue #1; pull request #2
+- Product: NitipCuy
+- Type: Workflow compatibility and supply-chain correction
+- Status: Prepared; exact-head workflow and merge pending
+- Objective:
+  - Remove the checkout v4 Node.js 20 deprecation warning surfaced by the hosted runner.
+- Scope:
+  - Pull-request lifecycle workflow and all four mandatory lifecycle documents.
+- Changes:
+  - Upgraded from checkout v4 to official latest release v7.0.1.
+  - Pinned v7.0.1 to verified immutable commit `3d3c42e5aac5ba805825da76410c181273ba90b1`.
+  - Preserved the pull-request trigger, read-only permission, full-history checkout, environment-based base-ref transport, and lifecycle check.
+  - Refreshed all four lifecycle documents without changing product scope or roadmap order.
+- Impact:
+  - The workflow no longer depends on checkout v4's deprecated Node.js 20 runtime.
+  - The dependency remains immutable and future updates remain explicit.
+- Validation:
+  - Lifecycle workflow run `30143787972` passed on pre-correction head `f2c9800e1788b510bd5ed2d9537040ea0680f56d` but emitted the Node.js 20 deprecation warning.
+  - GitHub API reported v7.0.1 as the latest official `actions/checkout` release, published 2026-07-20.
+  - GitHub reports commit `3d3c42e5aac5ba805825da76410c181273ba90b1` as verified.
+  - Local lifecycle, shell syntax, workflow YAML, immutable-action-reference, direct-context-interpolation, formatting, link, naming, placeholder, credential-pattern, and product-alignment checks passed after the upgrade.
+- Documentation:
+  - Updated `handoff.md`, `docs/changes.md`, `docs/roadmap.md`, and `docs/learning.md`.
+- Residual risks / exclusions:
+  - A fresh pull-request workflow must pass without the checkout v4 warning on the corrected exact head.
+  - CodeRabbit has no review object or independent findings for this pull request.
+  - Application architecture, scaffolding, providers, payments, deployment, and product scope remain excluded.
+- Follow-up:
+  - Validate, commit, and push the upgrade; confirm an annotation-free exact-head run; post the final audit; and squash-merge under recorded BurinSN authority.

@@ -265,3 +265,28 @@ Do not present inference, provider marketing, provisional pricing, or a future i
 ### No new domain learning
 
 - The correction changes workflow supply-chain posture only.
+
+## 2026-07-25 11:18 WIB - A green workflow can still expose a runtime blocker
+
+### Verified
+
+- Lifecycle run `30143787972` passed but warned that checkout v4 targets deprecated Node.js 20 and was being force-run on Node.js 24.
+  - Evidence: GitHub Actions job annotation on the exact pull-request head.
+  - Impact: a green conclusion does not excuse a material compatibility warning.
+- Official `actions/checkout` release v7.0.1 was the latest release and resolved to verified commit `3d3c42e5aac5ba805825da76410c181273ba90b1`.
+  - Evidence: GitHub release, tag, and commit APIs on 2026-07-25.
+  - Impact: upgrade and pin the supported release.
+
+### Corrected
+
+- The immutable v4 pin removed tag mutability but retained the deprecated runtime.
+  - Supersedes: treating the v4 pin alone as the completed supply-chain correction.
+  - Impact: dependency review must cover compatibility annotations as well as immutability.
+
+### Reusable learning
+
+- Audit hosted-runner annotations, not only job conclusions. A successful workflow may still disclose an imminent compatibility failure.
+
+### No new domain learning
+
+- The correction changes CI compatibility only.
