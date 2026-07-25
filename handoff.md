@@ -1,6 +1,6 @@
 # NitipCuy Cross-Session Handoff
 
-Last updated: 2026-07-25 07:50 WIB
+Last updated: 2026-07-25 11:09 WIB
 
 Handoff owner: Codex
 
@@ -97,9 +97,10 @@ Build the platform first.
 | Active issue | `#1 Harden lifecycle documentation against stale state and product drift` |
 | Active branch | `docs/1-lifecycle-governance` |
 | Pull request | `#2 docs: enforce lifecycle documentation freshness` |
-| Last pushed checkpoint before this handoff edit | `d31b39bbbf7cf70d5e48c38ec8f58c49f187f619` |
+| Last pushed checkpoint before this handoff edit | `d33e158bf5a73395a9efb1f4f7b8f4583f0252b9` |
 | Pull-request checks at that checkpoint | Lifecycle workflow passed; CodeRabbit was rate-limited and provided no review coverage |
-| Merge authority | Not granted |
+| Live pull-request head and checks | Volatile; retrieve directly from GitHub before merge |
+| Merge authority | Granted by BurinSN on 2026-07-25, conditional on final exact-head audit and green lifecycle workflow |
 | Branch protection | Unavailable for this private repository on the current GitHub plan |
 | Deployment | None |
 | Production providers | None activated |
@@ -182,11 +183,15 @@ Verified:
 - issue #1 exists and owns this bounded documentation hardening pass;
 - accepted product and payment decisions match the master specification, ADRs, and active Global Brain entries.
 
-Not yet verified for issue #1:
+Volatile evidence that must always be retrieved live:
 
-- final pull-request check state after this handoff update;
-- independent review coverage;
-- BurinSN merge decision.
+- pull-request head;
+- lifecycle workflow state for that exact head;
+- review objects and findings;
+- mergeability and issue state;
+- post-merge `main` and branch state.
+
+Do not store a transient `pending`, `passed`, or current PR-head claim here as permanent current truth.
 
 Verified for issue #1:
 
@@ -202,9 +207,13 @@ Verified for issue #1:
 - lifecycle state commit `d31b39bbbf7cf70d5e48c38ec8f58c49f187f619` was pushed;
 - the lifecycle workflow passed at that checkpoint;
 - CodeRabbit reported pass only because review was rate-limited, so no independent review was performed.
+- BurinSN reviewed the disclosed check and review limitations and explicitly authorized final correction, audit, and merge of pull request #2 on 2026-07-25.
 
 ## 10. Exact next action
 
-Before any merge, retrieve pull request #2's live head, check state, and review state; report the exact evidence and missing independent review coverage to BurinSN; then obtain a fresh explicit decision for pull request #2.
+Resolve the transition from live state:
 
-Do not merge without fresh explicit BurinSN approval for that pull request.
+- If pull request #2 is open, verify its exact head, lifecycle workflow, review objects, mergeability, and complete base diff; post the audit evidence; then squash-merge under the recorded BurinSN authority.
+- If pull request #2 is merged, verify `main`, issue #1 closure, and remote/local branch cleanup; then create the architecture and application-scaffolding issue as the next governed slice.
+
+Do not begin application scaffolding before the issue #1 merge and cleanup are verified.

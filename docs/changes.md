@@ -135,3 +135,36 @@ A session with no material change does not invent an entry. A session that makes
   - No application architecture, scaffolding, provider contact, payment, logistics integration, deployment, or product-scope change is included.
 - Follow-up:
   - Push the final lifecycle-state update, verify the rerun on the live PR head, disclose the missing independent review coverage, and request BurinSN merge approval.
+
+## 2026-07-25 11:09 WIB - Final merge authority and volatile-state correction
+
+- Issue / PR: Issue #1; pull request #2
+- Product: NitipCuy
+- Type: Documentation correction and merge authorization
+- Status: Authorized; exact-head audit and merge pending
+- Objective:
+  - Remove the last transient external-state claims and finish the issue #1 governance change under explicit BurinSN authority.
+- Scope:
+  - All four lifecycle documents and pull request #2 metadata.
+- Changes:
+  - Replaced stale `pending` and `not yet verified` language with a durable rule requiring live GitHub verification.
+  - Kept immutable checkpoints as timestamped evidence rather than presenting them as the current branch head.
+  - Added a conditional handoff transition that remains correct before and after merge.
+  - Recorded BurinSN authorization for final correction, audit, comments, merge, issue handling, and branch cleanup.
+  - Preserved the platform-first roadmap and every accepted product boundary without change.
+- Impact:
+  - Future sessions cannot confuse a tracked documentation snapshot with live PR, CI, review, or merge state.
+  - The issue #1 transition can complete without making the handoff stale solely because GitHub state changes after commit.
+- Validation:
+  - Before this correction, pull request #2 head `d33e158bf5a73395a9efb1f4f7b8f4583f0252b9` was clean, open, and mergeable.
+  - The lifecycle workflow passed on that head.
+  - CodeRabbit had no review object or findings because its review was rate-limited.
+  - Product alignment hostile review found no drift.
+- Documentation:
+  - Updated `handoff.md`, `docs/changes.md`, `docs/roadmap.md`, and `docs/learning.md`.
+- Residual risks / exclusions:
+  - Branch protection remains unavailable for the private repository on the current GitHub plan.
+  - No independent automated review coverage is available for this PR.
+  - Application architecture, scaffolding, providers, payments, deployment, and product scope remain excluded.
+- Follow-up:
+  - Push the corrected head, wait for its lifecycle workflow, perform and post the final audit, squash-merge pull request #2, verify issue closure and `main`, and clean up the branch.

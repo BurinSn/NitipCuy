@@ -1,10 +1,10 @@
 # NitipCuy Canonical Roadmap
 
-Last reviewed: 2026-07-25 07:50 WIB
+Last reviewed: 2026-07-25 11:09 WIB
 
 Current stage: Stage 1 - Platform foundation
 
-Current work item: Issue #1 - lifecycle documentation governance
+Current work item: Issue #1 merge transition; architecture and application scaffolding next
 
 ## 1. Role, authority, and freshness contract
 
@@ -113,9 +113,11 @@ Status: In progress
 - [x] Local lifecycle freshness check passes.
 - [x] Pull request #2 opened against `main`.
 - [x] Pull-request lifecycle workflow demonstrated a passing run.
-- [ ] Pull-request check result is manually enforced because private branch protection is unavailable on the current GitHub plan.
-- [ ] Independent review coverage obtained or its absence explicitly accepted by BurinSN.
-- [ ] Issue #1 pull request is reviewed and receives explicit BurinSN merge approval.
+- [x] Pull-request check result is manually enforced because private branch protection is unavailable on the current GitHub plan.
+- [x] Missing independent CodeRabbit review coverage disclosed to BurinSN.
+- [x] BurinSN explicitly authorized final correction, exact-head audit, and merge of pull request #2.
+
+Pull-request merge state is volatile and must be verified live. Once pull request #2 is confirmed merged and issue #1 is closed, the next slice below becomes current without changing the accepted roadmap order.
 
 ### Next slice
 
@@ -219,7 +221,7 @@ The unresolved DOKU, logistics, policy, legal, and pilot items listed in Stage 3
 
 ### Now
 
-Verify pull request #2 checks on its final live head, disclose that CodeRabbit was rate-limited and provided no independent review, and obtain explicit BurinSN merge approval.
+If pull request #2 remains open, complete its exact-head audit and authorized merge. If it is merged, verify `main`, issue closure, and branch cleanup, then start the next slice.
 
 ### Next
 

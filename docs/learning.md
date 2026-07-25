@@ -197,3 +197,27 @@ Do not present inference, provider marketing, provisional pricing, or a future i
 - Never expand or reconstruct an abbreviated immutable identifier. Copy direct verification output.
 - Never call an integration status independent review coverage without a real review object or findings.
 - Avoid self-referential lifecycle claims that become stale by the act of committing them.
+
+## 2026-07-25 11:09 WIB - Durable treatment of volatile GitHub state
+
+### Corrected
+
+- `Pending` and `not yet verified` are unsafe permanent wording for PR checks recorded in a tracked handoff.
+  - Supersedes: the transient final-check wording found during the second hostile review.
+  - Impact: PR head, checks, reviews, mergeability, and issue state must be retrieved live before action.
+- A historical checkpoint may be recorded, but it must be labeled as timestamped evidence rather than current truth.
+  - Supersedes: any attempt to keep a tracked handoff synchronized with its own containing commit SHA.
+  - Impact: use conditional transition instructions that remain correct when external state changes.
+
+### Accepted
+
+- BurinSN explicitly authorized the final issue #1 correction, audit, PR handling, merge, issue handling, and branch cleanup after the missing independent review coverage and branch-protection limitation were disclosed.
+
+### Reusable learning
+
+- Stable lifecycle instructions describe how to resolve volatile state, not what a fast-changing external status happened to be seconds before commit.
+- A merge handoff can remain current across the transition by defining both branches: what to do if the PR is still open and what to do if it is already merged.
+
+### No new domain learning
+
+- This correction changes documentation governance only. It does not change the jastip, fee, payment, logistics, moderation, delivery, or platform-first product model.
