@@ -1,6 +1,6 @@
 # NitipCuy Cross-Session Handoff
 
-Last updated: 2026-07-25 07:47 WIB
+Last updated: 2026-07-25 07:48 WIB
 
 Handoff owner: Codex
 
@@ -96,7 +96,9 @@ Build the platform first.
 | Verified `main` base | `6fe622733bdf457448ed0e8670ff5249ce3ca6fe` |
 | Active issue | `#1 Harden lifecycle documentation against stale state and product drift` |
 | Active branch | `docs/1-lifecycle-governance` |
-| Pull request | Not created yet |
+| Verified branch head | `db936aa94c525b8eeb2d48a20cf752eaac1dd419` |
+| Pull request | `#2 docs: enforce lifecycle documentation freshness` |
+| Pull-request checks | Lifecycle workflow pending; CodeRabbit pending |
 | Merge authority | Not granted |
 | Branch protection | Unavailable for this private repository on the current GitHub plan |
 | Deployment | None |
@@ -181,8 +183,9 @@ Verified:
 Not yet verified for issue #1:
 
 - pull-request CI behavior;
-- committed branch head;
-- pull request and review state.
+- CodeRabbit review outcome;
+- final pull-request check state;
+- BurinSN merge decision.
 
 Verified for issue #1:
 
@@ -193,9 +196,12 @@ Verified for issue #1:
 - lifecycle authority, product-boundary, provider-boundary, Threads-sequencing, and historical-versus-current contradiction review passed;
 - branch-protection API returned `403`, so a green lifecycle check must be manually enforced as a merge policy.
 - `shellcheck` and `actionlint` were unavailable locally and were not claimed.
+- branch `docs/1-lifecycle-governance` was committed and pushed at `db936aa94c525b8eeb2d48a20cf752eaac1dd419`;
+- pull request #2 was opened against `main`;
+- the lifecycle workflow and CodeRabbit review are pending.
 
 ## 10. Exact next action
 
-Finish the four-document rewrite and lifecycle enforcement, run the full documentation and secret-safe verification set, commit and push `docs/1-lifecycle-governance`, open a pull request linked to issue #1, then update this handoff with the immutable branch head, pull-request number, checks, findings, and merge boundary.
+Wait for pull request #2's lifecycle workflow and CodeRabbit review to finish. Reconcile any findings, rerun the full local verification set, and report the exact immutable head and check state to BurinSN.
 
 Do not merge without fresh explicit BurinSN approval for that pull request.

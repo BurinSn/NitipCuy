@@ -149,3 +149,28 @@ Do not present inference, provider marketing, provisional pricing, or a future i
 
 - Detailed Threads market-pattern research remains valuable after a demonstrable platform exists.
 - Provider commercial outreach remains deferred until BurinSN separately approves external contact.
+
+## 2026-07-25 07:48 WIB - Lifecycle pull-request state
+
+### Verified
+
+- Issue #1 work was committed and pushed at `db936aa94c525b8eeb2d48a20cf752eaac1dd419`.
+  - Evidence: local and remote branch state.
+  - Impact: pull request #2 now provides the review and CI boundary for the governance change.
+- The lifecycle workflow and CodeRabbit review began automatically when pull request #2 opened.
+  - Evidence: GitHub pull-request checks at 07:48 WIB.
+  - Impact: their pending state is not approval and must be reconciled before any merge request.
+
+### Reusable learning
+
+- Creating or updating a pull request changes operational truth even when product behavior does not change. All four lifecycle documents still require a truthful update under the accepted rule.
+
+### Failed approach
+
+- An unverified expanded SHA was drafted from the real abbreviated commit and caught before commit.
+  - Evidence: direct `git rev-parse HEAD` returned `db936aa94c525b8eeb2d48a20cf752eaac1dd419`.
+  - Impact: immutable identifiers must always be copied from direct verification output, never expanded, inferred, or reconstructed.
+
+### No new domain learning
+
+- This state transition introduced no new jastip, payment, logistics, moderation, or commercial-model learning.
