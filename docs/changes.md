@@ -1,6 +1,57 @@
 # NitipCuy Changes
 
-This file is append-only.
+## 1. Role, authority, and freshness contract
+
+This is the append-only material-change history. It answers:
+
+- What changed?
+- Why did it change?
+- What product, technical, security, operational, or documentation impact resulted?
+- What was actually verified?
+- What remained partial, blocked, or unverified at that time?
+
+Historical entries remain truthful to the time they were written. Their old status, follow-up, branch, commit, or verification must never be used as current state. Use `handoff.md` for live operational truth and `docs/roadmap.md` for current stage, sequencing, gates, and upcoming work.
+
+Never delete or silently rewrite a merged historical entry to make the project appear cleaner. Correct it with a newer dated entry that identifies what it supersedes.
+
+## 2. Mandatory update contract
+
+Every material session must append one entry before completion, including documentation-only, planning, security, dependency, configuration, schema, provider, workflow, or governance work.
+
+An entry must record:
+
+- Asia/Jakarta date and time;
+- issue and pull request when applicable;
+- product or surface;
+- change type and status;
+- objective and bounded scope;
+- concrete changes;
+- user or business impact;
+- verification commands and exact results;
+- all lifecycle and specialist documents updated;
+- residual risks, exclusions, and unverified claims;
+- exact follow-up.
+
+A session with no material change does not invent an entry. A session that makes a material change is incomplete while this file is stale.
+
+## 3. Entry template
+
+```markdown
+## YYYY-MM-DD HH:MM WIB - Short factual title
+
+- Issue / PR:
+- Product:
+- Type:
+- Status: Complete | Partial | Blocked | Prepared, pending merge
+- Objective:
+- Scope:
+- Changes:
+- Impact:
+- Validation:
+- Documentation:
+- Residual risks / exclusions:
+- Follow-up:
+```
 
 ## 2026-07-25 - Product planning baseline created
 
@@ -43,3 +94,173 @@ This file is append-only.
   - GitHub reported the canonical repository as private, unarchived, and using `main`.
 - Follow-up:
   - Open the first architecture and application-scaffolding issue.
+
+## 2026-07-25 07:40 WIB - Lifecycle documentation governance hardened
+
+- Issue / PR: Issue #1; pull request #2
+- Product: NitipCuy
+- Type: Documentation governance and drift prevention
+- Status: Prepared and pushed; pull request checks and approval pending
+- Objective:
+  - Make the four lifecycle documents authoritative, current, non-overlapping, and enforceable for future sessions.
+- Scope:
+  - `handoff.md`, `docs/changes.md`, `docs/roadmap.md`, `docs/learning.md`, contributor rules, pull-request governance, and lifecycle freshness checks.
+- Changes:
+  - Assigned one explicit role and authority boundary to each lifecycle document.
+  - Added mandatory update triggers, reading rules, stale-state stop conditions, and historical-entry interpretation rules.
+  - Pinned the product compass, non-goals, platform-first sequence, provider-independent boundary, launch gates, and exact next platform slice.
+  - Corrected the distinction between the first baseline commit and current repository state.
+  - Made deferred Threads research explicit so it cannot reappear as a platform-build gate.
+  - Added a fail-closed lifecycle file-presence check for local and pull-request use.
+- Impact:
+  - Future sessions have a deterministic resume path and cannot truthfully declare material work complete while any of the four lifecycle documents is omitted.
+  - Historical records remain auditable without competing with current-state authority.
+- Validation:
+  - `scripts/check-lifecycle-docs.sh origin/main` passed.
+  - `bash -n scripts/check-lifecycle-docs.sh` passed.
+  - Workflow YAML parsed successfully.
+  - Internal Markdown links, `git diff --check`, naming and placeholder scan, and credential-pattern scan passed.
+  - GitHub branch-protection query returned `403`: private-repository branch protection requires a higher plan or public visibility.
+  - `shellcheck` and `actionlint` are unavailable locally; their specialist validation was not claimed.
+  - Branch head `db936aa94c525b8eeb2d48a20cf752eaac1dd419` was pushed and pull request #2 was opened against `main`.
+  - Lifecycle workflow and CodeRabbit review were pending at 07:48 WIB.
+  - Follow-up checkpoint `d31b39bbbf7cf70d5e48c38ec8f58c49f187f619` was pushed.
+  - Lifecycle workflow passed at that checkpoint.
+  - CodeRabbit reported pass because its review was rate-limited; it provided no independent review coverage.
+- Documentation:
+  - Updated all four lifecycle documents plus `AGENTS.md` and the pull-request template.
+- Residual risks / exclusions:
+  - File-presence automation proves that all four documents changed, not that their content is correct. Human hostile review remains mandatory.
+  - GitHub cannot technically require the lifecycle check on the current private-repository plan. A green check is enforced by project policy and explicit merge approval.
+  - No application architecture, scaffolding, provider contact, payment, logistics integration, deployment, or product-scope change is included.
+- Follow-up:
+  - Push the final lifecycle-state update, verify the rerun on the live PR head, disclose the missing independent review coverage, and request BurinSN merge approval.
+
+## 2026-07-25 11:09 WIB - Final merge authority and volatile-state correction
+
+- Issue / PR: Issue #1; pull request #2
+- Product: NitipCuy
+- Type: Documentation correction and merge authorization
+- Status: Authorized; exact-head audit and merge pending
+- Objective:
+  - Remove the last transient external-state claims and finish the issue #1 governance change under explicit BurinSN authority.
+- Scope:
+  - All four lifecycle documents and pull request #2 metadata.
+- Changes:
+  - Replaced stale `pending` and `not yet verified` language with a durable rule requiring live GitHub verification.
+  - Kept immutable checkpoints as timestamped evidence rather than presenting them as the current branch head.
+  - Added a conditional handoff transition that remains correct before and after merge.
+  - Recorded BurinSN authorization for final correction, audit, comments, merge, issue handling, and branch cleanup.
+  - Preserved the platform-first roadmap and every accepted product boundary without change.
+- Impact:
+  - Future sessions cannot confuse a tracked documentation snapshot with live PR, CI, review, or merge state.
+  - The issue #1 transition can complete without making the handoff stale solely because GitHub state changes after commit.
+- Validation:
+  - Before this correction, pull request #2 head `d33e158bf5a73395a9efb1f4f7b8f4583f0252b9` was clean, open, and mergeable.
+  - The lifecycle workflow passed on that head.
+  - CodeRabbit had no review object or findings because its review was rate-limited.
+  - Product alignment hostile review found no drift.
+- Documentation:
+  - Updated `handoff.md`, `docs/changes.md`, `docs/roadmap.md`, and `docs/learning.md`.
+- Residual risks / exclusions:
+  - Branch protection remains unavailable for the private repository on the current GitHub plan.
+  - No independent automated review coverage is available for this PR.
+  - Application architecture, scaffolding, providers, payments, deployment, and product scope remain excluded.
+- Follow-up:
+  - Push the corrected head, wait for its lifecycle workflow, perform and post the final audit, squash-merge pull request #2, verify issue closure and `main`, and clean up the branch.
+
+## 2026-07-25 11:14 WIB - Lifecycle workflow context handling hardened
+
+- Issue / PR: Issue #1; pull request #2
+- Product: NitipCuy
+- Type: Workflow security correction
+- Status: Prepared; exact-head workflow and merge pending
+- Objective:
+  - Remove direct GitHub-context interpolation from the lifecycle workflow before merge.
+- Scope:
+  - Pull-request lifecycle workflow and all four mandatory lifecycle documents.
+- Changes:
+  - Moved `github.base_ref` into a step environment variable.
+  - Passed the resulting base ref to the shell script through a quoted shell variable.
+  - Preserved the pull-request-only trigger, read-only repository permission, full-history checkout, and existing lifecycle check.
+  - Refreshed all four lifecycle documents without changing product scope or roadmap order.
+- Impact:
+  - GitHub context data no longer appears directly inside the generated shell command.
+  - The workflow remains functionally identical for pull requests against `main`.
+- Validation:
+  - Pre-correction pull-request head `7491442a9db85c33e7bcda3967783c35cc699b0b` was clean and mergeable.
+  - Lifecycle workflow run `30143630722` passed on that exact head.
+  - Full-diff audit identified the interpolation risk before merge.
+  - Local lifecycle, shell syntax, workflow YAML, direct-context-interpolation, formatting, link, naming, placeholder, credential-pattern, and product-alignment checks passed after the correction.
+- Documentation:
+  - Updated `handoff.md`, `docs/changes.md`, `docs/roadmap.md`, and `docs/learning.md`.
+- Residual risks / exclusions:
+  - A fresh pull-request workflow must pass on the corrected exact head.
+  - CodeRabbit has no review object or independent findings for this pull request.
+  - Application architecture, scaffolding, providers, payments, deployment, and product scope remain excluded.
+- Follow-up:
+  - Commit and push the correction, wait for exact-head checks, repeat the final audit, post evidence, and squash-merge under the recorded BurinSN authority.
+
+## 2026-07-25 11:17 WIB - Workflow action pinned to immutable commit
+
+- Issue / PR: Issue #1; pull request #2
+- Product: NitipCuy
+- Type: Workflow supply-chain hardening
+- Status: Prepared; exact-head workflow and merge pending
+- Objective:
+  - Remove the final moving third-party action reference before merge.
+- Scope:
+  - Pull-request lifecycle workflow and all four mandatory lifecycle documents.
+- Changes:
+  - Replaced `actions/checkout@v4` with verified immutable commit `11d5960a326750d5838078e36cf38b85af677262`.
+  - Kept a `v4` comment for maintainability.
+  - Preserved the pull-request trigger, read-only permission, full-history checkout, environment-based base-ref transport, and lifecycle check.
+  - Refreshed all four lifecycle documents without changing product scope or roadmap order.
+- Impact:
+  - The workflow no longer trusts a mutable action tag at execution time.
+  - Future checkout upgrades must be deliberate, reviewed commit changes.
+- Validation:
+  - GitHub API resolved official `actions/checkout` tag `v4` to commit `11d5960a326750d5838078e36cf38b85af677262`.
+  - GitHub reports that commit as verified.
+  - Pre-correction pull-request head `22f5291ba030159fca6d33fab89fde946e8986c3` passed lifecycle workflow run `30143723423`.
+  - Local lifecycle, shell syntax, workflow YAML, immutable-action-reference, formatting, link, naming, placeholder, credential-pattern, and product-alignment checks passed after the pin.
+- Documentation:
+  - Updated `handoff.md`, `docs/changes.md`, `docs/roadmap.md`, and `docs/learning.md`.
+- Residual risks / exclusions:
+  - A fresh pull-request workflow must pass on the pinned exact head.
+  - CodeRabbit has no review object or independent findings for this pull request.
+  - Application architecture, scaffolding, providers, payments, deployment, and product scope remain excluded.
+- Follow-up:
+  - Validate, commit, and push the pin; wait for exact-head checks; post the final audit; and squash-merge under recorded BurinSN authority.
+
+## 2026-07-25 11:18 WIB - Deprecated checkout runtime upgraded
+
+- Issue / PR: Issue #1; pull request #2
+- Product: NitipCuy
+- Type: Workflow compatibility and supply-chain correction
+- Status: Prepared; exact-head workflow and merge pending
+- Objective:
+  - Remove the checkout v4 Node.js 20 deprecation warning surfaced by the hosted runner.
+- Scope:
+  - Pull-request lifecycle workflow and all four mandatory lifecycle documents.
+- Changes:
+  - Upgraded from checkout v4 to official latest release v7.0.1.
+  - Pinned v7.0.1 to verified immutable commit `3d3c42e5aac5ba805825da76410c181273ba90b1`.
+  - Preserved the pull-request trigger, read-only permission, full-history checkout, environment-based base-ref transport, and lifecycle check.
+  - Refreshed all four lifecycle documents without changing product scope or roadmap order.
+- Impact:
+  - The workflow no longer depends on checkout v4's deprecated Node.js 20 runtime.
+  - The dependency remains immutable and future updates remain explicit.
+- Validation:
+  - Lifecycle workflow run `30143787972` passed on pre-correction head `f2c9800e1788b510bd5ed2d9537040ea0680f56d` but emitted the Node.js 20 deprecation warning.
+  - GitHub API reported v7.0.1 as the latest official `actions/checkout` release, published 2026-07-20.
+  - GitHub reports commit `3d3c42e5aac5ba805825da76410c181273ba90b1` as verified.
+  - Local lifecycle, shell syntax, workflow YAML, immutable-action-reference, direct-context-interpolation, formatting, link, naming, placeholder, credential-pattern, and product-alignment checks passed after the upgrade.
+- Documentation:
+  - Updated `handoff.md`, `docs/changes.md`, `docs/roadmap.md`, and `docs/learning.md`.
+- Residual risks / exclusions:
+  - A fresh pull-request workflow must pass without the checkout v4 warning on the corrected exact head.
+  - CodeRabbit has no review object or independent findings for this pull request.
+  - Application architecture, scaffolding, providers, payments, deployment, and product scope remain excluded.
+- Follow-up:
+  - Validate, commit, and push the upgrade; confirm an annotation-free exact-head run; post the final audit; and squash-merge under recorded BurinSN authority.

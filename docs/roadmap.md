@@ -1,61 +1,135 @@
 # NitipCuy Canonical Roadmap
 
-Last updated: 2026-07-25 07:32 WIB
+Last reviewed: 2026-07-25 11:18 WIB
 
 Current stage: Stage 1 - Platform foundation
 
-Implementation status: Repository baseline complete; architecture and application scaffolding next
+Current work item: Issue #1 merge transition; architecture and application scaffolding next
 
-## 1. Accepted foundation
+## 1. Role, authority, and freshness contract
 
-- Standalone BurinSN product named NitipCuy.
-- Two service modes: Shop for me and Carry my item.
-- Trip-first destination and timeline discovery.
-- Seller-defined rates, capacity, minimums, maximums, and delivery terms.
-- Public listing discussion plus private order communication.
-- Private address captured before paid commitment.
-- Self-pickup QR with OTP fallback and third-party logistics evidence.
-- Verified seller identity and bank account.
-- Transaction-only reputation.
-- Active risk scanning with severity-based enforcement and appeals.
-- No subscriptions.
-- Provisional 3 percent platform protection fee, minimum Rp15,000 and maximum Rp100,000.
-- DOKU as conditional preferred payment provider.
-- QRIS and selected VA as preferred MVP payment rails.
+This is the single authority for:
 
-## 2. Stage 0 - Product foundation
+- product delivery sequence;
+- current stage and stage status;
+- completed, current, next, and later work;
+- entry and exit gates;
+- launch blockers versus build blockers;
+- roadmap-level dependencies and deliberate deferrals.
+
+This file is not an operational handoff and not a change log. Branches, pull requests, exact current commits, and session verification belong in `handoff.md`. Historical material changes belong in `docs/changes.md`. Reusable discoveries and corrected assumptions belong in `docs/learning.md`.
+
+Update this file during every material session, even when scope and order do not change. At minimum, refresh the review timestamp, current work item, affected checklist state, gate evidence, and exact next work. If the roadmap remains unchanged, say so in the corresponding `docs/changes.md` entry.
+
+The roadmap is stale when checked work lacks evidence, the current work item disagrees with GitHub or the handoff, blockers are assigned to the wrong stage, or completed and upcoming work are mixed.
+
+## 2. Product north star
+
+NitipCuy makes jastip activity searchable, explicit, evidence-backed, and safer without turning BurinSN into the merchant for every item.
+
+The product must let:
+
+- a jastipper publish where and when they are travelling, what they can buy or carry, remaining capacity, their own rates, deadlines, relevant location, and delivery terms;
+- a customer find a suitable route, inspect products or submit a request, understand the full cost and delivery method, transact through the platform, follow evidence, dispute when necessary, and review a completed transaction;
+- reusable questions remain public on the relevant trip, listing, or request, while private details remain private;
+- both parties use either Shop for me or Carry my item through one authoritative order, evidence, payment, moderation, and reputation system.
+
+The master product specification and accepted ADRs control detailed product behavior.
+
+## 3. Non-negotiable boundaries
+
+1. NitipCuy is a standalone BurinSN product, separate from BCN.
+2. The suffix is `Cuy`, not `Coy`.
+3. The two primary services are Shop for me and Carry my item.
+4. Jastippers set their own rates and commercial terms.
+5. NitipCuy earns a disclosed transaction protection fee, not subscriptions.
+6. The provisional fee is 3 percent, minimum Rp15,000 and maximum Rp100,000, pending provider and pilot economics.
+7. Public discussion complements, but does not replace, private order communication.
+8. Address, delivery method, cost basis, deadlines, and evidence terms are visible before paid commitment.
+9. Protected reviews require completed platform transactions.
+10. Trust and safety covers identity, scanning, evidence, enforcement, appeals, disputes, and reconciliation.
+11. Severe prohibited conduct can receive immediate takedown and suspension.
+12. NitipCuy is not designed as the cross-border merchant, importer, customs broker, carrier, or legal seller of jastipper goods.
+13. Core domain behavior remains independent of DOKU, Biteship, or another provider.
+14. No external-provider unknown blocks building with mock provider ports.
+15. Threads is a later acquisition and feedback channel, not a prerequisite for platform development.
+
+## 4. Drift alarms
+
+Stop and require a new impact analysis and BurinSN decision if work attempts to:
+
+- merge NitipCuy into BCN;
+- replace `Cuy` with `Coy`;
+- remove either primary service mode;
+- make NitipCuy set a universal jastip or kilogram rate;
+- introduce subscriptions, paid boosts, or advertising as an assumed revenue requirement;
+- make private addresses or identity records public;
+- allow unprotected off-platform transactions to receive protected status or verified reviews;
+- replace public reusable discussion with private chat only;
+- weaken evidence, moderation, reconciliation, dispute, or appeal requirements;
+- hard-code DOKU or Biteship behavior into the core domain;
+- move real money before provider, legal, policy, security, and operational gates pass;
+- delay platform development merely to collect more Threads examples;
+- claim T&C removes all platform duties after known illegal or harmful activity.
+
+## 5. Delivery strategy
+
+```text
+product foundation
+  -> platform foundation
+  -> core marketplace MVP using mock providers
+  -> real provider integration and closed pilot
+  -> public beta and Threads acquisition
+```
+
+Build platform behavior and provider-independent contracts before production integrations. Validate with real users when there is enough product to demonstrate and measure.
+
+## 6. Stage 0 - Product and repository foundation
 
 Status: Complete
-
-Completed:
 
 - [x] Product boundary and commercial ADR.
 - [x] Master product specification.
 - [x] Initial order lifecycle.
-- [x] Initial trust-and-safety enforcement model.
+- [x] Trust-and-safety moderation model.
 - [x] DOKU public-documentation hostile review.
 - [x] DOKU conditional-preference ADR.
-- [x] Standalone project folder and lifecycle records.
-- [x] Canonical private GitHub repository created under BurinSn.
+- [x] Standalone local folder.
+- [x] Private `BurinSn/NitipCuy` repository with `main`.
+- [x] Initial Git and pull-request governance.
 
-Threads research is not a platform-build prerequisite. The existing market evidence is sufficient to begin building. Threads moves to public-beta acquisition, promotion, and continuous product feedback.
+Exit evidence:
 
-## 3. Stage 1 - Platform foundation
+- initial baseline `70b4c96a0df486b70e626434338e0b20dec7df1f`;
+- repository-state record `6fe622733bdf457448ed0e8670ff5249ce3ca6fe`.
+
+## 7. Stage 1 - Platform foundation
 
 Status: In progress
 
-Deliverables:
+### Current slice
 
-- [x] Commit and push the initial documentation and governance baseline.
-- [ ] Select and document the web-first application architecture and deployment target.
-- [ ] Define the first end-to-end vertical slice and acceptance criteria.
-- [ ] Define core domain entities, permissions, state machines, and provider-independent ports.
-- [ ] Establish local development, quality, test, security, migration, and CI foundations.
-- [ ] Implement a working local platform shell using mock payment and logistics providers.
-- [ ] Produce customer and jastipper journey maps and the initial information architecture.
-- [ ] Produce the first visual direction and obtain BurinSN visual sign-off before production use.
+- [x] Issue #1 hardens all four lifecycle documents.
+- [x] Local lifecycle freshness check passes.
+- [x] Pull request #2 opened against `main`.
+- [x] Pull-request lifecycle workflow demonstrated a passing run.
+- [x] Pull-request check result is manually enforced because private branch protection is unavailable on the current GitHub plan.
+- [x] Missing independent CodeRabbit review coverage disclosed to BurinSN.
+- [x] BurinSN explicitly authorized final correction, exact-head audit, and merge of pull request #2.
+- [x] Lifecycle workflow base-ref input hardened against direct GitHub-context interpolation in shell.
+- [x] External workflow action upgraded to supported checkout v7.0.1 and pinned to a verified immutable commit.
 
-Recommended first vertical slice:
+Pull-request merge state is volatile and must be verified live. Once pull request #2 is confirmed merged and issue #1 is closed, the next slice below becomes current without changing the accepted roadmap order.
+
+### Next slice
+
+- [ ] Create the architecture and application-scaffolding issue.
+- [ ] Select and record the web-first stack and deployment target.
+- [ ] Select and record identity, authorization, database, and migration direction.
+- [ ] Define provider-independent payment and logistics ports.
+- [ ] Establish local development, formatting, linting, type, test, security, migration, build, and CI gates.
+- [ ] Scaffold a working local platform shell.
+- [ ] Implement the first vertical slice:
 
 ```text
 account
@@ -66,83 +140,95 @@ account
   -> public question and answer
 ```
 
-Exit gate:
+### Experience slice
 
-- The repository is healthy and the first vertical slice works locally with documented architecture, tests, and approved product behavior.
-
-## 4. Stage 2 - Core marketplace MVP
-
-Status: Pending Stage 1 exit
-
-Deliverables:
-
-- Shop for me and Carry my item requests;
-- seller acceptance, rate, capacity, deadline, address, and delivery disclosure;
-- private order communication;
-- order state machine and evidence collection;
-- mock protected payment, hold, release, split, refund, and reconciliation;
-- QR and OTP pickup;
-- mock third-party delivery tracking;
-- trust-and-safety scanning and moderation workflow;
-- disputes and transaction-only reviews;
-- administrator and support exception handling.
-
-Real funds and production logistics remain disabled. Mock provider ports let the marketplace be built and tested without waiting for DOKU or Biteship.
+- [ ] Produce customer and jastipper journey maps.
+- [ ] Define information architecture and responsive web behavior.
+- [ ] Create the first visual direction.
+- [ ] Obtain BurinSN visual sign-off before production use.
 
 Exit gate:
 
-- Both service modes complete end to end in a controlled environment, including moderation, evidence, dispute, refund, and reconciliation failure cases.
+- The repository is healthy and the first vertical slice works locally with documented architecture, tests, security boundaries, and approved product behavior.
 
-## 5. Stage 3 - Provider integration and closed pilot
+## 8. Stage 2 - Core marketplace MVP
 
-Status: Pending Stage 2 exit
+Status: Pending Stage 1
+
+- [ ] Shop for me request and fulfilment.
+- [ ] Carry my item request and fulfilment.
+- [ ] Seller acceptance, rates, capacity, deadlines, addresses, and delivery disclosure.
+- [ ] Private order communication.
+- [ ] Authoritative order state machine and evidence records.
+- [ ] Mock protected payment, hold, release, split, refund, chargeback, and reconciliation.
+- [ ] QR pickup with OTP fallback.
+- [ ] Mock logistics dispatch and tracking.
+- [ ] Risk scanning, moderation, enforcement, and appeals.
+- [ ] Disputes and transaction-only reviews.
+- [ ] Administrator and support exception handling.
+
+Real funds and production logistics remain disabled.
+
+Exit gate:
+
+- Both service modes complete end to end in a controlled environment, including evidence, moderation, dispute, refund, and reconciliation failure paths.
+
+## 9. Stage 3 - Provider integration and closed pilot
+
+Status: Pending Stage 2
 
 Required before real transactions:
 
-- written DOKU Partner/Aggregator approval and commercial terms;
-- confirmed Hold plus Split channel matrix, maximum hold, partial release, refund, reserve, and failure behavior;
-- Biteship or another approved logistics integration review;
-- route-aware prohibited and restricted-item taxonomy;
-- cancellation, refund, dispute, insurance, loss, damage, and provider-cost allocation matrix;
-- pilot route, category, value, weight, capacity, and participant boundaries;
-- legal, privacy, security, incident-response, and operational sign-off.
+- [ ] Written DOKU Partner/Aggregator approval and complete commercial terms.
+- [ ] Confirmed Hold plus Split channels, maximum hold, partial release, refund, reserve, and failure behavior.
+- [ ] Approved logistics provider, evidence, claims, and exception model.
+- [ ] Route-aware prohibited and restricted-item taxonomy.
+- [ ] Cancellation, refund, dispute, insurance, loss, damage, and provider-cost allocation matrix.
+- [ ] Pilot route, category, value, weight, capacity, and participant boundaries.
+- [ ] Legal, privacy, security, incident-response, support, reconciliation, and operational sign-off.
 
-Initial production rails remain QRIS and selected Virtual Accounts.
+Initial production payment rails remain QRIS and selected Virtual Accounts. Cards, PayLater, and convenience stores remain disabled until separately approved.
 
 Exit gate:
 
 - End-to-end money, evidence, support, moderation, reconciliation, recovery, and logistics work with bounded pilot users and low-risk real transactions.
 
-## 6. Stage 4 - Public beta and Threads acquisition
+## 10. Stage 4 - Public beta and Threads acquisition
 
-Status: Pending Stage 3 exit
+Status: Pending Stage 3
 
-Threads becomes a deliberate launch channel for:
+Threads is used to:
 
-- recruiting active jastippers;
-- advertising published trips and destinations;
-- collecting feature requests and workflow feedback;
-- publishing education and trust guidance;
-- directing transactions into NitipCuy instead of completing them in social replies or direct messages.
+- recruit active jastippers;
+- advertise real published trips and destinations;
+- collect feature requests and workflow feedback;
+- publish trust and safety education;
+- move transaction activity from social replies and direct messages into NitipCuy.
 
-Public beta also requires measured fraud, cancellation, refund, dispute, support, conversion, and settlement results; validated fee sustainability; tested incident response; and BurinSN product and visual approval.
+Public beta requires:
 
-## 7. Current blockers
+- measured conversion, fulfilment, cancellation, fraud, moderation, refund, dispute, support, and settlement results;
+- validated fee sustainability;
+- tested incident response and recovery;
+- stable provider and operational service levels;
+- BurinSN product and visual approval.
 
-There is no external blocker to repository setup, architecture, experience design, or building with mock providers.
+## 11. Current blockers
 
-The following block real-money pilot launch, not platform development:
+No external blocker prevents Stage 1 or Stage 2 work with mock providers.
 
-1. DOKU marketplace contract and custom fees.
-2. Maximum Hold duration, partial release, refund, reserve, and failure rules.
-3. Biteship or alternative logistics approval.
-4. Prohibited-item taxonomy and legal review.
-5. Cancellation, refund, loss, damage, insurance, and provider-cost policy.
-6. Pilot route and risk boundaries.
+The unresolved DOKU, logistics, policy, legal, and pilot items listed in Stage 3 block only real-money pilot activation.
 
-## 8. Exact next actions
+## 12. Now, next, and later
 
-1. Create the first hosted implementation issue for architecture and project scaffolding.
-2. Decide the web-first stack, deployment target, identity approach, database, and provider-port boundaries in an ADR.
-3. Scaffold the application and implement the first local vertical slice.
-4. Defer Threads acquisition research until the platform can demonstrate real trip discovery and collect useful feedback.
+### Now
+
+If pull request #2 remains open, complete its exact-head audit and authorized merge. If it is merged, verify `main`, issue closure, and branch cleanup, then start the next slice.
+
+### Next
+
+Open the architecture and application-scaffolding issue and implement the first vertical slice through the governed branch and pull-request workflow.
+
+### Later
+
+Complete the core marketplace with mock providers, integrate approved real providers, run a closed pilot, then use Threads for acquisition and continuous feedback.
