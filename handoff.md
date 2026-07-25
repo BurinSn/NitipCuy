@@ -1,6 +1,6 @@
 # NitipCuy Cross-Session Handoff
 
-Last updated: 2026-07-25 16:39 WIB
+Last updated: 2026-07-25 17:07 WIB
 
 Handoff owner: Codex
 
@@ -94,9 +94,10 @@ The shell is a functional architecture probe. It is not a production UI and has 
 | Active issue | [#3 Establish web architecture and application foundation](https://github.com/BurinSn/NitipCuy/issues/3) |
 | Active branch | `feat/3-architecture-foundation` |
 | Pull request | [#4 feat: establish application architecture foundation](https://github.com/BurinSn/NitipCuy/pull/4) |
-| Last audited pushed checkpoint | `7623526f1058d67f53ff82076330bc6c9f6afed0` |
-| Checks at that checkpoint | Lifecycle and application quality passed with no annotations |
+| Pre-correction audited pull-request head | `c4988a621f7303acca23e5e9f93534acaed226bc` |
+| Checks at that checkpoint | Application quality run `30153169698` and lifecycle run `30153169703` passed |
 | Independent review at that checkpoint | None; CodeRabbit reported success only because review was rate-limited and created no review object or findings |
+| First hostile-review correction | Domain invariant code, tests, and lifecycle truth locally validated; retrieve Git to determine its current commit and push state |
 | Live head, checks, reviews, and mergeability | Volatile; retrieve directly before any approval or merge action |
 | Merge authority | Not granted for issue #3; fresh BurinSN approval is required after exact-head evidence |
 | Branch protection | Unavailable for this private repository on the current GitHub plan |
@@ -107,7 +108,7 @@ The tracked handoff cannot contain its own final commit SHA. Copy immutable iden
 
 ## 6. Current work item
 
-Issue #3 owns the architecture and application-foundation slice.
+Issue #3 owns the architecture and application-foundation slice. A direct hostile review found material implementation and acceptance gaps after the original technical checks passed. Pull request #4 is therefore in corrective review and is not ready for merge.
 
 Implemented locally:
 
@@ -115,6 +116,8 @@ Implemented locally:
 - exact Node.js, pnpm, framework, compiler, lint, format, task, and test pins;
 - modular workspace packages for domain, application, adapters, and web delivery;
 - validated published-trip domain behavior, including origin-local departure date plus exact timezone-bearing departure timestamp;
+- strict runtime rejection of unsupported service modes, impossible calendar and clock values, invalid timezone offsets, and duplicate public-question IDs;
+- public-question sorting by actual instant across differing timezone offsets;
 - read-only trip discovery and detail use cases;
 - deterministic in-memory repository plus mock payment, logistics, identity-verification, evidence-storage, clock, identifier, transaction, audit, and outbox adapters with no external calls;
 - a local Indonesian web shell with explicit simulated-data and inactive-transaction notices;
@@ -136,15 +139,22 @@ Verified locally with Node.js `24.18.0` and pnpm `11.17.0`:
 
 - `pnpm peers check`: no peer-dependency issues;
 - `pnpm audit:prod`: no known production vulnerabilities after the explicit patched overrides;
-- `pnpm check`: format, lint, strict type checking, 13 unit tests, and production build passed;
+- `pnpm check`: format, lint, strict type checking, 18 unit tests, and production build passed on the reconciled domain-correction tree;
+- targeted domain type checking and 10 domain tests passed;
+- an exact-Node adversarial probe rejected `UNSUPPORTED`, rejected `2026-02-30`, and sorted the `+08:00` earlier instant before the `+07:00` later instant;
 - Next.js production routes built for `/`, `/_not-found`, and three generated `/trips/[tripId]` fixture paths;
 - production HTTP probe returned `200` for home, filtered search, and a known trip, `404` for an unknown trip, passed content assertions, and emitted no fallback error;
 - lifecycle, diff, workflow YAML, internal-link, credential-pattern, placeholder, dependency-direction, provider-SDK, unsafe-`any`, console, and source-network scans passed;
 - workflow action tags resolve to their pinned immutable commits and both commits are verified by GitHub;
 - no external service or production credential was required.
 
+The first direct full-gate attempt invoked pnpm `11.17.0` through Node `24.18.0`, but nested package-script calls resolved the ambient Node `26.0.0` and pnpm `9.15.0`; `engine-strict` correctly failed the attempt. Re-running through the exact `npx` Node and pnpm wrapper propagated the supported toolchain to child processes and passed. The failed attempt is not counted as verification success.
+
 Hostile-review corrections already made:
 
+- reject unsupported service modes at runtime rather than relying on a TypeScript union;
+- reject normalized impossible dates, invalid clock values, and invalid timezone offsets;
+- sort public questions by parsed instants and require unique question IDs;
 - rejected TypeScript 7 and ESLint 10 because the installed peer graph does not support them;
 - removed a hard-coded Jakarta-midnight comparison from the trip timeline;
 - compare Q&A timestamps as real instants across timezone offsets;
@@ -155,15 +165,28 @@ Hostile-review corrections already made:
 
 Still required before requesting merge:
 
-1. Commit and push this final review-state documentation checkpoint.
-2. Resolve the live head condition below without relying on the historical checkpoint.
-3. Ask BurinSN for fresh issue #3 merge approval only when the live condition permits it.
+1. Complete lifecycle reconciliation and final verification for the first domain correction.
+2. Commit and push that bounded correction to pull request #4 and verify exact-head checks.
+3. Resolve each remaining hostile-review finding through the same branch, one coherent correction at a time.
+4. Reconcile issue #3 and pull-request claims after the final correction.
+5. Ask BurinSN for fresh merge approval only when no material finding remains.
 
 Browser automation and visual approval were not performed and are not claimed.
 
 ## 8. Blockers and gates
 
-No external blocker prevents completing issue #3 or continuing later development with mocks.
+No external blocker prevents continuing provider-independent development with mocks.
+
+The following internal findings block issue #3 merge:
+
+1. the checked identity-to-domain-account acceptance claim is not implemented and must be corrected or explicitly deferred;
+2. package dependency direction has no automated enforcement against cross-package relative imports;
+3. the transaction port cannot bind repository, audit, ledger, and outbox changes to one enforceable transaction;
+4. the payment port collapses asynchronous payment initiation and reconciliation directly into `HELD`;
+5. payment, logistics, and evidence mocks ignore their idempotency keys;
+6. evidence storage trusts a caller-supplied hash and models raw buffered content without a quarantine or verification lifecycle;
+7. the public `PublishedTrip` projection is not yet clearly separated from the future authoritative Trip aggregate;
+8. lifecycle, issue, and pull-request claims require reconciliation after every correction.
 
 The following still block real-money pilot activation:
 
@@ -179,10 +202,9 @@ These are Stage 3 activation gates, not reasons to delay provider-independent pl
 
 ## 9. Exact next action
 
-Commit and push this review-state documentation checkpoint. Then retrieve pull request #4's live exact head, hosted checks, annotations, review objects, comments, findings, mergeability, and complete base diff.
+Retrieve the live branch and pull-request state. If the first domain correction is not committed and pushed, review, commit, and push it, then verify pull request #4 on that exact head. If it is pushed and the lifecycle and application-quality checks pass without material annotations, begin the identity-to-internal-account acceptance correction. Do not request merge approval because the remaining findings above are still open.
 
-- If lifecycle and application quality pass without material annotations, the PR is mergeable, no material finding remains, and the live head contains only the reviewed documentation-state update, post the final audit and request fresh BurinSN approval.
-- Otherwise, fix or explicitly disposition every material finding through the same branch and update all four lifecycle documents again.
+After the first correction is durably verified, the next bounded correction is the mismatch between issue #3's checked identity-to-domain-account acceptance claim and the deliberately deferred account implementation.
 
 Do not create another pull request.
 

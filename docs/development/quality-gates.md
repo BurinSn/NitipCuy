@@ -130,6 +130,9 @@ GitHub branch protection is unavailable for the current private repository plan.
 ## 7. Current limitations
 
 - The architecture probe has source, unit, production-build, and local HTTP runtime evidence.
+- Published-trip runtime validation now rejects unsupported service modes, impossible calendar and clock values, invalid timezone offsets, and duplicate question IDs; cross-offset public questions are sorted by instant.
+- Package dependency direction is still verified by review and manual scans; an automated boundary gate remains required.
+- Transaction, payment, logistics, evidence, audit, and outbox mocks remain provisional until their transaction, asynchronous-state, idempotency, and evidence-integrity findings are resolved.
 - No PostgreSQL adapter or integration test exists yet.
 - No browser automation exists yet.
 - No identity, provider, payment, logistics, or storage integration exists.

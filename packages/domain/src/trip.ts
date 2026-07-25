@@ -1,7 +1,11 @@
 const tripIdPattern = /^[a-z0-9][a-z0-9-]{2,63}$/;
 const dateOnlyPattern = /^\d{4}-\d{2}-\d{2}$/;
 const isoDateTimePattern =
-  /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2}(?:\.\d{3})?)?(Z|[+-]\d{2}:\d{2})$/;
+  /^(\d{4}-\d{2}-\d{2})T(\d{2}):(\d{2})(?::(\d{2})(?:\.(\d{3}))?)?(Z|([+-])(\d{2}):(\d{2}))$/;
+const supportedServiceModes = new Set<ServiceMode>([
+  "SHOP_FOR_ME",
+  "CARRY_MY_ITEM",
+]);
 
 declare const tripIdBrand: unique symbol;
 
@@ -104,9 +108,17 @@ export function createPublishedTrip(input: PublishedTrip): PublishedTrip {
     );
   }
 
-  if (input.serviceModes.length === 0) {
+  const serviceModes = [...new Set(input.serviceModes)];
+
+  if (serviceModes.length === 0) {
     throw new DomainValidationError(
       "A published trip must support at least one service mode.",
+    );
+  }
+
+  if (serviceModes.some((mode) => !supportedServiceModes.has(mode))) {
+    throw new DomainValidationError(
+      "A published trip contains an unsupported service mode.",
     );
   }
 
@@ -129,9 +141,24 @@ export function createPublishedTrip(input: PublishedTrip): PublishedTrip {
     throw new DomainValidationError("Rating summary is invalid.");
   }
 
-  const publicQuestions = [...input.publicQuestions]
-    .map((question) => normalizeQuestion(question))
-    .sort((left, right) => left.createdAt.localeCompare(right.createdAt));
+  const publicQuestions = [...input.publicQuestions].map((question) =>
+    normalizeQuestion(question),
+  );
+  const questionIds = new Set<string>();
+
+  for (const question of publicQuestions) {
+    if (questionIds.has(question.id)) {
+      throw new DomainValidationError(
+        "Public question IDs must be unique within a trip.",
+      );
+    }
+
+    questionIds.add(question.id);
+  }
+
+  publicQuestions.sort(
+    (left, right) => Date.parse(left.createdAt) - Date.parse(right.createdAt),
+  );
 
   return Object.freeze({
     ...input,
@@ -147,7 +174,7 @@ export function createPublishedTrip(input: PublishedTrip): PublishedTrip {
     ),
     deliverySummary: requireLabel(input.deliverySummary, "Delivery summary"),
     rateSummary: requireLabel(input.rateSummary, "Rate summary"),
-    serviceModes: Object.freeze([...new Set(input.serviceModes)]),
+    serviceModes: Object.freeze(serviceModes),
     rating: Object.freeze({ ...input.rating }),
     publicQuestions: Object.freeze(publicQuestions),
   });
@@ -201,10 +228,7 @@ function requireLabel(value: string, field: string): string {
 }
 
 function requireDateOnly(value: string, field: string): string {
-  if (
-    !dateOnlyPattern.test(value) ||
-    Number.isNaN(Date.parse(`${value}T00:00:00Z`))
-  ) {
+  if (!isValidDateOnly(value)) {
     throw new DomainValidationError(`${field} must be an ISO date.`);
   }
 
@@ -212,11 +236,63 @@ function requireDateOnly(value: string, field: string): string {
 }
 
 function requireIsoDateTime(value: string, field: string): string {
-  if (!isoDateTimePattern.test(value) || Number.isNaN(Date.parse(value))) {
+  const match = isoDateTimePattern.exec(value);
+
+  if (!match) {
+    throw new DomainValidationError(
+      `${field} must include an ISO date, time, and timezone.`,
+    );
+  }
+
+  const [
+    ,
+    date,
+    hourText,
+    minuteText,
+    secondText,
+    ,
+    timezone,
+    ,
+    offsetHourText,
+    offsetMinuteText,
+  ] = match;
+  const hour = Number(hourText);
+  const minute = Number(minuteText);
+  const second = Number(secondText ?? "0");
+  const offsetHour = Number(offsetHourText ?? "0");
+  const offsetMinute = Number(offsetMinuteText ?? "0");
+  const validOffset =
+    timezone === "Z" ||
+    (offsetHour <= 14 &&
+      offsetMinute <= 59 &&
+      (offsetHour < 14 || offsetMinute === 0));
+
+  if (
+    !date ||
+    !isValidDateOnly(date) ||
+    hour > 23 ||
+    minute > 59 ||
+    second > 59 ||
+    !validOffset ||
+    Number.isNaN(Date.parse(value))
+  ) {
     throw new DomainValidationError(
       `${field} must include an ISO date, time, and timezone.`,
     );
   }
 
   return value;
+}
+
+function isValidDateOnly(value: string): boolean {
+  if (!dateOnlyPattern.test(value)) {
+    return false;
+  }
+
+  const parsed = Date.parse(`${value}T00:00:00Z`);
+
+  return (
+    !Number.isNaN(parsed) &&
+    new Date(parsed).toISOString().slice(0, 10) === value
+  );
 }

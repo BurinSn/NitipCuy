@@ -1,10 +1,10 @@
 # NitipCuy Canonical Roadmap
 
-Last reviewed: 2026-07-25 16:39 WIB
+Last reviewed: 2026-07-25 17:07 WIB
 
 Current stage: Stage 1 - Platform foundation
 
-Current work item: Issue #3 architecture and application foundation; pull request #4 owner-evaluation gate
+Current work item: Issue #3 architecture-foundation remediation; first hostile-review correction for published-trip runtime invariants
 
 ## 1. Role, authority, and freshness contract
 
@@ -121,21 +121,36 @@ Status: In progress
 - [x] Issue #3 created with bounded acceptance and exclusions.
 - [x] Web-first stack, runtime, workspace shape, and deployment posture selected in ADR 0003.
 - [x] Identity, deny-by-default authorization, PostgreSQL, and migration direction recorded.
-- [x] Provider-independent payment, logistics, identity-verification, evidence-storage, clock, identifier, transaction, audit, and outbox ports implemented with deterministic mocks.
-- [x] Framework-free domain, application, adapter, and delivery boundaries established.
+- [x] Provider-independent payment, logistics, identity-verification, evidence-storage, clock, identifier, transaction, audit, and outbox interfaces and deterministic mocks exist.
+- [x] Framework-free domain, application, adapter, and delivery package layout established.
+- [ ] Mechanically enforce dependency direction; package manifests and TypeScript do not prevent cross-package relative imports.
 - [x] Local development, formatting, lint, strict type, unit test, build, audit, and PR-CI gates established.
 - [x] Working local shell implements public trip search, detail, and chronological public Q&A using simulated data.
-- [x] Exact-toolchain frozen install, peer, quality, production-audit, lifecycle, runtime, complete-diff, and security gates pass locally.
+- [x] Published-trip runtime invariants reject unsupported modes, impossible calendar and clock values, invalid offsets, and duplicate question IDs; cross-offset Q&A sorts by instant.
+- [x] Exact-toolchain frozen install, peer, quality, production-audit, lifecycle, runtime, complete-diff, and security gates passed for the original architecture checkpoint.
 - [x] Issue #3 branch is committed, pushed, and opened as pull request #4.
 - [ ] BurinSN gives fresh issue #3 merge approval after all evidence and findings are visible.
 
-The current architecture probe is deliberately public and read-only. It proves boundaries without prematurely combining identity selection, persistence, protected mutation, and UI behavior in one change.
+The current architecture probe is deliberately public and read-only. It demonstrates the intended package direction without prematurely combining identity selection, persistence, protected mutation, and UI behavior in one change. It is not merge-ready while the hostile-review remediation gate below remains open.
 
 Pull-request head, hosted checks, annotations, reviews, and mergeability are volatile. Retrieve them directly. A missing, pending, skipped, warned, or failed lifecycle or application-quality result blocks approval by project policy.
 
+### Hostile-review remediation gate
+
+- [x] Correct published-trip runtime date, timestamp, service-mode, question-identity, and cross-offset chronology invariants with adversarial tests.
+- [ ] Reconcile the checked identity-to-internal-account acceptance claim with the deliberately deferred account slice.
+- [ ] Add automated dependency-boundary enforcement.
+- [ ] Replace or defer the transaction abstraction so repository, audit, ledger, and outbox work can share one enforceable transaction.
+- [ ] Correct payment initiation, held-state, release, refund, and reconciliation contracts.
+- [ ] Enforce and contract-test idempotency.
+- [ ] Replace caller-trusted evidence hashes and buffered raw-upload assumptions with a server-authoritative evidence lifecycle.
+- [ ] Clarify the public published-trip projection versus the future authoritative Trip aggregate.
+- [ ] Reconcile all lifecycle, specialist, issue, and pull-request claims after the corrections.
+- [ ] Run final exact-toolchain, runtime, security, complete-diff, and hosted exact-head review.
+
 ### Next persisted vertical slice
 
-- [ ] Create the persisted marketplace-foundation issue after issue #3 is merged.
+- [ ] Create the persisted marketplace-foundation issue only after the remediation gate passes and issue #3 is merged.
 - [ ] Implement the first persisted vertical slice:
 
 ```text

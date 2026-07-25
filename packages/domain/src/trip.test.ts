@@ -5,6 +5,7 @@ import {
   createPublishedTrip,
   tripId,
   type PublishedTrip,
+  type ServiceMode,
 } from "./index";
 
 function validTrip(overrides: Partial<PublishedTrip> = {}): PublishedTrip {
@@ -52,6 +53,32 @@ describe("createPublishedTrip", () => {
     expect(trip.publicQuestions.map(({ id }) => id)).toEqual([
       "question-1",
       "question-2",
+    ]);
+  });
+
+  it("sorts public questions by instant across timezone offsets", () => {
+    const trip = createPublishedTrip(
+      validTrip({
+        publicQuestions: [
+          {
+            id: "question-later",
+            authorDisplayName: "Dina",
+            message: "This question happened later.",
+            createdAt: "2026-08-10T09:00:00+07:00",
+          },
+          {
+            id: "question-earlier",
+            authorDisplayName: "Bayu",
+            message: "This question happened earlier.",
+            createdAt: "2026-08-10T09:30:00+08:00",
+          },
+        ],
+      }),
+    );
+
+    expect(trip.publicQuestions.map(({ id }) => id)).toEqual([
+      "question-earlier",
+      "question-later",
     ]);
   });
 
@@ -108,5 +135,84 @@ describe("createPublishedTrip", () => {
         }),
       ),
     ).toThrow("Trip origin and destination must be different.");
+  });
+
+  it("rejects unsupported service modes at runtime", () => {
+    expect(() =>
+      createPublishedTrip(
+        validTrip({
+          serviceModes: ["UNSUPPORTED" as ServiceMode],
+        }),
+      ),
+    ).toThrow("A published trip contains an unsupported service mode.");
+  });
+
+  it("rejects impossible calendar dates", () => {
+    expect(() =>
+      createPublishedTrip(
+        validTrip({
+          departureDate: "2026-02-30",
+          departureAt: "2026-02-30T10:00:00+08:00",
+          requestDeadline: "2026-02-28T18:00:00+08:00",
+          estimatedArrivalAt: "2026-03-03T16:00:00+07:00",
+        }),
+      ),
+    ).toThrow("Departure date must be an ISO date.");
+  });
+
+  it("rejects impossible times and timezone offsets", () => {
+    expect(() =>
+      createPublishedTrip(
+        validTrip({
+          departureDate: "2026-03-02",
+          departureAt: "2026-02-30T10:00:00+08:00",
+        }),
+      ),
+    ).toThrow(
+      "Departure timestamp must include an ISO date, time, and timezone.",
+    );
+
+    expect(() =>
+      createPublishedTrip(
+        validTrip({
+          departureAt: "2026-08-20T24:00:00+08:00",
+        }),
+      ),
+    ).toThrow(
+      "Departure timestamp must include an ISO date, time, and timezone.",
+    );
+
+    expect(() =>
+      createPublishedTrip(
+        validTrip({
+          departureAt: "2026-08-20T10:00:00+14:30",
+        }),
+      ),
+    ).toThrow(
+      "Departure timestamp must include an ISO date, time, and timezone.",
+    );
+  });
+
+  it("rejects duplicate public question IDs within a trip", () => {
+    expect(() =>
+      createPublishedTrip(
+        validTrip({
+          publicQuestions: [
+            {
+              id: "question-duplicate",
+              authorDisplayName: "Dina",
+              message: "First question.",
+              createdAt: "2026-08-10T09:00:00+07:00",
+            },
+            {
+              id: "question-duplicate",
+              authorDisplayName: "Bayu",
+              message: "Second question.",
+              createdAt: "2026-08-10T10:00:00+07:00",
+            },
+          ],
+        }),
+      ),
+    ).toThrow("Public question IDs must be unique within a trip.");
   });
 });

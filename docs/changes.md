@@ -372,3 +372,42 @@ A session with no material change does not invent an entry. A session that makes
   - Browser automation, visual approval, provider compatibility, persistence, deployment, and real transactions remain excluded.
 - Follow-up:
   - Push this checkpoint; if the resulting head passes lifecycle and application quality without material annotations, remains mergeable, and introduces only the reviewed lifecycle update, post the final audit and request fresh BurinSN approval. Otherwise fix the live head.
+
+## 2026-07-25 17:07 WIB - Published-trip runtime invariants corrected
+
+- Issue / PR: Issue #3; pull request #4
+- Product: NitipCuy
+- Type: Domain correction, adversarial testing, architecture truth, and lifecycle reconciliation
+- Status: First hostile-review correction implemented and locally validated; commit, push, and hosted exact-head verification pending
+- Objective:
+  - Make the executable published-trip boundary enforce the supported service modes, calendar and timestamp validity, question identity, and chronological behavior already promised by the architecture.
+- Scope:
+  - `packages/domain/src/trip.ts`, its unit tests, all four lifecycle documents, system architecture, and quality limitations.
+- Changes:
+  - Added a runtime allowlist for Shop for me and Carry my item instead of relying on the TypeScript union.
+  - Added strict calendar, clock, and timezone-offset validation so normalized values such as `2026-02-30`, hour `24`, and offset `+14:30` are rejected.
+  - Sorted public questions by parsed instant across timezone offsets.
+  - Required public-question IDs to be unique within a trip.
+  - Added adversarial regression tests for each corrected behavior.
+  - Reopened the remaining identity, dependency-boundary, transaction, payment, idempotency, evidence, and projection findings as explicit issue #3 merge blockers.
+  - Corrected the architecture documentation so package direction is no longer described as mechanically enforced.
+- Impact:
+  - Runtime inputs from future delivery, persistence, or provider adapters cannot bypass these trip invariants merely because their compile-time type was asserted.
+  - Public discussion chronology now reflects actual time rather than lexical timestamp text.
+  - Pull request #4 remains unapproved and unmergeable by project policy while the other hostile-review findings remain open.
+- Validation:
+  - Exact Node.js `24.18.0` and pnpm `11.17.0` targeted domain type checking passed.
+  - All 10 domain tests passed; the workspace now has 18 passing unit tests.
+  - An exact-Node adversarial probe rejected `UNSUPPORTED`, rejected `2026-02-30`, and returned `question-earlier,question-later` for the cross-offset ordering case.
+  - Frozen install was already up to date and `pnpm peers check` found no peer issues.
+  - `pnpm check` passed formatting, lint, four-package strict type checking, 18 tests, and the production build through the exact toolchain wrapper.
+  - `pnpm audit:prod` reported no known production vulnerabilities.
+  - A first full-gate attempt failed correctly because nested package scripts resolved ambient Node `26.0.0` and pnpm `9.15.0`; it is recorded as a failed invocation and not counted as passing evidence.
+- Documentation:
+  - Updated `handoff.md`, `docs/changes.md`, `docs/roadmap.md`, `docs/learning.md`, `docs/architecture/system-architecture.md`, and `docs/development/quality-gates.md`.
+- Residual risks / exclusions:
+  - No persistence, account, protected mutation, provider integration, private data, payment movement, logistics booking, deployment, browser automation, or visual approval was added.
+  - Hosted checks do not cover the correction until it is committed and pushed.
+  - The remaining hostile-review findings still block merge.
+- Follow-up:
+  - Run the final lifecycle and diff gates on the reconciled tree, commit and push this bounded correction, verify pull request #4 on the new exact head, then address the identity-to-internal-account acceptance mismatch as the next correction.

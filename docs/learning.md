@@ -376,3 +376,37 @@ Do not present inference, provider marketing, provisional pricing, or a future i
 ### No new domain learning
 
 - Hosted verification changes evidence only. It does not change NitipCuy product, commercial, payment, logistics, moderation, delivery, or launch boundaries.
+
+## 2026-07-25 17:07 WIB - Runtime domain boundaries require adversarial proof
+
+### Verified
+
+- TypeScript unions do not validate delivery, persistence, or provider data at runtime.
+  - Evidence: `createPublishedTrip` accepted the runtime value `UNSUPPORTED` while the public type declared only Shop for me and Carry my item.
+  - Impact: security and business enums require runtime allowlists at the domain boundary.
+- `Date.parse` acceptance is not strict calendar validation.
+  - Evidence: Node.js `24.18.0` normalized `2026-02-30` and the previous domain accepted it.
+  - Impact: validate the date shape and round-trip the parsed UTC calendar value before accepting it.
+- Valid ISO timestamp strings cannot be sorted chronologically by lexical text when offsets differ.
+  - Evidence: `09:30+08:00` is an earlier instant than `09:00+07:00`, but the previous question sort placed it later.
+  - Impact: compare parsed instants and retain a cross-offset ordering regression test.
+- Public question identity is a trip-level invariant.
+  - Evidence: duplicate normalized question IDs were previously accepted and would also produce duplicate presentation keys.
+  - Impact: enforce uniqueness before freezing and exposing the public projection.
+
+### Corrected assumption
+
+- The earlier correction and learning covered answer-before-question validation across offsets but did not correct public-question sorting.
+  - Evidence: answer validation used parsed instants while the collection sort still used `localeCompare`.
+  - Impact: do not generalize one fixed timestamp comparison into a claim that every chronology path was corrected.
+
+### Failed approach
+
+- Invoking cached pnpm `11.17.0` through a Node `24.18.0` executable did not automatically propagate that toolchain into nested package-script commands.
+  - Evidence: the outer frozen install, peer check, and audit used the requested versions, while `pnpm check` resolved ambient Node `26.0.0` and pnpm `9.15.0` and failed `engine-strict`.
+  - Impact: run the full task graph through the exact Node and pnpm wrapper so child processes inherit the supported executable path; record the failed invocation separately.
+
+### Deferred
+
+- The correction does not resolve the identity mapping, dependency enforcement, transaction scope, payment lifecycle, idempotency, evidence integrity, or domain-versus-projection findings.
+- IANA trip timezone identity and viewer-facing timezone labels remain separate model and experience work.

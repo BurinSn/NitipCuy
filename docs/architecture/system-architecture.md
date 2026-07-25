@@ -1,6 +1,6 @@
 # NitipCuy System Architecture
 
-Status: Accepted foundation
+Status: Accepted direction; issue #3 implementation corrections in progress
 
 Last reviewed: 2026-07-25
 
@@ -76,7 +76,7 @@ Forbidden imports:
 - client components to server composition, database, secrets, private storage, provider SDKs, or application mutation internals;
 - provider callbacks directly to domain repositories or ledger tables.
 
-Package manifests and TypeScript compilation enforce the main direction. Architecture tests and review enforce the semantic direction.
+Package manifests constrain package-name dependencies, but they do not prevent cross-package relative imports. Review and manual scans currently enforce the direction. An automated architecture gate that covers relative, aliased, type-only, and dynamic imports remains required before issue #3 can merge.
 
 ## 4. Bounded contexts
 
@@ -187,7 +187,10 @@ Issue #3 implements one framework-free published-trip model with:
 - non-negative remaining capacity;
 - seller-defined rate and delivery summaries;
 - valid rating bounds;
-- public questions sorted oldest to newest.
+- public question IDs unique within a trip;
+- public questions sorted oldest to newest by their actual instants across timezone offsets.
+
+Date-only and timezone-bearing timestamp values receive strict runtime calendar, clock, and timezone-offset validation. TypeScript unions do not replace runtime validation for delivery, persistence, or provider inputs.
 
 The proof intentionally contains public simulated data only. It does not contain an account, address, private chat, payment, real seller, real review, or provider record.
 
@@ -331,6 +334,8 @@ Plain unit tests must exercise:
 - authorization denials;
 - state-transition conflicts.
 
+The domain invariant tests satisfy the published-trip validation and cross-offset chronology portion. Automated dependency-boundary enforcement and provider-adapter idempotency tests remain open issue #3 findings.
+
 Integration tests later exercise:
 
 - migrations and constraints on disposable PostgreSQL;
@@ -367,6 +372,8 @@ Implemented in issue #3:
 - chronological public questions and answers;
 - correct HTTP `404` behavior for unknown simulated trip paths;
 - PR quality workflow.
+
+The payment, logistics, evidence, transaction, audit, and outbox interfaces and mocks exist, but their transaction scoping, asynchronous state, idempotency, and evidence-integrity contracts remain under corrective review. Their existence is not evidence that those guarantees are implemented.
 
 Not implemented:
 
