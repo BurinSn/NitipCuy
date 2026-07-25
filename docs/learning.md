@@ -1,6 +1,58 @@
 # NitipCuy Learning
 
-This file is append-only.
+## 1. Role, authority, and freshness contract
+
+This is the append-only cumulative learning record. It preserves:
+
+- verified facts and their evidence;
+- accepted product or technical learning;
+- corrected assumptions;
+- failed approaches and why they failed;
+- reusable procedures;
+- open questions and deliberately deferred research.
+
+This file does not define current repository state, current work, or roadmap order. Use `handoff.md` for current operational truth and `docs/roadmap.md` for current sequence and gates.
+
+Read from oldest to newest. When entries conflict, the newest evidence-backed correction wins. Do not delete an old learning to hide a mistake. Add a newer entry that identifies what it supersedes.
+
+## 2. Mandatory update contract
+
+Every material session must append:
+
+- new verified learning;
+- a correction to an earlier assumption;
+- a failed approach and its lesson;
+- a newly opened, resolved, or deferred question; or
+- an explicit statement that no new domain learning resulted.
+
+Label claims clearly:
+
+- `Verified`: proven from source, code, runtime, Git, provider, or primary documentation evidence.
+- `Accepted`: approved product or architecture interpretation.
+- `Corrected`: supersedes an earlier assumption or conclusion.
+- `Failed approach`: attempted and rejected with evidence.
+- `Open`: unresolved and potentially blocking.
+- `Deferred`: intentionally postponed and not a current blocker.
+
+Do not present inference, provider marketing, provisional pricing, or a future intention as verified fact.
+
+## 3. Entry template
+
+```markdown
+## YYYY-MM-DD HH:MM WIB - Learning title
+
+### Verified
+
+- Claim.
+  - Evidence:
+  - Impact:
+
+### Corrected / Failed approach / Open / Deferred
+
+- Claim.
+  - Supersedes:
+  - Impact:
+```
 
 ## 2026-07-25 - Initial product and provider learning
 
@@ -31,7 +83,7 @@ This file is append-only.
 - Broad DOKU payment-method availability does not prove that every method supports the required Hold plus Split combination.
 - Holding all buyer funds protects the transaction but creates working-capital pressure for jastippers.
 
-### Open research
+### Open research at the time
 
 - Real Threads operator and customer patterns.
 - Pilot routes, categories, order values, weights, and capacities.
@@ -52,3 +104,48 @@ This file is append-only.
 
 - Separate a market-existence gate from a feature-validation loop. Once a real market is established, additional social research should not become indefinite permission to delay building.
 - External-provider uncertainty is best isolated behind provider-independent contracts and simulators so core product work can continue safely.
+
+## 2026-07-25 07:40 WIB - Lifecycle documentation hostile review
+
+### Verified
+
+- The four expected lifecycle files existed before issue #1.
+  - Evidence: repository tree at `main` commit `6fe622733bdf457448ed0e8670ff5249ce3ca6fe`.
+  - Impact: the gap was authority and freshness, not missing filenames.
+- The handoff named the first baseline commit but did not clearly state the current `main` tip.
+  - Evidence: handoff text compared with live local and remote Git state.
+  - Impact: a future session could pin work to the wrong immutable base.
+- Historical follow-up text in `docs/changes.md` can become obsolete by design.
+  - Evidence: the first entry recommended Threads research, while a later accepted decision moved Threads after platform development.
+  - Impact: historical change entries must never be read as current instructions.
+- The initial learning entry listed Threads research as open, and the later entry corrected its priority without explicitly labeling the old item deferred.
+  - Evidence: chronological comparison of the two learning entries.
+  - Impact: future readers need newest-correction-wins and explicit deferred status rules.
+- Prose alone cannot enforce the four-file update requirement.
+  - Evidence: no local or CI lifecycle freshness check existed at issue opening.
+  - Impact: add a fail-closed file-presence check while retaining human content review.
+- GitHub cannot currently require the lifecycle check through branch protection while the repository remains private on the current plan.
+  - Evidence: the branch-protection API returned `403` with an upgrade-or-public requirement.
+  - Impact: keep the repository private, run the pull-request workflow, treat missing or red lifecycle results as a policy-level merge blocker, and require explicit approval.
+
+### Corrected
+
+- Threads operator and customer research from the initial entry is now `Deferred`, not `Open` for Stage 1 or Stage 2.
+  - Supersedes: the priority implied by `Open research at the time` in the initial entry.
+  - Impact: it becomes Stage 4 acquisition and continuous-feedback work.
+- The DOKU, Biteship, legal, and policy questions are `Open for Stage 3`, not blockers for platform work with mock providers.
+  - Supersedes: any reading that treats provider validation as permission to begin implementation.
+  - Impact: Stage 1 architecture and Stage 2 marketplace development can proceed.
+
+### Reusable learning
+
+- Four lifecycle documents need different jobs. Duplicating the same status across all four creates drift instead of continuity.
+- Presence checks can prove that required files were touched, but cannot prove their content is truthful. Completion still requires live-state reconciliation and hostile human review.
+- A CI check that fails closed is not the same as a protected branch that technically forbids bypass. Documentation must state the enforcement layer honestly.
+- Current state belongs in the handoff, sequencing belongs in the roadmap, material history belongs in changes, and reusable knowledge belongs in learning.
+- A historical fact can remain accurate while its follow-up is obsolete. Preserve the history and add a newer correction rather than rewriting it.
+
+### Deferred
+
+- Detailed Threads market-pattern research remains valuable after a demonstrable platform exists.
+- Provider commercial outreach remains deferred until BurinSN separately approves external contact.

@@ -23,12 +23,13 @@ This exception does not authorize later direct feature work on `main`.
 2. Create a focused branch from current `main`.
 3. Preserve unrelated and user-owned changes.
 4. Implement code, tests, migrations, security controls, and required documentation together.
-5. Run relevant local quality gates and record exact results.
-6. Open a pull request using `.github/PULL_REQUEST_TEMPLATE.md`.
-7. Review the complete base diff and resolve or explicitly disposition material findings.
-8. Obtain fresh BurinSN product-owner approval before merge.
-9. Prefer squash merge for one coherent issue.
-10. Verify post-merge `main` and clean up the merged branch.
+5. Update `handoff.md`, `docs/changes.md`, `docs/roadmap.md`, and `docs/learning.md` in every material pull request.
+6. Run `scripts/check-lifecycle-docs.sh origin/main` plus all relevant local quality gates and record exact results.
+7. Open a pull request using `.github/PULL_REQUEST_TEMPLATE.md`.
+8. Review the complete base diff and resolve or explicitly disposition material findings.
+9. Obtain fresh BurinSN product-owner approval before merge.
+10. Prefer squash merge for one coherent issue.
+11. Verify post-merge `main` and clean up the merged branch.
 
 ## Branch names
 
@@ -57,3 +58,13 @@ chore/<issue>-<slug>
 - No bypass of branch protection or required checks.
 - No merge based solely on passing automation.
 - No production deployment or external-provider activation implied by merge approval.
+
+## Current repository-control limitation
+
+GitHub returned `403` for branch-protection access because private-repository branch protection is unavailable on the current plan. Keep the repository private. Until that capability changes:
+
+- the lifecycle workflow still runs on pull requests;
+- a missing, skipped, or failed lifecycle result blocks merge by project policy;
+- merge-button availability does not override the policy;
+- fresh explicit BurinSN approval remains required after all checks and findings are visible;
+- the handoff must record the exact check and approval state before merge.

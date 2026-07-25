@@ -19,12 +19,13 @@ Verified live state and current explicit BurinSN direction override stale docume
 ## Canonical authority
 
 - `docs/roadmap.md` owns project stage, gates, and next work.
+- `handoff.md` owns verified current repository state, active work, authority boundaries, blockers, verification, and the exact next action.
+- `docs/changes.md` owns append-only material-change history and never overrides current state.
+- `docs/learning.md` owns append-only verified learning, corrections, failed approaches, and deferred questions.
 - `docs/product/master-specification.md` owns the product model.
 - `docs/product/order-lifecycle.md` owns transaction states and evidence gates.
 - `docs/trust-safety/moderation-model.md` owns marketplace enforcement.
 - ADRs in `docs/decisions/` own accepted product and architecture decisions.
-- `docs/changes.md` and `docs/learning.md` are append-only histories.
-- `handoff.md` is the current operational resume point.
 
 When sources conflict, reconcile them before implementation.
 
@@ -40,11 +41,22 @@ When sources conflict, reconcile them before implementation.
 
 Every material product, trust, payment, architecture, implementation, or workflow change must update:
 
-1. `docs/roadmap.md`
+1. `handoff.md`
 2. `docs/changes.md`
-3. `docs/learning.md`
-4. Every affected canonical specialist document
-5. `handoff.md` when the operational next action changes
+3. `docs/roadmap.md`
+4. `docs/learning.md`
+5. Every affected canonical specialist document
+
+All four lifecycle documents are mandatory for every material session and pull request. This is required even when one document has no substantive product change:
+
+- update the handoff with current live state and exact next action;
+- append the material change to changes;
+- refresh roadmap status and explicitly record when scope/order is unchanged;
+- append the learning, correction, failed approach, deferred question, or an explicit no-new-learning statement.
+
+Run `scripts/check-lifecycle-docs.sh origin/main` before declaring the work complete. Passing the check proves file participation only. It does not replace live-state reconciliation or hostile content review.
+
+Work is incomplete while any lifecycle document is stale. Do not defer lifecycle updates to a later issue, cleanup pass, handoff, or sign-off.
 
 Classify statements as verified fact, accepted decision, current assumption, proposal, or open question. Date external pricing and regulatory facts and link their primary sources.
 
@@ -62,4 +74,6 @@ Provider onboarding, legal commitments, paid services, production integrations, 
 - After the explicitly authorized initial documentation baseline, material work begins from a written issue and uses a focused branch and pull request.
 - Never merge because checks pass. BurinSN product-owner approval remains required.
 - Do not force-push `main`, rewrite shared history, expose secrets, or use direct feature commits on `main`.
+- Every material pull request must include all four lifecycle documents and pass the lifecycle freshness check.
+- GitHub branch protection is unavailable for this private repository on the current plan. Merge-button availability is not permission. A missing or red lifecycle check blocks merge by project policy.
 - Follow `docs/development/git-workflow.md`.
