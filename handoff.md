@@ -1,6 +1,6 @@
 # NitipCuy Cross-Session Handoff
 
-Last updated: 2026-07-25 11:09 WIB
+Last updated: 2026-07-25 11:14 WIB
 
 Handoff owner: Codex
 
@@ -97,8 +97,8 @@ Build the platform first.
 | Active issue | `#1 Harden lifecycle documentation against stale state and product drift` |
 | Active branch | `docs/1-lifecycle-governance` |
 | Pull request | `#2 docs: enforce lifecycle documentation freshness` |
-| Last pushed checkpoint before this handoff edit | `d33e158bf5a73395a9efb1f4f7b8f4583f0252b9` |
-| Pull-request checks at that checkpoint | Lifecycle workflow passed; CodeRabbit was rate-limited and provided no review coverage |
+| Last pushed checkpoint before this handoff edit | `7491442a9db85c33e7bcda3967783c35cc699b0b` |
+| Pull-request checks at that checkpoint | Lifecycle workflow passed; CodeRabbit was successful but provided no review object or findings |
 | Live pull-request head and checks | Volatile; retrieve directly from GitHub before merge |
 | Merge authority | Granted by BurinSN on 2026-07-25, conditional on final exact-head audit and green lifecycle workflow |
 | Branch protection | Unavailable for this private repository on the current GitHub plan |
@@ -208,6 +208,7 @@ Verified for issue #1:
 - the lifecycle workflow passed at that checkpoint;
 - CodeRabbit reported pass only because review was rate-limited, so no independent review was performed.
 - BurinSN reviewed the disclosed check and review limitations and explicitly authorized final correction, audit, and merge of pull request #2 on 2026-07-25.
+- The final full-diff audit found and corrected direct GitHub-context interpolation in the lifecycle workflow; the base ref now crosses into the shell through an environment variable.
 
 ## 10. Exact next action
 

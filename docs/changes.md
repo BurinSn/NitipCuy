@@ -168,3 +168,35 @@ A session with no material change does not invent an entry. A session that makes
   - Application architecture, scaffolding, providers, payments, deployment, and product scope remain excluded.
 - Follow-up:
   - Push the corrected head, wait for its lifecycle workflow, perform and post the final audit, squash-merge pull request #2, verify issue closure and `main`, and clean up the branch.
+
+## 2026-07-25 11:14 WIB - Lifecycle workflow context handling hardened
+
+- Issue / PR: Issue #1; pull request #2
+- Product: NitipCuy
+- Type: Workflow security correction
+- Status: Prepared; exact-head workflow and merge pending
+- Objective:
+  - Remove direct GitHub-context interpolation from the lifecycle workflow before merge.
+- Scope:
+  - Pull-request lifecycle workflow and all four mandatory lifecycle documents.
+- Changes:
+  - Moved `github.base_ref` into a step environment variable.
+  - Passed the resulting base ref to the shell script through a quoted shell variable.
+  - Preserved the pull-request-only trigger, read-only repository permission, full-history checkout, and existing lifecycle check.
+  - Refreshed all four lifecycle documents without changing product scope or roadmap order.
+- Impact:
+  - GitHub context data no longer appears directly inside the generated shell command.
+  - The workflow remains functionally identical for pull requests against `main`.
+- Validation:
+  - Pre-correction pull-request head `7491442a9db85c33e7bcda3967783c35cc699b0b` was clean and mergeable.
+  - Lifecycle workflow run `30143630722` passed on that exact head.
+  - Full-diff audit identified the interpolation risk before merge.
+  - Local lifecycle, shell syntax, workflow YAML, direct-context-interpolation, formatting, link, naming, placeholder, credential-pattern, and product-alignment checks passed after the correction.
+- Documentation:
+  - Updated `handoff.md`, `docs/changes.md`, `docs/roadmap.md`, and `docs/learning.md`.
+- Residual risks / exclusions:
+  - A fresh pull-request workflow must pass on the corrected exact head.
+  - CodeRabbit has no review object or independent findings for this pull request.
+  - Application architecture, scaffolding, providers, payments, deployment, and product scope remain excluded.
+- Follow-up:
+  - Commit and push the correction, wait for exact-head checks, repeat the final audit, post evidence, and squash-merge under the recorded BurinSN authority.

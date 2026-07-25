@@ -17,4 +17,6 @@ jobs:
           fetch-depth: 0
 
       - name: Verify lifecycle document participation
-        run: ./scripts/check-lifecycle-docs.sh "origin/${{ github.base_ref }}"
+        env:
+          BASE_REF: origin/${{ github.base_ref }}
+        run: ./scripts/check-lifecycle-docs.sh "$BASE_REF"

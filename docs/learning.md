@@ -221,3 +221,25 @@ Do not present inference, provider marketing, provisional pricing, or a future i
 ### No new domain learning
 
 - This correction changes documentation governance only. It does not change the jastip, fee, payment, logistics, moderation, delivery, or platform-first product model.
+
+## 2026-07-25 11:14 WIB - GitHub context must not be interpolated into shell commands
+
+### Corrected
+
+- The lifecycle workflow inserted `github.base_ref` directly inside a `run` command.
+  - Supersedes: the initial workflow transport for the pull-request base ref.
+  - Impact: expose the context value as a step environment variable and use a quoted shell variable instead.
+
+### Verified
+
+- The correction preserves the workflow's pull-request trigger, read-only permission, full-history checkout, and lifecycle script behavior.
+  - Evidence: workflow diff and local YAML and shell validation.
+  - Impact: security hardening does not broaden permissions or change the merge policy.
+
+### Reusable learning
+
+- Treat GitHub context values as data. Move them through `env` before referencing them in shell, even when the currently expected value is a trusted branch name.
+
+### No new domain learning
+
+- The correction does not change the NitipCuy product, fee, provider, logistics, moderation, or delivery model.
