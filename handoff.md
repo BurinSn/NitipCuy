@@ -1,6 +1,6 @@
 # NitipCuy Cross-Session Handoff
 
-Last updated: 2026-07-25 16:36 WIB
+Last updated: 2026-07-25 16:39 WIB
 
 Handoff owner: Codex
 
@@ -94,8 +94,9 @@ The shell is a functional architecture probe. It is not a production UI and has 
 | Active issue | [#3 Establish web architecture and application foundation](https://github.com/BurinSn/NitipCuy/issues/3) |
 | Active branch | `feat/3-architecture-foundation` |
 | Pull request | [#4 feat: establish application architecture foundation](https://github.com/BurinSn/NitipCuy/pull/4) |
-| Last pushed implementation checkpoint | `e1d0669e80430c3abc1f4ca4e94637c827bc3f37` |
-| Checks at that checkpoint | Lifecycle passed; application quality in progress; CodeRabbit pending at 16:36 WIB |
+| Last audited pushed checkpoint | `7623526f1058d67f53ff82076330bc6c9f6afed0` |
+| Checks at that checkpoint | Lifecycle and application quality passed with no annotations |
+| Independent review at that checkpoint | None; CodeRabbit reported success only because review was rate-limited and created no review object or findings |
 | Live head, checks, reviews, and mergeability | Volatile; retrieve directly before any approval or merge action |
 | Merge authority | Not granted for issue #3; fresh BurinSN approval is required after exact-head evidence |
 | Branch protection | Unavailable for this private repository on the current GitHub plan |
@@ -154,10 +155,9 @@ Hostile-review corrections already made:
 
 Still required before requesting merge:
 
-1. Commit and push this pull-request-state documentation checkpoint.
-2. Inspect hosted checks, annotations, review objects, comments, and findings on the resulting exact immutable head.
-3. Resolve or explicitly disposition every material finding through the same branch and update all four lifecycle documents again if code or operational truth changes.
-4. Ask BurinSN for fresh issue #3 merge approval.
+1. Commit and push this final review-state documentation checkpoint.
+2. Resolve the live head condition below without relying on the historical checkpoint.
+3. Ask BurinSN for fresh issue #3 merge approval only when the live condition permits it.
 
 Browser automation and visual approval were not performed and are not claimed.
 
@@ -179,8 +179,11 @@ These are Stage 3 activation gates, not reasons to delay provider-independent pl
 
 ## 9. Exact next action
 
-Commit and push the pull-request-state documentation checkpoint, then audit pull request #4 on the resulting exact immutable head.
+Commit and push this review-state documentation checkpoint. Then retrieve pull request #4's live exact head, hosted checks, annotations, review objects, comments, findings, mergeability, and complete base diff.
 
-Do not create another pull request. Retrieve pull request #4's exact head, hosted checks, review objects, findings, mergeability, and complete base diff. Fix findings through the same branch and update all four lifecycle documents again.
+- If lifecycle and application quality pass without material annotations, the PR is mergeable, no material finding remains, and the live head contains only the reviewed documentation-state update, post the final audit and request fresh BurinSN approval.
+- Otherwise, fix or explicitly disposition every material finding through the same branch and update all four lifecycle documents again.
+
+Do not create another pull request.
 
 Do not merge issue #3, deploy, contact providers, move money, or claim visual approval without the corresponding fresh BurinSN authority.

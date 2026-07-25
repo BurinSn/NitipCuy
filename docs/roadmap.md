@@ -1,10 +1,10 @@
 # NitipCuy Canonical Roadmap
 
-Last reviewed: 2026-07-25 16:36 WIB
+Last reviewed: 2026-07-25 16:39 WIB
 
 Current stage: Stage 1 - Platform foundation
 
-Current work item: Issue #3 architecture and application foundation; pull request #4 exact-head review
+Current work item: Issue #3 architecture and application foundation; pull request #4 owner-evaluation gate
 
 ## 1. Role, authority, and freshness contract
 
@@ -236,7 +236,7 @@ The unresolved DOKU, logistics, policy, legal, and pilot items listed in Stage 3
 
 ### Now
 
-Push the pull-request-state documentation checkpoint, then audit pull request #4's exact immutable head and resolve every material finding.
+Push the final review-state documentation checkpoint. If the resulting live head passes both hosted workflows without material annotations or findings and remains mergeable, post the final audit and request fresh owner approval; otherwise fix the live head.
 
 ### Next
 

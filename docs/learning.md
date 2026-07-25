@@ -356,3 +356,23 @@ Do not present inference, provider marketing, provisional pricing, or a future i
 ### No new domain learning
 
 - Opening the pull request does not change the NitipCuy service modes, seller-rate rights, fee model, payment direction, logistics direction, moderation duties, or platform-first sequence.
+
+## 2026-07-25 16:39 WIB - Hosted verification coverage
+
+### Verified
+
+- Lifecycle and application-quality workflows passed without annotations on checkpoint `7623526f1058d67f53ff82076330bc6c9f6afed0`.
+  - Evidence: GitHub check runs `30153108867` and `30153108868`.
+  - Impact: the exact architecture graph reproduces in hosted CI using the frozen lockfile.
+- CodeRabbit's success state did not represent a review.
+  - Evidence: its comment states that the review limit was reached; GitHub contains no CodeRabbit review object or findings.
+  - Impact: disclose zero independent automated review coverage and retain root hostile review plus fresh owner approval as separate gates.
+
+### Reusable learning
+
+- Hosted check conclusions and annotations are separate evidence. Inspect both.
+- A third-party status named `success` can still mean no work was performed; inspect the underlying comment and review objects.
+
+### No new domain learning
+
+- Hosted verification changes evidence only. It does not change NitipCuy product, commercial, payment, logistics, moderation, delivery, or launch boundaries.
