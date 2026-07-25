@@ -1,6 +1,6 @@
 # NitipCuy Canonical Roadmap
 
-Last reviewed: 2026-07-25 11:14 WIB
+Last reviewed: 2026-07-25 11:17 WIB
 
 Current stage: Stage 1 - Platform foundation
 
@@ -117,6 +117,7 @@ Status: In progress
 - [x] Missing independent CodeRabbit review coverage disclosed to BurinSN.
 - [x] BurinSN explicitly authorized final correction, exact-head audit, and merge of pull request #2.
 - [x] Lifecycle workflow base-ref input hardened against direct GitHub-context interpolation in shell.
+- [x] External workflow action pinned to a verified immutable commit.
 
 Pull-request merge state is volatile and must be verified live. Once pull request #2 is confirmed merged and issue #1 is closed, the next slice below becomes current without changing the accepted roadmap order.
 

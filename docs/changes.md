@@ -200,3 +200,35 @@ A session with no material change does not invent an entry. A session that makes
   - Application architecture, scaffolding, providers, payments, deployment, and product scope remain excluded.
 - Follow-up:
   - Commit and push the correction, wait for exact-head checks, repeat the final audit, post evidence, and squash-merge under the recorded BurinSN authority.
+
+## 2026-07-25 11:17 WIB - Workflow action pinned to immutable commit
+
+- Issue / PR: Issue #1; pull request #2
+- Product: NitipCuy
+- Type: Workflow supply-chain hardening
+- Status: Prepared; exact-head workflow and merge pending
+- Objective:
+  - Remove the final moving third-party action reference before merge.
+- Scope:
+  - Pull-request lifecycle workflow and all four mandatory lifecycle documents.
+- Changes:
+  - Replaced `actions/checkout@v4` with verified immutable commit `11d5960a326750d5838078e36cf38b85af677262`.
+  - Kept a `v4` comment for maintainability.
+  - Preserved the pull-request trigger, read-only permission, full-history checkout, environment-based base-ref transport, and lifecycle check.
+  - Refreshed all four lifecycle documents without changing product scope or roadmap order.
+- Impact:
+  - The workflow no longer trusts a mutable action tag at execution time.
+  - Future checkout upgrades must be deliberate, reviewed commit changes.
+- Validation:
+  - GitHub API resolved official `actions/checkout` tag `v4` to commit `11d5960a326750d5838078e36cf38b85af677262`.
+  - GitHub reports that commit as verified.
+  - Pre-correction pull-request head `22f5291ba030159fca6d33fab89fde946e8986c3` passed lifecycle workflow run `30143723423`.
+  - Local lifecycle, shell syntax, workflow YAML, immutable-action-reference, formatting, link, naming, placeholder, credential-pattern, and product-alignment checks passed after the pin.
+- Documentation:
+  - Updated `handoff.md`, `docs/changes.md`, `docs/roadmap.md`, and `docs/learning.md`.
+- Residual risks / exclusions:
+  - A fresh pull-request workflow must pass on the pinned exact head.
+  - CodeRabbit has no review object or independent findings for this pull request.
+  - Application architecture, scaffolding, providers, payments, deployment, and product scope remain excluded.
+- Follow-up:
+  - Validate, commit, and push the pin; wait for exact-head checks; post the final audit; and squash-merge under recorded BurinSN authority.

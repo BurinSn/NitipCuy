@@ -243,3 +243,25 @@ Do not present inference, provider marketing, provisional pricing, or a future i
 ### No new domain learning
 
 - The correction does not change the NitipCuy product, fee, provider, logistics, moderation, or delivery model.
+
+## 2026-07-25 11:17 WIB - Workflow actions require immutable references
+
+### Verified
+
+- Official `actions/checkout` tag `v4` resolved to verified commit `11d5960a326750d5838078e36cf38b85af677262` during the final audit.
+  - Evidence: GitHub repository API for `actions/checkout`.
+  - Impact: pin that exact commit while retaining the major-version comment for maintenance.
+
+### Corrected
+
+- The initial lifecycle workflow used the moving `actions/checkout@v4` tag.
+  - Supersedes: the workflow action reference introduced earlier in issue #1.
+  - Impact: future workflow dependency updates must appear as explicit immutable commit changes.
+
+### Reusable learning
+
+- A trusted publisher does not make a mutable tag immutable. Pin CI actions to verified commits and update them deliberately.
+
+### No new domain learning
+
+- The correction changes workflow supply-chain posture only.
