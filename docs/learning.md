@@ -437,7 +437,7 @@ Do not present inference, provider marketing, provisional pricing, or a future i
 
 - The correction does not change NitipCuy's roles, service modes, rates, transaction fee, payment direction, logistics direction, moderation duties, or platform-first sequence.
 
-## 2026-07-27 17:00 WIB - Security and scale require layered, measurable evidence
+## 2026-07-27 17:10 WIB - Security and scale require layered, measurable evidence
 
 ### Verified
 
@@ -482,6 +482,15 @@ Do not present inference, provider marketing, provisional pricing, or a future i
 
 - Exact pilot concurrency, traffic, latency, availability, data volume, provider quotas, cost ceilings, RPO, and RTO remain open until the closed pilot is bounded.
 - Actual Vercel plan controls, Neon compute and pooling, identity provider, shared limiter or session store, object storage, scanner, worker, monitoring, and security-testing tools remain selection and runtime-verification work. Their documentation availability is not provider configuration evidence.
+
+### Hosted evidence
+
+- Required hosted application-quality and lifecycle workflows passed without annotations at architecture-amendment head `7522bf8d2076101cdc78245f390818eb6125252f`.
+  - Evidence: GitHub Actions runs `30256384832` and `30256384917`.
+  - Impact: the committed documentation reproduces under project CI, but this remains source and governance evidence rather than runtime security or capacity evidence.
+- A third-party review marked “in progress” is not review coverage.
+  - Evidence: CodeRabbit run `fe94a2a4-4776-497f-b797-caae88ce6a39` remained pending after the bounded wait and created no review object or finding by 17:10 WIB.
+  - Impact: disclose the pending state and continue to require direct hostile review; never translate status presence into approval.
 
 ### No product-model change
 

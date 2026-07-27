@@ -447,12 +447,12 @@ A session with no material change does not invent an entry. A session that makes
 - Follow-up:
   - Validate lifecycle freshness and formatting, commit and push this correction, verify the new exact-head checks and annotations, then implement automated dependency-boundary enforcement.
 
-## 2026-07-27 17:00 WIB - Security, resilience, and scale baseline established
+## 2026-07-27 17:10 WIB - Security, resilience, and scale baseline established
 
 - Issue / PR: Issue #3; pull request #4
 - Product: NitipCuy
 - Type: Security architecture, anti-abuse, resilience, capacity, and lifecycle amendment
-- Status: Accepted design documented and locally validated; issue and pull-request metadata reconciled; commit, push, and hosted exact-head evidence pending
+- Status: Accepted design documented, locally validated, committed, pushed, and required hosted workflows verified
 - Objective:
   - Make security against DDoS and resource exhaustion, SQL injection, session compromise, credential and OTP attacks, and other common web threats a binding project requirement while preserving a realistic, testable path to horizontal growth.
 - Scope:
@@ -476,7 +476,10 @@ A session with no material change does not invent an entry. A session that makes
   - `pnpm audit:prod` reported no known production vulnerability.
   - Lifecycle participation, internal Markdown links across 19 files, and `git diff --check` passed.
   - Live issue #3 and pull request #4 were retrieved before mutation, then updated to record the accepted design, exclusions, evidence levels, remaining blockers, and non-claims.
-  - Commit, push, and hosted exact-head results remain pending at this entry's current checkpoint.
+  - Commit `7522bf8d2076101cdc78245f390818eb6125252f` was pushed to pull request #4.
+  - Application-quality run `30256384832` and lifecycle run `30256384917` passed on that exact head with no annotations, failed steps, or skipped steps.
+  - GitHub reported the pull request open and mergeable with no review decision.
+  - CodeRabbit review run `fe94a2a4-4776-497f-b797-caae88ce6a39` remained pending after the bounded wait and had produced no review object or finding as of 17:10 WIB. It is not counted as independent review coverage or approval.
 - Documentation:
   - Added `docs/decisions/0004-security-resilience-and-scale-baseline.md`, `docs/security/security-architecture.md`, and `docs/architecture/scalability-and-resilience.md`.
   - Updated `AGENTS.md`, `README.md`, `handoff.md`, `docs/architecture/system-architecture.md`, `docs/development/quality-gates.md`, `docs/roadmap.md`, `docs/changes.md`, and `docs/learning.md`.
@@ -485,4 +488,4 @@ A session with no material change does not invent an entry. A session that makes
   - No claim of DDoS immunity, complete injection prevention, session safety, brute-force immunity, OWASP conformance, production capacity, or incident readiness is made.
   - Existing hostile-review blockers for dependency enforcement, transaction scope, payment lifecycle, idempotency, evidence integrity, projection boundaries, and final reconciliation remain.
 - Follow-up:
-  - Validate and reconcile the amendment, publish it on pull request #4 with exact-head evidence, then implement automated dependency-boundary enforcement as the next bounded correction.
+  - Implement automated dependency-boundary enforcement as the next bounded correction; the other transaction, payment, idempotency, evidence, projection, and final-reconciliation blockers follow.

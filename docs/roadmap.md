@@ -1,10 +1,10 @@
 # NitipCuy Canonical Roadmap
 
-Last reviewed: 2026-07-27 17:00 WIB
+Last reviewed: 2026-07-27 17:10 WIB
 
 Current stage: Stage 1 - Platform foundation
 
-Current work item: Issue #3 architecture-foundation remediation; binding security, anti-abuse, resilience, and scale baseline added before automated dependency-boundary enforcement
+Current work item: Issue #3 architecture-foundation remediation; automated dependency-boundary enforcement is next after the published and hosted-verified security, anti-abuse, resilience, and scale amendment
 
 ## 1. Role, authority, and freshness contract
 
@@ -134,6 +134,7 @@ Status: In progress
 - [x] ADR 0004 records the OWASP ASVS 5.0 Level 2 target, evidence-level claims, layered attack controls, stateless horizontal production shape, and capacity/recovery gates.
 - [x] Security architecture covers DDoS and cost abuse, injection, sessions, credential and OTP attacks, authorization, browser threats, uploads, SSRF, callbacks, secrets, monitoring, incident response, and verification.
 - [x] Scalability and resilience architecture covers caching, database and connection budgets, transaction and concurrency rules, durable workers, provider isolation, observability, load profiles, and evidence-driven extraction.
+- [x] Security and scale amendment committed and pushed at `7522bf8d2076101cdc78245f390818eb6125252f`; application-quality run `30256384832` and lifecycle run `30256384917` passed without annotations.
 - [x] Provider-independent payment, logistics, identity-verification, evidence-storage, clock, identifier, transaction, audit, and outbox interfaces and deterministic mocks exist.
 - [x] Framework-free domain, application, adapter, and delivery package layout established.
 - [ ] Mechanically enforce dependency direction; package manifests and TypeScript do not prevent cross-package relative imports.
@@ -277,7 +278,7 @@ The unresolved DOKU, logistics, policy, legal, and pilot items listed in Stage 3
 
 ### Now
 
-Validate and publish the security, anti-abuse, resilience, and scale architecture amendment on pull request #4. Verify the resulting exact head and lifecycle truth, then implement automated dependency-boundary enforcement as the next bounded hostile-review correction. Do not treat the accepted design as implemented production security.
+Implement automated dependency-boundary enforcement as the next bounded hostile-review correction. It must cover cross-package relative, aliased, type-only, and dynamic imports without mistaking the accepted security and scale design for implemented production controls.
 
 ### Next
 

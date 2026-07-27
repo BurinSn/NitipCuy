@@ -1,6 +1,6 @@
 # NitipCuy Cross-Session Handoff
 
-Last updated: 2026-07-27 17:00 WIB
+Last updated: 2026-07-27 17:10 WIB
 
 Handoff owner: Codex
 
@@ -103,12 +103,12 @@ The shell is a functional architecture probe. It is not a production UI, has no 
 | Active issue | [#3 Establish web architecture and application foundation](https://github.com/BurinSn/NitipCuy/issues/3) |
 | Active branch | `feat/3-architecture-foundation` |
 | Pull request | [#4 feat: establish application architecture foundation](https://github.com/BurinSn/NitipCuy/pull/4) |
-| Last live-verified pushed correction head | `7489b2d38b3c40963f78283f93c8b3c74a4f0296` |
-| Checks at that checkpoint | Application quality run `30154201296` and lifecycle run `30154201300` passed without annotations |
-| Independent review at that checkpoint | None; CodeRabbit reported success only because review was rate-limited and created no review object or findings |
+| Last live-verified pushed correction head | `7522bf8d2076101cdc78245f390818eb6125252f` |
+| Checks at that checkpoint | Application quality run `30256384832` and lifecycle run `30256384917` passed without annotations |
+| Independent review at that checkpoint | CodeRabbit started review run `fe94a2a4-4776-497f-b797-caae88ce6a39` but remained pending after the bounded wait and had created no review object or finding as of 17:10 WIB |
 | First hostile-review correction | Published-trip runtime invariants committed, pushed, and hosted-verified |
 | Second hostile-review correction | Issue #3 identity acceptance and pull-request scope reconciled with the deliberately deferred persisted account implementation; committed, pushed, and hosted-verified |
-| Current local amendment | Accepted security, anti-abuse, resilience, and scale baseline; local validation and GitHub metadata reconciliation passed; commit, push, and hosted verification pending |
+| Security and scale amendment | Accepted, committed, pushed, and required hosted workflows verified; production controls remain unimplemented |
 | Live head, checks, reviews, and mergeability | Volatile; retrieve directly before any approval or merge action |
 | Merge authority | Not granted for issue #3; fresh BurinSN approval is required after exact-head evidence |
 | Branch protection | Unavailable for this private repository on the current GitHub plan |
@@ -123,7 +123,7 @@ Issue #3 owns the architecture and application-foundation slice. A direct hostil
 
 The issue now states that external-identity-to-internal-account mapping and deny-by-default authorization are documented architecture directions. Mapping implementation is explicitly deferred to the first persisted account slice, matching the issue scope, exclusions, ADR 0003, current code, and roadmap.
 
-The current local amendment answers BurinSN's security and growth requirement through ADR 0004 plus dedicated security and scalability documents. It defines controls for DDoS and cost abuse, SQL injection, session compromise, credential and OTP attacks, authorization, browser threats, uploads, SSRF, callbacks, secrets, monitoring, recovery, stateless horizontal scaling, bounded PostgreSQL access, durable work, provider isolation, capacity, and load testing. These are binding design requirements. They are not claims that production infrastructure or controls exist.
+The security and scale amendment answers BurinSN's security and growth requirement through ADR 0004 plus dedicated security and scalability documents. It defines controls for DDoS and cost abuse, SQL injection, session compromise, credential and OTP attacks, authorization, browser threats, uploads, SSRF, callbacks, secrets, monitoring, recovery, stateless horizontal scaling, bounded PostgreSQL access, durable work, provider isolation, capacity, and load testing. These are binding design requirements. They are not claims that production infrastructure or controls exist.
 
 Implemented locally:
 
@@ -189,7 +189,7 @@ Still required before requesting merge:
 
 Browser automation and visual approval were not performed and are not claimed.
 
-The security and scale amendment passed the exact-toolchain frozen install, peer, format, lint, type, 18-test, production-build, production-audit, lifecycle, internal-link, and diff gates. Issue #3 and pull request #4 were reconciled with the accepted design and explicit implementation non-claims. Commit, push, and hosted exact-head verification remain pending. No WAF, bot control, shared rate limiter, production session, database, private upload pipeline, worker, monitoring, backup, load test, security test, or provider configuration was activated by the documentation.
+The security and scale amendment passed the exact-toolchain frozen install, peer, format, lint, type, 18-test, production-build, production-audit, lifecycle, internal-link, and diff gates. Issue #3 and pull request #4 were reconciled with the accepted design and explicit implementation non-claims. Required hosted workflows passed without annotations at exact head `7522bf8d2076101cdc78245f390818eb6125252f`. CodeRabbit remained pending after a bounded wait and had produced no review object or finding; this is unavailable independent-review evidence, not approval. No WAF, bot control, shared rate limiter, production session, database, private upload pipeline, worker, monitoring, backup, load test, security test, or provider configuration was activated by the documentation.
 
 ## 8. Blockers and gates
 
@@ -224,7 +224,7 @@ These are Stage 3 activation gates, not reasons to delay provider-independent pl
 
 ## 9. Exact next action
 
-Validate the complete security and scale documentation amendment, reconcile issue #3 and pull request #4 so they record the accepted design without claiming implementation, run the lifecycle and complete-diff gates, commit and push the bounded amendment, and verify hosted checks and annotations on its exact head. Then begin automated dependency-boundary enforcement as the next implementation correction.
+Implement automated dependency-boundary enforcement as the next bounded issue #3 correction. Cover cross-package relative, aliased, type-only, and dynamic imports; wire the gate into the exact local and hosted quality path; add adversarial fixtures or tests; and reconcile all lifecycle, issue, and pull-request claims.
 
 Do not add account persistence or a production identity provider to issue #3. Those belong to the first persisted account slice after this architecture issue is corrected and merged.
 
