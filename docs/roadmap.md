@@ -1,10 +1,10 @@
 # NitipCuy Canonical Roadmap
 
-Last reviewed: 2026-07-27 18:27 WIB
+Last reviewed: 2026-07-27 18:35 WIB
 
 Current stage: Stage 1 - Platform foundation
 
-Current work item: Issue #3 architecture-foundation remediation; publish and inspect the locally validated six-gap security and scale design correction, then resume automated dependency-boundary enforcement
+Current work item: Issue #3 architecture-foundation remediation; automated dependency-boundary enforcement follows the hosted-verified six-gap security and scale design correction
 
 ## 1. Role, authority, and freshness contract
 
@@ -284,11 +284,11 @@ The unresolved DOKU, logistics, policy, legal, and pilot items listed in Stage 3
 
 ### Now
 
-Commit, push, and inspect the exact hosted head for the locally validated six-gap security and scale design correction. Issue #3 and pull request #4 already name the correction without claiming that documentation implements runtime controls; verify them again after the branch state changes.
+Implement automated dependency-boundary enforcement as the next bounded hostile-review correction. It must cover cross-package relative, aliased, type-only, and dynamic imports and must run in the exact local and hosted quality path.
 
 ### Next
 
-Implement automated dependency-boundary enforcement as the next bounded code correction. It must cover cross-package relative, aliased, type-only, and dynamic imports. Then resolve transaction scope, payment lifecycle, idempotency, evidence integrity, and projection findings; reconcile exact-head evidence; and obtain fresh owner approval for issue #3.
+Resolve transaction scope, payment lifecycle, idempotency, evidence integrity, and projection findings; reconcile exact-head evidence; and obtain fresh owner approval for issue #3. After merge, implement the persisted account-to-public-Q&A vertical slice through a new governed issue with its applicable security and resource controls.
 
 ### Later
 

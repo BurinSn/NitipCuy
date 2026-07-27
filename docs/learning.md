@@ -537,6 +537,15 @@ Do not present inference, provider marketing, provisional pricing, or a future i
 - Exact identity, proxy/edge, shared control-state, KMS, encryption format, cache, database, and deployment-provider selections remain future governed work.
 - The correction reaches the designed evidence level only. Implementation, source tests, runtime configuration, load evidence, provider verification, and incident exercises remain required with the features and environments that create those risks.
 
+### Hosted evidence
+
+- The complete six-gap documentation correction reproduced on the supported hosted toolchain.
+  - Evidence: application-quality run `30262412048` and lifecycle run `30262412059` passed with zero annotations at exact checkpoint `609c23b8bf96be995a9c9347a442d8abaca59ff6`.
+  - Impact: this is source and governance evidence only; it does not raise any of the six controls above the designed level.
+- No independent automated review covered the correction.
+  - Evidence: pull request #4 has no review object or review decision, and CodeRabbit's only current record remains the earlier rate-limited run `86ff3d62-b1f7-4429-839e-e07fd4402c20`.
+  - Impact: retain direct hostile review and fresh BurinSN approval as separate gates; do not infer review coverage from workflow success.
+
 ### No product-model change
 
 - This correction does not change NitipCuy's roles, Shop for me and Carry my item services, seller-defined rates, platform fee direction, delivery model, moderation responsibility, or platform-first sequence.

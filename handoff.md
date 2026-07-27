@@ -1,6 +1,6 @@
 # NitipCuy Cross-Session Handoff
 
-Last updated: 2026-07-27 18:27 WIB
+Last updated: 2026-07-27 18:35 WIB
 
 Handoff owner: Codex
 
@@ -108,12 +108,12 @@ The shell is a functional architecture probe. It is not a production UI, has no 
 | Active issue | [#3 Establish web architecture and application foundation](https://github.com/BurinSn/NitipCuy/issues/3) |
 | Active branch | `feat/3-architecture-foundation` |
 | Pull request | [#4 feat: establish application architecture foundation](https://github.com/BurinSn/NitipCuy/pull/4) |
-| Last live-verified pushed correction head before this amendment | `bf48727ed9f1e65d87919f4fbe11ac0815542355` |
-| Checks at that checkpoint | Application quality run `30257081811` and lifecycle run `30257081823` passed without annotations |
-| Independent review at that checkpoint | CodeRabbit run `86ff3d62-b1f7-4429-839e-e07fd4402c20` was rate-limited and created no review object or finding; it provides no review coverage |
+| Six-gap security and scale design correction checkpoint | `609c23b8bf96be995a9c9347a442d8abaca59ff6` |
+| Checks at that checkpoint | Application quality run `30262412048` and lifecycle run `30262412059` passed with zero annotations |
+| Independent review at that checkpoint | No review object or finding exists; CodeRabbit's only current record is the earlier rate-limited run `86ff3d62-b1f7-4429-839e-e07fd4402c20`, which provides no review coverage |
 | First hostile-review correction | Published-trip runtime invariants committed, pushed, and hosted-verified |
 | Second hostile-review correction | Issue #3 identity acceptance and pull-request scope reconciled with the deliberately deferred persisted account implementation; committed, pushed, and hosted-verified |
-| Security and scale amendment | Accepted, committed, pushed, and required hosted workflows verified; production controls remain unimplemented |
+| Security and scale amendment | Initial amendment and six-gap hostile-review correction accepted, committed, pushed, and required hosted workflows verified; production controls remain unimplemented |
 | Live head, checks, reviews, and mergeability | Volatile; retrieve directly before any approval or merge action |
 | Merge authority | Not granted for issue #3; fresh BurinSN approval is required after exact-head evidence |
 | Branch protection | Unavailable for this private repository on the current GitHub plan |
@@ -187,16 +187,15 @@ Hostile-review corrections already made:
 
 Still required before requesting merge:
 
-1. Validate, commit, push, and inspect hosted checks and annotations for the six-gap design correction.
-2. Resolve each remaining implementation finding through the same branch, one coherent correction at a time.
-3. Reconcile issue #3 and pull-request claims after the final correction.
-4. Ask BurinSN for fresh merge approval only when no material finding remains.
+1. Resolve each remaining implementation finding through the same branch, one coherent correction at a time.
+2. Reconcile issue #3 and pull-request claims after the final correction.
+3. Ask BurinSN for fresh merge approval only when no material finding remains.
 
 Browser automation and visual approval were not performed and are not claimed.
 
 The first security and scale amendment passed the exact-toolchain frozen install, peer, format, lint, type, 18-test, production-build, production-audit, lifecycle, internal-link, and diff gates. The later identity and lifecycle reconciliation is hosted-verified at exact head `bf48727ed9f1e65d87919f4fbe11ac0815542355` through application run `30257081811` and lifecycle run `30257081823`, both without annotations. CodeRabbit was rate-limited and produced no review object or finding; this is unavailable independent-review evidence, not approval.
 
-The current six-gap design correction has changed documentation only. Exact Node.js `24.18.0` and pnpm `11.17.0` frozen install, peer, format, lint, type, 18-test, production-build, production-audit, lifecycle, 20-file internal-link, stale-language, control-presence, and diff gates passed locally. Its resulting hosted exact-head checks still require inspection after push. No WAF, proxy policy, bot control, shared limiter, privileged MFA, encryption key, production session, database, cache, private upload pipeline, worker, monitoring, backup, load test, security test, deployment, or provider configuration was activated by the documentation.
+The six-gap design correction changed documentation only. Exact Node.js `24.18.0` and pnpm `11.17.0` frozen install, peer, format, lint, type, 18-test, production-build, production-audit, lifecycle, 20-file internal-link, stale-language, control-presence, and diff gates passed locally. Application run `30262412048` and lifecycle run `30262412059` then passed at exact pushed checkpoint `609c23b8bf96be995a9c9347a442d8abaca59ff6` with zero annotations. No WAF, proxy policy, bot control, shared limiter, privileged MFA, encryption key, production session, database, cache, private upload pipeline, worker, monitoring, backup, load test, security test, deployment, or provider configuration was activated by the documentation.
 
 ## 8. Blockers and gates
 
@@ -231,9 +230,7 @@ These are Stage 3 activation gates, not reasons to delay provider-independent pl
 
 ## 9. Exact next action
 
-Commit and push the locally validated six-gap design correction to pull request #4. Inspect both required hosted workflows and annotations on the resulting immutable head, then retrieve and reconcile issue #3 and pull request #4 again.
-
-After that published checkpoint is sound, implement automated dependency-boundary enforcement as the next bounded code correction. Cover cross-package relative, aliased, type-only, and dynamic imports; wire the gate into the exact local and hosted quality path; add adversarial fixtures or tests; and reconcile all lifecycle, issue, and pull-request claims.
+Implement automated dependency-boundary enforcement as the next bounded code correction. Cover cross-package relative, aliased, type-only, and dynamic imports; wire the gate into the exact local and hosted quality path; add adversarial fixtures or tests; and reconcile all lifecycle, issue, and pull-request claims.
 
 Do not add account persistence or a production identity provider to issue #3. Those belong to the first persisted account slice after this architecture issue is corrected and merged.
 

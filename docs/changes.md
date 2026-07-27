@@ -495,7 +495,7 @@ A session with no material change does not invent an entry. A session that makes
 - Issue / PR: Issue #3; pull request #4
 - Product: NitipCuy
 - Type: Security architecture correction, scale-safety correction, and lifecycle reconciliation
-- Status: Source correction applied and locally validated; commit, push, and hosted exact-head verification pending
+- Status: Accepted design correction committed, pushed, and hosted-verified; final lifecycle reconciliation in progress
 - Objective:
   - Close six material gaps found in the accepted security and scale baseline before returning to dependency-boundary implementation.
 - Scope:
@@ -522,7 +522,10 @@ A session with no material change does not invent an entry. A session that makes
   - Frozen install, peer check, formatting, lint, strict types, all 18 tests, production build, and production dependency audit passed.
   - Lifecycle participation, internal Markdown links across 20 files, stale-control-language scan, six-control presence scan, and `git diff --check` passed.
   - Issue #3 and pull request #4 were updated and read back successfully; both remain open, and the pull request remains GitHub-mergeable with no review or review decision.
-  - Hosted exact-head verification remains pending until the correction is committed and pushed.
+  - Correction commit `609c23b8bf96be995a9c9347a442d8abaca59ff6` was pushed to pull request #4.
+  - Application-quality run `30262412048` and lifecycle run `30262412059` passed on that exact checkpoint with zero annotations.
+  - Pull request #4 remained open and GitHub-mergeable with no review decision or review object after hosted verification.
+  - CodeRabbit did not review the correction; its only current record remains the earlier rate-limited run and provides no independent review coverage.
 - Documentation:
   - Updated all four lifecycle documents and every affected canonical architecture, security, scale, and quality document.
 - Residual risks / exclusions:
@@ -530,4 +533,4 @@ A session with no material change does not invent an entry. A session that makes
   - Dependency enforcement, transaction scope, payment lifecycle, idempotency, evidence integrity, projection separation, and final issue/PR reconciliation remain merge blockers.
   - Pull request #4 remains open and unapproved.
 - Follow-up:
-  - Run the exact-toolchain and documentation gates, update issue #3 and pull request #4, commit and push the correction, inspect hosted exact-head checks and annotations, then resume automated dependency-boundary enforcement.
+  - Commit and push the lifecycle reconciliation, verify its exact hosted head, then resume automated dependency-boundary enforcement.
