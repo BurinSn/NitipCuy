@@ -1,10 +1,10 @@
 # NitipCuy Canonical Roadmap
 
-Last reviewed: 2026-07-25 17:15 WIB
+Last reviewed: 2026-07-27 17:00 WIB
 
 Current stage: Stage 1 - Platform foundation
 
-Current work item: Issue #3 architecture-foundation remediation; identity acceptance reconciled with the deliberately deferred persisted account slice
+Current work item: Issue #3 architecture-foundation remediation; binding security, anti-abuse, resilience, and scale baseline added before automated dependency-boundary enforcement
 
 ## 1. Role, authority, and freshness contract
 
@@ -53,6 +53,10 @@ The master product specification and accepted ADRs control detailed product beha
 13. Core domain behavior remains independent of DOKU, Biteship, or another provider.
 14. No external-provider unknown blocks building with mock provider ports.
 15. Threads is a later acquisition and feedback channel, not a prerequisite for platform development.
+16. Security is defense in depth and evidence-based: no framework, ORM, cloud provider, checklist, or passed build makes the platform attack-proof.
+17. The production web shape is stateless and horizontally scalable; process-local session, idempotency, rate-limit, lock, cache, or job state is forbidden.
+18. The complete production web application targets OWASP ASVS 5.0 Level 2, with additional risk-based review for high-impact flows.
+19. Capacity, availability, latency, recovery, provider-quota, and cost claims require approved numerical targets and tests.
 
 ## 4. Drift alarms
 
@@ -71,6 +75,12 @@ Stop and require a new impact analysis and BurinSN decision if work attempts to:
 - move real money before provider, legal, policy, security, and operational gates pass;
 - delay platform development merely to collect more Threads examples;
 - claim T&C removes all platform duties after known illegal or harmful activity.
+- claim that NitipCuy is DDoS-proof, injection-proof, session-hijack-proof, brute-force-proof, generally “secure,” or “scalable” without naming the exact evidence level;
+- rely on Vercel, Prisma, an identity provider, `SameSite`, CSP, or another single control as the complete security boundary;
+- store production sessions, idempotency, rate limits, locks, cache authority, or durable jobs only in one web process;
+- add unbounded search, pagination, uploads, provider calls, retries, database queries, or asynchronous work;
+- activate protected or real-money flows before their security, abuse, provider, monitoring, recovery, and incident gates pass;
+- split into microservices without a measured scaling, availability, security-isolation, ownership, or deployment trigger and a new ADR.
 
 ## 5. Delivery strategy
 
@@ -121,6 +131,9 @@ Status: In progress
 - [x] Issue #3 created with bounded acceptance and exclusions.
 - [x] Web-first stack, runtime, workspace shape, and deployment posture selected in ADR 0003.
 - [x] Identity, deny-by-default authorization, PostgreSQL, and migration direction recorded.
+- [x] ADR 0004 records the OWASP ASVS 5.0 Level 2 target, evidence-level claims, layered attack controls, stateless horizontal production shape, and capacity/recovery gates.
+- [x] Security architecture covers DDoS and cost abuse, injection, sessions, credential and OTP attacks, authorization, browser threats, uploads, SSRF, callbacks, secrets, monitoring, incident response, and verification.
+- [x] Scalability and resilience architecture covers caching, database and connection budgets, transaction and concurrency rules, durable workers, provider isolation, observability, load profiles, and evidence-driven extraction.
 - [x] Provider-independent payment, logistics, identity-verification, evidence-storage, clock, identifier, transaction, audit, and outbox interfaces and deterministic mocks exist.
 - [x] Framework-free domain, application, adapter, and delivery package layout established.
 - [ ] Mechanically enforce dependency direction; package manifests and TypeScript do not prevent cross-package relative imports.
@@ -145,6 +158,7 @@ Pull-request head, hosted checks, annotations, reviews, and mergeability are vol
 - [ ] Enforce and contract-test idempotency.
 - [ ] Replace caller-trusted evidence hashes and buffered raw-upload assumptions with a server-authoritative evidence lifecycle.
 - [ ] Clarify the public published-trip projection versus the future authoritative Trip aggregate.
+- [x] Establish the binding defense-in-depth security and evidence-based scale baseline without claiming the controls are implemented.
 - [ ] Reconcile all lifecycle, specialist, issue, and pull-request claims after the corrections.
 - [ ] Run final exact-toolchain, runtime, security, complete-diff, and hosted exact-head review.
 
@@ -167,6 +181,9 @@ account
 - [ ] Add the first PostgreSQL schema and reviewed migration through the isolated database adapter.
 - [ ] Add external-identity proof and protected server-authoritative mutations without storing passwords.
 - [ ] Add integration tests using disposable resources and explicit destructive-test guards.
+- [ ] Implement the first applicable security controls with the feature that needs them: secure session behavior, central authorization denials, multi-axis shared rate limits for protected actions, safe-query enforcement, CSRF and browser policy, private-data-safe logs, and bounded inputs.
+- [ ] Establish cursor pagination, query and connection budgets, and minimal database, application, and abuse observability for the persisted slice.
+- [ ] Record preliminary pilot capacity, provider-quota, cost, RPO, and RTO questions without inventing targets before the pilot is bounded.
 
 ### Experience slice
 
@@ -177,7 +194,7 @@ account
 
 Exit gate:
 
-- The repository is healthy and the first vertical slice works locally with documented architecture, tests, security boundaries, and approved product behavior.
+  - The repository is healthy and the first vertical slice works locally with documented architecture, automated negative tests, implemented applicable security boundaries, bounded resource use, and approved product behavior.
 
 ## 8. Stage 2 - Core marketplace MVP
 
@@ -194,6 +211,10 @@ Status: Pending Stage 1
 - [ ] Risk scanning, moderation, enforcement, and appeals.
 - [ ] Disputes and transaction-only reviews.
 - [ ] Administrator and support exception handling.
+- [ ] Shared production-shape session, idempotency, rate-limit, and abuse state; process-local implementations remain test-only.
+- [ ] Direct private evidence quarantine, server-observed hashes, validation, scanning, retention, and authorization-mediated downloads.
+- [ ] Transaction-bound outbox and durable retrying worker before asynchronous scans, notifications, provider retries, or reconciliation.
+- [ ] Bounded cursor-paginated reads, request and provider budgets, circuit breakers, kill switches, and actionable observability.
 
 Real funds and production logistics remain disabled.
 
@@ -214,6 +235,11 @@ Required before real transactions:
 - [ ] Cancellation, refund, dispute, insurance, loss, damage, and provider-cost allocation matrix.
 - [ ] Pilot route, category, value, weight, capacity, and participant boundaries.
 - [ ] Legal, privacy, security, incident-response, support, reconciliation, and operational sign-off.
+- [ ] Applicable OWASP ASVS 5.0 Level 2 requirements traced to current evidence, with independent review of high-impact flows.
+- [ ] Actual identity, cookie, header, edge, WAF, bot, rate-limit, database, storage, payment, and logistics configurations verified in non-production.
+- [ ] BurinSN-approved user, traffic, latency, availability, data, provider-quota, recovery, and cost capacity contract.
+- [ ] Ramp, spike, soak, abuse, provider-failure, and recovery profiles passed in an isolated environment against that contract.
+- [ ] Backup restore, session revocation, provider kill switches, incident response, and evidence preservation rehearsed.
 
 Initial production payment rails remain QRIS and selected Virtual Accounts. Cards, PayLater, and convenience stores remain disabled until separately approved.
 
@@ -251,11 +277,11 @@ The unresolved DOKU, logistics, policy, legal, and pilot items listed in Stage 3
 
 ### Now
 
-Push the final review-state documentation checkpoint. If the resulting live head passes both hosted workflows without material annotations or findings and remains mergeable, post the final audit and request fresh owner approval; otherwise fix the live head.
+Validate and publish the security, anti-abuse, resilience, and scale architecture amendment on pull request #4. Verify the resulting exact head and lifecycle truth, then implement automated dependency-boundary enforcement as the next bounded hostile-review correction. Do not treat the accepted design as implemented production security.
 
 ### Next
 
-Obtain fresh owner approval for issue #3 after exact-head hosted evidence, then implement the persisted account-to-public-Q&A vertical slice through a new governed issue.
+Resolve transaction scope, payment lifecycle, idempotency, evidence integrity, and projection findings; reconcile exact-head evidence; then obtain fresh owner approval for issue #3. After merge, implement the persisted account-to-public-Q&A vertical slice through a new governed issue with the applicable security and resource-bound controls.
 
 ### Later
 

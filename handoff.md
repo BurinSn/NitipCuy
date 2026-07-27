@@ -1,6 +1,6 @@
 # NitipCuy Cross-Session Handoff
 
-Last updated: 2026-07-25 17:15 WIB
+Last updated: 2026-07-27 17:00 WIB
 
 Handoff owner: Codex
 
@@ -78,9 +78,18 @@ ADR 0003 selects:
 - provider-independent payment, logistics, identity, evidence, repository, audit, and outbox contracts;
 - Vercel Node.js in `sin1` plus Singapore PostgreSQL as the intended first hosting posture, without provisioning or deployment authority.
 
+ADR 0004 adds:
+
+- OWASP ASVS 5.0 Level 2 as the complete production web-application verification target, with additional risk-based review for high-impact flows;
+- layered edge, WAF, bot, shared rate-limit, resource-budget, session, authorization, query, upload, callback, monitoring, incident, and recovery controls;
+- explicit evidence levels from designed through incident-tested so accepted architecture cannot be mislabeled production security;
+- stateless horizontally scalable web instances, pooled PostgreSQL, shared cross-request control state, private direct-to-quarantine evidence storage, and durable workers before asynchronous work;
+- numerical capacity, provider-quota, cost, RPO, RTO, load, abuse, and recovery evidence before real-money pilot activation;
+- evidence-driven optimization and service extraction instead of premature microservices.
+
 Issue #3 proves these boundaries with simulated public trip discovery, destination/date search, trip detail, chronological public Q&A, and deterministic platform-service mocks. It intentionally implements no account, protected mutation, address, private chat, database, real provider, or payment movement.
 
-The shell is a functional architecture probe. It is not a production UI and has no visual approval.
+The shell is a functional architecture probe. It is not a production UI, has no visual approval, and does not implement or verify the production security and scaling controls in ADR 0004.
 
 ## 5. Verified repository state
 
@@ -94,11 +103,12 @@ The shell is a functional architecture probe. It is not a production UI and has 
 | Active issue | [#3 Establish web architecture and application foundation](https://github.com/BurinSn/NitipCuy/issues/3) |
 | Active branch | `feat/3-architecture-foundation` |
 | Pull request | [#4 feat: establish application architecture foundation](https://github.com/BurinSn/NitipCuy/pull/4) |
-| Last audited pushed correction head | `96a7ff9dc9a9a7542770f05070540f4cf7fb3ec1` |
-| Checks at that checkpoint | Application quality run `30154018299` and lifecycle run `30154018297` passed without annotations |
+| Last live-verified pushed correction head | `7489b2d38b3c40963f78283f93c8b3c74a4f0296` |
+| Checks at that checkpoint | Application quality run `30154201296` and lifecycle run `30154201300` passed without annotations |
 | Independent review at that checkpoint | None; CodeRabbit reported success only because review was rate-limited and created no review object or findings |
 | First hostile-review correction | Published-trip runtime invariants committed, pushed, and hosted-verified |
-| Second hostile-review correction | Issue #3 identity acceptance and pull-request scope reconciled with the deliberately deferred persisted account implementation; lifecycle commit and hosted verification pending |
+| Second hostile-review correction | Issue #3 identity acceptance and pull-request scope reconciled with the deliberately deferred persisted account implementation; committed, pushed, and hosted-verified |
+| Current local amendment | Accepted security, anti-abuse, resilience, and scale baseline; local validation and GitHub metadata reconciliation passed; commit, push, and hosted verification pending |
 | Live head, checks, reviews, and mergeability | Volatile; retrieve directly before any approval or merge action |
 | Merge authority | Not granted for issue #3; fresh BurinSN approval is required after exact-head evidence |
 | Branch protection | Unavailable for this private repository on the current GitHub plan |
@@ -113,6 +123,8 @@ Issue #3 owns the architecture and application-foundation slice. A direct hostil
 
 The issue now states that external-identity-to-internal-account mapping and deny-by-default authorization are documented architecture directions. Mapping implementation is explicitly deferred to the first persisted account slice, matching the issue scope, exclusions, ADR 0003, current code, and roadmap.
 
+The current local amendment answers BurinSN's security and growth requirement through ADR 0004 plus dedicated security and scalability documents. It defines controls for DDoS and cost abuse, SQL injection, session compromise, credential and OTP attacks, authorization, browser threats, uploads, SSRF, callbacks, secrets, monitoring, recovery, stateless horizontal scaling, bounded PostgreSQL access, durable work, provider isolation, capacity, and load testing. These are binding design requirements. They are not claims that production infrastructure or controls exist.
+
 Implemented locally:
 
 - ADR 0003 and the supporting system-architecture document;
@@ -126,6 +138,7 @@ Implemented locally:
 - a local Indonesian web shell with explicit simulated-data and inactive-transaction notices;
 - PR-only application-quality CI with read-only permission and immutable action references;
 - local quality-gate documentation and production dependency overrides for audited patched `postcss` and `sharp` versions.
+- accepted security, anti-abuse, resilience, and scale requirements with explicit evidence-level claims and pilot gates.
 
 Deliberately excluded:
 
@@ -176,6 +189,8 @@ Still required before requesting merge:
 
 Browser automation and visual approval were not performed and are not claimed.
 
+The security and scale amendment passed the exact-toolchain frozen install, peer, format, lint, type, 18-test, production-build, production-audit, lifecycle, internal-link, and diff gates. Issue #3 and pull request #4 were reconciled with the accepted design and explicit implementation non-claims. Commit, push, and hosted exact-head verification remain pending. No WAF, bot control, shared rate limiter, production session, database, private upload pipeline, worker, monitoring, backup, load test, security test, or provider configuration was activated by the documentation.
+
 ## 8. Blockers and gates
 
 No external blocker prevents continuing provider-independent development with mocks.
@@ -199,14 +214,21 @@ The following still block real-money pilot activation:
 5. cancellation, refund, dispute, insurance, loss, damage, customs, and provider-cost allocation policy;
 6. bounded pilot route, category, value, weight, capacity, and participant rules;
 7. legal, privacy, security, incident-response, support, reconciliation, and operational sign-off.
+8. applicable OWASP ASVS 5.0 Level 2 traceability and independent review of high-impact flows;
+9. verified identity, cookie, header, edge, WAF, bot, rate-limit, database, storage, payment, and logistics configuration;
+10. approved capacity, latency, availability, provider-quota, cost, RPO, and RTO contract;
+11. isolated ramp, spike, soak, abuse, provider-failure, and recovery evidence;
+12. backup restore, session revocation, provider kill switch, incident response, and evidence-preservation exercises.
 
 These are Stage 3 activation gates, not reasons to delay provider-independent platform work.
 
 ## 9. Exact next action
 
-Retrieve the live branch, issue, and pull-request state. If the identity acceptance reconciliation is not committed and pushed, validate, commit, and push it, then verify pull request #4 on that exact head. If it is pushed and the lifecycle and application-quality checks pass without material annotations, begin automated dependency-boundary enforcement. Do not request merge approval because the remaining findings above are still open.
+Validate the complete security and scale documentation amendment, reconcile issue #3 and pull request #4 so they record the accepted design without claiming implementation, run the lifecycle and complete-diff gates, commit and push the bounded amendment, and verify hosted checks and annotations on its exact head. Then begin automated dependency-boundary enforcement as the next implementation correction.
 
 Do not add account persistence or a production identity provider to issue #3. Those belong to the first persisted account slice after this architecture issue is corrected and merged.
+
+Do not provision WAF, rate-limit, identity, database, storage, worker, monitoring, backup, security-test, load-test, or production infrastructure merely because the requirements are accepted.
 
 Do not create another pull request.
 

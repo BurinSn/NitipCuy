@@ -446,3 +446,43 @@ A session with no material change does not invent an entry. A session that makes
   - Hosted workflows must run again after the lifecycle commit changes the pull-request head.
 - Follow-up:
   - Validate lifecycle freshness and formatting, commit and push this correction, verify the new exact-head checks and annotations, then implement automated dependency-boundary enforcement.
+
+## 2026-07-27 17:00 WIB - Security, resilience, and scale baseline established
+
+- Issue / PR: Issue #3; pull request #4
+- Product: NitipCuy
+- Type: Security architecture, anti-abuse, resilience, capacity, and lifecycle amendment
+- Status: Accepted design documented and locally validated; issue and pull-request metadata reconciled; commit, push, and hosted exact-head evidence pending
+- Objective:
+  - Make security against DDoS and resource exhaustion, SQL injection, session compromise, credential and OTP attacks, and other common web threats a binding project requirement while preserving a realistic, testable path to horizontal growth.
+- Scope:
+  - Architecture decision and specialist documents, system architecture, quality gates, roadmap, contributor rules, README, and all four lifecycle documents.
+- Changes:
+  - Added ADR 0004 to require defense in depth, OWASP ASVS 5.0 Level 2 as the complete production web target, stateless horizontal scaling, bounded expensive work, secure sessions and authorization, safe persistence, hostile file/callback/outbound handling, measurable capacity, and explicit evidence levels.
+  - Added a security architecture covering assets, trust boundaries, a threat-control matrix, DDoS and cost abuse, authentication and sessions, brute force and automation, authorization, SQL injection, XSS, CSRF, uploads, SSRF, callbacks, secrets, private logs, monitoring, incident response, and launch gates.
+  - Added a scalability and resilience architecture covering public caching, pooled PostgreSQL, connection and query budgets, transactions, idempotency, durable workers, provider isolation, graceful degradation, observability, capacity contracts, load profiles, scaling sequence, backup, and recovery.
+  - Updated system architecture and quality gates so “designed,” “implemented,” “source-tested,” “runtime-tested,” “load-tested,” “provider-verified,” and “incident-tested” cannot be collapsed into a false security or scale claim.
+  - Updated Stage 1 through Stage 3 roadmap gates so each protected feature carries its applicable controls and real-money pilot activation requires configuration, load, abuse, restore, revocation, kill-switch, and incident evidence.
+  - Kept the current issue #3 architecture shell explicitly separate from production security implementation.
+- Impact:
+  - Future sessions have concrete, provider-independent acceptance criteria instead of a general instruction to “be secure” or “scale.”
+  - The starting modular monolith remains appropriate, but production correctness may not depend on one process.
+  - Security and capacity work becomes incremental with the feature that introduces risk; it is not deferred until launch and is not falsely claimed by documentation alone.
+- Validation:
+  - Primary guidance was checked from OWASP ASVS 5.0, OWASP cheat sheets and API Security, Next.js, Prisma, Vercel, and Neon documentation on 2026-07-27.
+  - Exact Node.js `24.18.0` and pnpm `11.17.0` were used.
+  - Frozen install was already up to date and `pnpm peers check` found no peer dependency issue.
+  - `pnpm check` passed formatting, lint, strict type checking, all 18 tests, and the production build.
+  - `pnpm audit:prod` reported no known production vulnerability.
+  - Lifecycle participation, internal Markdown links across 19 files, and `git diff --check` passed.
+  - Live issue #3 and pull request #4 were retrieved before mutation, then updated to record the accepted design, exclusions, evidence levels, remaining blockers, and non-claims.
+  - Commit, push, and hosted exact-head results remain pending at this entry's current checkpoint.
+- Documentation:
+  - Added `docs/decisions/0004-security-resilience-and-scale-baseline.md`, `docs/security/security-architecture.md`, and `docs/architecture/scalability-and-resilience.md`.
+  - Updated `AGENTS.md`, `README.md`, `handoff.md`, `docs/architecture/system-architecture.md`, `docs/development/quality-gates.md`, `docs/roadmap.md`, `docs/changes.md`, and `docs/learning.md`.
+- Residual risks / exclusions:
+  - This amendment does not activate or verify identity, sessions, WAF, bot controls, shared rate limiting, a database, object storage, a worker, providers, monitoring, backup, load testing, security testing, deployment, or production.
+  - No claim of DDoS immunity, complete injection prevention, session safety, brute-force immunity, OWASP conformance, production capacity, or incident readiness is made.
+  - Existing hostile-review blockers for dependency enforcement, transaction scope, payment lifecycle, idempotency, evidence integrity, projection boundaries, and final reconciliation remain.
+- Follow-up:
+  - Validate and reconcile the amendment, publish it on pull request #4 with exact-head evidence, then implement automated dependency-boundary enforcement as the next bounded correction.

@@ -13,7 +13,7 @@ The product replaces fragmented promotion and repetitive private questions with 
 
 Stage 1 platform foundation is in progress under [issue #3](https://github.com/BurinSn/NitipCuy/issues/3).
 
-The repository now contains a modular-monolith architecture, provider-independent ports, deterministic mock adapters, unit tests, quality gates, and a working local read-only trip-discovery shell. The shell uses simulated public data and is not production, provider, payment, legal, security, or visual approval.
+The repository now contains a modular-monolith architecture, provider-independent ports, deterministic mock adapters, unit tests, quality gates, a defense-in-depth security and scale baseline, and a working local read-only trip-discovery shell. The shell uses simulated public data. The security and scale controls are accepted design requirements, not proof that production controls are implemented or that the shell has production, provider, payment, legal, security, capacity, or visual approval.
 
 DOKU remains the preferred payment candidate, conditional on written Partner/Aggregator approval and resolution of the gates in the [DOKU evaluation](docs/payments/doku-evaluation.md). No provider, deployment, database, or production account is active.
 
@@ -60,7 +60,7 @@ packages/application     use cases and provider-neutral ports
 packages/adapters        in-memory and mock adapter implementations
 ```
 
-The [system architecture](docs/architecture/system-architecture.md) and [ADR 0003](docs/decisions/0003-web-architecture-and-application-foundation.md) define the binding dependency and security boundaries.
+The [system architecture](docs/architecture/system-architecture.md), [ADR 0003](docs/decisions/0003-web-architecture-and-application-foundation.md), and [ADR 0004](docs/decisions/0004-security-resilience-and-scale-baseline.md) define the binding dependency, security, resilience, and scaling boundaries.
 
 ## Documentation
 
@@ -70,9 +70,12 @@ The [system architecture](docs/architecture/system-architecture.md) and [ADR 000
 | [Master specification](docs/product/master-specification.md) | Canonical product and commercial model |
 | [Order lifecycle](docs/product/order-lifecycle.md) | Trip, order, payment, fulfilment, and dispute states |
 | [System architecture](docs/architecture/system-architecture.md) | Runtime, modules, data boundaries, security, and provider ports |
+| [Security architecture](docs/security/security-architecture.md) | Threat model, defense-in-depth controls, and security verification gates |
+| [Scalability and resilience](docs/architecture/scalability-and-resilience.md) | Stateless scaling, database and worker discipline, capacity, load, and recovery gates |
 | [Product-boundary ADR](docs/decisions/0001-product-boundary-and-commercial-model.md) | Standalone product, seller-rate rights, and transaction-fee model |
 | [DOKU preference ADR](docs/decisions/0002-doku-conditional-preference.md) | Conditional payment-provider direction and activation gates |
 | [Architecture ADR](docs/decisions/0003-web-architecture-and-application-foundation.md) | Stack, deployment posture, alternatives, and extraction triggers |
+| [Security and scale ADR](docs/decisions/0004-security-resilience-and-scale-baseline.md) | Accepted security target, layered controls, scalable runtime, and evidence levels |
 | [Quality gates](docs/development/quality-gates.md) | Supported toolchain and validation requirements |
 | [Moderation model](docs/trust-safety/moderation-model.md) | Scanning, enforcement, evidence, and appeals |
 | [DOKU evaluation](docs/payments/doku-evaluation.md) | Payment-provider fit, costs, settlement, and blockers |

@@ -2,26 +2,34 @@
 
 Status: Accepted direction; issue #3 implementation corrections in progress
 
-Last reviewed: 2026-07-25
+Last reviewed: 2026-07-27
 
-Binding decision: [ADR 0003](../decisions/0003-web-architecture-and-application-foundation.md)
+Binding decisions:
+
+- [ADR 0003: Web architecture and application foundation](../decisions/0003-web-architecture-and-application-foundation.md)
+- [ADR 0004: Security, resilience, and scale baseline](../decisions/0004-security-resilience-and-scale-baseline.md)
 
 ## 1. Architectural objective
 
 NitipCuy must make jastip discovery and transactions explicit, evidence-backed, and safer without turning BurinSN into the merchant, importer, customs broker, carrier, or seller for every item.
 
-The architecture therefore protects five properties:
+The architecture therefore protects seven properties:
 
 1. domain rules remain independent of frameworks and providers;
 2. public discovery never leaks private identity, address, order, or evidence data;
 3. every protected mutation is authorized, idempotent, attributable, and auditable;
 4. payment and logistics states are reconciled rather than trusted from redirects or callbacks;
 5. production provider uncertainty does not block mock-backed platform development.
+6. public and protected work is bounded, observable, recoverable, and safe to operate across multiple web instances;
+7. security claims distinguish accepted design from implemented, runtime-tested, provider-verified, load-tested, and incident-tested controls.
 
 ## 2. Runtime shape
 
 ```text
 Browser
+  |
+  v
+Edge network / DDoS mitigation / WAF / bot controls
   |
   v
 Next.js App Router on Node.js 24
@@ -44,6 +52,8 @@ Application use cases
 ```
 
 Only the web application is deployable in Stage 1. Domain, application, and adapters are packages, not network services.
+
+The first production shape must be stateless and horizontally scalable. Cross-request session, idempotency, rate-limit, cache, transaction, and job state may not rely on one web process. Durable asynchronous work requires a transaction-bound outbox and retrying worker. The full runtime and extraction rules live in [Scalability and resilience](scalability-and-resilience.md).
 
 ## 3. Source layout and dependency rules
 
@@ -221,6 +231,8 @@ Initial target:
 
 Production database creation is not authorized by this document.
 
+Runtime database access must also use separate least-privilege application and migration identities, explicit connection budgets, statement and transaction timeouts, bounded queries, and reviewed indexes. Prisma-generated operations are the default. Unsafe raw-query APIs are forbidden in application source; exceptional raw SQL requires tagged parameterization, allowlisted dynamic identifiers, focused tests, and review.
+
 ## 7. Identity and authorization
 
 ### Identity
@@ -309,19 +321,21 @@ Extract a worker deployment only when duration, throughput, or availability evid
 
 ## 11. Security baseline
 
-- No secrets or production URLs in Git.
-- No production provider calls from tests or previews.
-- Environment parsing is server-only and fail-fast.
-- All external text, numbers, files, redirects, callbacks, and statuses are untrusted.
-- Mutation inputs receive schema validation at the delivery boundary and invariant validation in the domain.
-- Rate limiting, bot controls, and abuse signals protect registration, publication, discussion, checkout, upload, and reporting.
-- Private files use authorization-mediated access, non-public storage, type and size limits, malware scanning, hash evidence, and retention policy.
-- Structured logs exclude addresses, identity documents, payment data, tokens, raw chat, and uploaded content.
-- Audit records include actor, action, target, reason, time, request correlation, and outcome.
-- Security headers, content security policy, secure cookies, CSRF controls, and open-redirect checks are required before protected browser flows.
-- Dependency and workflow action references are pinned and audited.
+The binding detail is [Security architecture](../security/security-architecture.md). The complete production web application targets OWASP ASVS 5.0 Level 2, with additional risk-based controls for payment, settlement, moderation, support, administrator, identity-evidence, and recovery operations.
+
+Required properties include:
+
+- edge DDoS mitigation plus WAF, bot controls, shared multi-axis rate limits, request budgets, provider-spend ceilings, circuit breakers, and operator kill switches;
+- external reviewed authentication, secure opaque cookie sessions, rotation, expiry, revocation, step-up, generic errors, and server-side deny-by-default authorization;
+- layered runtime schemas, domain invariants, parameterized persistence, database constraints, least privilege, query timeouts, and bounded results;
+- safe rendering, CSRF controls, content security policy, browser security headers, exact redirect and CORS allowlists, and SSRF-resistant outbound adapters;
+- private direct-to-quarantine uploads with server-observed hash, actual-type and size checks, scanning, authorization-mediated access, and retention;
+- callback signature, timestamp, replay, inbox, idempotency, and reconciliation controls;
+- managed secrets, private-data-safe logs, append-only audit, dependency and workflow integrity, security monitoring, incident response, backup, and tested recovery.
 
 The trust-and-safety behavior remains governed by [the moderation model](../trust-safety/moderation-model.md).
+
+No provider, ORM, framework, checklist, or passed build makes NitipCuy attack-proof. Controls may be described only at their highest evidenced level: designed, implemented, source-tested, runtime-tested, load-tested, provider-verified, or incident-tested.
 
 ## 12. Quality and test boundaries
 
@@ -383,5 +397,7 @@ Not implemented:
 - private data;
 - real providers;
 - order, payment, evidence, logistics, moderation, dispute, or review workflows;
+- shared WAF, rate-limit, bot, session, idempotency, cache, worker, observability, backup, or recovery infrastructure;
+- runtime security configuration, load and abuse tests, provider configuration review, incident exercises, or penetration testing;
 - production deployment;
 - visual approval.

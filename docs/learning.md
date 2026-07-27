@@ -436,3 +436,53 @@ Do not present inference, provider marketing, provisional pricing, or a future i
 ### No product-model change
 
 - The correction does not change NitipCuy's roles, service modes, rates, transaction fee, payment direction, logistics direction, moderation duties, or platform-first sequence.
+
+## 2026-07-27 17:00 WIB - Security and scale require layered, measurable evidence
+
+### Verified
+
+- OWASP ASVS 5.0.0 is the current stable ASVS release and provides a requirements basis for testing web-application security controls.
+  - Evidence: [OWASP ASVS project](https://owasp.org/www-project-application-security-verification-standard/) checked 2026-07-27.
+  - Impact: target Level 2 for the complete NitipCuy production web application and apply additional risk-based review to high-impact flows; do not claim current verification.
+- Parameterized queries are the primary SQL-injection defense, while string-built queries, untrusted dynamic identifiers, unsafe raw APIs, and excessive database privilege remain independent risks.
+  - Evidence: [OWASP SQL Injection Prevention](https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html) and [Prisma raw-query documentation](https://www.prisma.io/docs/orm/prisma-client/using-raw-sql/raw-queries), checked 2026-07-27.
+  - Impact: generated Prisma operations are the default, unsafe raw APIs are forbidden, and exceptional raw SQL requires tagged parameterization, allowlists, focused tests, review, and least-privilege roles.
+- Session protection requires more than an authenticated page or signed cookie.
+  - Evidence: [OWASP Session Management](https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html) and [Next.js authentication guidance](https://nextjs.org/docs/app/guides/authentication), checked 2026-07-27.
+  - Impact: require opaque secure cookies, rotation, idle and absolute expiry, server-side revocation, step-up, a central data-access boundary, and command-level authorization.
+- Credential attacks must be controlled across independent dimensions rather than only one IP-and-account pair.
+  - Evidence: [OWASP Credential Stuffing Prevention](https://cheatsheetseries.owasp.org/cheatsheets/Credential_Stuffing_Prevention_Cheat_Sheet.html) and [Bot Management and Anti-Automation](https://cheatsheetseries.owasp.org/cheatsheets/Bot_Management_and_Anti-Automation_Cheat_Sheet.html), checked 2026-07-27.
+  - Impact: combine shared network, account, session or device, action, target, challenge, step-up, anomaly, and spending controls while avoiding permanent lockout as the only response.
+- Edge-provider DDoS mitigation does not remove application resource, database, provider-quota, or cost-exhaustion risk.
+  - Evidence: [Vercel DDoS mitigation](https://vercel.com/docs/vercel-firewall/ddos-mitigation), [Vercel Firewall](https://vercel.com/docs/vercel-firewall), [OWASP denial-of-service guidance](https://cheatsheetseries.owasp.org/cheatsheets/Denial_of_Service_Cheat_Sheet.html), and [OWASP API4:2023](https://owasp.org/API-Security/editions/2023/en/0xa4-unrestricted-resource-consumption/), checked 2026-07-27.
+  - Impact: require edge protection plus shared multi-axis limits, bounded payloads and queries, circuit breakers, provider-spend ceilings, alerts, and kill switches.
+- A pooled serverless database can accept many clients without having capacity to execute the same number of simultaneous operations.
+  - Evidence: [Neon connection-pooling guidance](https://neon.com/docs/connect/connection-pooling), checked 2026-07-27.
+  - Impact: size web and worker connection budgets from active database capacity, query latency, working set, and contention rather than an advertised client-connection ceiling.
+
+### Accepted
+
+- Start with a stateless modular monolith, not microservices.
+  - Evidence: NitipCuy has one product, one web client, one developer, and no measured independently scaled or isolated workload.
+  - Impact: use horizontal web instances, pooled PostgreSQL, shared control state, private object storage, and a durable worker; extract only after measured evidence and a new ADR.
+- Security and scale requirements travel with the feature that creates the risk.
+  - Evidence: deferring sessions, upload safety, callbacks, transaction integrity, or resource bounds until launch would allow unsafe contracts to harden.
+  - Impact: the first persisted and protected slices must implement and test their applicable controls while production-only provider and load evidence remains a later activation gate.
+
+### Corrected
+
+- Dependency-boundary enforcement is necessary but cannot establish application security.
+  - Supersedes: any implication that mechanically correct imports would cover SQL injection, session compromise, DDoS, brute force, browser threats, uploads, callbacks, or operational recovery.
+  - Impact: keep dependency enforcement as the next issue #3 code correction and maintain separate security, runtime, provider, load, and incident gates.
+- “Support many users” is not a capacity target.
+  - Supersedes: an unbounded qualitative scalability claim.
+  - Impact: approve explicit concurrency, request mix, latency, availability, data, provider-quota, recovery, and cost targets before testing or making capacity claims.
+
+### Deferred
+
+- Exact pilot concurrency, traffic, latency, availability, data volume, provider quotas, cost ceilings, RPO, and RTO remain open until the closed pilot is bounded.
+- Actual Vercel plan controls, Neon compute and pooling, identity provider, shared limiter or session store, object storage, scanner, worker, monitoring, and security-testing tools remain selection and runtime-verification work. Their documentation availability is not provider configuration evidence.
+
+### No product-model change
+
+- The security and scale baseline does not change NitipCuy's roles, Shop for me and Carry my item services, seller-defined rates, platform fee direction, DOKU conditional preference, logistics direction, moderation responsibilities, or platform-first sequence.
