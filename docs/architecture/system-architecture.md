@@ -218,7 +218,9 @@ Core rules:
 - use append-only audit and financial records;
 - keep current projections separate from immutable history;
 - never use destructive schema synchronization in production;
-- migrations are reviewed source files and run separately from application startup.
+- migrations are reviewed source files and run separately from application startup;
+- use expand-and-contract releases: additive schema and compatible code first, bounded backfill and observed cutover next, destructive cleanup only after the rollback and version-skew window closes;
+- keep old and new web and worker versions compatible throughout rolling deployment, including queued outbox payloads and retries.
 
 Initial target:
 
@@ -249,6 +251,8 @@ The system stores:
 It does not store passwords.
 
 Seller verification is not the same as login. It may include liveness, identity, bank ownership, provider KYB, and platform trust review.
+
+Administrator, support, moderation, payment, payout, refund, bank-detail change, factor replacement, and account-recovery flows require an approved phishing-resistant MFA or high-assurance step-up contract. Identity-provider selection must satisfy that contract; unavailable capability is not a reason to downgrade it. Recovery must not be weaker than the assurance it replaces.
 
 ### Authorization
 
@@ -290,6 +294,8 @@ Private:
 
 Private data is fetched only after authorization and is never embedded in public cache entries or static fixtures.
 
+Provider encryption at rest and in transit is mandatory for private persistence and backups. Threat modelling selects high-impact identity, bank, contact, address, verification, payment-reference, and evidence fields for application-level envelope encryption through an outer managed-key adapter. The domain may carry key identifiers and format versions but never raw keys or provider cryptography.
+
 ## 9. Provider port rules
 
 Every provider adapter must:
@@ -326,11 +332,15 @@ The binding detail is [Security architecture](../security/security-architecture.
 Required properties include:
 
 - edge DDoS mitigation plus WAF, bot controls, shared multi-axis rate limits, request budgets, provider-spend ceilings, circuit breakers, and operator kill switches;
-- external reviewed authentication, secure opaque cookie sessions, rotation, expiry, revocation, step-up, generic errors, and server-side deny-by-default authorization;
+- an edge-only origin, explicit trusted-proxy chain, overwritten forwarding headers, canonical host/origin/absolute-URL policy, and tested direct-origin denial;
+- explicit dependency-outage behavior: protected identity, transaction, evidence, moderation, support, and administrator actions fail closed when required security controls are unavailable;
+- external reviewed authentication, secure opaque cookie sessions, rotation, expiry, revocation, mandatory privileged phishing-resistant MFA or approved high-assurance step-up, non-downgrading recovery, generic errors, and server-side deny-by-default authorization;
 - layered runtime schemas, domain invariants, parameterized persistence, database constraints, least privilege, query timeouts, and bounded results;
 - safe rendering, CSRF controls, content security policy, browser security headers, exact redirect and CORS allowlists, and SSRF-resistant outbound adapters;
 - private direct-to-quarantine uploads with server-observed hash, actual-type and size checks, scanning, authorization-mediated access, and retention;
 - callback signature, timestamp, replay, inbox, idempotency, and reconciliation controls;
+- provider and application-level encryption where the threat model requires it, managed key lifecycle and compromise recovery, encrypted backup and verified deletion;
+- public-only canonical caching with poisoning, deception, stampede, hot-key, and bounded-staleness controls;
 - managed secrets, private-data-safe logs, append-only audit, dependency and workflow integrity, security monitoring, incident response, backup, and tested recovery.
 
 The trust-and-safety behavior remains governed by [the moderation model](../trust-safety/moderation-model.md).
@@ -352,7 +362,7 @@ The domain invariant tests satisfy the published-trip validation and cross-offse
 
 Integration tests later exercise:
 
-- migrations and constraints on disposable PostgreSQL;
+- expand-and-contract migrations, interrupted backfills, mixed old/new application versions, rollback or forward-fix, and constraints on disposable PostgreSQL;
 - repository mapping and transactions;
 - provider signature and event inbox handling;
 - private object-storage authorization;
@@ -398,6 +408,7 @@ Not implemented:
 - real providers;
 - order, payment, evidence, logistics, moderation, dispute, or review workflows;
 - shared WAF, rate-limit, bot, session, idempotency, cache, worker, observability, backup, or recovery infrastructure;
+- trusted-proxy/canonical-host configuration, privileged MFA, managed-key encryption lifecycle, cache-safety controls, or mixed-version deployment evidence;
 - runtime security configuration, load and abuse tests, provider configuration review, incident exercises, or penetration testing;
 - production deployment;
 - visual approval.

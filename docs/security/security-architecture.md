@@ -73,6 +73,7 @@ The browser, URL, headers, cookies, hidden fields, client role, file name, MIME 
 | Threat | Required primary controls | Required evidence before affected production flow |
 |---|---|---|
 | DDoS and resource exhaustion | Provider DDoS layer, WAF, shared rate limits, request and cost budgets, cache, circuit breakers | Runtime provider configuration, load and abuse tests, alert and kill-switch exercise |
+| Proxy, host, or forwarding-header spoofing | Edge-only origin, trusted proxy allowlist, stripped and overwritten forwarding headers, canonical host and origin | Direct-origin denial, forged-header, host-confusion, redirect, and callback-URL tests |
 | SQL injection | ORM by default, parameterized exceptional SQL, allowlisted identifiers, least-privilege DB roles | Static ban, unit/integration negative tests, focused raw-query review |
 | Broken object or function authorization | Central server-side authorization, ownership and capability checks, deny by default | Unit and integration denial matrix; browser cross-account tests |
 | Session hijacking or fixation | HTTPS/HSTS, opaque cookie session, Secure/HttpOnly/host scope, rotation, expiry, revocation, step-up | Cookie/config review, runtime rotation and revocation tests |
@@ -82,6 +83,8 @@ The browser, URL, headers, cookies, hidden fields, client role, file name, MIME 
 | SSRF | Outbound allowlist, safe resolution, private-range block, timeout, redirect and response-size limits | Unit and integration destination-bypass tests |
 | Forged or replayed webhook | Signature, timestamp, inbox dedupe, idempotency, reconciliation | Provider fixture and replay tests; provider sandbox verification |
 | Secrets or private-data leakage | Managed secrets, least privilege, redacted logs, DTOs, private storage, retention | Secret scan, logging tests, access review, deletion exercise |
+| Encryption-key loss or compromise | Managed KMS/HSM, envelope encryption, separated keys and data, versioned rotation, revocation, recovery | Configuration review, key rotation and restore test, compromise and deletion exercise |
+| Cache poisoning, deception, or stampede | Canonical bounded keys, public-only policy, response classification, coalescing, stale limits, hot-key budgets | Poisoning/deception negative tests, concurrent-miss and hot-key load tests |
 | Supply-chain compromise | Frozen lockfile, minimum release age, immutable workflow actions, audit, provenance review | CI evidence and reviewed dependency diff |
 | Privileged or support abuse | Least privilege, step-up, reason codes, dual-control where warranted, append-only audit | Capability matrix tests and audit review |
 
@@ -92,8 +95,10 @@ The initial Vercel direction may use the provider's network DDoS protection, fir
 Required layers:
 
 1. Put every public origin behind the approved edge; do not expose an alternate unprotected application origin.
-2. Apply managed WAF rules and narrowly reviewed custom rules.
-3. Use separate rate-limit policies for:
+2. Restrict origin ingress to the approved edge path. Trust forwarding information only from an explicit proxy chain that strips and overwrites client-supplied `Forwarded`, `X-Forwarded-*`, and equivalent platform headers.
+3. Derive client IP, scheme, host, origin, redirect targets, callback URLs, and absolute URLs from one canonical server-owned policy. Reject unknown hosts, conflicting proxy metadata, and direct-origin traffic; never let a user-supplied host select a security boundary or generated URL.
+4. Apply managed WAF rules and narrowly reviewed custom rules.
+5. Use separate rate-limit policies for:
    - public discovery and search;
    - account creation and identity callbacks;
    - login, OTP request, OTP submission, recovery, and resend;
@@ -101,12 +106,24 @@ Required layers:
    - checkout, payment initiation, refund, and payout changes;
    - evidence upload and download;
    - reports, disputes, moderation, support, and administrator actions.
-4. Combine relevant keys such as network or IP reputation, account, session or device, action, and target resource. A single IP-plus-username bucket is insufficient.
-5. Store authoritative counters in a shared system or enforce them at the edge. Process-local counters are test-only.
-6. Use progressive delay, challenge, temporary deny, and risk review. Avoid permanent account lockout as the only response because attackers can use it to deny service to victims.
-7. Bound request bodies, field sizes, array counts, page sizes, upload counts, provider calls, database time, and execution time.
-8. Apply global circuit breakers, provider-spend thresholds, alerts, and operator kill switches to expensive or dangerous operations.
-9. Preserve essential read access where safe while disabling nonessential writes or provider calls during an incident.
+6. Combine relevant keys such as network or IP reputation, account, session or device, action, and target resource. A single IP-plus-username bucket is insufficient.
+7. Store authoritative counters in a shared system or enforce them at the edge. Process-local counters are test-only.
+8. Use progressive delay, challenge, temporary deny, and risk review. Avoid permanent account lockout as the only response because attackers can use it to deny service to victims.
+9. Bound request bodies, field sizes, array counts, page sizes, upload counts, provider calls, database time, and execution time.
+10. Apply global circuit breakers, provider-spend thresholds, alerts, and operator kill switches to expensive or dangerous operations.
+11. Preserve essential read access where safe while disabling nonessential writes or provider calls during an incident.
+
+Security-dependency outages use this minimum failure policy:
+
+| Route or action class | Required behavior when a security dependency is unavailable |
+|---|---|
+| Public cacheable discovery | Serve an approved bounded stale public projection or fall back to bounded authoritative reads; never expose private data |
+| Public publication or discussion write | Reject or pause when required shared rate-limit, risk, moderation, authorization, audit, or idempotency controls are unavailable |
+| Login, OTP, recovery, session change | Fail closed when identity, rate-limit, risk, session, notification, or audit guarantees required by the action cannot be established |
+| Checkout, refund, payout, bank change, protected evidence | Fail closed and preserve a recoverable pending state; never infer success from a timeout or queue acceptance |
+| Administrator, support, or moderation action | Fail closed when assurance, authorization, reason, audit, or dual-control requirements cannot be recorded |
+
+Every dependency receives an owner, timeout, circuit breaker, alert, safe external error, recovery path, and explicit decision whether read-only degradation is permitted. “Allow on error” is forbidden unless this document names the exact public read case.
 
 The baseline follows the multi-layer availability approach in the [OWASP denial-of-service guidance](https://cheatsheetseries.owasp.org/cheatsheets/Denial_of_Service_Cheat_Sheet.html) and the resource-budget controls in [OWASP API4:2023](https://owasp.org/API-Security/editions/2023/en/0xa4-unrestricted-resource-consumption/).
 
@@ -140,11 +157,13 @@ Brute force, credential stuffing, password spraying, account enumeration, OTP fl
 - OTPs are single-use, short-lived, purpose-bound, attempt-limited, and invalidated on success;
 - resend cooldowns and per-destination spending limits;
 - recovery cannot silently bypass stronger authentication;
-- passkeys, MFA, or step-up are required where the selected provider supports the risk tier;
+- administrator, support, moderation, payment, payout, refund, bank-detail change, factor replacement, and recovery flows require phishing-resistant MFA such as passkeys where feasible, or a separately approved high-assurance factor plus recent step-up;
+- provider selection must satisfy that assurance contract; missing provider capability cannot be treated as an acceptable downgrade;
+- factor enrollment, replacement, and recovery require reauthentication, risk checks, user notification, session revocation where warranted, append-only audit, and a recovery path no weaker than the protected account's approved assurance;
 - login and recovery responses remain generic while internal audit preserves reason codes;
 - alerts cover distributed low-and-slow attempts, not only single-IP spikes.
 
-MFA or phishing-resistant authentication is the strongest general defense against reused credentials, but it does not remove the need for automation controls. See [OWASP credential-stuffing prevention](https://cheatsheetseries.owasp.org/cheatsheets/Credential_Stuffing_Prevention_Cheat_Sheet.html) and [bot-management guidance](https://cheatsheetseries.owasp.org/cheatsheets/Bot_Management_and_Anti-Automation_Cheat_Sheet.html).
+MFA or phishing-resistant authentication is the strongest general defense against reused credentials, but it does not remove the need for automation controls. See [OWASP multi-factor authentication](https://cheatsheetseries.owasp.org/cheatsheets/Multifactor_Authentication_Cheat_Sheet.html), [credential-stuffing prevention](https://cheatsheetseries.owasp.org/cheatsheets/Credential_Stuffing_Prevention_Cheat_Sheet.html), and [bot-management guidance](https://cheatsheetseries.owasp.org/cheatsheets/Bot_Management_and_Anti-Automation_Cheat_Sheet.html).
 
 ## 9. Authorization
 
@@ -248,6 +267,14 @@ See the [OWASP SSRF prevention guidance](https://cheatsheetseries.owasp.org/chea
 
 ## 14. Secrets, privacy, logs, and dependencies
 
+- Minimize collection and retention before relying on encryption. Classify each private field and record its purpose, authority, retention, deletion, and backup behavior.
+- Require provider encryption in transit and at rest for PostgreSQL, private object storage, queues, managed control state, and backups.
+- Use threat modelling to select high-impact identity, bank, contact, address, verification, payment-reference, and evidence fields for application-level envelope encryption.
+- Keep cryptography in outer infrastructure adapters behind provider-independent ports. Use approved authenticated encryption and managed KMS, HSM, or key-vault wrapping; domain records retain key identifiers and versions, never raw keys.
+- Separate data-encryption keys, key-encryption keys, application secrets, encrypted data, and backups by purpose, access, and environment. Do not store plaintext keys beside the protected data.
+- Document and rehearse generation, distribution, use, rotation, re-wrapping, revocation, suspected-compromise recovery, key backup, encrypted-data restore, retention expiry, verified deletion, and cryptographic erasure.
+- Keep retained encrypted backups recoverable for their approved lifetime, while ensuring deletion workflows address live rows, objects, replicas, indexes, caches, derived projections, logs, and backup-expiry schedules.
+- Do not invent cryptographic algorithms or silently change encryption formats. Version formats and retain backward decryption only for the approved migration window.
 - Secrets live in an approved managed secret store and are separated by environment and provider purpose.
 - Access follows least privilege and rotation; revocation is tested before launch.
 - Preview and test environments receive no production credentials or private production data.
@@ -256,6 +283,8 @@ See the [OWASP SSRF prevention guidance](https://cheatsheetseries.owasp.org/chea
 - Dependencies use a frozen lockfile, minimum-release-age policy, reviewed overrides, production audit, and explicit provenance review.
 - CI actions use immutable reviewed commits and least privilege.
 - Secret scanning, static analysis, and dependency review become pull-request gates before protected functionality is introduced.
+
+The data and key lifecycle follows the [OWASP Cryptographic Storage](https://cheatsheetseries.owasp.org/cheatsheets/Cryptographic_Storage_Cheat_Sheet.html), [Key Management](https://cheatsheetseries.owasp.org/cheatsheets/Key_Management_Cheat_Sheet.html), and [Secrets Management](https://cheatsheetseries.owasp.org/cheatsheets/Secrets_Management_Cheat_Sheet.html) guidance. Provider encryption claims remain unverified until the selected live configuration, identities, key policy, rotation, restore, and deletion behavior are inspected.
 
 ## 15. Monitoring, incident response, and recovery
 
@@ -278,9 +307,12 @@ Backups are not accepted until restore is tested. RPO and RTO require BurinSN ap
 Before protected preview:
 
 - threat model and data inventory reviewed;
+- trusted-proxy, direct-origin denial, canonical host, forwarded-header, redirect, and absolute-URL tests;
 - central authorization denial tests;
 - safe-query static rule and tests;
-- session, CSRF, XSS, redirect, SSRF, callback, and upload negative tests appropriate to implemented flows;
+- session, privileged MFA, factor-recovery, CSRF, XSS, redirect, SSRF, callback, and upload negative tests appropriate to implemented flows;
+- dependency-outage tests proving each protected action fails closed and each allowed public-read degradation stays public and bounded;
+- encryption-format, KMS authorization, rotation, re-wrapping, key-unavailability, log-redaction, retention, and deletion tests appropriate to stored private data;
 - secret, dependency, static, and workflow scans;
 - logging-redaction tests.
 
@@ -288,6 +320,7 @@ Before closed pilot:
 
 - complete applicable ASVS traceability;
 - runtime cookie, header, WAF, rate-limit, identity, database, storage, and provider configuration review;
+- runtime privileged-assurance, trusted-proxy, canonical-host, managed-key, backup-encryption, rotation, restore, and deletion configuration review;
 - cross-account browser tests;
 - isolated ramp, spike, soak, recovery, and abuse tests;
 - backup restore, session revocation, provider kill switch, and incident exercise;
@@ -302,6 +335,10 @@ Designed:
 
 - this baseline;
 - deny-by-default authorization direction;
+- trusted edge, canonical request interpretation, and explicit security-dependency failure policy;
+- mandatory privileged assurance and non-downgrading recovery;
+- private-data encryption, managed-key lifecycle, backup, restore, and deletion requirements;
+- public-cache poisoning, deception, stampede, and hot-key controls;
 - private evidence and provider callback boundaries;
 - dependency and workflow supply-chain controls;
 - pooled PostgreSQL and modular-monolith direction.
@@ -315,8 +352,10 @@ Implemented and source-tested only for the narrow issue #3 shell:
 Not implemented or verified:
 
 - production identity or sessions;
-- shared rate limiting, WAF policy, bot controls, or DDoS runtime configuration;
+- privileged MFA or recovery controls;
+- trusted-proxy, canonical-host, shared rate-limiting, WAF, bot, cache-safety, or DDoS runtime configuration;
 - database adapter or SQL safety gate;
+- application-level encryption, managed keys, key rotation, encrypted-backup restore, or verified deletion;
 - private upload quarantine or scanner;
 - protected commands or authorization matrix;
 - provider callbacks, payment, logistics, ledger, reconciliation, or worker;

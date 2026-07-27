@@ -39,6 +39,10 @@ provider network and DDoS controls
 
 No layer is accepted as a substitute for the others. A hosting provider's DDoS mitigation does not replace application limits. An ORM does not replace least privilege or query review. `SameSite` cookies do not replace complete CSRF controls. A content security policy does not replace output safety.
 
+The edge-to-origin boundary is explicit. Only the approved edge may reach the application origin. The application trusts forwarding information only from the approved proxy chain, which must strip and overwrite client-supplied forwarding headers. Client IP, scheme, host, origin, redirect, callback, and absolute-URL decisions use one canonical server-owned interpretation. An unrecognized host, proxy path, or contradictory forwarding value is rejected rather than guessed.
+
+Shared security dependencies also have route-class failure policies. Public reads may degrade to bounded authoritative reads or an approved stale public projection. Authentication, recovery, OTP, checkout, refund, payout, bank-detail change, protected evidence, moderation, support, and administrator actions fail closed when required session, authorization, rate-limit, risk, audit, or idempotency state is unavailable. A dependency timeout or unavailable control never silently becomes “allow.”
+
 ### 3. Keep the first production shape horizontally scalable
 
 NitipCuy remains a modular monolith with:
@@ -52,6 +56,10 @@ NitipCuy remains a modular monolith with:
 - explicit caching only for public projections with documented freshness and invalidation.
 
 In-memory adapters and process-local controls are test and architecture-probe tools only. They are not production scale or security mechanisms.
+
+Public caches use canonical, bounded keys and never cache private, personalized, authentication, authorization, error, or redirect responses. Implementations must resist cache poisoning and deception, coalesce concurrent misses, bound hot-key work, add expiry jitter, and use stale-while-revalidate only inside an approved public-data stale window. Cache failure must not bypass authorization or create an unbounded database stampede.
+
+Database and deployment changes use an expand-and-contract sequence. Additive schema and application support lands before data backfill or traffic migration; old and new web and worker versions remain compatible during the deployment window; destructive cleanup occurs only after observed cutover and rollback expiry. Migrations run separately from application startup and must have rehearsal, monitoring, rollback or forward-fix, and version-skew evidence. This follows Prisma's [expand-and-contract migration guidance](https://www.prisma.io/docs/guides/database/data-migration).
 
 ### 4. Bound every expensive or abusable operation
 
@@ -83,6 +91,8 @@ NitipCuy does not store passwords. A reviewed authentication provider or library
 
 Authentication success never grants implicit authorization to another account's object.
 
+The provider-selection gate is mandatory, not opportunistic: administrator, support, moderation, payment, payout, refund, bank-detail change, and account-recovery flows require phishing-resistant MFA such as passkeys where feasible, or a separately approved high-assurance factor and recent step-up. Recovery and factor replacement cannot be weaker than the assurance they replace, cannot silently downgrade a protected account, and require notification, revocation, audit, and risk controls. A provider that cannot satisfy the approved assurance and recovery contract is ineligible for those flows. See the [OWASP MFA guidance](https://cheatsheetseries.owasp.org/cheatsheets/Multifactor_Authentication_Cheat_Sheet.html).
+
 ### 6. Keep SQL and external input behind strict boundaries
 
 Prisma is the default database adapter. Ordinary application persistence uses generated ORM operations. Unsafe raw query APIs are forbidden in application source. A raw query is exceptional and requires:
@@ -100,7 +110,15 @@ Uploads enter private quarantine through short-lived, narrowly scoped signed req
 
 Provider callbacks use signature, timestamp, replay, deduplication, inbox, idempotency, and reconciliation controls. Outbound server requests use destination allowlists, safe DNS and IP resolution, redirect and response-size limits, and blocks for private, loopback, link-local, and metadata destinations.
 
-### 8. Require measurable capacity and recovery evidence
+### 8. Protect sensitive data through an explicit cryptographic lifecycle
+
+NitipCuy minimizes collection and retention before applying encryption. Database, object-storage, queue, and backup providers must encrypt data at rest and in transit. Threat modelling determines which high-impact identity, bank, contact, address, verification, payment-reference, and evidence fields also require application-level envelope encryption.
+
+Encryption is an outer-adapter responsibility behind provider-independent ports. Approved platform cryptography and a managed KMS, HSM, or key vault supply authenticated encryption and key wrapping; domain records carry only key identifiers and versions, never raw keys. Data-encryption keys, key-encryption keys, application secrets, encrypted data, and backups remain separated by purpose and least privilege.
+
+The operational contract covers generation, distribution, use, rotation, re-wrapping, revocation, compromise recovery, backup, restore, retention expiry, and verified deletion or cryptographic erasure. Key loss and key compromise are separate rehearsed incidents. Long-lived encrypted records and backups must remain recoverable during approved retention while expired data and unnecessary old key material are retired. NitipCuy does not design custom cryptographic algorithms or store plaintext keys beside protected data. These requirements follow the [OWASP Cryptographic Storage](https://cheatsheetseries.owasp.org/cheatsheets/Cryptographic_Storage_Cheat_Sheet.html) and [Key Management](https://cheatsheetseries.owasp.org/cheatsheets/Key_Management_Cheat_Sheet.html) guidance.
+
+### 9. Require measurable capacity and recovery evidence
 
 Before closed pilot, BurinSN must approve:
 
@@ -114,7 +132,9 @@ Before closed pilot, BurinSN must approve:
 
 An isolated environment must then pass ramp, spike, soak, recovery, abuse, and provider-failure tests against those targets. “Many users” is not a testable capacity requirement.
 
-### 9. Separate design, implementation, and verification claims
+Tests also cover cache hot keys, concurrent misses, poisoned-key attempts, protected-response non-caching, rolling old/new application versions, worker-version skew, expand-and-contract migrations, interrupted backfills, rollback or forward-fix, and dependency-outage fail-open or fail-closed behavior.
+
+### 10. Separate design, implementation, and verification claims
 
 Security and scale statements use these evidence levels:
 
@@ -133,6 +153,7 @@ Only the highest completed level may be claimed for a control.
 - The current shell becomes governed by an explicit security and scale contract without being mislabeled production-safe.
 - Some protected features cannot launch immediately after functional implementation; they also require negative, abuse, runtime, and operational evidence.
 - Shared rate-limit state, durable asynchronous work, private quarantine storage, and monitoring add cost only when the corresponding functionality is introduced.
+- Managed key custody, field-encryption decisions, privileged assurance, trusted-proxy configuration, cache safety, and deployment-version compatibility become explicit activation work rather than implicit provider assumptions.
 - Public read-heavy traffic can scale independently through cache and horizontal web instances while protected writes remain transactionally authoritative.
 - Service extraction remains evidence-driven. Security and scale requirements do not justify microservices by themselves.
 

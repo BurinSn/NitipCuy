@@ -1,6 +1,6 @@
 # NitipCuy Cross-Session Handoff
 
-Last updated: 2026-07-27 17:10 WIB
+Last updated: 2026-07-27 18:27 WIB
 
 Handoff owner: Codex
 
@@ -86,6 +86,11 @@ ADR 0004 adds:
 - stateless horizontally scalable web instances, pooled PostgreSQL, shared cross-request control state, private direct-to-quarantine evidence storage, and durable workers before asynchronous work;
 - numerical capacity, provider-quota, cost, RPO, RTO, load, abuse, and recovery evidence before real-money pilot activation;
 - evidence-driven optimization and service extraction instead of premature microservices.
+- mandatory privileged phishing-resistant MFA or approved high-assurance step-up with non-downgrading recovery;
+- an edge-only origin, explicit trusted-proxy chain, canonical host and request interpretation, and protected fail-closed dependency behavior;
+- provider and threat-modelled application encryption, managed-key lifecycle, encrypted backups, restore, retention, and verified deletion;
+- canonical public-only caching with poisoning, deception, stampede, hot-key, and stale-window controls;
+- expand-and-contract migrations with old/new web, worker, payload, and queue compatibility during rolling deployment.
 
 Issue #3 proves these boundaries with simulated public trip discovery, destination/date search, trip detail, chronological public Q&A, and deterministic platform-service mocks. It intentionally implements no account, protected mutation, address, private chat, database, real provider, or payment movement.
 
@@ -103,9 +108,9 @@ The shell is a functional architecture probe. It is not a production UI, has no 
 | Active issue | [#3 Establish web architecture and application foundation](https://github.com/BurinSn/NitipCuy/issues/3) |
 | Active branch | `feat/3-architecture-foundation` |
 | Pull request | [#4 feat: establish application architecture foundation](https://github.com/BurinSn/NitipCuy/pull/4) |
-| Last live-verified pushed correction head | `7522bf8d2076101cdc78245f390818eb6125252f` |
-| Checks at that checkpoint | Application quality run `30256384832` and lifecycle run `30256384917` passed without annotations |
-| Independent review at that checkpoint | CodeRabbit started review run `fe94a2a4-4776-497f-b797-caae88ce6a39` but remained pending after the bounded wait and had created no review object or finding as of 17:10 WIB |
+| Last live-verified pushed correction head before this amendment | `bf48727ed9f1e65d87919f4fbe11ac0815542355` |
+| Checks at that checkpoint | Application quality run `30257081811` and lifecycle run `30257081823` passed without annotations |
+| Independent review at that checkpoint | CodeRabbit run `86ff3d62-b1f7-4429-839e-e07fd4402c20` was rate-limited and created no review object or finding; it provides no review coverage |
 | First hostile-review correction | Published-trip runtime invariants committed, pushed, and hosted-verified |
 | Second hostile-review correction | Issue #3 identity acceptance and pull-request scope reconciled with the deliberately deferred persisted account implementation; committed, pushed, and hosted-verified |
 | Security and scale amendment | Accepted, committed, pushed, and required hosted workflows verified; production controls remain unimplemented |
@@ -123,7 +128,7 @@ Issue #3 owns the architecture and application-foundation slice. A direct hostil
 
 The issue now states that external-identity-to-internal-account mapping and deny-by-default authorization are documented architecture directions. Mapping implementation is explicitly deferred to the first persisted account slice, matching the issue scope, exclusions, ADR 0003, current code, and roadmap.
 
-The security and scale amendment answers BurinSN's security and growth requirement through ADR 0004 plus dedicated security and scalability documents. It defines controls for DDoS and cost abuse, SQL injection, session compromise, credential and OTP attacks, authorization, browser threats, uploads, SSRF, callbacks, secrets, monitoring, recovery, stateless horizontal scaling, bounded PostgreSQL access, durable work, provider isolation, capacity, and load testing. These are binding design requirements. They are not claims that production infrastructure or controls exist.
+The security and scale amendment answers BurinSN's security and growth requirement through ADR 0004 plus dedicated security and scalability documents. The current hostile-review correction closes six material design gaps: sensitive-data encryption and managed-key lifecycle; mandatory privileged assurance and non-downgrading recovery; trusted-proxy, forwarded-header, and canonical-host rules; explicit fail-open or fail-closed dependency behavior; cache poisoning, deception, stampede, and hot-key controls; and expand-and-contract mixed-version deployment. These are binding design requirements. They are not claims that production infrastructure or controls exist.
 
 Implemented locally:
 
@@ -139,6 +144,7 @@ Implemented locally:
 - PR-only application-quality CI with read-only permission and immutable action references;
 - local quality-gate documentation and production dependency overrides for audited patched `postcss` and `sharp` versions.
 - accepted security, anti-abuse, resilience, and scale requirements with explicit evidence-level claims and pilot gates.
+- accepted encryption, managed-key, privileged-assurance, trusted-edge, dependency-outage, cache-safety, and deployment-compatibility requirements at the **designed** evidence level only.
 
 Deliberately excluded:
 
@@ -181,15 +187,16 @@ Hostile-review corrections already made:
 
 Still required before requesting merge:
 
-1. Commit and push the identity acceptance and lifecycle reconciliation.
-2. Verify hosted checks and annotations on that exact head.
-3. Resolve each remaining hostile-review finding through the same branch, one coherent correction at a time.
-4. Reconcile issue #3 and pull-request claims after the final correction.
-5. Ask BurinSN for fresh merge approval only when no material finding remains.
+1. Validate, commit, push, and inspect hosted checks and annotations for the six-gap design correction.
+2. Resolve each remaining implementation finding through the same branch, one coherent correction at a time.
+3. Reconcile issue #3 and pull-request claims after the final correction.
+4. Ask BurinSN for fresh merge approval only when no material finding remains.
 
 Browser automation and visual approval were not performed and are not claimed.
 
-The security and scale amendment passed the exact-toolchain frozen install, peer, format, lint, type, 18-test, production-build, production-audit, lifecycle, internal-link, and diff gates. Issue #3 and pull request #4 were reconciled with the accepted design and explicit implementation non-claims. Required hosted workflows passed without annotations at exact head `7522bf8d2076101cdc78245f390818eb6125252f`. CodeRabbit remained pending after a bounded wait and had produced no review object or finding; this is unavailable independent-review evidence, not approval. No WAF, bot control, shared rate limiter, production session, database, private upload pipeline, worker, monitoring, backup, load test, security test, or provider configuration was activated by the documentation.
+The first security and scale amendment passed the exact-toolchain frozen install, peer, format, lint, type, 18-test, production-build, production-audit, lifecycle, internal-link, and diff gates. The later identity and lifecycle reconciliation is hosted-verified at exact head `bf48727ed9f1e65d87919f4fbe11ac0815542355` through application run `30257081811` and lifecycle run `30257081823`, both without annotations. CodeRabbit was rate-limited and produced no review object or finding; this is unavailable independent-review evidence, not approval.
+
+The current six-gap design correction has changed documentation only. Exact Node.js `24.18.0` and pnpm `11.17.0` frozen install, peer, format, lint, type, 18-test, production-build, production-audit, lifecycle, 20-file internal-link, stale-language, control-presence, and diff gates passed locally. Its resulting hosted exact-head checks still require inspection after push. No WAF, proxy policy, bot control, shared limiter, privileged MFA, encryption key, production session, database, cache, private upload pipeline, worker, monitoring, backup, load test, security test, deployment, or provider configuration was activated by the documentation.
 
 ## 8. Blockers and gates
 
@@ -224,7 +231,9 @@ These are Stage 3 activation gates, not reasons to delay provider-independent pl
 
 ## 9. Exact next action
 
-Implement automated dependency-boundary enforcement as the next bounded issue #3 correction. Cover cross-package relative, aliased, type-only, and dynamic imports; wire the gate into the exact local and hosted quality path; add adversarial fixtures or tests; and reconcile all lifecycle, issue, and pull-request claims.
+Commit and push the locally validated six-gap design correction to pull request #4. Inspect both required hosted workflows and annotations on the resulting immutable head, then retrieve and reconcile issue #3 and pull request #4 again.
+
+After that published checkpoint is sound, implement automated dependency-boundary enforcement as the next bounded code correction. Cover cross-package relative, aliased, type-only, and dynamic imports; wire the gate into the exact local and hosted quality path; add adversarial fixtures or tests; and reconcile all lifecycle, issue, and pull-request claims.
 
 Do not add account persistence or a production identity provider to issue #3. Those belong to the first persisted account slice after this architecture issue is corrected and merged.
 

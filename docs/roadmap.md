@@ -1,10 +1,10 @@
 # NitipCuy Canonical Roadmap
 
-Last reviewed: 2026-07-27 17:10 WIB
+Last reviewed: 2026-07-27 18:27 WIB
 
 Current stage: Stage 1 - Platform foundation
 
-Current work item: Issue #3 architecture-foundation remediation; automated dependency-boundary enforcement is next after the published and hosted-verified security, anti-abuse, resilience, and scale amendment
+Current work item: Issue #3 architecture-foundation remediation; publish and inspect the locally validated six-gap security and scale design correction, then resume automated dependency-boundary enforcement
 
 ## 1. Role, authority, and freshness contract
 
@@ -77,6 +77,10 @@ Stop and require a new impact analysis and BurinSN decision if work attempts to:
 - claim T&C removes all platform duties after known illegal or harmful activity.
 - claim that NitipCuy is DDoS-proof, injection-proof, session-hijack-proof, brute-force-proof, generally “secure,” or “scalable” without naming the exact evidence level;
 - rely on Vercel, Prisma, an identity provider, `SameSite`, CSP, or another single control as the complete security boundary;
+- treat privileged MFA, trusted-proxy handling, security-dependency outage behavior, encryption and key custody, cache safety, or deployment compatibility as optional provider details;
+- fail open for protected actions when session, authorization, rate-limit, risk, audit, or idempotency guarantees are unavailable;
+- cache private, personalized, authorization-dependent, error, or redirect responses on a public path;
+- perform destructive database contraction before old and new web, worker, migration, and queued payload versions are proven compatible;
 - store production sessions, idempotency, rate limits, locks, cache authority, or durable jobs only in one web process;
 - add unbounded search, pagination, uploads, provider calls, retries, database queries, or asynchronous work;
 - activate protected or real-money flows before their security, abuse, provider, monitoring, recovery, and incident gates pass;
@@ -160,6 +164,7 @@ Pull-request head, hosted checks, annotations, reviews, and mergeability are vol
 - [ ] Replace caller-trusted evidence hashes and buffered raw-upload assumptions with a server-authoritative evidence lifecycle.
 - [ ] Clarify the public published-trip projection versus the future authoritative Trip aggregate.
 - [x] Establish the binding defense-in-depth security and evidence-based scale baseline without claiming the controls are implemented.
+- [x] Close the follow-up design gaps for sensitive-data encryption and managed-key lifecycle, mandatory privileged assurance, trusted-proxy and canonical-host handling, explicit dependency-outage failure policy, cache poisoning/deception/stampede/hot-key protection, and expand-and-contract mixed-version deployment.
 - [ ] Reconcile all lifecycle, specialist, issue, and pull-request claims after the corrections.
 - [ ] Run final exact-toolchain, runtime, security, complete-diff, and hosted exact-head review.
 
@@ -179,10 +184,10 @@ account
   -> public question and answer
 ```
 
-- [ ] Add the first PostgreSQL schema and reviewed migration through the isolated database adapter.
-- [ ] Add external-identity proof and protected server-authoritative mutations without storing passwords.
+- [ ] Add the first PostgreSQL schema and reviewed expand-and-contract migration through the isolated database adapter, with old/new application compatibility and rollback or forward-fix evidence.
+- [ ] Add external-identity proof and protected server-authoritative mutations without storing passwords; require the approved privileged MFA, high-assurance step-up, and non-downgrading recovery contract where applicable.
 - [ ] Add integration tests using disposable resources and explicit destructive-test guards.
-- [ ] Implement the first applicable security controls with the feature that needs them: secure session behavior, central authorization denials, multi-axis shared rate limits for protected actions, safe-query enforcement, CSRF and browser policy, private-data-safe logs, and bounded inputs.
+- [ ] Implement the first applicable security controls with the feature that needs them: secure session behavior, central authorization denials, multi-axis shared rate limits for protected actions, trusted-proxy and canonical-host handling, explicit protected fail-closed behavior, safe-query enforcement, CSRF and browser policy, private-data encryption and managed-key boundaries where required, private-data-safe logs, and bounded inputs.
 - [ ] Establish cursor pagination, query and connection budgets, and minimal database, application, and abuse observability for the persisted slice.
 - [ ] Record preliminary pilot capacity, provider-quota, cost, RPO, and RTO questions without inventing targets before the pilot is bounded.
 
@@ -213,6 +218,7 @@ Status: Pending Stage 1
 - [ ] Disputes and transaction-only reviews.
 - [ ] Administrator and support exception handling.
 - [ ] Shared production-shape session, idempotency, rate-limit, and abuse state; process-local implementations remain test-only.
+- [ ] Public cache safety: canonical keys, protected-response exclusion, poisoning and deception tests, concurrent-miss coalescing, hot-key budgets, bounded stale windows, invalidation, and database-stampede prevention.
 - [ ] Direct private evidence quarantine, server-observed hashes, validation, scanning, retention, and authorization-mediated downloads.
 - [ ] Transaction-bound outbox and durable retrying worker before asynchronous scans, notifications, provider retries, or reconciliation.
 - [ ] Bounded cursor-paginated reads, request and provider budgets, circuit breakers, kill switches, and actionable observability.
@@ -237,10 +243,10 @@ Required before real transactions:
 - [ ] Pilot route, category, value, weight, capacity, and participant boundaries.
 - [ ] Legal, privacy, security, incident-response, support, reconciliation, and operational sign-off.
 - [ ] Applicable OWASP ASVS 5.0 Level 2 requirements traced to current evidence, with independent review of high-impact flows.
-- [ ] Actual identity, cookie, header, edge, WAF, bot, rate-limit, database, storage, payment, and logistics configurations verified in non-production.
+- [ ] Actual privileged assurance and recovery, cookie, trusted-proxy, canonical-host, header, edge, WAF, bot, rate-limit, database, cache, managed-key, encrypted-backup, storage, payment, and logistics configurations verified in non-production.
 - [ ] BurinSN-approved user, traffic, latency, availability, data, provider-quota, recovery, and cost capacity contract.
-- [ ] Ramp, spike, soak, abuse, provider-failure, and recovery profiles passed in an isolated environment against that contract.
-- [ ] Backup restore, session revocation, provider kill switches, incident response, and evidence preservation rehearsed.
+- [ ] Ramp, spike, soak, abuse, cache-stampede and hot-key, mixed-version deployment, migration-interruption, provider-failure, and recovery profiles passed in an isolated environment against that contract.
+- [ ] Encrypted-backup and key restore, key rotation and compromise response, session revocation, provider kill switches, incident response, and evidence preservation rehearsed.
 
 Initial production payment rails remain QRIS and selected Virtual Accounts. Cards, PayLater, and convenience stores remain disabled until separately approved.
 
@@ -278,11 +284,11 @@ The unresolved DOKU, logistics, policy, legal, and pilot items listed in Stage 3
 
 ### Now
 
-Implement automated dependency-boundary enforcement as the next bounded hostile-review correction. It must cover cross-package relative, aliased, type-only, and dynamic imports without mistaking the accepted security and scale design for implemented production controls.
+Commit, push, and inspect the exact hosted head for the locally validated six-gap security and scale design correction. Issue #3 and pull request #4 already name the correction without claiming that documentation implements runtime controls; verify them again after the branch state changes.
 
 ### Next
 
-Resolve transaction scope, payment lifecycle, idempotency, evidence integrity, and projection findings; reconcile exact-head evidence; then obtain fresh owner approval for issue #3. After merge, implement the persisted account-to-public-Q&A vertical slice through a new governed issue with the applicable security and resource-bound controls.
+Implement automated dependency-boundary enforcement as the next bounded code correction. It must cover cross-package relative, aliased, type-only, and dynamic imports. Then resolve transaction scope, payment lifecycle, idempotency, evidence integrity, and projection findings; reconcile exact-head evidence; and obtain fresh owner approval for issue #3.
 
 ### Later
 

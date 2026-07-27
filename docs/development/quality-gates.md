@@ -113,6 +113,8 @@ Integration tests:
 - disposable test resources only;
 - explicit test-target acknowledgement before destructive reset;
 - migrations applied from a clean state;
+- expand-and-contract changes exercised across supported old and new web and worker versions;
+- interrupted backfill plus rollback or forward-fix behavior exercised before destructive contraction;
 - cleanup verified;
 - no fallback to a development or production database.
 
@@ -126,7 +128,10 @@ Browser tests:
 Security tests:
 
 - derive applicable requirements from OWASP ASVS 5.0 Level 2 and the project threat model;
-- test denial, cross-account access, malformed and oversized input, injection attempts, session rotation and revocation, CSRF, XSS, redirect, SSRF, upload, callback replay, idempotency, and privilege boundaries as the corresponding flows are introduced;
+- test denial, cross-account access, malformed and oversized input, injection attempts, session rotation and revocation, privileged MFA and recovery, CSRF, XSS, redirect, SSRF, upload, callback replay, idempotency, and privilege boundaries as the corresponding flows are introduced;
+- test direct-origin rejection, canonical host/origin behavior, forwarded-header spoofing, redirect and callback URL generation, and trusted-proxy configuration;
+- test each shared security-dependency outage, proving protected actions fail closed and any public-read degradation remains bounded and public;
+- test encryption formats, managed-key authorization, rotation, re-wrapping, key unavailability, backup restore, retention expiry, verified deletion, and log redaction for applicable private data;
 - test that logs and telemetry exclude secrets and private content;
 - use synthetic test identities and disposable non-production data;
 - never run active testing against an external or production target without separate exact-target authorization.
@@ -135,7 +140,7 @@ Load and resilience tests:
 
 - run only against isolated approved resources;
 - use an approved capacity contract rather than an arbitrary concurrent-user number;
-- cover ramp, mixed protected work, callback burst, upload, spike, soak, abuse, provider failure, restart, and recovery as applicable;
+- cover ramp, mixed protected work, callback burst, upload, spike, soak, abuse, cache hot keys and concurrent misses, provider failure, mixed-version deployment, migration interruption, restart, and recovery as applicable;
 - record environment, dataset, request mix, duration, latency percentiles, errors, saturation, provider usage, cost, and recovery;
 - never infer production capacity from a local build, unit benchmark, provider limit, or one happy-path request.
 
@@ -161,7 +166,7 @@ GitHub branch protection is unavailable for the current private repository plan.
 - Published-trip runtime validation now rejects unsupported service modes, impossible calendar and clock values, invalid timezone offsets, and duplicate question IDs; cross-offset public questions are sorted by instant.
 - Package dependency direction is still verified by review and manual scans; an automated boundary gate remains required.
 - OWASP ASVS 5.0 Level 2 is the accepted production verification target, but no traceability matrix or complete ASVS verification exists.
-- The DDoS, WAF, bot, shared rate-limit, session, SQL-safety, CSRF, XSS, SSRF, private-upload, monitoring, incident, backup, and recovery requirements are designed but not production-implemented or runtime-verified.
+- The DDoS, WAF, bot, trusted-proxy, canonical-host, shared rate-limit, session, privileged-MFA, SQL-safety, encryption/key-management, cache-safety, CSRF, XSS, SSRF, private-upload, monitoring, incident, backup, deployment-compatibility, and recovery requirements are designed but not production-implemented or runtime-verified.
 - No capacity contract, service-level objective, provider quota review, load or abuse test, backup restore, or incident exercise exists.
 - Transaction, payment, logistics, evidence, audit, and outbox mocks remain provisional until their transaction, asynchronous-state, idempotency, and evidence-integrity findings are resolved.
 - No PostgreSQL adapter or integration test exists yet.
@@ -178,6 +183,9 @@ Before the first protected preview:
 
 - threat model and private-data inventory reviewed;
 - authorization denial matrix automated;
+- trusted-proxy, canonical-host, forwarding-header, direct-origin, and protected dependency-outage tests active;
+- privileged-assurance and non-downgrading recovery tests active;
+- applicable encryption, managed-key, rotation, backup-restore, retention, and deletion tests active;
 - safe-query rule and database negative tests active when persistence exists;
 - applicable session, CSRF, XSS, redirect, SSRF, callback, upload, and log-redaction tests active;
 - secret, dependency, static, and workflow scans passing;
@@ -188,7 +196,7 @@ Before a real-money closed pilot:
 - applicable OWASP ASVS requirements traced to evidence;
 - live non-production identity, cookie, header, edge, WAF, rate-limit, bot, database, storage, and provider configurations reviewed;
 - cross-account browser tests passed;
-- approved capacity and cost contract passed through ramp, spike, soak, abuse, provider-failure, and recovery testing;
+- approved capacity and cost contract passed through ramp, spike, soak, abuse, cache-stampede/hot-key, provider-failure, mixed-version deployment, migration-interruption, and recovery testing;
 - backup restore, session revocation, provider kill switch, and incident response rehearsed;
 - high-impact flows independently security-reviewed;
 - no unresolved critical or high security finding without explicit documented BurinSN risk acceptance;

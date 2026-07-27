@@ -56,12 +56,15 @@ Per-request context is immutable and request-scoped. Cross-request state belongs
 Public discovery is the primary cacheable workload.
 
 - Cache only explicit public projections.
-- Cache keys include every filter and representation dimension that changes the response.
+- Cache keys are canonical and include every normalized filter, authorization-independent representation dimension, locale, version, and encoding choice that changes the public response. Unbounded or attacker-controlled key cardinality is rejected.
 - Freshness and invalidation are documented per projection.
 - Publication, moderation, capacity, cancellation, and privacy changes trigger invalidation or a safely bounded stale period.
 - Private identity, address, order, evidence, payment, dispute, moderation, and support data is never stored in a public cache.
-- Personalized responses are private and use conservative cache headers.
-- Cache failure falls back to bounded authoritative reads rather than bypassing authorization.
+- Personalized, authenticated, error, redirect, and authorization-dependent responses are private and use conservative cache headers; path shape or file-like suffixes never change that classification.
+- Cache population derives the key and response classification from canonical server state, not untrusted forwarding or host headers, preventing cache poisoning and cache-deception variants.
+- Concurrent misses use request coalescing or single-flight behavior. Hot keys and cache-fill work receive per-key and global concurrency budgets, expiry jitter, and overload shedding.
+- Stale-while-revalidate is allowed only for an explicit public projection and approved stale window. Privacy, moderation, cancellation, and safety invalidation can require immediate expiry.
+- Cache failure falls back to bounded authoritative reads rather than bypassing authorization or stampeding PostgreSQL. A circuit breaker may prefer an approved stale public projection or safe `503` over uncontrolled origin work.
 
 Search and list endpoints use cursor pagination, maximum page sizes, bounded filters, stable ordering, and reviewed indexes. Offset-based unbounded browsing and export-style endpoints are not default product APIs.
 
@@ -80,7 +83,11 @@ Required production behavior:
 - optimistic version checks or explicit locking for capacity, acceptance, payment, release, refund, and moderation conflicts;
 - cursor pagination, selective projections, and indexes justified by actual query plans;
 - slow-query, lock-wait, connection, storage, and replication monitoring;
-- migration rehearsal and forward-fix recovery.
+- expand-and-contract migrations with additive schema first, compatible application support, bounded backfill, observed cutover, and destructive cleanup only after rollback expiry;
+- simultaneous compatibility for the old and new web and worker versions during rolling deployment, including mixed-version reads, writes, messages, and outbox payloads;
+- migration rehearsal, interrupted-backfill recovery, rollback or forward-fix, and version-skew verification.
+
+Migrations run separately from application startup. A release cannot require every web and worker instance to switch versions atomically. Contracting a column, constraint, payload, event, or behavior is a later independently reviewed release after telemetry confirms that no supported old code or queued work depends on it. The pattern follows Prisma's [expand-and-contract migration guidance](https://www.prisma.io/docs/guides/database/data-migration).
 
 [Neon connection pooling](https://neon.com/docs/connect/connection-pooling) can accept many client connections through PgBouncer, but that does not mean the database can execute the same number of operations concurrently. Capacity decisions use database compute, active backend connections, query latency, working set, and contention evidence, not the advertised client ceiling alone.
 
@@ -140,6 +147,21 @@ Graceful degradation examples:
 - publication or discussion can be rate-reduced independently from order support.
 
 The product must never report a successful payment, dispatch, scan, or notification merely because a request was queued.
+
+Minimum shared-dependency behavior:
+
+| Dependency | Public-read degradation | Protected-write behavior |
+|---|---|---|
+| Public cache | Bounded authoritative read or approved stale public projection | Never used as authorization or transaction authority |
+| Session or authorization store | Public reads remain available | Fail closed; do not create or mutate protected state |
+| Shared rate-limit or risk service | Serve only explicitly approved low-cost public reads within edge budgets | Fail closed for publication, identity, recovery, transaction, evidence, moderation, support, and admin actions |
+| Identity provider | Public reads remain available | Reject new authentication, recovery, assurance, and protected actions whose identity guarantee cannot be refreshed |
+| PostgreSQL | Approved stale public projection may remain readable | Fail closed; never acknowledge a durable mutation |
+| Evidence storage or scanner | Existing authorized metadata may remain readable | Pause upload/promotion and retain a recoverable pending or rejected state |
+| Payment or logistics provider | Existing authoritative platform status remains readable | Pause initiation or retain explicit pending/reconciliation state; never infer success |
+| Audit or idempotency authority | Public reads remain available | Fail closed for actions requiring durable audit or replay safety |
+
+Each dependency receives an owner, timeout, circuit breaker, alert, retry ceiling, recovery command, and tested state transition. Degradation cannot silently weaken authorization, assurance, audit, idempotency, evidence, or financial integrity.
 
 ## 9. Resource and cost budgets
 
@@ -206,8 +228,10 @@ Required profiles:
 - **spike**: a viral trip or acquisition burst above normal peak;
 - **soak**: sustained expected peak long enough to expose leaks, queue drift, pool starvation, and cost;
 - **abuse**: enumeration, brute-force, scraping, large inputs, expensive filters, and repeated failures;
+- **cache safety**: poisoned-key and cache-deception attempts, protected-response non-caching, concurrent misses, hot keys, invalidation bursts, stale-window expiry, and cache outage without database stampede;
 - **provider failure**: latency, timeout, partial failure, quota rejection, and recovery;
-- **recovery**: restart, deployment, queue replay, backup restore, and cache rebuild.
+- **deployment compatibility**: old and new web and worker versions operating together across additive schema, message, outbox, and API changes;
+- **recovery**: restart, interrupted migration or backfill, deployment rollback or forward-fix, queue replay, backup restore, and cache rebuild.
 
 Record dataset, infrastructure size, concurrency, request mix, duration, latency percentiles, errors, saturation, cost, and recovery time. A passed test applies only to that exact profile and environment.
 
@@ -229,11 +253,12 @@ Service extraction requires a workload or isolation need, ownership model, data 
 
 ## 14. Availability and recovery
 
-- Define dependency criticality and failure behavior.
+- Apply the explicit dependency matrix above; protected state never uses generic fail-open behavior.
 - Keep development, test, preview, and production isolated.
 - Back up authoritative data and verify restore into an isolated target.
 - Reconcile object storage and database evidence references.
-- Test session revocation, provider disablement, deployment rollback, queue replay, and cache rebuild.
+- Require expand-and-contract compatibility across the rolling-deployment window and retained queue messages.
+- Test session revocation, provider disablement, mixed-version deployment, migration interruption, rollback or forward-fix, queue replay, cache rebuild, cache stampede resistance, and hot-key containment.
 - Preserve ledger, audit, inbox, and evidence integrity during recovery.
 - Approve RPO and RTO before real money.
 
@@ -245,8 +270,11 @@ Designed:
 
 - modular monolith and stateless production direction;
 - public/private cache boundary;
+- canonical cache keys, protected-response exclusion, poisoning/deception defenses, miss coalescing, hot-key budgets, and bounded stale behavior;
 - pooled PostgreSQL direction;
+- expand-and-contract migration and mixed-version deployment requirements;
 - transactions, inbox, outbox, idempotency, and provider isolation requirements;
+- explicit shared-dependency degradation and protected fail-closed policy;
 - direct private evidence storage direction;
 - observability, capacity, load, and recovery gates.
 
@@ -258,6 +286,7 @@ Implemented and source-tested only for the narrow architecture probe:
 
 Not implemented or verified:
 
-- production cache, shared session/rate-limit/idempotency system, database, object storage, worker, provider, observability, backup, or restore;
+- production cache or cache-safety controls, shared session/rate-limit/idempotency system, database, object storage, worker, provider, observability, backup, or restore;
+- expand-and-contract migration, mixed-version rollout, or dependency-outage runtime evidence;
 - capacity targets, load tests, provider quotas, SLOs, RPO, RTO, or production cost budgets;
 - runtime horizontal-scaling or failure-recovery evidence.

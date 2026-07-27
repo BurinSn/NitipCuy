@@ -495,3 +495,48 @@ Do not present inference, provider marketing, provisional pricing, or a future i
 ### No product-model change
 
 - The security and scale baseline does not change NitipCuy's roles, Shop for me and Carry my item services, seller-defined rates, platform fee direction, DOKU conditional preference, logistics direction, moderation responsibilities, or platform-first sequence.
+
+## 2026-07-27 18:27 WIB - Security controls need explicit failure and lifecycle contracts
+
+### Verified
+
+- Encryption at rest is not a complete sensitive-data protection or key-management design.
+  - Evidence: [OWASP Cryptographic Storage](https://cheatsheetseries.owasp.org/cheatsheets/Cryptographic_Storage_Cheat_Sheet.html) and [OWASP Key Management](https://cheatsheetseries.owasp.org/cheatsheets/Key_Management_Cheat_Sheet.html), checked 2026-07-27, require threat-modelled encryption placement plus key generation, storage, rotation, backup, compromise, recovery, and decommissioning controls.
+  - Impact: NitipCuy now separates provider encryption, application envelope encryption, data-encryption keys, key-encryption keys, secrets, protected data, encrypted backups, restore, retention, and deletion.
+- High-impact accounts and actions cannot depend on whether a provider happens to offer stronger authentication.
+  - Evidence: [OWASP MFA guidance](https://cheatsheetseries.owasp.org/cheatsheets/Multifactor_Authentication_Cheat_Sheet.html), checked 2026-07-27, recommends MFA for administrative and high-privilege users and identifies passkeys as phishing-resistant.
+  - Impact: provider capability is now a selection gate for protected assurance and recovery, not an optional enhancement.
+- Reverse-proxy deployment requires an application-owned trust boundary.
+  - Evidence: [Next.js self-hosting guidance](https://nextjs.org/docs/app/guides/self-hosting), checked 2026-07-27, recommends a reverse proxy for malformed requests, slow attacks, payload limits, and rate limiting.
+  - Impact: NitipCuy additionally binds trusted proxy sources, forwarding-header overwrite, canonical host/origin/client-IP interpretation, direct-origin denial, and forged-header tests.
+- Safe zero-downtime database change requires application-version compatibility, not only a reversible migration file.
+  - Evidence: [Prisma expand-and-contract guidance](https://www.prisma.io/docs/guides/database/data-migration), checked 2026-07-27, separates additive expansion, data migration, and later contraction.
+  - Impact: old and new web and worker versions, backfills, queued payloads, rollback, forward-fix, and destructive-cleanup timing are now part of the deployment contract.
+
+### Corrected
+
+- “Passkeys, MFA, or step-up where the provider supports the risk tier” was too weak.
+  - Supersedes: the conditional language in the first security baseline.
+  - Impact: mandatory protected-flow assurance now constrains provider selection and cannot silently downgrade during recovery or outage.
+- “Define dependency criticality and failure behavior” was not an actionable outage policy.
+  - Supersedes: the generic availability bullet in the first scalability baseline.
+  - Impact: the architecture now names the exact public-read degradation boundary and the protected actions that fail closed when session, authorization, rate-limit, risk, audit, or idempotency guarantees are unavailable.
+- A public/private cache split did not by itself address cache poisoning, cache deception, concurrent misses, hot keys, unsafe staleness, or origin stampede.
+  - Supersedes: treating cache eligibility and invalidation as the whole cache-safety contract.
+  - Impact: cache keys, response classification, fill concurrency, staleness, invalidation, failure, and load evidence are now binding requirements.
+
+### Reusable learning
+
+- Name the failure mode for every shared security dependency. “Highly available” is not a substitute for deciding whether each route rejects, pauses, queues, serves approved stale public data, or falls back to bounded authority.
+- Encryption requirements must cover the data lifecycle and the key lifecycle together. Rotation without restore and deletion evidence is incomplete.
+- Rolling deployments create a temporary distributed system even inside a modular monolith: schema, web, worker, messages, and retries can run at different versions.
+- Cache design is part of both security and capacity engineering because a poisoned key or synchronized miss can create privacy failure, incorrect content, or a database denial of service.
+
+### Deferred
+
+- Exact identity, proxy/edge, shared control-state, KMS, encryption format, cache, database, and deployment-provider selections remain future governed work.
+- The correction reaches the designed evidence level only. Implementation, source tests, runtime configuration, load evidence, provider verification, and incident exercises remain required with the features and environments that create those risks.
+
+### No product-model change
+
+- This correction does not change NitipCuy's roles, Shop for me and Carry my item services, seller-defined rates, platform fee direction, delivery model, moderation responsibility, or platform-first sequence.

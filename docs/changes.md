@@ -489,3 +489,45 @@ A session with no material change does not invent an entry. A session that makes
   - Existing hostile-review blockers for dependency enforcement, transaction scope, payment lifecycle, idempotency, evidence integrity, projection boundaries, and final reconciliation remain.
 - Follow-up:
   - Implement automated dependency-boundary enforcement as the next bounded correction; the other transaction, payment, idempotency, evidence, projection, and final-reconciliation blockers follow.
+
+## 2026-07-27 18:27 WIB - Security and scale hostile-review gaps corrected
+
+- Issue / PR: Issue #3; pull request #4
+- Product: NitipCuy
+- Type: Security architecture correction, scale-safety correction, and lifecycle reconciliation
+- Status: Source correction applied and locally validated; commit, push, and hosted exact-head verification pending
+- Objective:
+  - Close six material gaps found in the accepted security and scale baseline before returning to dependency-boundary implementation.
+- Scope:
+  - ADR 0004, security architecture, scalability and resilience, system architecture, quality gates, roadmap, handoff, changes, learning, issue #3, and pull request #4.
+- Changes:
+  - Made phishing-resistant MFA such as passkeys, or an explicitly approved high-assurance alternative, a provider-selection gate for administrator, support, moderation, payment, payout, refund, bank-change, factor-replacement, and recovery flows.
+  - Added non-downgrading factor recovery with reauthentication, risk, notification, revocation, and audit requirements.
+  - Added an explicit edge-only origin, trusted proxy chain, forwarding-header overwrite, canonical host/origin/client-IP interpretation, direct-origin denial, and absolute-URL safety contract.
+  - Added a route-class dependency-outage matrix: bounded public reads may degrade, while protected identity, transaction, evidence, moderation, support, and administrator actions fail closed when required controls are unavailable.
+  - Added data minimization, provider encryption, threat-modelled application envelope encryption, managed KMS/HSM/key-vault custody, key versioning, rotation, revocation, compromise recovery, encrypted backup restore, retention, deletion, and cryptographic-erasure requirements.
+  - Added canonical public cache keys, protected-response exclusion, poisoning and deception defenses, concurrent-miss coalescing, hot-key budgets, expiry jitter, bounded stale windows, invalidation, and database-stampede prevention.
+  - Added expand-and-contract schema releases, bounded backfills, mixed old/new web and worker compatibility, queued-payload compatibility, destructive-cleanup delay, and rollback or forward-fix evidence.
+  - Expanded protected-preview, pilot, security, integration, load, outage, migration, cache, recovery, and incident gates for these controls.
+  - Corrected the handoff's stale instruction to commit and push the already hosted-verified identity acceptance work.
+- Impact:
+  - Future implementation has explicit provider-independent security and deployment contracts at the designed evidence level.
+  - The correction narrows false assumptions; it does not activate or verify any production control.
+  - Product scope, roadmap stage order, two service modes, seller-set rates, platform-fee direction, and provider-independent core remain unchanged.
+- Validation:
+  - Starting branch head `bf48727ed9f1e65d87919f4fbe11ac0815542355`, issue #3, pull request #4, reviews, and required hosted workflows were retrieved before editing.
+  - Application run `30257081811` and lifecycle run `30257081823` passed on that starting head without annotations.
+  - CodeRabbit run `86ff3d62-b1f7-4429-839e-e07fd4402c20` was rate-limited and created no review object or finding.
+  - Exact Node.js `24.18.0` and pnpm `11.17.0` were used for the current tree.
+  - Frozen install, peer check, formatting, lint, strict types, all 18 tests, production build, and production dependency audit passed.
+  - Lifecycle participation, internal Markdown links across 20 files, stale-control-language scan, six-control presence scan, and `git diff --check` passed.
+  - Issue #3 and pull request #4 were updated and read back successfully; both remain open, and the pull request remains GitHub-mergeable with no review or review decision.
+  - Hosted exact-head verification remains pending until the correction is committed and pushed.
+- Documentation:
+  - Updated all four lifecycle documents and every affected canonical architecture, security, scale, and quality document.
+- Residual risks / exclusions:
+  - All six controls remain designed only; no identity provider, MFA, proxy, WAF, limiter, KMS, encryption, cache, database, migration, deployment, backup, security test, load test, or production service was created or configured.
+  - Dependency enforcement, transaction scope, payment lifecycle, idempotency, evidence integrity, projection separation, and final issue/PR reconciliation remain merge blockers.
+  - Pull request #4 remains open and unapproved.
+- Follow-up:
+  - Run the exact-toolchain and documentation gates, update issue #3 and pull request #4, commit and push the correction, inspect hosted exact-head checks and annotations, then resume automated dependency-boundary enforcement.
