@@ -632,7 +632,7 @@ A session with no material change does not invent an entry. A session that makes
 - Issue / PR: Issue #3; pull request #4
 - Product: NitipCuy application foundation
 - Type: Architecture correction, false-capability removal, test correction, and lifecycle reconciliation
-- Status: Implemented and fully locally verified; commit, push, and hosted verification pending
+- Status: Implementation committed, pushed, hosted-verified, and externally reconciled; lifecycle reconciliation in progress
 - Objective:
   - Resolve the transaction-scope finding without adding an in-memory abstraction that cannot prove persistence atomicity.
 - Scope:
@@ -657,11 +657,15 @@ A session with no material change does not invent an entry. A session that makes
   - Internal Markdown links passed across 19 files and 33 local targets; `git diff --check` passed.
   - The rebuilt production runtime returned `200` for home and a known trip and `404` for an unknown trip; tested public pages exposed no receipt, acquisition-cost, margin, or equivalent Indonesian private-pricing language.
   - Complete correction-diff hostile review found no material issue.
-  - Commit, push, hosted, issue, and pull-request verification remain pending.
+  - Implementation checkpoint `bf564436bf54815782501bc10280074f16a23fa9` was pushed and matched the remote branch.
+  - Application run `30354861825` and lifecycle run `30354861680` passed on that exact head with zero annotations.
+  - Pull request #4 remained open and GitHub-mergeable with no review object or review decision.
+  - CodeRabbit was green but produced no review object or finding and therefore provided no independent review coverage.
+  - Issue #3 and pull request #4 were updated and read back with the explicit deferral, exact implementation evidence, and remaining blockers.
 - Documentation:
   - Updated all four lifecycle documents plus ADR 0003, system architecture, and quality gates.
 - Residual risks / exclusions:
   - The future transaction-scoped unit of work is designed only and cannot be counted complete until implemented with the first persisted write slice and verified against disposable PostgreSQL.
   - Payment lifecycle, idempotency, evidence-storage integrity, and final lifecycle and pull-request reconciliation remain issue #3 merge blockers.
 - Follow-up:
-  - Commit and push the correction, inspect exact-head hosted evidence, reconcile issue #3 and pull request #4, then correct the asynchronous payment lifecycle.
+  - Commit, push, and inspect this lifecycle reconciliation, then correct the asynchronous payment lifecycle.

@@ -1,10 +1,10 @@
 # NitipCuy Canonical Roadmap
 
-Last reviewed: 2026-07-28 18:26 WIB
+Last reviewed: 2026-07-28 18:30 WIB
 
 Current stage: Stage 1 - Platform foundation
 
-Current work item: Issue #3 hostile-review remediation; the misleading callback-only transaction abstraction is removed and explicitly deferred to the first persisted write slice
+Current work item: Issue #3 hostile-review remediation; the transaction abstraction is explicitly deferred and the asynchronous payment lifecycle is next
 
 ## 1. Role, authority, and freshness contract
 
@@ -157,6 +157,7 @@ Status: In progress
 - [x] The simulated public shell presents source-service and ordering windows in the origin timezone and arrival in the destination timezone.
 - [x] Trip-window implementation checkpoint `f4b635abba9fcdf548441254d3da5e29a645e492` passed application-quality run `30316681999` and lifecycle run `30316681979` with zero annotations.
 - [x] Dependency-boundary implementation checkpoint `330b10a85adbd83c151eafdfc0a5ca6d0f36e9ae` passed application-quality run `30336136426` and lifecycle run `30336136464` with zero annotations.
+- [x] Transaction-deferral implementation checkpoint `bf564436bf54815782501bc10280074f16a23fa9` passed application-quality run `30354861825` and lifecycle run `30354861680` with zero annotations.
 - [x] Exact-toolchain frozen install, peer, quality, production-audit, lifecycle, runtime, complete-diff, and security gates passed for the original architecture checkpoint.
 - [x] Issue #3 branch is committed, pushed, and opened as pull request #4.
 - [ ] BurinSN gives fresh issue #3 merge approval after all evidence and findings are visible.
@@ -303,7 +304,7 @@ The unresolved DOKU, logistics, policy, legal, and pilot items listed in Stage 3
 
 ### Now
 
-Commit and push the locally verified transaction-deferral correction, inspect its exact-head hosted checks and annotations, and reconcile issue #3 and pull request #4 without claiming that persistence, protected transactions, or production controls exist.
+Correct the asynchronous payment lifecycle without claiming provider compatibility, money movement, persistence, protected transactions, or production controls.
 
 ### Next
 

@@ -676,3 +676,12 @@ Do not present inference, provider marketing, provisional pricing, or a future i
 ### No product-model change
 
 - This correction does not change NitipCuy's roles, service modes, seller-set pricing, platform fee, trip timelines, fulfilment evidence, payment direction, logistics direction, moderation duties, or platform-first delivery sequence.
+
+### Hosted evidence
+
+- Implementation checkpoint `bf564436bf54815782501bc10280074f16a23fa9` reproduced on the supported hosted toolchain.
+  - Evidence: application-quality run `30354861825` and lifecycle run `30354861680` passed with zero annotations.
+  - Impact: the false transaction capability is removed and the deferral contract is source- and hosted-workflow-verified; PostgreSQL transaction atomicity remains unimplemented and unverified.
+- A green integration status is not a review object.
+  - Evidence: CodeRabbit was green on the implementation checkpoint but pull request #4 still had no review object, review decision, or CodeRabbit finding.
+  - Impact: retain direct hostile review and fresh BurinSN approval as separate merge gates.

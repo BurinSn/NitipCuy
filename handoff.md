@@ -1,6 +1,6 @@
 # NitipCuy Cross-Session Handoff
 
-Last updated: 2026-07-28 18:26 WIB
+Last updated: 2026-07-28 18:30 WIB
 
 Handoff owner: Codex
 
@@ -120,8 +120,9 @@ The shell is a functional architecture probe. It is not a production UI, has no 
 | Dependency-boundary starting checkpoint | `b87e4541569d825c3b686e8954013945f986f1fb`; application run `30316840816` and lifecycle run `30316840817` passed with zero annotations |
 | Dependency-boundary implementation checkpoint | `330b10a85adbd83c151eafdfc0a5ca6d0f36e9ae`; application run `30336136426` and lifecycle run `30336136464` passed with zero annotations |
 | Dependency-boundary lifecycle checkpoint and transaction-correction starting head | `780563fa784c3ff57d28039b1f6cd491b126d2b4`; application run `30336362159` and lifecycle run `30336362143` passed with zero annotations |
-| Transaction-deferral correction | Implemented and fully locally verified; commit, push, hosted, issue, and pull-request reconciliation pending |
-| Independent review at that checkpoint | No review object or finding exists; CodeRabbit's only current record is the earlier rate-limited run `86ff3d62-b1f7-4429-839e-e07fd4402c20`, which provides no review coverage |
+| Transaction-deferral implementation checkpoint | `bf564436bf54815782501bc10280074f16a23fa9`; application run `30354861825` and lifecycle run `30354861680` passed with zero annotations |
+| Issue and pull-request reconciliation | Issue #3 and pull request #4 updated and read back at the transaction implementation checkpoint |
+| Independent review at that checkpoint | No review object or finding exists; CodeRabbit is green but its earlier review run `86ff3d62-b1f7-4429-839e-e07fd4402c20` was rate-limited, so it provides no independent review coverage |
 | First hostile-review correction | Published-trip runtime invariants committed, pushed, and hosted-verified |
 | Second hostile-review correction | Issue #3 identity acceptance and pull-request scope reconciled with the deliberately deferred persisted account implementation; committed, pushed, and hosted-verified |
 | Security and scale amendment | Initial amendment and six-gap hostile-review correction accepted, committed, pushed, and required hosted workflows verified; production controls remain unimplemented |
@@ -145,7 +146,7 @@ The current bounded amendment implements explicit source-service and ordering wi
 
 The dependency-boundary correction is implemented, committed, pushed, and hosted-verified. A package-manifest and TypeScript-AST gate mechanically enforces the accepted modular-monolith direction. The live scan covers four projects, 24 governed source files, and 46 module references. Twenty adversarial tests cover relative, aliased, type-only, import-type, triple-slash, dynamic, require, manifest placement, composition, client/server, non-static, and symlink bypasses.
 
-The transaction-scope finding is corrected by removing the callback-only `TransactionPort` and `PassthroughTransaction`. Issue #3 has no persisted write aggregate, ledger, or PostgreSQL adapter, so an in-memory replacement would not prove commit, rollback, isolation, shared connection use, or concurrency. ADR 0003 now defers a database-backed transaction-scoped unit of work to the first persisted write slice and makes its disposable-PostgreSQL atomicity tests binding. This removes a false capability claim; it is not transaction implementation or verification.
+The transaction-scope finding is corrected, committed, pushed, hosted-verified, and reconciled with issue #3 and pull request #4. The callback-only `TransactionPort` and `PassthroughTransaction` are removed. Issue #3 has no persisted write aggregate, ledger, or PostgreSQL adapter, so an in-memory replacement would not prove commit, rollback, isolation, shared connection use, or concurrency. ADR 0003 now defers a database-backed transaction-scoped unit of work to the first persisted write slice and makes its disposable-PostgreSQL atomicity tests binding. This removes a false capability claim; it is not transaction implementation or verification.
 
 Implemented locally:
 
@@ -228,7 +229,9 @@ Issue #3 and pull request #4 have been updated and read back successfully for th
 
 For the dependency correction, exact Node.js `24.18.0` and pnpm `11.17.0` formatting, lint, live boundary scan, strict type checking, all 20 boundary tests, 24 existing unit tests, production build, production dependency audit, lifecycle, 20-file internal-link, diff-hygiene, and production-runtime regression checks passed after the final source-root-symlink correction. The live scan covers four projects, 24 governed source files, and 46 module references. Complete-diff hostile review found no further material issue. Issue #3 and pull request #4 were updated and read back successfully. Implementation checkpoint `330b10a85adbd83c151eafdfc0a5ca6d0f36e9ae` passed application run `30336136426` and lifecycle run `30336136464` with zero annotations; the issue acceptance criterion is checked, the pull request is open and GitHub-mergeable, and no review object or decision exists. Dependency-boundary lifecycle reconciliation `780563fa784c3ff57d28039b1f6cd491b126d2b4` then passed application run `30336362159` and lifecycle run `30336362143` with zero annotations.
 
-The transaction-deferral correction started from that clean synchronized head. Exact Node.js `24.18.0` and pnpm `11.17.0` peer validation, formatting, lint, live boundary scan, strict type checking, all 20 boundary tests, all 24 unit tests, production build, production dependency audit, and lifecycle participation passed. Internal Markdown links passed across 19 files and 33 local targets; `git diff --check` passed. The rebuilt production runtime returned `200` for home and a known trip and `404` for an unknown trip, and its tested public pages exposed no receipt, acquisition-cost, margin, or equivalent Indonesian private-pricing language. Complete correction-diff hostile review found no material issue. Commit, push, hosted, issue, and pull-request evidence remain pending and are not claimed.
+The transaction-deferral correction started from that clean synchronized head. Exact Node.js `24.18.0` and pnpm `11.17.0` peer validation, formatting, lint, live boundary scan, strict type checking, all 20 boundary tests, all 24 unit tests, production build, production dependency audit, and lifecycle participation passed. Internal Markdown links passed across 19 files and 33 local targets; `git diff --check` passed. The rebuilt production runtime returned `200` for home and a known trip and `404` for an unknown trip, and its tested public pages exposed no receipt, acquisition-cost, margin, or equivalent Indonesian private-pricing language. Complete correction-diff hostile review found no material issue.
+
+Implementation checkpoint `bf564436bf54815782501bc10280074f16a23fa9` was pushed and matched the remote branch. Application run `30354861825` and lifecycle run `30354861680` passed on that exact head with zero annotations. Pull request #4 remained open and GitHub-mergeable with no review object or decision. CodeRabbit was green but produced no review object or finding, so it is not independent review evidence. Issue #3 and pull request #4 were updated and read back with the explicit deferral, exact implementation evidence, and remaining payment, idempotency, evidence, final-lifecycle, and owner-approval gates.
 
 ## 8. Blockers and gates
 
@@ -262,9 +265,7 @@ These are Stage 3 activation gates, not reasons to delay provider-independent pl
 
 ## 9. Exact next action
 
-Commit and push the locally verified transaction-deferral correction to the existing branch, inspect exact-head hosted checks and annotations, and reconcile issue #3 and pull request #4.
-
-After that checkpoint, correct the payment contract so initiation, pending, held, release, refund, provider-event, and reconciliation states cannot collapse asynchronous provider work into immediate success.
+Correct the payment contract so initiation, pending, held, release, refund, provider-event, and reconciliation states cannot collapse asynchronous provider work into immediate success.
 
 Do not add account persistence or a production identity provider to issue #3. Those belong to the first persisted account slice after this architecture issue is corrected and merged.
 
