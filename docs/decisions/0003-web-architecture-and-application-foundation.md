@@ -35,6 +35,8 @@ apps/web -> packages/adapters -> packages/application -> packages/domain
 
 The domain never imports Next.js, React, Prisma, a provider SDK, an environment reader, or a database client. Application use cases never import concrete adapters.
 
+The repository enforces this direction through both package manifests and a TypeScript-AST source gate. The gate parses static imports and exports, `import type`, import-type expressions, triple-slash references, dynamic imports, `require`, and `module.require`; rejects non-static module specifiers; forbids cross-project relative paths and workspace deep imports; requires declared `workspace:` dependencies; restricts concrete adapters to web server composition; and prevents client modules from importing server source or runtime application/adapters. Test files may use the approved test runner without weakening production-source rules.
+
 ### 2. Select the supported web toolchain
 
 The issue #3 baseline is pinned to:
@@ -220,6 +222,7 @@ Rejected for this baseline because the installed peer graph is unsupported. Re-e
 - Provider integration can proceed later without rewriting the domain.
 - The initial public shell is a functional architecture probe, not visual approval or production readiness.
 - Public ordering-window presentation can evolve independently from the future authoritative trip-offer and order aggregates; closing a public offer never mutates accepted order snapshots.
+- Dependency direction now fails in the exact local and hosted quality path when a manifest or parsed source edge violates the accepted layer graph.
 - More mapping code is required between domain, persistence, providers, and HTTP. That duplication is intentional at trust boundaries.
 - Cross-context workflows must use explicit application orchestration, transactions, audit records, and eventually an outbox.
 

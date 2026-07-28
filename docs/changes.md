@@ -583,3 +583,44 @@ A session with no material change does not invent an entry. A session that makes
   - Dependency enforcement, transaction scope, payment lifecycle, idempotency, evidence-storage integrity, and final lifecycle reconciliation remain issue #3 merge blockers.
 - Follow-up:
   - Commit and push the lifecycle reconciliation, inspect its exact hosted head and annotations, update pull request #4 with the immutable result, then return to dependency-boundary enforcement.
+
+## 2026-07-28 13:38 WIB - Dependency direction enforced mechanically
+
+- Issue / PR: Issue #3; pull request #4
+- Product: NitipCuy application foundation
+- Type: Architecture enforcement, test, quality-gate, and lifecycle correction
+- Status: Implemented and locally verified; complete-diff and GitHub reconciliation, commit, push, and hosted verification pending
+- Objective:
+  - Turn the accepted modular-monolith dependency direction from a review convention into a deterministic failing local and hosted gate.
+- Scope:
+  - Four project manifests, governed source under `packages/*/src` and `apps/web/src`, root quality scripts, adversarial fixtures, ADR 0003, system architecture, quality gates, README, and all four lifecycle documents.
+- Changes:
+  - Added a TypeScript-AST dependency analyzer that validates package manifests and parsed imports, exports, import-type expressions, triple-slash references, dynamic imports, `require`, `require.resolve`, and `module.require`.
+  - Rejected disallowed, unknown, undeclared, non-workspace, deep, cross-project-relative, source-root-escape, non-static, and symlink dependency paths.
+  - Kept domain and application production source free of external runtime packages and Node.js builtins.
+  - Restricted concrete adapters to web server composition and rejected client-to-server and client runtime-core imports while permitting type-only application contracts.
+  - Added `pnpm check:boundaries` for the live tree and 20 disposable adversarial fixture tests through `pnpm test:boundaries`.
+  - Wired both into `pnpm check`, so the existing read-only application-quality workflow executes the enforcement without new permissions or secrets.
+- Impact:
+  - A forbidden dependency edge now fails before merge instead of relying on a reviewer noticing it.
+  - Framework and provider code cannot silently enter domain or application through a relative, aliased, type-only, dynamic, require, manifest, or symlink bypass covered by the gate.
+  - The modular monolith remains one deployable; no microservice, provider, database, deployment, or runtime security control was introduced.
+- Validation:
+  - Starting local and remote branch head `b87e4541569d825c3b686e8954013945f986f1fb` was clean and synchronized.
+  - Exact Node.js `24.18.0` and pnpm `11.17.0` were used.
+  - Live scan passed across four projects, 24 governed source files, and 46 module references.
+  - All 20 boundary tests and 24 existing unit tests passed after the manifest-placement and source-root-symlink corrections.
+  - Complete-diff review found that the configured source root itself could still be a symlink; root-symlink rejection and a twentieth fixture were added, rerun, and passed.
+  - Formatting, lint, strict type checking, production build, production dependency audit, lifecycle, 20-file internal Markdown links, and diff hygiene passed.
+  - Production runtime regression returned `200` for home and a known trip and `404` for an unknown trip; expected timeline content remained present and public pages exposed no receipt, acquisition-cost, or margin language.
+  - Complete-diff hostile review found no further material issue.
+  - Issue #3 and pull request #4 were updated and read back successfully with the dependency scope, local evidence, remaining blockers, and hosted-pending status; both remain open.
+  - The issue's dependency acceptance box remains unchecked until the committed exact head passes hosted checks.
+  - Commit, push, and hosted verification remain pending.
+- Documentation:
+  - Updated all four lifecycle documents plus README, ADR 0003, system architecture, and quality gates.
+- Residual risks / exclusions:
+  - Static enforcement cannot prove runtime authorization, transaction atomicity, payment correctness, idempotency, evidence integrity, provider behavior, or production security.
+  - Transaction scope, payment lifecycle, idempotency, evidence-storage integrity, and final lifecycle reconciliation remain issue #3 merge blockers.
+- Follow-up:
+  - Complete hostile review and exact local verification, reconcile issue #3 and pull request #4, commit and push the correction, inspect hosted checks and annotations, then begin the transaction-scope correction.

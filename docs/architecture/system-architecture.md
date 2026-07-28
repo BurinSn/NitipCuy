@@ -2,7 +2,7 @@
 
 Status: Accepted direction; issue #3 implementation corrections in progress
 
-Last reviewed: 2026-07-27
+Last reviewed: 2026-07-28
 
 Binding decisions:
 
@@ -86,7 +86,18 @@ Forbidden imports:
 - client components to server composition, database, secrets, private storage, provider SDKs, or application mutation internals;
 - provider callbacks directly to domain repositories or ledger tables.
 
-Package manifests constrain package-name dependencies, but they do not prevent cross-package relative imports. Review and manual scans currently enforce the direction. An automated architecture gate that covers relative, aliased, type-only, and dynamic imports remains required before issue #3 can merge.
+Package manifests and `scripts/dependency-boundaries.mjs` now enforce the direction together. The gate parses governed TypeScript and JavaScript source with the pinned TypeScript compiler API and rejects:
+
+- disallowed, unknown, undeclared, non-`workspace:` or deep workspace dependencies and imports;
+- cross-project relative imports and relative or aliased source-root escapes;
+- forbidden outward edges expressed through static imports, exports, `import type`, import-type expressions, triple-slash references, dynamic imports, `require`, `require.resolve`, or `module.require`;
+- non-static dynamic or require specifiers that cannot be proven safe;
+- external runtime dependencies or Node.js builtins in domain and application production source;
+- concrete adapter imports outside web server composition;
+- client imports of server aliases, Node.js builtins, `server-only`, or runtime application and adapter modules;
+- symlinks inside governed source roots.
+
+The gate also verifies all four package manifests, requires external imports in adapter and web source to be declared, and requires production runtime imports to use a runtime dependency section rather than `devDependencies`. Approved Vitest and Node.js test tooling is isolated to test files. `pnpm check:boundaries` scans the real tree, `pnpm test:boundaries` exercises adversarial fixtures, and `pnpm check` runs both through the existing hosted application-quality workflow.
 
 ## 4. Bounded contexts
 
@@ -386,7 +397,7 @@ Plain unit tests must exercise:
 - authorization denials;
 - state-transition conflicts.
 
-The domain invariant tests satisfy the published-trip validation and cross-offset chronology portion. Automated dependency-boundary enforcement and provider-adapter idempotency tests remain open issue #3 findings.
+The domain invariant tests satisfy the published-trip validation and cross-offset chronology portion. The dependency gate has source-tested manifest, relative, aliased, type-only, dynamic, require, non-static, composition, client/server, and symlink denial coverage. Provider-adapter idempotency tests remain an open issue #3 finding.
 
 Integration tests later exercise:
 
@@ -414,7 +425,7 @@ Build success is not runtime, browser, security, legal, payment, provider, or vi
 Implemented in issue #3:
 
 - exact workspace toolchain;
-- package dependency direction;
+- package dependency direction with automated manifest and TypeScript-AST enforcement;
 - public trip domain invariants;
 - trip discovery use cases;
 - in-memory trip repository;

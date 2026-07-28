@@ -10,13 +10,15 @@
   "scripts": {
     "audit:prod": "pnpm audit --prod --audit-level high",
     "build": "turbo build",
-    "check": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm test && pnpm build",
+    "check": "pnpm format:check && pnpm lint && pnpm check:boundaries && pnpm typecheck && pnpm test && pnpm build",
+    "check:boundaries": "node scripts/check-dependency-boundaries.mjs",
     "dev": "turbo dev --filter=@nitipcuy/web",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "lint": "eslint .",
     "start": "pnpm --filter=@nitipcuy/web start",
-    "test": "turbo test",
+    "test": "pnpm test:boundaries && turbo test",
+    "test:boundaries": "node --test scripts/dependency-boundaries.test.mjs",
     "typecheck": "turbo typecheck"
   },
   "devDependencies": {

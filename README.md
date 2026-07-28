@@ -13,7 +13,7 @@ The product replaces fragmented promotion and repetitive private questions with 
 
 Stage 1 platform foundation is in progress under [issue #3](https://github.com/BurinSn/NitipCuy/issues/3).
 
-The repository now contains a modular-monolith architecture, provider-independent ports, deterministic mock adapters, unit tests, quality gates, a defense-in-depth security and scale baseline, and a working local read-only trip-discovery shell. The shell uses simulated public data. The security and scale controls are accepted design requirements, not proof that production controls are implemented or that the shell has production, provider, payment, legal, security, capacity, or visual approval.
+The repository now contains a modular-monolith architecture, mechanically enforced inward package dependencies, provider-independent ports, deterministic mock adapters, unit tests, quality gates, a defense-in-depth security and scale baseline, and a working local read-only trip-discovery shell. The shell uses simulated public data. The security and scale controls are accepted design requirements, not proof that production controls are implemented or that the shell has production, provider, payment, legal, security, capacity, or visual approval.
 
 DOKU remains the preferred payment candidate, conditional on written Partner/Aggregator approval and resolution of the gates in the [DOKU evaluation](docs/payments/doku-evaluation.md). No provider, deployment, database, or production account is active.
 
@@ -47,6 +47,7 @@ Open `http://localhost:3000`.
 Run the complete local application gate:
 
 ```bash
+pnpm check:boundaries
 pnpm check
 pnpm audit:prod
 ./scripts/check-lifecycle-docs.sh origin/main
@@ -61,6 +62,7 @@ apps/web                 Next.js delivery and server-only composition
 packages/domain          framework-free domain model and invariants
 packages/application     use cases and provider-neutral ports
 packages/adapters        in-memory and mock adapter implementations
+scripts                  architecture, test, and lifecycle gates
 ```
 
 The [system architecture](docs/architecture/system-architecture.md), [ADR 0003](docs/decisions/0003-web-architecture-and-application-foundation.md), and [ADR 0004](docs/decisions/0004-security-resilience-and-scale-baseline.md) define the binding dependency, security, resilience, and scaling boundaries.

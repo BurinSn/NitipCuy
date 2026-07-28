@@ -599,3 +599,35 @@ Do not present inference, provider marketing, provisional pricing, or a future i
 - A tracked lifecycle file cannot truthfully contain the SHA or hosted run IDs of the commit that contains that same text.
   - Evidence: a commit identifier is calculated only after its content is fixed, and hosted runs exist only after push.
   - Impact: record the immutable implementation predecessor in the lifecycle reconciliation, then verify the reconciliation commit live and place its exact evidence in the pull request without creating an endless self-referential commit loop.
+
+## 2026-07-28 13:38 WIB - Dependency rules need syntax and manifest enforcement
+
+### Accepted
+
+- The architecture gate validates both declared dependencies and actual parsed module edges.
+  - Evidence: package manifests alone did not prevent an allowed-direction or forbidden-direction cross-package relative path.
+  - Impact: a change must satisfy the manifest graph, public workspace exports, and source-edge rules together.
+- Unverifiable module loading fails closed in governed source.
+  - Evidence: a computed dynamic import or `require` target cannot be assigned to a trusted layer during static review.
+  - Impact: module specifiers must be static strings; intentional runtime plugin loading would require a separately designed allowlist and boundary.
+
+### Corrected
+
+- Regular-expression import scanning was rejected as the enforcement design.
+  - Supersedes: the earlier manual stale-language and dependency-direction scans used only as review evidence.
+  - Impact: the gate uses the pinned TypeScript parser to cover imports, exports, type expressions, triple-slash references, dynamic imports, and require forms without treating comments as module edges.
+- Treating every client application reference as a runtime violation was too broad.
+  - Evidence: delivery may legitimately consume application contracts as types, while runtime use cases still belong behind the server composition boundary.
+  - Impact: type-only application contracts remain allowed; runtime application/adapters and server-source imports from client modules fail.
+
+### Reusable learning
+
+- Architecture tests need positive cases as well as rejection fixtures; otherwise a “secure” rule can quietly make the accepted dependency direction unusable.
+- Deep workspace imports are a boundary bypass even when they point inward because they avoid the package's reviewed public export.
+- A source symlink can defeat lexical path checks, so governed source roots reject symlinks rather than following them.
+- A production runtime import declared only in `devDependencies` can pass a development install but disappear from a production install, so runtime edges require a runtime dependency section.
+
+### Deferred
+
+- The checker does not claim runtime authorization, transaction, provider, data-flow, or deployment security.
+- Any future plugin system, generated source outside the governed roots, new workspace package, or new alias requires an explicit architecture-gate update and adversarial tests.

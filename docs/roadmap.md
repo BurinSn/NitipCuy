@@ -1,6 +1,6 @@
 # NitipCuy Canonical Roadmap
 
-Last reviewed: 2026-07-28 06:56 WIB
+Last reviewed: 2026-07-28 13:38 WIB
 
 Current stage: Stage 1 - Platform foundation
 
@@ -150,7 +150,7 @@ Status: In progress
 - [x] Security and scale amendment committed and pushed at `7522bf8d2076101cdc78245f390818eb6125252f`; application-quality run `30256384832` and lifecycle run `30256384917` passed without annotations.
 - [x] Provider-independent payment, logistics, identity-verification, evidence-storage, clock, identifier, transaction, audit, and outbox interfaces and deterministic mocks exist.
 - [x] Framework-free domain, application, adapter, and delivery package layout established.
-- [ ] Mechanically enforce dependency direction; package manifests and TypeScript do not prevent cross-package relative imports.
+- [x] Mechanically enforce dependency direction through package-manifest validation, parsed source edges, and adversarial fixtures covering cross-package relative and other bypass forms.
 - [x] Local development, formatting, lint, strict type, unit test, build, audit, and PR-CI gates established.
 - [x] Working local shell implements public trip search, detail, and chronological public Q&A using simulated data.
 - [x] Published-trip runtime invariants reject unsupported modes, impossible calendar and clock values, invalid offsets and IANA timezones, inverted source-service and ordering windows, ordering after source availability, service after departure, and duplicate question IDs; advance PO is supported and cross-offset Q&A sorts by instant.
@@ -168,7 +168,7 @@ Pull-request head, hosted checks, annotations, reviews, and mergeability are vol
 
 - [x] Correct published-trip runtime date, timestamp, service-mode, question-identity, and cross-offset chronology invariants with adversarial tests.
 - [x] Reconcile identity acceptance as documented architecture direction while deferring mapping implementation to the first persisted account slice.
-- [ ] Add automated dependency-boundary enforcement.
+- [x] Add automated dependency-boundary enforcement.
 - [ ] Replace or defer the transaction abstraction so repository, audit, ledger, and outbox work can share one enforceable transaction.
 - [ ] Correct payment initiation, held-state, release, refund, and reconciliation contracts.
 - [ ] Enforce and contract-test idempotency.
@@ -302,11 +302,11 @@ The unresolved DOKU, logistics, policy, legal, and pilot items listed in Stage 3
 
 ### Now
 
-Commit, push, and inspect the exact hosted head for the lifecycle reconciliation of the verified trip-window, public-projection, pricing-privacy, and evidence-gate implementation checkpoint. Then begin automated dependency-boundary enforcement without claiming that persisted orders or dashboards exist.
+Hostile-review, reconcile, commit, push, and inspect the exact hosted head for automated dependency-boundary enforcement. Then correct transaction scope without claiming that persistence, protected transactions, or production controls exist.
 
 ### Next
 
-Implement automated dependency-boundary enforcement, then resolve transaction scope, payment lifecycle, idempotency, and evidence-integrity findings; reconcile exact-head evidence; and obtain fresh owner approval for issue #3. After merge, implement the persisted account-to-public-Q&A vertical slice through a new governed issue with its applicable security and resource controls.
+Resolve transaction scope, payment lifecycle, idempotency, and evidence-integrity findings; reconcile exact-head evidence; and obtain fresh owner approval for issue #3. After merge, implement the persisted account-to-public-Q&A vertical slice through a new governed issue with its applicable security and resource controls.
 
 ### Later
 

@@ -2,7 +2,7 @@
 
 Status: Accepted foundation
 
-Last reviewed: 2026-07-27
+Last reviewed: 2026-07-28
 
 ## 1. Supported toolchain
 
@@ -53,15 +53,17 @@ pnpm dev
 pnpm format
 pnpm format:check
 pnpm lint
+pnpm check:boundaries
 pnpm typecheck
 pnpm test
+pnpm test:boundaries
 pnpm build
 pnpm audit:prod
 pnpm check
 ./scripts/check-lifecycle-docs.sh origin/main
 ```
 
-`pnpm check` runs formatting, lint, strict type checking, unit tests, and the production build. The production dependency audit and lifecycle check remain explicit gates so their results cannot be hidden inside a generic command.
+`pnpm check` runs formatting, lint, the live dependency-boundary scan, strict type checking, boundary and unit tests, and the production build. The production dependency audit and lifecycle check remain explicit gates so their results cannot be hidden inside a generic command.
 
 ## 4. Evidence requirements
 
@@ -108,6 +110,14 @@ Unit tests:
 - no database requirement;
 - deterministic clock, ID, provider, and repository behavior.
 - cover origin and destination timezone validity, source-service ordering, advance PO, inverted windows, late close, departure cutoff, and public-projection invariants.
+
+Architecture tests:
+
+- scan package manifests and parsed source rather than relying on path naming or regular-expression-only checks;
+- cover cross-package relative, workspace alias, deep, type-only, import-type, triple-slash, dynamic import, `require`, composition, and client/server boundaries;
+- reject non-static module specifiers and source-root symlinks rather than silently skipping unverifiable edges;
+- verify that allowed workspace imports are declared through the workspace protocol, production runtime imports use runtime dependency sections, and domain and application cannot declare external runtime dependencies;
+- run synthetic disposable fixtures only; the live tree is scanned separately by `pnpm check:boundaries`.
 
 Integration tests:
 
@@ -171,7 +181,7 @@ GitHub branch protection is unavailable for the current private repository plan.
 
 - The architecture probe has source, unit, production-build, and local HTTP runtime evidence.
 - Published-trip runtime validation rejects unsupported service modes, impossible calendar and clock values, invalid offsets and IANA timezones, inverted source-service and ordering windows, ordering after source availability, service after departure, and duplicate question IDs; it supports advance PO and sorts cross-offset public questions by instant.
-- Package dependency direction is still verified by review and manual scans; an automated boundary gate remains required.
+- Package dependency direction is implemented and source-tested through the manifest plus TypeScript-AST boundary gate. It does not replace complete-diff review, runtime authorization, or provider and data-flow security verification.
 - OWASP ASVS 5.0 Level 2 is the accepted production verification target, but no traceability matrix or complete ASVS verification exists.
 - The DDoS, WAF, bot, trusted-proxy, canonical-host, shared rate-limit, session, privileged-MFA, SQL-safety, encryption/key-management, cache-safety, CSRF, XSS, SSRF, private-upload, monitoring, incident, backup, deployment-compatibility, and recovery requirements are designed but not production-implemented or runtime-verified.
 - No capacity contract, service-level objective, provider quota review, load or abuse test, backup restore, or incident exercise exists.
