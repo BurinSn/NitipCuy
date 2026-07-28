@@ -540,7 +540,7 @@ A session with no material change does not invent an entry. A session that makes
 - Issue / PR: Issue #3; pull request #4
 - Product: NitipCuy
 - Type: Product rule, public projection, domain invariant, evidence policy, and lifecycle correction
-- Status: Local exact-toolchain and production-runtime verification passed; GitHub reconciliation and hosted exact-head verification pending
+- Status: Implementation checkpoint committed, pushed, and hosted-verified; lifecycle reconciliation in progress
 - Objective:
   - Formalize seller-defined ordering windows, closed-trip history, seller and customer order workspaces, and evidence-gated fulfilment without exposing fixed-price seller acquisition cost.
 - Scope:
@@ -569,9 +569,12 @@ A session with no material change does not invent an entry. A session that makes
   - The rebuilt Next.js production runtime returned `200` for home and a known trip and `404` for an unknown trip; exact opening, closing, transport-departure, and estimated-arrival timestamps were present in their documented timezones.
   - Public-page content assertions found no receipt, acquisition-cost, or margin disclosure.
   - An initial runtime-start attempt picked up ambient Node.js `26.0.0` and pnpm `9.15.0`; `engine-strict` rejected it before startup. The successful probe used the exact `npx` Node.js and pnpm wrapper, and the failed attempt is not counted as success.
-  - Issue #3 and pull request #4 were updated and read back successfully; both remain open, and the pull request remains GitHub-mergeable at the pre-amendment head with no review object or decision.
+  - Issue #3 and pull request #4 were updated and read back successfully; both remain open.
   - Final lifecycle, 20-file internal Markdown-link, formatting, and diff checks passed after GitHub and hostile-audit reconciliation.
-  - Commit, push, and hosted exact-head verification remain pending.
+  - Implementation commit `f4b635abba9fcdf548441254d3da5e29a645e492` was pushed to pull request #4.
+  - Application-quality run `30316681999` and lifecycle run `30316681979` passed on that exact implementation checkpoint with zero annotations.
+  - Pull request #4 was open and GitHub-mergeable with no review object or review decision after hosted verification.
+  - Lifecycle-reconciliation commit, push, and exact-head hosted verification remain pending.
 - Documentation:
   - Updated all four lifecycle documents and every affected canonical product, order, architecture, security, and quality document.
 - Residual risks / exclusions:
@@ -579,4 +582,4 @@ A session with no material change does not invent an entry. A session that makes
   - A file hash still does not prove product authenticity, price, payment, ownership, or lawful content.
   - Dependency enforcement, transaction scope, payment lifecycle, idempotency, evidence-storage integrity, and final lifecycle reconciliation remain issue #3 merge blockers.
 - Follow-up:
-  - Run final lifecycle and link gates, commit and push the amendment, inspect exact-head hosted checks and annotations, then return to dependency-boundary enforcement.
+  - Commit and push the lifecycle reconciliation, inspect its exact hosted head and annotations, update pull request #4 with the immutable result, then return to dependency-boundary enforcement.

@@ -1,6 +1,6 @@
 # NitipCuy Cross-Session Handoff
 
-Last updated: 2026-07-28 07:13 WIB
+Last updated: 2026-07-28 07:15 WIB
 
 Handoff owner: Codex
 
@@ -115,6 +115,8 @@ The shell is a functional architecture probe. It is not a production UI, has no 
 | Pull request | [#4 feat: establish application architecture foundation](https://github.com/BurinSn/NitipCuy/pull/4) |
 | Last live-verified pre-amendment head | `55eda6bfc903f712b7eeff97e21bf37b99d0ccb5` |
 | Checks at that checkpoint | Application quality run `30262587723` and lifecycle run `30262587684` passed with zero annotations |
+| Trip-window implementation checkpoint | `f4b635abba9fcdf548441254d3da5e29a645e492` |
+| Checks at the implementation checkpoint | Application quality run `30316681999` and lifecycle run `30316681979` passed with zero annotations |
 | Independent review at that checkpoint | No review object or finding exists; CodeRabbit's only current record is the earlier rate-limited run `86ff3d62-b1f7-4429-839e-e07fd4402c20`, which provides no review coverage |
 | First hostile-review correction | Published-trip runtime invariants committed, pushed, and hosted-verified |
 | Second hostile-review correction | Issue #3 identity acceptance and pull-request scope reconciled with the deliberately deferred persisted account implementation; committed, pushed, and hosted-verified |
@@ -198,7 +200,7 @@ Hostile-review corrections already made:
 
 Still required before requesting merge:
 
-1. Publish and hosted-verify the locally validated timeline and evidence-policy amendment.
+1. Commit, push, and hosted-verify the lifecycle reconciliation for the verified implementation checkpoint.
 2. Resolve each remaining implementation finding through the same branch, one coherent correction at a time.
 3. Reconcile issue #3 and pull-request claims after the final correction.
 4. Ask BurinSN for fresh merge approval only when no material finding remains.
@@ -213,7 +215,7 @@ The current trip-window and evidence-policy amendment has passed exact Node.js `
 
 One runtime-start attempt resolved ambient Node.js `26.0.0` and pnpm `9.15.0`; `engine-strict` correctly rejected it before the server started. The successful probe used the documented `npx` wrapper for exact Node.js `24.18.0` and pnpm `11.17.0`. The failed attempt is not counted as verification success.
 
-Issue #3 and pull request #4 have been updated and read back successfully for this amendment. Both remain open; pull request #4 remains GitHub-mergeable at the pre-amendment head with no review object or review decision. The issue and pull request now distinguish the implemented public projection from the deferred authoritative offer, order, dashboard, history-persistence, and evidence-upload flows.
+Issue #3 and pull request #4 have been updated and read back successfully for this amendment. Both remain open; pull request #4 was GitHub-mergeable at implementation checkpoint `f4b635abba9fcdf548441254d3da5e29a645e492` with no review object or review decision. Application quality run `30316681999` and lifecycle run `30316681979` passed on that exact checkpoint with zero annotations. The issue and pull request distinguish the implemented public projection from the deferred authoritative offer, order, dashboard, history-persistence, and evidence-upload flows.
 
 ## 8. Blockers and gates
 
@@ -247,7 +249,7 @@ These are Stage 3 activation gates, not reasons to delay provider-independent pl
 
 ## 9. Exact next action
 
-Reconcile issue #3 and pull request #4 with the locally verified timeline and evidence-policy amendment, run the final lifecycle, internal-link, and complete-diff checks, commit and push to the existing branch, and inspect exact-head hosted checks and annotations.
+Commit and push this lifecycle reconciliation to the existing branch, inspect its exact-head hosted checks and annotations, and update pull request #4 with the immutable reconciliation evidence.
 
 After that checkpoint, implement automated dependency-boundary enforcement as the next bounded code correction. Cover cross-package relative, aliased, type-only, and dynamic imports; wire the gate into the exact local and hosted quality path; add adversarial fixtures or tests; and reconcile all lifecycle, issue, and pull-request claims.
 

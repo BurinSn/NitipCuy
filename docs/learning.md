@@ -590,3 +590,12 @@ Do not present inference, provider marketing, provisional pricing, or a future i
 
 - Authoritative trip persistence, capacity reservation, order workspaces, evidence upload and verification, private receipt handling, and evidence-gated status transitions remain later governed implementation.
 - Exact actual-cost receipt redaction, retention, reviewer access, and dispute rules remain category and policy work before those flows activate.
+
+### Hosted evidence
+
+- Implementation checkpoint `f4b635abba9fcdf548441254d3da5e29a645e492` reproduced on the supported hosted toolchain.
+  - Evidence: application-quality run `30316681999` and lifecycle run `30316681979` passed with zero annotations.
+  - Impact: the public projection and its tests have source, build, local-runtime, and hosted-workflow evidence; the deferred authoritative order and evidence flows remain unimplemented.
+- A tracked lifecycle file cannot truthfully contain the SHA or hosted run IDs of the commit that contains that same text.
+  - Evidence: a commit identifier is calculated only after its content is fixed, and hosted runs exist only after push.
+  - Impact: record the immutable implementation predecessor in the lifecycle reconciliation, then verify the reconciliation commit live and place its exact evidence in the pull request without creating an endless self-referential commit loop.
