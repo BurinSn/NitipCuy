@@ -156,6 +156,7 @@ Status: In progress
 - [x] Published-trip runtime invariants reject unsupported modes, impossible calendar and clock values, invalid offsets and IANA timezones, inverted source-service and ordering windows, ordering after source availability, service after departure, and duplicate question IDs; advance PO is supported and cross-offset Q&A sorts by instant.
 - [x] The simulated public shell presents source-service and ordering windows in the origin timezone and arrival in the destination timezone.
 - [x] Trip-window implementation checkpoint `f4b635abba9fcdf548441254d3da5e29a645e492` passed application-quality run `30316681999` and lifecycle run `30316681979` with zero annotations.
+- [x] Dependency-boundary implementation checkpoint `330b10a85adbd83c151eafdfc0a5ca6d0f36e9ae` passed application-quality run `30336136426` and lifecycle run `30336136464` with zero annotations.
 - [x] Exact-toolchain frozen install, peer, quality, production-audit, lifecycle, runtime, complete-diff, and security gates passed for the original architecture checkpoint.
 - [x] Issue #3 branch is committed, pushed, and opened as pull request #4.
 - [ ] BurinSN gives fresh issue #3 merge approval after all evidence and findings are visible.
@@ -302,7 +303,7 @@ The unresolved DOKU, logistics, policy, legal, and pilot items listed in Stage 3
 
 ### Now
 
-Hostile-review, reconcile, commit, push, and inspect the exact hosted head for automated dependency-boundary enforcement. Then correct transaction scope without claiming that persistence, protected transactions, or production controls exist.
+Commit, push, and inspect the exact hosted head for the dependency-boundary lifecycle reconciliation. Then correct transaction scope without claiming that persistence, protected transactions, or production controls exist.
 
 ### Next
 

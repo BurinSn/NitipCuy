@@ -1,6 +1,6 @@
 # NitipCuy Cross-Session Handoff
 
-Last updated: 2026-07-28 13:48 WIB
+Last updated: 2026-07-28 13:52 WIB
 
 Handoff owner: Codex
 
@@ -118,6 +118,7 @@ The shell is a functional architecture probe. It is not a production UI, has no 
 | Trip-window implementation checkpoint | `f4b635abba9fcdf548441254d3da5e29a645e492` |
 | Checks at the implementation checkpoint | Application quality run `30316681999` and lifecycle run `30316681979` passed with zero annotations |
 | Dependency-boundary starting checkpoint | `b87e4541569d825c3b686e8954013945f986f1fb`; application run `30316840816` and lifecycle run `30316840817` passed with zero annotations |
+| Dependency-boundary implementation checkpoint | `330b10a85adbd83c151eafdfc0a5ca6d0f36e9ae`; application run `30336136426` and lifecycle run `30336136464` passed with zero annotations |
 | Independent review at that checkpoint | No review object or finding exists; CodeRabbit's only current record is the earlier rate-limited run `86ff3d62-b1f7-4429-839e-e07fd4402c20`, which provides no review coverage |
 | First hostile-review correction | Published-trip runtime invariants committed, pushed, and hosted-verified |
 | Second hostile-review correction | Issue #3 identity acceptance and pull-request scope reconciled with the deliberately deferred persisted account implementation; committed, pushed, and hosted-verified |
@@ -140,7 +141,7 @@ The security and scale amendment answers BurinSN's security and growth requireme
 
 The current bounded amendment implements explicit source-service and ordering windows plus origin and destination timezones in the simulated public `PublishedTrip` projection. It also makes the future authoritative `TripOffer`, public history, private order dashboards, seller pricing privacy, purchased-product photo gate, and Carry my item collection and weight gate binding contracts. Persisted orders, protected transitions, archival history, and dashboards remain unimplemented.
 
-The next bounded correction is now implemented locally: a package-manifest and TypeScript-AST dependency gate mechanically enforces the accepted modular-monolith direction. The live scan covers four projects, 24 governed source files, and 46 module references. Twenty adversarial tests cover relative, aliased, type-only, import-type, triple-slash, dynamic, require, manifest placement, composition, client/server, non-static, and symlink bypasses. Exact hosted verification remains pending.
+The dependency-boundary correction is implemented, committed, pushed, and hosted-verified. A package-manifest and TypeScript-AST gate mechanically enforces the accepted modular-monolith direction. The live scan covers four projects, 24 governed source files, and 46 module references. Twenty adversarial tests cover relative, aliased, type-only, import-type, triple-slash, dynamic, require, manifest placement, composition, client/server, non-static, and symlink bypasses.
 
 Implemented locally:
 
@@ -204,10 +205,9 @@ Hostile-review corrections already made:
 
 Still required before requesting merge:
 
-1. Reconcile, commit, push, and hosted-verify the locally implemented dependency-boundary correction.
-2. Resolve each remaining implementation finding through the same branch, one coherent correction at a time.
-3. Reconcile issue #3 and pull-request claims after the final correction.
-4. Ask BurinSN for fresh merge approval only when no material finding remains.
+1. Resolve each remaining implementation finding through the same branch, one coherent correction at a time.
+2. Reconcile issue #3 and pull-request claims after the final correction.
+3. Ask BurinSN for fresh merge approval only when no material finding remains.
 
 Browser automation and visual approval were not performed and are not claimed.
 
@@ -221,7 +221,7 @@ One runtime-start attempt resolved ambient Node.js `26.0.0` and pnpm `9.15.0`; `
 
 Issue #3 and pull request #4 have been updated and read back successfully for this amendment. Both remain open; pull request #4 was GitHub-mergeable at implementation checkpoint `f4b635abba9fcdf548441254d3da5e29a645e492` with no review object or review decision. Application quality run `30316681999` and lifecycle run `30316681979` passed on that exact checkpoint with zero annotations. The issue and pull request distinguish the implemented public projection from the deferred authoritative offer, order, dashboard, history-persistence, and evidence-upload flows.
 
-For the dependency correction, exact Node.js `24.18.0` and pnpm `11.17.0` formatting, lint, live boundary scan, strict type checking, all 20 boundary tests, 24 existing unit tests, production build, production dependency audit, lifecycle, 20-file internal-link, diff-hygiene, and production-runtime regression checks passed after the final source-root-symlink correction. The live scan covers four projects, 24 governed source files, and 46 module references. Complete-diff hostile review found no further material issue. Issue #3 and pull request #4 were updated and read back successfully with the dependency scope, local evidence, residual blockers, and hosted-pending status; the issue acceptance box remains correctly unchecked until the committed exact head passes hosted checks. Commit, push, and hosted exact-head evidence remain to be completed.
+For the dependency correction, exact Node.js `24.18.0` and pnpm `11.17.0` formatting, lint, live boundary scan, strict type checking, all 20 boundary tests, 24 existing unit tests, production build, production dependency audit, lifecycle, 20-file internal-link, diff-hygiene, and production-runtime regression checks passed after the final source-root-symlink correction. The live scan covers four projects, 24 governed source files, and 46 module references. Complete-diff hostile review found no further material issue. Issue #3 and pull request #4 were updated and read back successfully. Implementation checkpoint `330b10a85adbd83c151eafdfc0a5ca6d0f36e9ae` passed application run `30336136426` and lifecycle run `30336136464` with zero annotations; the issue acceptance criterion is checked, the pull request is open and GitHub-mergeable, and no review object or decision exists. Lifecycle-reconciliation commit, push, and hosted exact-head evidence remain to be completed.
 
 ## 8. Blockers and gates
 
@@ -229,12 +229,11 @@ No external blocker prevents continuing provider-independent development with mo
 
 The following internal findings block issue #3 merge:
 
-1. dependency enforcement is implemented and locally source-tested but not yet committed or hosted-verified;
-2. the transaction port cannot bind repository, audit, ledger, and outbox changes to one enforceable transaction;
-3. the payment port collapses asynchronous payment initiation and reconciliation directly into `HELD`;
-4. payment, logistics, and evidence mocks ignore their idempotency keys;
-5. evidence storage trusts a caller-supplied hash and models raw buffered content without a quarantine or verification lifecycle;
-6. lifecycle, issue, and pull-request claims require reconciliation after every correction.
+1. the transaction port cannot bind repository, audit, ledger, and outbox changes to one enforceable transaction;
+2. the payment port collapses asynchronous payment initiation and reconciliation directly into `HELD`;
+3. payment, logistics, and evidence mocks ignore their idempotency keys;
+4. evidence storage trusts a caller-supplied hash and models raw buffered content without a quarantine or verification lifecycle;
+5. lifecycle, issue, and pull-request claims require reconciliation after every correction.
 
 The following still block real-money pilot activation:
 
@@ -255,7 +254,7 @@ These are Stage 3 activation gates, not reasons to delay provider-independent pl
 
 ## 9. Exact next action
 
-Hostile-review the complete dependency-gate diff, run the lifecycle, internal-link, production-runtime regression, and exact complete-gate checks, reconcile issue #3 and pull request #4, commit and push to the existing branch, and inspect exact-head hosted checks and annotations.
+Commit and push this lifecycle reconciliation to the existing branch, inspect its exact-head hosted checks and annotations, and update pull request #4 with the immutable reconciliation evidence.
 
 After that checkpoint, correct the transaction abstraction so repositories, audit, ledger, and outbox writes can share one enforceable transaction boundary.
 

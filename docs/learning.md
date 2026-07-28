@@ -631,3 +631,9 @@ Do not present inference, provider marketing, provisional pricing, or a future i
 
 - The checker does not claim runtime authorization, transaction, provider, data-flow, or deployment security.
 - Any future plugin system, generated source outside the governed roots, new workspace package, or new alias requires an explicit architecture-gate update and adversarial tests.
+
+### Hosted evidence
+
+- Implementation checkpoint `330b10a85adbd83c151eafdfc0a5ca6d0f36e9ae` reproduced on the supported hosted toolchain.
+  - Evidence: application-quality run `30336136426` and lifecycle run `30336136464` passed with zero annotations.
+  - Impact: dependency enforcement is implemented and source-tested in both local and hosted quality paths; it does not raise unrelated transaction, payment, idempotency, evidence, or production controls above their actual evidence levels.
