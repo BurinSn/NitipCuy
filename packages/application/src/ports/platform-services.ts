@@ -39,10 +39,6 @@ export interface IdentifierPort {
   next(namespace: string): string;
 }
 
-export interface TransactionPort {
-  execute<Result>(work: () => Promise<Result>): Promise<Result>;
-}
-
 export interface AuditRecord {
   readonly actorId: string;
   readonly action: string;

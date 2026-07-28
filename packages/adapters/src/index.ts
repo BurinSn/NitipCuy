@@ -5,7 +5,6 @@ export {
   InMemoryEvidenceStorage,
   InMemoryOutbox,
   MockIdentityVerification,
-  PassthroughTransaction,
   SequenceIdentifier,
 } from "./deterministic-platform-services";
 export { MockLogisticsGateway } from "./mock-logistics-gateway";

@@ -9,7 +9,6 @@ import type {
   OutboxPort,
   StoredEvidence,
   StoreEvidenceCommand,
-  TransactionPort,
   VerifiedExternalIdentity,
 } from "@nitipcuy/application";
 
@@ -42,12 +41,6 @@ export class SequenceIdentifier implements IdentifierPort {
 
     this.value += 1;
     return `${normalized}-${this.value.toString().padStart(4, "0")}`;
-  }
-}
-
-export class PassthroughTransaction implements TransactionPort {
-  execute<Result>(work: () => Promise<Result>): Promise<Result> {
-    return work();
   }
 }
 

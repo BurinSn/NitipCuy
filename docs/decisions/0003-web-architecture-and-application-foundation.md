@@ -4,6 +4,8 @@ Status: Accepted
 
 Date: 2026-07-25
 
+Amended: 2026-07-28
+
 Issue: [#3 Establish web architecture and application foundation](https://github.com/BurinSn/NitipCuy/issues/3)
 
 ## Context
@@ -149,12 +151,18 @@ Application ports describe NitipCuy intent:
 - identity principal resolution;
 - evidence storage and retrieval;
 - clock and identifier generation;
-- repository and transaction boundaries;
+- repository boundaries;
 - audit and outbox recording.
 
 Ports must not expose DOKU, Biteship, Vercel, Neon, or another vendor's object model. Provider webhooks and status callbacks are untrusted adapter inputs and never directly mutate an order or ledger.
 
-The architecture probe implements deterministic in-memory trip discovery plus mock payment, logistics, identity-verification, evidence-storage, clock, identifier, transaction, audit, and outbox adapters. The mocks move no money, book no delivery, verify no real identity, store no production evidence, start no background work, and contact no service.
+The architecture probe implements deterministic in-memory trip discovery plus mock payment, logistics, identity-verification, evidence-storage, clock, identifier, audit, and outbox adapters. The mocks move no money, book no delivery, verify no real identity, store no production evidence, start no background work, and contact no service.
+
+Issue #3 intentionally exposes no transaction port. A callback-only `execute(work)` contract and passthrough adapter were removed because they could not bind repositories, ledger, audit, and outbox writes to one underlying transaction, enforce rollback, or prove concurrency behavior.
+
+The first persisted write slice must introduce a database-backed, transaction-scoped unit of work. Its callback receives only repositories and append-only writers bound to the same underlying PostgreSQL transaction. Unscoped write adapters may not be substituted inside that callback. Successful authoritative state, balanced ledger entries, success audit, and required outbox records commit together or roll back together. Provider and object-storage network calls remain outside the database transaction through explicit pending, inbox, outbox, and reconciliation states.
+
+The implementation is incomplete until disposable-PostgreSQL integration tests prove rollback after fault injection at each write boundary, atomic last-capacity contention, stale-version or lock-conflict behavior, balanced ledger constraints, state-to-audit and state-to-outbox atomicity, bounded transaction and lock timeouts, and absence of provider calls while the transaction is open. A failed or denied attempt may be recorded after rollback through an explicitly separate path, but it cannot survive as a successful state-change audit.
 
 ### 8. Split architecture proof from the first persisted vertical slice
 

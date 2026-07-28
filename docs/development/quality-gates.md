@@ -128,6 +128,9 @@ Integration tests:
 - interrupted backfill plus rollback or forward-fix behavior exercised before destructive contraction;
 - server-side new-order denial outside the authoritative ordering window, at exhausted capacity, or for an ineligible seller or offer;
 - atomic last-capacity reservation and accepted-order commercial snapshot behavior;
+- one database-backed transaction scope for every repository, ledger, success-audit, inbox, and outbox write in a consistency-critical command;
+- rollback after injected failure at every write boundary, including proof that no success audit or outbox message survives without its authoritative state;
+- stale-version or lock-conflict behavior, balanced ledger constraints, bounded transaction and lock timeouts, and no provider network call while the transaction is open;
 - purchased and collected transitions denied until required evidence and customer-approved variance state exist;
 - cleanup verified;
 - no fallback to a development or production database.
@@ -185,7 +188,8 @@ GitHub branch protection is unavailable for the current private repository plan.
 - OWASP ASVS 5.0 Level 2 is the accepted production verification target, but no traceability matrix or complete ASVS verification exists.
 - The DDoS, WAF, bot, trusted-proxy, canonical-host, shared rate-limit, session, privileged-MFA, SQL-safety, encryption/key-management, cache-safety, CSRF, XSS, SSRF, private-upload, monitoring, incident, backup, deployment-compatibility, and recovery requirements are designed but not production-implemented or runtime-verified.
 - No capacity contract, service-level objective, provider quota review, load or abuse test, backup restore, or incident exercise exists.
-- Transaction, payment, logistics, evidence, audit, and outbox mocks remain provisional until their transaction, asynchronous-state, idempotency, and evidence-integrity findings are resolved.
+- No transaction abstraction or implementation exists. The callback-only transaction port and passthrough mock were removed because they could not enforce a shared atomic scope.
+- Payment, logistics, evidence, audit, and outbox mocks remain provisional until their asynchronous-state, idempotency, evidence-integrity, and future transaction-scoping findings are resolved.
 - No PostgreSQL adapter or integration test exists yet.
 - No authoritative trip-offer lifecycle, new-order guard, capacity reservation, archival history, evidence-gated order transition, or private seller/customer dashboard exists yet.
 - No browser automation exists yet.

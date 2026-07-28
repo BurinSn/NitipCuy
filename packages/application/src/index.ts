@@ -32,6 +32,5 @@ export type {
   OutboxPort,
   StoredEvidence,
   StoreEvidenceCommand,
-  TransactionPort,
   VerifiedExternalIdentity,
 } from "./ports/platform-services";

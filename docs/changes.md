@@ -626,3 +626,42 @@ A session with no material change does not invent an entry. A session that makes
   - Transaction scope, payment lifecycle, idempotency, evidence-storage integrity, and final lifecycle reconciliation remain issue #3 merge blockers.
 - Follow-up:
   - Commit and push the lifecycle reconciliation, inspect its exact hosted head and annotations, update pull request #4 with the immutable result, then begin the transaction-scope correction.
+
+## 2026-07-28 18:21 WIB - Misleading transaction abstraction removed and deferred
+
+- Issue / PR: Issue #3; pull request #4
+- Product: NitipCuy application foundation
+- Type: Architecture correction, false-capability removal, test correction, and lifecycle reconciliation
+- Status: Implemented and fully locally verified; commit, push, and hosted verification pending
+- Objective:
+  - Resolve the transaction-scope finding without adding an in-memory abstraction that cannot prove persistence atomicity.
+- Scope:
+  - Application platform-service ports and exports, deterministic adapters and tests, ADR 0003, system architecture, quality gates, roadmap, handoff, changes, and learning.
+- Changes:
+  - Removed the callback-only `TransactionPort`.
+  - Removed `PassthroughTransaction` and the test that treated independently mutated audit and outbox arrays as work performed inside a transaction.
+  - Kept deterministic audit and outbox adapters as standalone provisional test services without claiming shared atomicity.
+  - Amended ADR 0003 to defer a database-backed transaction-scoped unit of work to the first persisted write slice.
+  - Required the future scope to bind repositories, ledger, success audit, inbox, and outbox writers to one PostgreSQL transaction while keeping provider and object-storage calls outside it.
+  - Added future disposable-PostgreSQL proof gates for rollback fault injection, last-capacity contention, stale-version or lock conflict, balanced ledger constraints, state-to-audit and state-to-outbox atomicity, timeouts, and absence of provider calls inside the transaction.
+- Impact:
+  - Issue #3 no longer exposes a transaction-shaped callback that cannot commit, roll back, isolate concurrent work, or bind writers to one connection.
+  - The public read-only architecture probe remains appropriately database-free.
+  - The correction does not implement or verify PostgreSQL transactions, protected writes, ledger behavior, or production atomicity.
+  - Product scope, service modes, seller-defined rates, platform-fee direction, ordering windows, evidence rules, and roadmap stage order remain unchanged.
+- Validation:
+  - Starting local and remote branch head `780563fa784c3ff57d28039b1f6cd491b126d2b4` was clean and synchronized.
+  - Dependency-boundary lifecycle reconciliation at that head had application run `30336362159` and lifecycle run `30336362143` passed with zero annotations.
+  - Exact Node.js `24.18.0` and pnpm `11.17.0` application type checking and all five adapter tests passed after the removal.
+  - Exact-toolchain peer validation, formatting, lint, live boundary scan, strict type checking, all 20 boundary tests, all 24 unit tests, production build, production dependency audit, and lifecycle participation passed.
+  - Internal Markdown links passed across 19 files and 33 local targets; `git diff --check` passed.
+  - The rebuilt production runtime returned `200` for home and a known trip and `404` for an unknown trip; tested public pages exposed no receipt, acquisition-cost, margin, or equivalent Indonesian private-pricing language.
+  - Complete correction-diff hostile review found no material issue.
+  - Commit, push, hosted, issue, and pull-request verification remain pending.
+- Documentation:
+  - Updated all four lifecycle documents plus ADR 0003, system architecture, and quality gates.
+- Residual risks / exclusions:
+  - The future transaction-scoped unit of work is designed only and cannot be counted complete until implemented with the first persisted write slice and verified against disposable PostgreSQL.
+  - Payment lifecycle, idempotency, evidence-storage integrity, and final lifecycle and pull-request reconciliation remain issue #3 merge blockers.
+- Follow-up:
+  - Commit and push the correction, inspect exact-head hosted evidence, reconcile issue #3 and pull request #4, then correct the asynchronous payment lifecycle.

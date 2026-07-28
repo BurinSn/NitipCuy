@@ -637,3 +637,42 @@ Do not present inference, provider marketing, provisional pricing, or a future i
 - Implementation checkpoint `330b10a85adbd83c151eafdfc0a5ca6d0f36e9ae` reproduced on the supported hosted toolchain.
   - Evidence: application-quality run `30336136426` and lifecycle run `30336136464` passed with zero annotations.
   - Impact: dependency enforcement is implemented and source-tested in both local and hosted quality paths; it does not raise unrelated transaction, payment, idempotency, evidence, or production controls above their actual evidence levels.
+
+## 2026-07-28 18:21 WIB - A callback boundary is not transaction evidence
+
+### Accepted
+
+- The architecture probe exposes no transaction port until a persisted write slice can supply transaction-scoped resources.
+  - Evidence: the removed `execute(work)` callback supplied no repository, ledger, audit, inbox, or outbox scope and the adapter only invoked the callback.
+  - Impact: issue #3 no longer suggests that callback nesting provides commit, rollback, isolation, shared connection use, or concurrency control.
+- The first persisted write slice must introduce a database-backed transaction-scoped unit of work.
+  - Evidence: NitipCuy consistency-critical commands require authoritative state, balanced ledger entries, success audit, and required outbox records to commit or roll back together.
+  - Impact: the callback receives only writers bound to one PostgreSQL transaction; independently constructed write adapters cannot be mixed into the consistency boundary.
+- Provider and object-storage network calls stay outside the database transaction.
+  - Evidence: a network timeout or ambiguous provider result cannot be rolled back by PostgreSQL and holding locks across remote latency harms correctness and capacity.
+  - Impact: use explicit pending, inbox, outbox, worker, and reconciliation states around short database transactions.
+
+### Corrected
+
+- `PassthroughTransaction` was not a safe deterministic transaction adapter.
+  - Supersedes: treating successful execution of an arbitrary asynchronous callback as a transaction contract.
+  - Impact: the interface, adapter, export, and misleading test are removed rather than preserved as unused future scaffolding.
+- An in-memory replacement in issue #3 would create unjustified confidence.
+  - Evidence: this slice has no authoritative write aggregate, ledger, shared transactional repository set, or database adapter on which to prove atomicity and contention.
+  - Impact: defer implementation while making the future proof obligations explicit and reviewable.
+
+### Reusable learning
+
+- An abstraction should be removed when it advertises a guarantee its implementations cannot enforce.
+- Transaction scope is a resource-ownership rule, not merely a callback shape.
+- Success audit and outbox records belong to the same commit as the state they describe. Failed or denied attempt reporting may occur after rollback through an explicitly separate path, but it must never claim successful mutation.
+- Unit tests can validate orchestration rules, but commit, rollback, locking, isolation, and concurrent last-capacity behavior require integration tests against a disposable real database.
+
+### Deferred
+
+- The database-backed transaction-scoped unit of work, PostgreSQL adapter, ledger, authoritative write repositories, and transaction integration tests belong to the first persisted write slice.
+- Exact Prisma transaction mechanics, isolation level, retry classification, and repository scope shape remain implementation decisions within the binding atomicity and timeout requirements.
+
+### No product-model change
+
+- This correction does not change NitipCuy's roles, service modes, seller-set pricing, platform fee, trip timelines, fulfilment evidence, payment direction, logistics direction, moderation duties, or platform-first delivery sequence.

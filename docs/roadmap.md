@@ -1,10 +1,10 @@
 # NitipCuy Canonical Roadmap
 
-Last reviewed: 2026-07-28 13:38 WIB
+Last reviewed: 2026-07-28 18:26 WIB
 
 Current stage: Stage 1 - Platform foundation
 
-Current work item: Issue #3 trip-window, public-projection, pricing-privacy, and evidence-gate correction; automated dependency-boundary enforcement follows this bounded amendment
+Current work item: Issue #3 hostile-review remediation; the misleading callback-only transaction abstraction is removed and explicitly deferred to the first persisted write slice
 
 ## 1. Role, authority, and freshness contract
 
@@ -148,7 +148,7 @@ Status: In progress
 - [x] Security architecture covers DDoS and cost abuse, injection, sessions, credential and OTP attacks, authorization, browser threats, uploads, SSRF, callbacks, secrets, monitoring, incident response, and verification.
 - [x] Scalability and resilience architecture covers caching, database and connection budgets, transaction and concurrency rules, durable workers, provider isolation, observability, load profiles, and evidence-driven extraction.
 - [x] Security and scale amendment committed and pushed at `7522bf8d2076101cdc78245f390818eb6125252f`; application-quality run `30256384832` and lifecycle run `30256384917` passed without annotations.
-- [x] Provider-independent payment, logistics, identity-verification, evidence-storage, clock, identifier, transaction, audit, and outbox interfaces and deterministic mocks exist.
+- [x] Provider-independent payment, logistics, identity-verification, evidence-storage, clock, identifier, audit, and outbox interfaces and deterministic mocks exist.
 - [x] Framework-free domain, application, adapter, and delivery package layout established.
 - [x] Mechanically enforce dependency direction through package-manifest validation, parsed source edges, and adversarial fixtures covering cross-package relative and other bypass forms.
 - [x] Local development, formatting, lint, strict type, unit test, build, audit, and PR-CI gates established.
@@ -170,7 +170,7 @@ Pull-request head, hosted checks, annotations, reviews, and mergeability are vol
 - [x] Correct published-trip runtime date, timestamp, service-mode, question-identity, and cross-offset chronology invariants with adversarial tests.
 - [x] Reconcile identity acceptance as documented architecture direction while deferring mapping implementation to the first persisted account slice.
 - [x] Add automated dependency-boundary enforcement.
-- [ ] Replace or defer the transaction abstraction so repository, audit, ledger, and outbox work can share one enforceable transaction.
+- [x] Remove the unenforceable callback-only transaction abstraction and defer a database-backed transaction-scoped unit of work, with explicit atomicity and disposable-PostgreSQL proof gates, to the first persisted write slice.
 - [ ] Correct payment initiation, held-state, release, refund, and reconciliation contracts.
 - [ ] Enforce and contract-test idempotency.
 - [ ] Replace caller-trusted evidence hashes and buffered raw-upload assumptions with a server-authoritative evidence lifecycle.
@@ -303,11 +303,11 @@ The unresolved DOKU, logistics, policy, legal, and pilot items listed in Stage 3
 
 ### Now
 
-Commit, push, and inspect the exact hosted head for the dependency-boundary lifecycle reconciliation. Then correct transaction scope without claiming that persistence, protected transactions, or production controls exist.
+Commit and push the locally verified transaction-deferral correction, inspect its exact-head hosted checks and annotations, and reconcile issue #3 and pull request #4 without claiming that persistence, protected transactions, or production controls exist.
 
 ### Next
 
-Resolve transaction scope, payment lifecycle, idempotency, and evidence-integrity findings; reconcile exact-head evidence; and obtain fresh owner approval for issue #3. After merge, implement the persisted account-to-public-Q&A vertical slice through a new governed issue with its applicable security and resource controls.
+Correct the asynchronous payment lifecycle, then enforce idempotency and replace the evidence-storage assumptions; reconcile exact-head evidence and obtain fresh owner approval for issue #3. After merge, implement the persisted account-to-public-Q&A vertical slice through a new governed issue with its applicable security and resource controls.
 
 ### Later
 

@@ -11,7 +11,6 @@ import {
   MockIdentityVerification,
   MockLogisticsGateway,
   MockPaymentGateway,
-  PassthroughTransaction,
   SequenceIdentifier,
 } from "./index";
 
@@ -91,7 +90,6 @@ describe("mock and in-memory adapters", () => {
   it("provides deterministic non-provider platform services", async () => {
     const clock = new FixedClock("2026-09-20T08:00:00+07:00");
     const identifiers = new SequenceIdentifier();
-    const transaction = new PassthroughTransaction();
     const audit = new InMemoryAudit();
     const outbox = new InMemoryOutbox();
     const identities = new MockIdentityVerification({
@@ -104,28 +102,25 @@ describe("mock and in-memory adapters", () => {
     });
     const evidence = new InMemoryEvidenceStorage();
 
-    const result = await transaction.execute(async () => {
-      await audit.append({
-        actorId: "account-001",
-        action: "trip.publish",
-        targetType: "trip",
-        targetId: "trip-001",
-        reasonCode: "OWNER_REQUEST",
-        occurredAt: clock.now(),
-        correlationId: "correlation-001",
-        outcome: "SUCCEEDED",
-      });
-      await outbox.enqueue({
-        id: identifiers.next("message"),
-        topic: "trip.published",
-        aggregateType: "trip",
-        aggregateId: "trip-001",
-        occurredAt: clock.now(),
-        payload: { destination: "Bandung" },
-      });
-
-      return identities.verifyProof("proof-001");
+    await audit.append({
+      actorId: "account-001",
+      action: "trip.publish",
+      targetType: "trip",
+      targetId: "trip-001",
+      reasonCode: "OWNER_REQUEST",
+      occurredAt: clock.now(),
+      correlationId: "correlation-001",
+      outcome: "SUCCEEDED",
     });
+    await outbox.enqueue({
+      id: identifiers.next("message"),
+      topic: "trip.published",
+      aggregateType: "trip",
+      aggregateId: "trip-001",
+      occurredAt: clock.now(),
+      payload: { destination: "Bandung" },
+    });
+    const result = await identities.verifyProof("proof-001");
 
     const content = new Uint8Array([1, 2, 3]);
     const stored = await evidence.store({

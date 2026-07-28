@@ -260,6 +260,10 @@ Core rules:
 - use expand-and-contract releases: additive schema and compatible code first, bounded backfill and observed cutover next, destructive cleanup only after the rollback and version-skew window closes;
 - keep old and new web and worker versions compatible throughout rolling deployment, including queued outbox payloads and retries.
 
+Issue #3 deliberately has no transaction implementation. The removed callback-only transaction port did not provide scoped repositories or append-only writers and therefore could not enforce commit, rollback, isolation, or shared connection use.
+
+The first persisted write slice must introduce a database-backed transaction-scoped unit of work. The scope supplies only repository, ledger, audit, inbox, and outbox writers bound to the same PostgreSQL transaction. A consistency-critical use case may not combine scoped and independently constructed write adapters. Authoritative state, balanced financial entries, success audit, and required outbox records commit together or roll back together. Provider and object-storage network calls occur outside the transaction through explicit pending and reconciliation states.
+
 Initial target:
 
 - PostgreSQL 18 compatible schema;
@@ -402,7 +406,10 @@ The domain invariant tests satisfy the published-trip validation and cross-offse
 Integration tests later exercise:
 
 - expand-and-contract migrations, interrupted backfills, mixed old/new application versions, rollback or forward-fix, and constraints on disposable PostgreSQL;
-- repository mapping and transactions;
+- repository mapping and the transaction-scoped unit of work;
+- rollback after fault injection at every consistency-critical write boundary;
+- atomic last-capacity contention, stale-version or lock conflicts, balanced ledger constraints, and state-to-audit and state-to-outbox atomicity;
+- bounded transaction and lock timeouts, with no provider network call while a database transaction is open;
 - provider signature and event inbox handling;
 - private object-storage authorization;
 - outbox processing.
@@ -429,7 +436,7 @@ Implemented in issue #3:
 - public trip domain invariants;
 - trip discovery use cases;
 - in-memory trip repository;
-- provider-neutral payment, logistics, identity verification, evidence storage, clock, identifier, transaction, audit, and outbox ports;
+- provider-neutral payment, logistics, identity verification, evidence storage, clock, identifier, audit, and outbox ports;
 - deterministic in-memory and mock adapters for those boundaries;
 - server-only composition;
 - destination and date search;
@@ -439,7 +446,7 @@ Implemented in issue #3:
 - correct HTTP `404` behavior for unknown simulated trip paths;
 - PR quality workflow.
 
-The payment, logistics, evidence, transaction, audit, and outbox interfaces and mocks exist, but their transaction scoping, asynchronous state, idempotency, and evidence-integrity contracts remain under corrective review. Their existence is not evidence that those guarantees are implemented.
+The callback-only transaction interface and passthrough adapter were removed rather than misrepresented as atomic infrastructure. Transaction requirements are designed, but no transaction implementation or verification exists. Payment, logistics, evidence, audit, and outbox interfaces and mocks remain provisional while their asynchronous-state, idempotency, evidence-integrity, and future transaction-scoping contracts are corrected.
 
 Not implemented:
 
