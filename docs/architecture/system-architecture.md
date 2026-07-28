@@ -109,7 +109,8 @@ Owns:
 
 - jastipper profile presentation;
 - trip drafts and publication;
-- origin, destination, deadlines, dates, capacity, service modes, and delivery terms;
+- origin and destination IANA timezones;
+- source-service start and end, ordering open and close, transport departure, estimated arrival, capacity, service modes, and delivery terms;
 - product offers and open-request availability;
 - public trip, listing, and request discussion.
 
@@ -124,6 +125,7 @@ Owns:
 - accepted commercial snapshot;
 - private delivery method and address reference;
 - order lifecycle and cancellation intent.
+- private jastipper and customer order-dashboard projections.
 
 An order preserves the accepted terms. Later trip edits do not silently rewrite committed orders.
 
@@ -131,12 +133,14 @@ An order preserves the accepted terms. Later trip edits do not silently rewrite 
 
 Owns:
 
-- purchase, collection, photo, receipt, weight, package, dispatch, pickup, and delivery evidence;
+- purchased-item photograph, collection photograph, weight, package, dispatch, pickup, delivery, and purpose-limited private receipt evidence;
 - evidence requirements by mode and category;
 - QR and OTP handover evidence;
 - immutable evidence metadata and private-blob references.
 
 File bytes live in private object storage. The database stores metadata, hashes, classification, ownership, and retention state.
+
+For fixed-price Shop for me, an accepted actual-product photograph gates the `PURCHASED` transition while routine buyer-visible receipt disclosure is forbidden. A receipt may be private evidence only for an accepted actual-cost pricing formula or a proportionate dispute, fraud, or compliance purpose. For Carry my item, accepted collection photographs and measured weight gate `COLLECTED`; material variance requires customer approval.
 
 ### Payments and ledger
 
@@ -184,12 +188,35 @@ Owns:
 
 Only completed protected orders can create verified reviews.
 
-## 5. Initial domain proof
+## 5. Authoritative trip offer and public projections
+
+The future authoritative `TripOffer` aggregate owns:
+
+- jastipper account and eligibility reference;
+- draft, review, publication, pause, closure, cancellation, moderation, and archive state;
+- origin and destination with IANA timezones;
+- source-service, ordering, transport-departure, and estimated-arrival instants;
+- service modes, capacity, product and request terms, delivery terms, and revision;
+- the facts needed to decide whether a new request may be accepted.
+
+Every new request or checkout evaluates the authoritative offer with the platform clock, current capacity, seller eligibility, and risk state. A scheduled job may update presentation state, but stale UI or projection state cannot authorize a commitment.
+
+`PublishedTrip` is a rebuildable, read-only public projection. It contains only publishable route, time-window, capacity-summary, rate-summary, delivery-summary, rating, and moderated-discussion fields. It does not own capacity reservations, accepted commercial terms, customer identities, addresses, private evidence, orders, payments, moderation reasons, or settlement. It is never accepted as mutation or authorization input.
+
+The public closed-trip history is another projection of the authoritative trip and eligible terminal orders. It may show completed-trip and completed-protected-order aggregates plus verified reviews, but not private order rows or evidence.
+
+Jastipper and customer order dashboards are private projections built from authoritative order, evidence, logistics, payment, and dispute state. Dashboard labels may simplify internal states but cannot create or infer a transition.
+
+## 6. Initial domain proof
 
 Issue #3 implements one framework-free published-trip model with:
 
 - a validated trip ID;
 - different origin and destination;
+- valid origin and destination IANA timezones;
+- an exact source-service window;
+- an exact ordering-open and ordering-close window that supports advance PO and closes no later than source availability;
+- the current public `requestOpenAt` and `requestDeadline` fields are the projection's ordering-open and ordering-close instants; the future authoritative aggregate uses the explicit `orderOpenAt` and `orderCloseAt` terms;
 - an origin-local departure date paired with an exact timezone-bearing departure timestamp;
 - request deadline before the exact departure instant;
 - estimated arrival no earlier than departure;
@@ -202,9 +229,9 @@ Issue #3 implements one framework-free published-trip model with:
 
 Date-only and timezone-bearing timestamp values receive strict runtime calendar, clock, and timezone-offset validation. TypeScript unions do not replace runtime validation for delivery, persistence, or provider inputs.
 
-The proof intentionally contains public simulated data only. It does not contain an account, address, private chat, payment, real seller, real review, or provider record.
+The proof intentionally contains public simulated data only. Its `PublishedTrip` is the public projection described above, not the future authoritative aggregate. It does not contain an account, address, private chat, order, payment, capacity reservation, real seller, real review, or provider record.
 
-## 6. Persistence direction
+## 7. Persistence direction
 
 PostgreSQL is authoritative. Prisma lives only in a future database adapter.
 
@@ -235,7 +262,7 @@ Production database creation is not authorized by this document.
 
 Runtime database access must also use separate least-privilege application and migration identities, explicit connection budgets, statement and transaction timeouts, bounded queries, and reviewed indexes. Prisma-generated operations are the default. Unsafe raw-query APIs are forbidden in application source; exceptional raw SQL requires tagged parameterization, allowlisted dynamic identifiers, focused tests, and review.
 
-## 7. Identity and authorization
+## 8. Identity and authorization
 
 ### Identity
 
@@ -269,7 +296,7 @@ Every protected command evaluates:
 
 Missing context denies. Client-side navigation, hidden controls, route names, or claimed role fields never authorize a command.
 
-## 8. Public and private data boundaries
+## 9. Public and private data boundaries
 
 Public:
 
@@ -296,7 +323,7 @@ Private data is fetched only after authorization and is never embedded in public
 
 Provider encryption at rest and in transit is mandatory for private persistence and backups. Threat modelling selects high-impact identity, bank, contact, address, verification, payment-reference, and evidence fields for application-level envelope encryption through an outer managed-key adapter. The domain may carry key identifiers and format versions but never raw keys or provider cryptography.
 
-## 9. Provider port rules
+## 10. Provider port rules
 
 Every provider adapter must:
 
@@ -311,7 +338,7 @@ Every provider adapter must:
 
 The DOKU and Biteship candidates do not change these rules.
 
-## 10. Background work
+## 11. Background work
 
 Do not start untracked promises after an HTTP response.
 
@@ -325,7 +352,7 @@ Stage 1 has no background worker. Before background work is required:
 
 Extract a worker deployment only when duration, throughput, or availability evidence requires it.
 
-## 11. Security baseline
+## 12. Security baseline
 
 The binding detail is [Security architecture](../security/security-architecture.md). The complete production web application targets OWASP ASVS 5.0 Level 2, with additional risk-based controls for payment, settlement, moderation, support, administrator, identity-evidence, and recovery operations.
 
@@ -347,11 +374,12 @@ The trust-and-safety behavior remains governed by [the moderation model](../trus
 
 No provider, ORM, framework, checklist, or passed build makes NitipCuy attack-proof. Controls may be described only at their highest evidenced level: designed, implemented, source-tested, runtime-tested, load-tested, provider-verified, or incident-tested.
 
-## 12. Quality and test boundaries
+## 13. Quality and test boundaries
 
 Plain unit tests must exercise:
 
 - domain invariants;
+- timezone-explicit source-service and ordering-window invariants, including advance PO and closed-window denial;
 - use cases with test repositories;
 - provider-neutral port behavior;
 - adapter mapping and idempotency;
@@ -371,15 +399,17 @@ Integration tests later exercise:
 Browser tests later exercise:
 
 - public discovery;
+- scheduled, open, closed, and archived trip-offer presentation;
 - protected mutation and denial;
 - public versus private information;
+- jastipper and customer order projections plus evidence-gated progress;
 - accessibility;
 - responsive behavior;
 - evidence and recovery workflows.
 
 Build success is not runtime, browser, security, legal, payment, provider, or visual approval.
 
-## 13. Current implementation state
+## 14. Current implementation state
 
 Implemented in issue #3:
 
@@ -393,6 +423,7 @@ Implemented in issue #3:
 - server-only composition;
 - destination and date search;
 - trip detail;
+- source-service and ordering-window presentation with origin and destination timezones;
 - chronological public questions and answers;
 - correct HTTP `404` behavior for unknown simulated trip paths;
 - PR quality workflow.
@@ -407,6 +438,7 @@ Not implemented:
 - private data;
 - real providers;
 - order, payment, evidence, logistics, moderation, dispute, or review workflows;
+- authoritative `TripOffer`, new-order eligibility, capacity reservation, archival history, or private seller and customer order dashboards;
 - shared WAF, rate-limit, bot, session, idempotency, cache, worker, observability, backup, or recovery infrastructure;
 - trusted-proxy/canonical-host configuration, privileged MFA, managed-key encryption lifecycle, cache-safety controls, or mixed-version deployment evidence;
 - runtime security configuration, load and abuse tests, provider configuration review, incident exercises, or penetration testing;

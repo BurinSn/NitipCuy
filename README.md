@@ -4,7 +4,7 @@ NitipCuy is a standalone BurinSN marketplace for finding and transacting with in
 
 It supports two primary services:
 
-1. **Shop for me**: a jastipper publishes a trip, available products or open requests, rates, capacity, purchase deadline, and estimated arrival.
+1. **Shop for me**: a jastipper publishes a trip, source-service and ordering windows, available products or open requests, rates, capacity, transport departure, and estimated arrival.
 2. **Carry my item**: a customer already owns or purchased an item and hires a jastipper to collect or carry it using declared weight and route-based terms.
 
 The product replaces fragmented promotion and repetitive private questions with searchable trips, public reusable discussion, protected orders, logistics evidence, and transaction-backed reputation.
@@ -23,6 +23,9 @@ DOKU remains the preferred payment candidate, conditional on written Partner/Agg
 - Uses the BurinSN `Cuy` suffix, not `Coy`.
 - No subscription monetization.
 - Jastippers choose their own rates and commercial terms.
+- Fixed-price Shop for me orders require purchased-product photographs, not routine buyer-visible receipt or acquisition-cost disclosure.
+- Carry my item collection requires photographs and measured weight, with customer approval for material variance.
+- Closed trip offers reject new orders but remain read-only seller history.
 - NitipCuy earns a disclosed platform protection fee on completed protected transactions.
 - Payment, identity, evidence, moderation, dispute, and review controls remain platform-authoritative.
 - NitipCuy does not become the importer, customs broker, cross-border merchant, or carrier merely by facilitating a transaction.

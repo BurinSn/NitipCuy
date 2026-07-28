@@ -549,3 +549,44 @@ Do not present inference, provider marketing, provisional pricing, or a future i
 ### No product-model change
 
 - This correction does not change NitipCuy's roles, Shop for me and Carry my item services, seller-defined rates, platform fee direction, delivery model, moderation responsibility, or platform-first sequence.
+
+## 2026-07-28 06:56 WIB - Price evidence and fulfilment evidence are different contracts
+
+### Accepted
+
+- A fixed-price Shop for me order requires an actual-product photograph before `PURCHASED`, but does not routinely require the seller's receipt to be shown to the buyer.
+  - Evidence: direct BurinSN product decision on 2026-07-28.
+  - Impact: the buyer agrees to the final seller price before payment; the platform protects evidence of item acquisition without converting the order into mandatory cost-plus pricing or exposing the seller's margin.
+- A receipt may be private evidence only when the seller explicitly chose actual cost plus a service fee, or a proportionate dispute, fraud, or compliance review requires it.
+  - Evidence: direct BurinSN alignment plus the existing private-evidence boundary.
+  - Impact: acquisition-cost evidence has a disclosed purpose, access boundary, retention rule, and pricing consequence rather than becoming a routine upload.
+- Carry my item requires collection photographs and measured weight before `COLLECTED`; a material variance requires customer approval before fulfilment continues.
+  - Evidence: direct BurinSN product decision on 2026-07-28.
+  - Impact: collection and charge changes become evidence-gated rather than seller-declared status changes.
+- A trip's ordering window is independent from its source-service and physical-travel milestones.
+  - Evidence: the approved example allows a 2–8 August ordering window within a 1–10 August trip and also allows advance PO before the trip.
+  - Impact: model exact source-service start and end, order open and close, transport departure, and estimated arrival instead of one ambiguous trip date.
+
+### Corrected
+
+- “Purchase receipt or store confirmation” was too broad as a routine Shop for me evidence rule.
+  - Supersedes: the optional but undifferentiated receipt item in the first order lifecycle.
+  - Impact: actual-product photo is the normal buyer-visible gate; receipt handling now depends on the accepted pricing model or a private exceptional purpose.
+- Closing a trip only after all orders are delivered would keep stale checkout open too long.
+  - Supersedes: conflating request acceptance, physical travel, fulfilment, and archival.
+  - Impact: close new orders at the authoritative order cutoff or earlier ineligibility, continue accepted orders separately, and archive only after trip completion plus eligible terminal order states.
+- A public `PublishedTrip` cannot be the future transaction authority.
+  - Supersedes: the previously underspecified relationship between the issue #3 model and a persisted trip.
+  - Impact: future `TripOffer` owns mutable eligibility and capacity; `PublishedTrip`, public history, and private dashboards are rebuildable projections.
+
+### Reusable learning
+
+- Price transparency means the customer understands and accepts the final charge and formula; it does not always mean exposing the seller's cost or margin.
+- A cryptographic hash identifies exact evidence bytes. It does not establish authenticity, price, payment status, ownership, or legality without surrounding controls.
+- Time-based UI states are advisory. Every protected command must evaluate the authoritative current instant, status, capacity, and eligibility again.
+- When two activities overlap, use separate state dimensions. Offer availability, physical travel, and order fulfilment cannot be represented safely as one linear status.
+
+### Deferred
+
+- Authoritative trip persistence, capacity reservation, order workspaces, evidence upload and verification, private receipt handling, and evidence-gated status transitions remain later governed implementation.
+- Exact actual-cost receipt redaction, retention, reviewer access, and dispute rules remain category and policy work before those flows activate.

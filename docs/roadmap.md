@@ -1,10 +1,10 @@
 # NitipCuy Canonical Roadmap
 
-Last reviewed: 2026-07-27 18:35 WIB
+Last reviewed: 2026-07-28 06:56 WIB
 
 Current stage: Stage 1 - Platform foundation
 
-Current work item: Issue #3 architecture-foundation remediation; automated dependency-boundary enforcement follows the hosted-verified six-gap security and scale design correction
+Current work item: Issue #3 trip-window, public-projection, pricing-privacy, and evidence-gate correction; automated dependency-boundary enforcement follows this bounded amendment
 
 ## 1. Role, authority, and freshness contract
 
@@ -29,8 +29,8 @@ NitipCuy makes jastip activity searchable, explicit, evidence-backed, and safer 
 
 The product must let:
 
-- a jastipper publish where and when they are travelling, what they can buy or carry, remaining capacity, their own rates, deadlines, relevant location, and delivery terms;
-- a customer find a suitable route, inspect products or submit a request, understand the full cost and delivery method, transact through the platform, follow evidence, dispute when necessary, and review a completed transaction;
+- a jastipper publish where and when they are available and travelling, when orders open and close, what they can buy or carry, remaining capacity, their own rates, deadlines, relevant location, and delivery terms;
+- a customer find a suitable route, see the ordering window, inspect products or submit a request, understand the full cost and delivery method, transact through the platform, follow an order timeline and evidence, dispute when necessary, and review a completed transaction;
 - reusable questions remain public on the relevant trip, listing, or request, while private details remain private;
 - both parties use either Shop for me or Carry my item through one authoritative order, evidence, payment, moderation, and reputation system.
 
@@ -57,6 +57,10 @@ The master product specification and accepted ADRs control detailed product beha
 17. The production web shape is stateless and horizontally scalable; process-local session, idempotency, rate-limit, lock, cache, or job state is forbidden.
 18. The complete production web application targets OWASP ASVS 5.0 Level 2, with additional risk-based review for high-impact flows.
 19. Capacity, availability, latency, recovery, provider-quota, and cost claims require approved numerical targets and tests.
+20. A closed or ineligible trip offer rejects new orders server-side while remaining read-only public seller history.
+21. Fixed-price Shop for me requires an actual-product photograph before `PURCHASED`, not routine buyer-visible receipt, acquisition-cost, or margin disclosure.
+22. Carry my item requires collection photographs and measured weight before `COLLECTED`; material variance requires customer approval.
+23. Public trip history and private seller/customer order dashboards are projections, never mutation or authorization authority.
 
 ## 4. Drift alarms
 
@@ -66,6 +70,11 @@ Stop and require a new impact analysis and BurinSN decision if work attempts to:
 - replace `Cuy` with `Coy`;
 - remove either primary service mode;
 - make NitipCuy set a universal jastip or kilogram rate;
+- force fixed-price jastippers to reveal routine receipts, acquisition cost, or margin to buyers;
+- mark Shop for me as purchased without an accepted actual-product photograph;
+- mark Carry my item as collected without accepted collection photographs, measured weight, and required variance approval;
+- accept a new request outside the authoritative ordering window or from a stale public projection;
+- delete closed trips that should remain safe public history, or expose their private customers, orders, addresses, or evidence;
 - introduce subscriptions, paid boosts, or advertising as an assumed revenue requirement;
 - make private addresses or identity records public;
 - allow unprotected off-platform transactions to receive protected status or verified reviews;
@@ -144,7 +153,8 @@ Status: In progress
 - [ ] Mechanically enforce dependency direction; package manifests and TypeScript do not prevent cross-package relative imports.
 - [x] Local development, formatting, lint, strict type, unit test, build, audit, and PR-CI gates established.
 - [x] Working local shell implements public trip search, detail, and chronological public Q&A using simulated data.
-- [x] Published-trip runtime invariants reject unsupported modes, impossible calendar and clock values, invalid offsets, and duplicate question IDs; cross-offset Q&A sorts by instant.
+- [x] Published-trip runtime invariants reject unsupported modes, impossible calendar and clock values, invalid offsets and IANA timezones, inverted source-service and ordering windows, ordering after source availability, service after departure, and duplicate question IDs; advance PO is supported and cross-offset Q&A sorts by instant.
+- [x] The simulated public shell presents source-service and ordering windows in the origin timezone and arrival in the destination timezone.
 - [x] Exact-toolchain frozen install, peer, quality, production-audit, lifecycle, runtime, complete-diff, and security gates passed for the original architecture checkpoint.
 - [x] Issue #3 branch is committed, pushed, and opened as pull request #4.
 - [ ] BurinSN gives fresh issue #3 merge approval after all evidence and findings are visible.
@@ -162,7 +172,7 @@ Pull-request head, hosted checks, annotations, reviews, and mergeability are vol
 - [ ] Correct payment initiation, held-state, release, refund, and reconciliation contracts.
 - [ ] Enforce and contract-test idempotency.
 - [ ] Replace caller-trusted evidence hashes and buffered raw-upload assumptions with a server-authoritative evidence lifecycle.
-- [ ] Clarify the public published-trip projection versus the future authoritative Trip aggregate.
+- [x] Separate the future authoritative `TripOffer`, public `PublishedTrip`, public history, and private seller/customer order projections; projections never authorize mutation, checkout, or capacity reservation.
 - [x] Establish the binding defense-in-depth security and evidence-based scale baseline without claiming the controls are implemented.
 - [x] Close the follow-up design gaps for sensitive-data encryption and managed-key lifecycle, mandatory privileged assurance, trusted-proxy and canonical-host handling, explicit dependency-outage failure policy, cache poisoning/deception/stampede/hot-key protection, and expand-and-contract mixed-version deployment.
 - [ ] Reconcile all lifecycle, specialist, issue, and pull-request claims after the corrections.
@@ -179,6 +189,7 @@ account
   -> trip draft
   -> moderation gate
   -> trip publication
+  -> source-service and ordering windows
   -> destination and date search
   -> trip detail
   -> public question and answer
@@ -187,6 +198,7 @@ account
 - [ ] Add the first PostgreSQL schema and reviewed expand-and-contract migration through the isolated database adapter, with old/new application compatibility and rollback or forward-fix evidence.
 - [ ] Add external-identity proof and protected server-authoritative mutations without storing passwords; require the approved privileged MFA, high-assurance step-up, and non-downgrading recovery contract where applicable.
 - [ ] Add integration tests using disposable resources and explicit destructive-test guards.
+- [ ] Make new-order eligibility server-authoritative across exact time, offer state, seller eligibility, moderation, and capacity; reserve the final capacity atomically.
 - [ ] Implement the first applicable security controls with the feature that needs them: secure session behavior, central authorization denials, multi-axis shared rate limits for protected actions, trusted-proxy and canonical-host handling, explicit protected fail-closed behavior, safe-query enforcement, CSRF and browser policy, private-data encryption and managed-key boundaries where required, private-data-safe logs, and bounded inputs.
 - [ ] Establish cursor pagination, query and connection budgets, and minimal database, application, and abuse observability for the persisted slice.
 - [ ] Record preliminary pilot capacity, provider-quota, cost, RPO, and RTO questions without inventing targets before the pilot is bounded.
@@ -209,6 +221,8 @@ Status: Pending Stage 1
 - [ ] Shop for me request and fulfilment.
 - [ ] Carry my item request and fulfilment.
 - [ ] Seller acceptance, rates, capacity, deadlines, addresses, and delivery disclosure.
+- [ ] Private jastipper order workspace grouped by trip, store, and actionable status.
+- [ ] Private customer order timeline with evidence, expected next action, arrival, pickup or delivery, tracking, confirmation, and dispute entry.
 - [ ] Private order communication.
 - [ ] Authoritative order state machine and evidence records.
 - [ ] Mock protected payment, hold, release, split, refund, chargeback, and reconciliation.
@@ -220,6 +234,9 @@ Status: Pending Stage 1
 - [ ] Shared production-shape session, idempotency, rate-limit, and abuse state; process-local implementations remain test-only.
 - [ ] Public cache safety: canonical keys, protected-response exclusion, poisoning and deception tests, concurrent-miss coalescing, hot-key budgets, bounded stale windows, invalidation, and database-stampede prevention.
 - [ ] Direct private evidence quarantine, server-observed hashes, validation, scanning, retention, and authorization-mediated downloads.
+- [ ] Gate Shop for me `PURCHASED` on an accepted actual-product photograph without routine fixed-price receipt disclosure.
+- [ ] Gate Carry my item `COLLECTED` on accepted collection photographs and measured weight; require customer approval for material variance.
+- [ ] Keep any actual-cost, dispute, fraud, or compliance receipt evidence private, purpose-limited, and retention-bounded.
 - [ ] Transaction-bound outbox and durable retrying worker before asynchronous scans, notifications, provider retries, or reconciliation.
 - [ ] Bounded cursor-paginated reads, request and provider budgets, circuit breakers, kill switches, and actionable observability.
 
@@ -284,11 +301,11 @@ The unresolved DOKU, logistics, policy, legal, and pilot items listed in Stage 3
 
 ### Now
 
-Implement automated dependency-boundary enforcement as the next bounded hostile-review correction. It must cover cross-package relative, aliased, type-only, and dynamic imports and must run in the exact local and hosted quality path.
+Commit, push, and inspect the exact hosted head for the locally validated and GitHub-reconciled trip-window, public-projection, pricing-privacy, and evidence-gate amendment without claiming that persisted orders or dashboards exist.
 
 ### Next
 
-Resolve transaction scope, payment lifecycle, idempotency, evidence integrity, and projection findings; reconcile exact-head evidence; and obtain fresh owner approval for issue #3. After merge, implement the persisted account-to-public-Q&A vertical slice through a new governed issue with its applicable security and resource controls.
+Implement automated dependency-boundary enforcement, then resolve transaction scope, payment lifecycle, idempotency, and evidence-integrity findings; reconcile exact-head evidence; and obtain fresh owner approval for issue #3. After merge, implement the persisted account-to-public-Q&A vertical slice through a new governed issue with its applicable security and resource controls.
 
 ### Later
 

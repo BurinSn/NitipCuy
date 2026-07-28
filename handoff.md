@@ -1,6 +1,6 @@
 # NitipCuy Cross-Session Handoff
 
-Last updated: 2026-07-27 18:35 WIB
+Last updated: 2026-07-28 07:13 WIB
 
 Handoff owner: Codex
 
@@ -55,6 +55,11 @@ Non-negotiable boundaries:
 - NitipCuy does not impose a mandatory seller rate;
 - public discussion serves reusable questions; private surfaces hold addresses, identity, receipts, disputes, and order details;
 - address and final-delivery terms are known before paid commitment;
+- every trip offer has timezone-explicit source-service, ordering, transport-departure, and arrival instants; advance PO is allowed;
+- closed or ineligible offers reject new orders server-side but remain read-only public seller history;
+- fixed-price Shop for me requires an actual-product photograph before `PURCHASED`, not routine buyer-visible receipt or acquisition-cost disclosure;
+- Carry my item requires collection photographs and measured weight before `COLLECTED`, with customer approval for material variance;
+- jastipper and customer order workspaces are private projections of authoritative state;
 - only protected completed platform transactions receive verified reviews;
 - revenue is a disclosed transaction protection fee, not subscriptions or paid boosts;
 - the planning fee remains 3 percent, minimum Rp15,000 and maximum Rp100,000, pending provider and pilot economics;
@@ -108,8 +113,8 @@ The shell is a functional architecture probe. It is not a production UI, has no 
 | Active issue | [#3 Establish web architecture and application foundation](https://github.com/BurinSn/NitipCuy/issues/3) |
 | Active branch | `feat/3-architecture-foundation` |
 | Pull request | [#4 feat: establish application architecture foundation](https://github.com/BurinSn/NitipCuy/pull/4) |
-| Six-gap security and scale design correction checkpoint | `609c23b8bf96be995a9c9347a442d8abaca59ff6` |
-| Checks at that checkpoint | Application quality run `30262412048` and lifecycle run `30262412059` passed with zero annotations |
+| Last live-verified pre-amendment head | `55eda6bfc903f712b7eeff97e21bf37b99d0ccb5` |
+| Checks at that checkpoint | Application quality run `30262587723` and lifecycle run `30262587684` passed with zero annotations |
 | Independent review at that checkpoint | No review object or finding exists; CodeRabbit's only current record is the earlier rate-limited run `86ff3d62-b1f7-4429-839e-e07fd4402c20`, which provides no review coverage |
 | First hostile-review correction | Published-trip runtime invariants committed, pushed, and hosted-verified |
 | Second hostile-review correction | Issue #3 identity acceptance and pull-request scope reconciled with the deliberately deferred persisted account implementation; committed, pushed, and hosted-verified |
@@ -130,6 +135,8 @@ The issue now states that external-identity-to-internal-account mapping and deny
 
 The security and scale amendment answers BurinSN's security and growth requirement through ADR 0004 plus dedicated security and scalability documents. The current hostile-review correction closes six material design gaps: sensitive-data encryption and managed-key lifecycle; mandatory privileged assurance and non-downgrading recovery; trusted-proxy, forwarded-header, and canonical-host rules; explicit fail-open or fail-closed dependency behavior; cache poisoning, deception, stampede, and hot-key controls; and expand-and-contract mixed-version deployment. These are binding design requirements. They are not claims that production infrastructure or controls exist.
 
+The current bounded amendment implements explicit source-service and ordering windows plus origin and destination timezones in the simulated public `PublishedTrip` projection. It also makes the future authoritative `TripOffer`, public history, private order dashboards, seller pricing privacy, purchased-product photo gate, and Carry my item collection and weight gate binding contracts. Persisted orders, protected transitions, archival history, and dashboards remain unimplemented.
+
 Implemented locally:
 
 - ADR 0003 and the supporting system-architecture document;
@@ -138,6 +145,8 @@ Implemented locally:
 - validated published-trip domain behavior, including origin-local departure date plus exact timezone-bearing departure timestamp;
 - strict runtime rejection of unsupported service modes, impossible calendar and clock values, invalid timezone offsets, and duplicate public-question IDs;
 - public-question sorting by actual instant across differing timezone offsets;
+- source-service and ordering-window validation, including advance PO, source cutoff, transport departure, and IANA timezone rules;
+- public source-service and ordering-window presentation in origin time and estimated arrival in destination time;
 - read-only trip discovery and detail use cases;
 - deterministic in-memory repository plus mock payment, logistics, identity-verification, evidence-storage, clock, identifier, transaction, audit, and outbox adapters with no external calls;
 - a local Indonesian web shell with explicit simulated-data and inactive-transaction notices;
@@ -145,6 +154,7 @@ Implemented locally:
 - local quality-gate documentation and production dependency overrides for audited patched `postcss` and `sharp` versions.
 - accepted security, anti-abuse, resilience, and scale requirements with explicit evidence-level claims and pilot gates.
 - accepted encryption, managed-key, privileged-assurance, trusted-edge, dependency-outage, cache-safety, and deployment-compatibility requirements at the **designed** evidence level only.
+- explicit separation of future authoritative `TripOffer`, public `PublishedTrip`, public history, and private seller/customer order projections.
 
 Deliberately excluded:
 
@@ -153,6 +163,7 @@ Deliberately excluded:
 - account creation, seller verification, protected authorization, and persistence;
 - real DOKU, Biteship, identity, storage, or database integration;
 - orders, money movement, delivery booking, customer PII, or production secrets;
+- authoritative offer mutation, capacity reservation, historical trip persistence, evidence-gated order transitions, or seller/customer order dashboards;
 - provider outreach, Threads promotion, public launch, microservices, or event sourcing.
 
 ## 7. Verification checkpoint
@@ -187,15 +198,22 @@ Hostile-review corrections already made:
 
 Still required before requesting merge:
 
-1. Resolve each remaining implementation finding through the same branch, one coherent correction at a time.
-2. Reconcile issue #3 and pull-request claims after the final correction.
-3. Ask BurinSN for fresh merge approval only when no material finding remains.
+1. Publish and hosted-verify the locally validated timeline and evidence-policy amendment.
+2. Resolve each remaining implementation finding through the same branch, one coherent correction at a time.
+3. Reconcile issue #3 and pull-request claims after the final correction.
+4. Ask BurinSN for fresh merge approval only when no material finding remains.
 
 Browser automation and visual approval were not performed and are not claimed.
 
 The first security and scale amendment passed the exact-toolchain frozen install, peer, format, lint, type, 18-test, production-build, production-audit, lifecycle, internal-link, and diff gates. The later identity and lifecycle reconciliation is hosted-verified at exact head `bf48727ed9f1e65d87919f4fbe11ac0815542355` through application run `30257081811` and lifecycle run `30257081823`, both without annotations. CodeRabbit was rate-limited and produced no review object or finding; this is unavailable independent-review evidence, not approval.
 
 The six-gap design correction changed documentation only. Exact Node.js `24.18.0` and pnpm `11.17.0` frozen install, peer, format, lint, type, 18-test, production-build, production-audit, lifecycle, 20-file internal-link, stale-language, control-presence, and diff gates passed locally. Application run `30262412048` and lifecycle run `30262412059` then passed at exact pushed checkpoint `609c23b8bf96be995a9c9347a442d8abaca59ff6` with zero annotations. No WAF, proxy policy, bot control, shared limiter, privileged MFA, encryption key, production session, database, cache, private upload pipeline, worker, monitoring, backup, load test, security test, deployment, or provider configuration was activated by the documentation.
+
+The current trip-window and evidence-policy amendment has passed exact Node.js `24.18.0` and pnpm `11.17.0` formatting, lint, strict type checking, all 24 unit tests, production build, production dependency audit, lifecycle, 20-file internal Markdown-link, and diff gates after the final hostile-audit correction. Its rebuilt Next.js production runtime returned `200` for home and a known trip and `404` for an unknown trip. The runtime rendered the exact opening, closing, transport-departure, and estimated-arrival timestamps in the documented origin or destination timezone and exposed no receipt, acquisition-cost, or margin language on the public pages.
+
+One runtime-start attempt resolved ambient Node.js `26.0.0` and pnpm `9.15.0`; `engine-strict` correctly rejected it before the server started. The successful probe used the documented `npx` wrapper for exact Node.js `24.18.0` and pnpm `11.17.0`. The failed attempt is not counted as verification success.
+
+Issue #3 and pull request #4 have been updated and read back successfully for this amendment. Both remain open; pull request #4 remains GitHub-mergeable at the pre-amendment head with no review object or review decision. The issue and pull request now distinguish the implemented public projection from the deferred authoritative offer, order, dashboard, history-persistence, and evidence-upload flows.
 
 ## 8. Blockers and gates
 
@@ -208,8 +226,7 @@ The following internal findings block issue #3 merge:
 3. the payment port collapses asynchronous payment initiation and reconciliation directly into `HELD`;
 4. payment, logistics, and evidence mocks ignore their idempotency keys;
 5. evidence storage trusts a caller-supplied hash and models raw buffered content without a quarantine or verification lifecycle;
-6. the public `PublishedTrip` projection is not yet clearly separated from the future authoritative Trip aggregate;
-7. lifecycle, issue, and pull-request claims require reconciliation after every correction.
+6. lifecycle, issue, and pull-request claims require reconciliation after every correction.
 
 The following still block real-money pilot activation:
 
@@ -230,7 +247,9 @@ These are Stage 3 activation gates, not reasons to delay provider-independent pl
 
 ## 9. Exact next action
 
-Implement automated dependency-boundary enforcement as the next bounded code correction. Cover cross-package relative, aliased, type-only, and dynamic imports; wire the gate into the exact local and hosted quality path; add adversarial fixtures or tests; and reconcile all lifecycle, issue, and pull-request claims.
+Reconcile issue #3 and pull request #4 with the locally verified timeline and evidence-policy amendment, run the final lifecycle, internal-link, and complete-diff checks, commit and push to the existing branch, and inspect exact-head hosted checks and annotations.
+
+After that checkpoint, implement automated dependency-boundary enforcement as the next bounded code correction. Cover cross-package relative, aliased, type-only, and dynamic imports; wire the gate into the exact local and hosted quality path; add adversarial fixtures or tests; and reconcile all lifecycle, issue, and pull-request claims.
 
 Do not add account persistence or a production identity provider to issue #3. Those belong to the first persisted account slice after this architecture issue is corrected and merged.
 

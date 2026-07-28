@@ -13,9 +13,14 @@ function validTrip(overrides: Partial<PublishedTrip> = {}): PublishedTrip {
     id: tripId("trip-jakarta-001"),
     jastipperDisplayName: "Rani",
     originLabel: "Guangzhou",
+    originTimeZone: "Asia/Shanghai",
     destinationLabel: "Jakarta",
+    destinationTimeZone: "Asia/Jakarta",
+    serviceWindowStartAt: "2026-08-10T09:00:00+08:00",
+    serviceWindowEndAt: "2026-08-19T18:00:00+08:00",
     departureDate: "2026-08-20",
     departureAt: "2026-08-20T10:00:00+08:00",
+    requestOpenAt: "2026-08-01T09:00:00+07:00",
     requestDeadline: "2026-08-18T18:00:00+08:00",
     estimatedArrivalAt: "2026-08-21T16:00:00+07:00",
     serviceModes: ["SHOP_FOR_ME", "CARRY_MY_ITEM"],
@@ -90,6 +95,66 @@ describe("createPublishedTrip", () => {
         }),
       ),
     ).toThrow(DomainValidationError);
+  });
+
+  it("allows advance ordering before the service window begins", () => {
+    const trip = createPublishedTrip(
+      validTrip({
+        requestOpenAt: "2026-07-20T09:00:00+07:00",
+      }),
+    );
+
+    expect(trip.requestOpenAt).toBe("2026-07-20T09:00:00+07:00");
+  });
+
+  it("rejects an inverted source-service window", () => {
+    expect(() =>
+      createPublishedTrip(
+        validTrip({
+          serviceWindowStartAt: "2026-08-19T18:00:00+08:00",
+        }),
+      ),
+    ).toThrow("Service-window start must be before its end.");
+  });
+
+  it("rejects an inverted ordering window", () => {
+    expect(() =>
+      createPublishedTrip(
+        validTrip({
+          requestOpenAt: "2026-08-18T18:00:00+08:00",
+        }),
+      ),
+    ).toThrow("Request opening must be before the request deadline.");
+  });
+
+  it("rejects requests closing after source availability ends", () => {
+    expect(() =>
+      createPublishedTrip(
+        validTrip({
+          requestDeadline: "2026-08-19T19:00:00+08:00",
+        }),
+      ),
+    ).toThrow("Request deadline cannot be after the service window ends.");
+  });
+
+  it("rejects a service window ending after departure", () => {
+    expect(() =>
+      createPublishedTrip(
+        validTrip({
+          serviceWindowEndAt: "2026-08-20T11:00:00+08:00",
+        }),
+      ),
+    ).toThrow("Service window cannot end after departure.");
+  });
+
+  it("rejects invalid IANA timezones", () => {
+    expect(() =>
+      createPublishedTrip(
+        validTrip({
+          originTimeZone: "Asia/Not-A-Place",
+        }),
+      ),
+    ).toThrow("Origin timezone must be a valid IANA timezone.");
   });
 
   it("rejects a local departure date that disagrees with its timestamp", () => {

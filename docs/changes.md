@@ -534,3 +534,49 @@ A session with no material change does not invent an entry. A session that makes
   - Pull request #4 remains open and unapproved.
 - Follow-up:
   - Commit and push the lifecycle reconciliation, verify its exact hosted head, then resume automated dependency-boundary enforcement.
+
+## 2026-07-28 06:56 WIB - Trip windows, order projections, and evidence policy aligned
+
+- Issue / PR: Issue #3; pull request #4
+- Product: NitipCuy
+- Type: Product rule, public projection, domain invariant, evidence policy, and lifecycle correction
+- Status: Local exact-toolchain and production-runtime verification passed; GitHub reconciliation and hosted exact-head verification pending
+- Objective:
+  - Formalize seller-defined ordering windows, closed-trip history, seller and customer order workspaces, and evidence-gated fulfilment without exposing fixed-price seller acquisition cost.
+- Scope:
+  - Public simulated trip projection and presentation, product and order specifications, product and architecture ADRs, system and security architecture, quality gates, README, roadmap, handoff, changes, learning, issue #3, and pull request #4.
+- Changes:
+  - Added origin and destination IANA timezones, source-service start and end, and request-opening time to the public `PublishedTrip` projection.
+  - Added domain invariants for valid IANA timezones, advance PO, ordering-window sequence, source-service cutoff, and transport departure.
+  - Updated simulated trips and public list and detail presentation to show source-service and ordering windows in origin time and arrival in destination time.
+  - Defined the future authoritative `TripOffer`, rebuildable public `PublishedTrip`, read-only public history, and private seller/customer order projections; projections cannot authorize mutations, checkout, or capacity reservation.
+  - Split offer availability from physical trip milestones so request closure can coexist with ongoing accepted-order fulfilment.
+  - Required server-side new-order rejection outside the exact ordering window or when capacity, seller, offer, moderation, or risk eligibility fails.
+  - Required a verified actual-product photograph before fixed-price Shop for me can become `PURCHASED`, while removing routine buyer-visible receipt, acquisition-cost, and margin disclosure.
+  - Limited receipt evidence to an explicitly accepted actual-cost pricing formula or a proportionate private dispute, fraud, or compliance purpose.
+  - Required collection photographs and measured weight before Carry my item can become `COLLECTED`, with customer approval for material variance.
+  - Defined private jastipper work queues and customer progress timelines as future projections, not current implementation.
+- Impact:
+  - Customers can see when ordering starts and ends rather than only a deadline.
+  - Jastippers retain seller-defined fixed-price privacy while customers receive item-existence and condition evidence.
+  - Closed offers remain useful reputation history without accepting stale orders or exposing private transaction data.
+  - The prior public-versus-authoritative trip projection finding is resolved at the contract and current-code level.
+- Validation:
+  - Starting local and remote branch head `55eda6bfc903f712b7eeff97e21bf37b99d0ccb5` was clean.
+  - Pull request #4 was open and GitHub-mergeable with application run `30262587723` and lifecycle run `30262587684` passed with zero annotations; no review object or decision existed.
+  - Exact Node.js `24.18.0` and pnpm `11.17.0` formatting, lint, strict type checking, all 24 unit tests, production build, production dependency audit, lifecycle, and `git diff --check` passed after the final hostile-audit correction.
+  - The audit found that source-service chronology was enforced but lacked a direct inverted-window test; that adversarial test was added and passed.
+  - The rebuilt Next.js production runtime returned `200` for home and a known trip and `404` for an unknown trip; exact opening, closing, transport-departure, and estimated-arrival timestamps were present in their documented timezones.
+  - Public-page content assertions found no receipt, acquisition-cost, or margin disclosure.
+  - An initial runtime-start attempt picked up ambient Node.js `26.0.0` and pnpm `9.15.0`; `engine-strict` rejected it before startup. The successful probe used the exact `npx` Node.js and pnpm wrapper, and the failed attempt is not counted as success.
+  - Issue #3 and pull request #4 were updated and read back successfully; both remain open, and the pull request remains GitHub-mergeable at the pre-amendment head with no review object or decision.
+  - Final lifecycle, 20-file internal Markdown-link, formatting, and diff checks passed after GitHub and hostile-audit reconciliation.
+  - Commit, push, and hosted exact-head verification remain pending.
+- Documentation:
+  - Updated all four lifecycle documents and every affected canonical product, order, architecture, security, and quality document.
+- Residual risks / exclusions:
+  - No authoritative trip persistence, protected request, capacity reservation, order, evidence upload, payment, dashboard, archive, provider, or production flow was created.
+  - A file hash still does not prove product authenticity, price, payment, ownership, or lawful content.
+  - Dependency enforcement, transaction scope, payment lifecycle, idempotency, evidence-storage integrity, and final lifecycle reconciliation remain issue #3 merge blockers.
+- Follow-up:
+  - Run final lifecycle and link gates, commit and push the amendment, inspect exact-head hosted checks and annotations, then return to dependency-boundary enforcement.

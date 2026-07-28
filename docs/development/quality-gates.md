@@ -107,6 +107,7 @@ Unit tests:
 - no production credential;
 - no database requirement;
 - deterministic clock, ID, provider, and repository behavior.
+- cover origin and destination timezone validity, source-service ordering, advance PO, inverted windows, late close, departure cutoff, and public-projection invariants.
 
 Integration tests:
 
@@ -115,6 +116,9 @@ Integration tests:
 - migrations applied from a clean state;
 - expand-and-contract changes exercised across supported old and new web and worker versions;
 - interrupted backfill plus rollback or forward-fix behavior exercised before destructive contraction;
+- server-side new-order denial outside the authoritative ordering window, at exhausted capacity, or for an ineligible seller or offer;
+- atomic last-capacity reservation and accepted-order commercial snapshot behavior;
+- purchased and collected transitions denied until required evidence and customer-approved variance state exist;
 - cleanup verified;
 - no fallback to a development or production database.
 
@@ -122,6 +126,9 @@ Browser tests:
 
 - use isolated test identities and data;
 - assert public versus private boundaries;
+- show scheduled, open, closed, and archived offers without enabling a stale checkout;
+- cover jastipper work queues and customer progress timelines without treating dashboard labels as authority;
+- keep fixed-price acquisition cost and private receipts out of customer and public surfaces;
 - cover denial and recovery, not only happy paths;
 - record browser-visible evidence separately from source and build evidence.
 
@@ -163,13 +170,14 @@ GitHub branch protection is unavailable for the current private repository plan.
 ## 7. Current limitations
 
 - The architecture probe has source, unit, production-build, and local HTTP runtime evidence.
-- Published-trip runtime validation now rejects unsupported service modes, impossible calendar and clock values, invalid timezone offsets, and duplicate question IDs; cross-offset public questions are sorted by instant.
+- Published-trip runtime validation rejects unsupported service modes, impossible calendar and clock values, invalid offsets and IANA timezones, inverted source-service and ordering windows, ordering after source availability, service after departure, and duplicate question IDs; it supports advance PO and sorts cross-offset public questions by instant.
 - Package dependency direction is still verified by review and manual scans; an automated boundary gate remains required.
 - OWASP ASVS 5.0 Level 2 is the accepted production verification target, but no traceability matrix or complete ASVS verification exists.
 - The DDoS, WAF, bot, trusted-proxy, canonical-host, shared rate-limit, session, privileged-MFA, SQL-safety, encryption/key-management, cache-safety, CSRF, XSS, SSRF, private-upload, monitoring, incident, backup, deployment-compatibility, and recovery requirements are designed but not production-implemented or runtime-verified.
 - No capacity contract, service-level objective, provider quota review, load or abuse test, backup restore, or incident exercise exists.
 - Transaction, payment, logistics, evidence, audit, and outbox mocks remain provisional until their transaction, asynchronous-state, idempotency, and evidence-integrity findings are resolved.
 - No PostgreSQL adapter or integration test exists yet.
+- No authoritative trip-offer lifecycle, new-order guard, capacity reservation, archival history, evidence-gated order transition, or private seller/customer dashboard exists yet.
 - No browser automation exists yet.
 - No identity, provider, payment, logistics, or storage integration exists.
 - No production or preview environment exists.

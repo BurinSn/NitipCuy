@@ -239,6 +239,12 @@ authorized upload intent
 
 The platform never trusts the client file name, extension, MIME type, claimed hash, path, or scan status. Object keys are server-generated. Access is ownership- and case-authorized through short-lived downloads. Scanners failing or timing out fail closed. Logs contain references and reason codes, not raw content or signed URLs.
 
+For fixed-price Shop for me orders, the buyer-visible evidence requirement is an accepted photograph of the actual purchased item, not routine disclosure of the seller's receipt or acquisition cost. Any receipt collected for an explicitly actual-cost contract or a proportionate dispute, fraud, or compliance purpose is private, purpose-limited, retention-bounded, redacted where possible, and never placed in a public projection.
+
+The server-observed cryptographic hash binds evidence metadata to exact accepted bytes. It does not prove that the item is authentic, that a stated price was paid, that payment succeeded, that contents are lawful, or that the image belongs to the claimed event without the other order, upload-intent, classification, timing, duplicate-detection, scan, and review controls.
+
+Evidence-gated transitions fail closed. An order cannot become `PURCHASED` until its actual-product photograph is accepted, and cannot become `COLLECTED` until its collection photographs and measured weight are accepted. A material Carry my item variance requires customer approval before continued fulfilment.
+
 See the [OWASP file-upload guidance](https://cheatsheetseries.owasp.org/cheatsheets/File_Upload_Cheat_Sheet.html).
 
 ## 13. SSRF and external-provider boundaries
@@ -311,6 +317,7 @@ Before protected preview:
 - central authorization denial tests;
 - safe-query static rule and tests;
 - session, privileged MFA, factor-recovery, CSRF, XSS, redirect, SSRF, callback, and upload negative tests appropriate to implemented flows;
+- closed-order-window, capacity, seller-eligibility, evidence-gated transition, reused-image, private-receipt, and Carry my item variance denial tests as those flows are introduced;
 - dependency-outage tests proving each protected action fails closed and each allowed public-read degradation stays public and bounded;
 - encryption-format, KMS authorization, rotation, re-wrapping, key-unavailability, log-redaction, retention, and deletion tests appropriate to stored private data;
 - secret, dependency, static, and workflow scans;

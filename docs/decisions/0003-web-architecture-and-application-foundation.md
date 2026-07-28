@@ -73,6 +73,7 @@ Primary evidence checked on 2026-07-25:
 - Request parsing belongs in the delivery layer.
 - Use cases receive provider-neutral inputs and return provider-neutral results.
 - Public trip discovery may be cached only when freshness and invalidation are explicit.
+- The public `PublishedTrip` type is a read-only projection, not the authoritative future `TripOffer` aggregate and never mutation, checkout, capacity-reservation, or authorization input.
 - Identity, address, order, evidence, payment, dispute, and moderation surfaces are dynamic and private by default.
 - Server-only composition is enforced with the `server-only` marker.
 
@@ -162,7 +163,7 @@ simulated published trips
   -> application discovery use case
   -> in-memory repository adapter
   -> server-only composition root
-  -> destination/date search
+  -> destination/date search with source-service and ordering windows
   -> trip detail
   -> chronological public questions and answers
 ```
@@ -218,6 +219,7 @@ Rejected for this baseline because the installed peer graph is unsupported. Re-e
 - Core use cases can run in tests without Next.js, a database, Docker, or network access.
 - Provider integration can proceed later without rewriting the domain.
 - The initial public shell is a functional architecture probe, not visual approval or production readiness.
+- Public ordering-window presentation can evolve independently from the future authoritative trip-offer and order aggregates; closing a public offer never mutates accepted order snapshots.
 - More mapping code is required between domain, persistence, providers, and HTTP. That duplication is intentional at trust boundaries.
 - Cross-context workflows must use explicit application orchestration, transactions, audit records, and eventually an outbox.
 

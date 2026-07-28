@@ -32,13 +32,24 @@ export interface PublicQuestion {
   readonly answer?: PublicAnswer;
 }
 
+/**
+ * Read-only public discovery projection.
+ *
+ * This is not the future authoritative TripOffer aggregate and must never be
+ * accepted as mutation, capacity-reservation, checkout, or authorization input.
+ */
 export interface PublishedTrip {
   readonly id: TripId;
   readonly jastipperDisplayName: string;
   readonly originLabel: string;
+  readonly originTimeZone: string;
   readonly destinationLabel: string;
+  readonly destinationTimeZone: string;
+  readonly serviceWindowStartAt: string;
+  readonly serviceWindowEndAt: string;
   readonly departureDate: string;
   readonly departureAt: string;
+  readonly requestOpenAt: string;
   readonly requestDeadline: string;
   readonly estimatedArrivalAt: string;
   readonly serviceModes: readonly ServiceMode[];
@@ -82,19 +93,59 @@ export function createPublishedTrip(input: PublishedTrip): PublishedTrip {
   }
 
   requireDateOnly(input.departureDate, "Departure date");
+  const originTimeZone = requireTimeZone(
+    input.originTimeZone,
+    "Origin timezone",
+  );
+  const destinationTimeZone = requireTimeZone(
+    input.destinationTimeZone,
+    "Destination timezone",
+  );
+  requireIsoDateTime(input.serviceWindowStartAt, "Service-window start");
+  requireIsoDateTime(input.serviceWindowEndAt, "Service-window end");
   requireIsoDateTime(input.departureAt, "Departure timestamp");
+  requireIsoDateTime(input.requestOpenAt, "Request opening");
   requireIsoDateTime(input.requestDeadline, "Request deadline");
   requireIsoDateTime(input.estimatedArrivalAt, "Estimated arrival");
 
-  if (input.departureAt.slice(0, 10) !== input.departureDate) {
+  if (
+    dateInTimeZone(input.departureAt, originTimeZone) !== input.departureDate
+  ) {
     throw new DomainValidationError(
       "Departure date must match the local date in the departure timestamp.",
     );
   }
 
+  const serviceWindowStart = Date.parse(input.serviceWindowStartAt);
+  const serviceWindowEnd = Date.parse(input.serviceWindowEndAt);
+  const requestOpen = Date.parse(input.requestOpenAt);
   const requestDeadline = Date.parse(input.requestDeadline);
   const departure = Date.parse(input.departureAt);
   const estimatedArrival = Date.parse(input.estimatedArrivalAt);
+
+  if (serviceWindowStart >= serviceWindowEnd) {
+    throw new DomainValidationError(
+      "Service-window start must be before its end.",
+    );
+  }
+
+  if (requestOpen >= requestDeadline) {
+    throw new DomainValidationError(
+      "Request opening must be before the request deadline.",
+    );
+  }
+
+  if (requestDeadline > serviceWindowEnd) {
+    throw new DomainValidationError(
+      "Request deadline cannot be after the service window ends.",
+    );
+  }
+
+  if (serviceWindowEnd > departure) {
+    throw new DomainValidationError(
+      "Service window cannot end after departure.",
+    );
+  }
 
   if (requestDeadline >= departure) {
     throw new DomainValidationError(
@@ -163,7 +214,9 @@ export function createPublishedTrip(input: PublishedTrip): PublishedTrip {
   return Object.freeze({
     ...input,
     originLabel,
+    originTimeZone,
     destinationLabel,
+    destinationTimeZone,
     jastipperDisplayName: requireLabel(
       input.jastipperDisplayName,
       "Jastipper display name",
@@ -282,6 +335,31 @@ function requireIsoDateTime(value: string, field: string): string {
   }
 
   return value;
+}
+
+function requireTimeZone(value: string, field: string): string {
+  const normalized = value.trim();
+
+  try {
+    new Intl.DateTimeFormat("en-US", { timeZone: normalized }).format(0);
+  } catch {
+    throw new DomainValidationError(`${field} must be a valid IANA timezone.`);
+  }
+
+  return normalized;
+}
+
+function dateInTimeZone(value: string, timeZone: string): string {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    day: "2-digit",
+    month: "2-digit",
+    timeZone,
+    year: "numeric",
+  }).formatToParts(new Date(value));
+  const part = (type: Intl.DateTimeFormatPartTypes) =>
+    parts.find((candidate) => candidate.type === type)?.value;
+
+  return `${part("year")}-${part("month")}-${part("day")}`;
 }
 
 function isValidDateOnly(value: string): boolean {

@@ -31,8 +31,9 @@ export default async function HomePage({ searchParams }: HomePageProps) {
             <p className="eyebrow">Cari berdasarkan perjalanan</p>
             <h1>Jastip yang jelas dari tujuan sampai serah terima.</h1>
             <p className="hero-lead">
-              Lihat siapa yang bepergian, kapan permintaan ditutup, layanan apa
-              yang tersedia, kapasitas tersisa, dan cara barang sampai ke kamu.
+              Lihat siapa yang bepergian, kapan pesanan dibuka dan ditutup,
+              layanan apa yang tersedia, kapasitas tersisa, dan cara barang
+              sampai ke kamu.
             </p>
             <div className="mode-grid" aria-label="Mode layanan">
               <article>
@@ -136,12 +137,24 @@ function TripCard({ trip }: Readonly<{ trip: PublishedTrip }>) {
 
       <div className="trip-meta-grid">
         <div>
-          <span>Berangkat</span>
-          <strong>{formatDate(trip.departureDate)}</strong>
+          <span>Periode di lokasi asal</span>
+          <strong>
+            {formatDateTimeRange(
+              trip.serviceWindowStartAt,
+              trip.serviceWindowEndAt,
+              trip.originTimeZone,
+            )}
+          </strong>
         </div>
         <div>
-          <span>Tutup permintaan</span>
-          <strong>{formatDateTime(trip.requestDeadline)}</strong>
+          <span>Periode pesanan (waktu asal)</span>
+          <strong>
+            {formatDateTimeRange(
+              trip.requestOpenAt,
+              trip.requestDeadline,
+              trip.originTimeZone,
+            )}
+          </strong>
         </div>
         <div>
           <span>Kapasitas</span>
@@ -199,23 +212,23 @@ function serviceModeLabel(mode: ServiceMode): string {
   return mode === "SHOP_FOR_ME" ? "Belikan barang" : "Bawakan barang";
 }
 
-function formatDate(value: string): string {
-  return new Intl.DateTimeFormat("id-ID", {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-    timeZone: "Asia/Jakarta",
-  }).format(new Date(`${value}T00:00:00+07:00`));
-}
-
-function formatDateTime(value: string): string {
-  return new Intl.DateTimeFormat("id-ID", {
+function formatDateTimeRange(
+  start: string,
+  end: string,
+  timeZone: string,
+): string {
+  const formatter = new Intl.DateTimeFormat("id-ID", {
     day: "numeric",
     hour: "2-digit",
     minute: "2-digit",
     month: "short",
-    timeZone: "Asia/Jakarta",
-  }).format(new Date(value));
+    timeZone,
+    year: "numeric",
+  });
+
+  return `${formatter.format(new Date(start))}–${formatter.format(
+    new Date(end),
+  )}`;
 }
 
 function formatCapacity(value: number): string {

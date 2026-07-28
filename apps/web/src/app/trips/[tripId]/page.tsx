@@ -53,8 +53,10 @@ export default async function TripDetailPage({ params }: TripDetailPageProps) {
             {trip.originLabel} ke {trip.destinationLabel}
           </h1>
           <p>
-            Dibuka oleh <strong>{trip.jastipperDisplayName}</strong>. Permintaan
-            ditutup {formatDateTime(trip.requestDeadline)}.
+            Dibuka oleh <strong>{trip.jastipperDisplayName}</strong>. Pesanan
+            dibuka {formatDateTime(trip.requestOpenAt, trip.originTimeZone)} dan
+            ditutup {formatDateTime(trip.requestDeadline, trip.originTimeZone)}{" "}
+            menurut waktu lokasi asal.
           </p>
         </div>
         <div className="capacity-box">
@@ -70,12 +72,33 @@ export default async function TripDetailPage({ params }: TripDetailPageProps) {
           <h2 id="terms-heading">Sebelum membuat permintaan</h2>
           <dl className="terms-list">
             <div>
-              <dt>Tanggal berangkat</dt>
-              <dd>{formatDate(trip.departureDate)}</dd>
+              <dt>Periode di lokasi asal</dt>
+              <dd>
+                {formatDateTime(trip.serviceWindowStartAt, trip.originTimeZone)}
+                {"–"}
+                {formatDateTime(trip.serviceWindowEndAt, trip.originTimeZone)}
+              </dd>
+            </div>
+            <div>
+              <dt>Periode pesanan</dt>
+              <dd>
+                {formatDateTime(trip.requestOpenAt, trip.originTimeZone)}
+                {"–"}
+                {formatDateTime(trip.requestDeadline, trip.originTimeZone)}
+              </dd>
+            </div>
+            <div>
+              <dt>Keberangkatan transport</dt>
+              <dd>{formatDateTime(trip.departureAt, trip.originTimeZone)}</dd>
             </div>
             <div>
               <dt>Perkiraan tiba</dt>
-              <dd>{formatDateTime(trip.estimatedArrivalAt)}</dd>
+              <dd>
+                {formatDateTime(
+                  trip.estimatedArrivalAt,
+                  trip.destinationTimeZone,
+                )}
+              </dd>
             </div>
             <div>
               <dt>Lokasi jastipper</dt>
@@ -109,7 +132,10 @@ export default async function TripDetailPage({ params }: TripDetailPageProps) {
                   <div className="discussion-author">
                     <strong>{question.authorDisplayName}</strong>
                     <time dateTime={question.createdAt}>
-                      {formatDateTime(question.createdAt)}
+                      {formatDateTime(
+                        question.createdAt,
+                        trip.destinationTimeZone,
+                      )}
                     </time>
                   </div>
                   <p>{question.message}</p>
@@ -118,7 +144,10 @@ export default async function TripDetailPage({ params }: TripDetailPageProps) {
                       <div className="discussion-author">
                         <strong>{question.answer.authorDisplayName}</strong>
                         <time dateTime={question.answer.createdAt}>
-                          {formatDateTime(question.answer.createdAt)}
+                          {formatDateTime(
+                            question.answer.createdAt,
+                            trip.destinationTimeZone,
+                          )}
                         </time>
                       </div>
                       <p>{question.answer.message}</p>
@@ -150,22 +179,14 @@ async function findTrip(rawTripId: string) {
   }
 }
 
-function formatDate(value: string): string {
-  return new Intl.DateTimeFormat("id-ID", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-    timeZone: "Asia/Jakarta",
-  }).format(new Date(`${value}T00:00:00+07:00`));
-}
-
-function formatDateTime(value: string): string {
+function formatDateTime(value: string, timeZone: string): string {
   return new Intl.DateTimeFormat("id-ID", {
     day: "numeric",
     hour: "2-digit",
     minute: "2-digit",
     month: "short",
-    timeZone: "Asia/Jakarta",
+    timeZone,
+    year: "numeric",
   }).format(new Date(value));
 }
 
