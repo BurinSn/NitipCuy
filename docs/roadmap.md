@@ -1,10 +1,10 @@
 # NitipCuy Canonical Roadmap
 
-Last reviewed: 2026-07-28 18:30 WIB
+Last reviewed: 2026-07-29 18:04 WIB
 
 Current stage: Stage 1 - Platform foundation
 
-Current work item: Issue #3 hostile-review remediation; the transaction abstraction is explicitly deferred and the asynchronous payment lifecycle is next
+Current work item: Issue #3 hostile-review remediation; the asynchronous payment contract passed the full local gate and hostile review, with commit, push, hosted exact-head evidence, and external reconciliation pending
 
 ## 1. Role, authority, and freshness contract
 
@@ -172,7 +172,7 @@ Pull-request head, hosted checks, annotations, reviews, and mergeability are vol
 - [x] Reconcile identity acceptance as documented architecture direction while deferring mapping implementation to the first persisted account slice.
 - [x] Add automated dependency-boundary enforcement.
 - [x] Remove the unenforceable callback-only transaction abstraction and defer a database-backed transaction-scoped unit of work, with explicit atomicity and disposable-PostgreSQL proof gates, to the first persisted write slice.
-- [ ] Correct payment initiation, held-state, release, refund, and reconciliation contracts.
+- [x] Correct payment initiation, held-state, release, refund, and reconciliation contracts through provider-neutral submissions, observations, signals, stable attempt correlation, exact collected-and-held amount assessment, configured mocks, and adversarial tests. Full local verification passed; hosted exact-head verification remains pending.
 - [ ] Enforce and contract-test idempotency.
 - [ ] Replace caller-trusted evidence hashes and buffered raw-upload assumptions with a server-authoritative evidence lifecycle.
 - [x] Separate the future authoritative `TripOffer`, public `PublishedTrip`, public history, and private seller/customer order projections; projections never authorize mutation, checkout, or capacity reservation.
@@ -304,11 +304,11 @@ The unresolved DOKU, logistics, policy, legal, and pilot items listed in Stage 3
 
 ### Now
 
-Correct the asynchronous payment lifecycle without claiming provider compatibility, money movement, persistence, protected transactions, or production controls.
+Commit and push the locally verified asynchronous payment correction, then reconcile its hosted exact-head evidence without claiming provider compatibility, money movement, persistence, protected transactions, or production controls.
 
 ### Next
 
-Correct the asynchronous payment lifecycle, then enforce idempotency and replace the evidence-storage assumptions; reconcile exact-head evidence and obtain fresh owner approval for issue #3. After merge, implement the persisted account-to-public-Q&A vertical slice through a new governed issue with its applicable security and resource controls.
+Enforce idempotency, replace the evidence-storage assumptions, then reconcile exact-head evidence and obtain fresh owner approval for issue #3. After merge, implement the persisted account-to-public-Q&A vertical slice through a new governed issue with its applicable security and resource controls.
 
 ### Later
 

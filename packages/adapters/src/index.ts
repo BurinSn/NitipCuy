@@ -8,4 +8,7 @@ export {
   SequenceIdentifier,
 } from "./deterministic-platform-services";
 export { MockLogisticsGateway } from "./mock-logistics-gateway";
-export { MockPaymentGateway } from "./mock-payment-gateway";
+export {
+  MockPaymentGateway,
+  type MockPaymentGatewayConfig,
+} from "./mock-payment-gateway";

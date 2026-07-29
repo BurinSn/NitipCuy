@@ -669,3 +669,47 @@ A session with no material change does not invent an entry. A session that makes
   - Payment lifecycle, idempotency, evidence-storage integrity, and final lifecycle and pull-request reconciliation remain issue #3 merge blockers.
 - Follow-up:
   - Commit, push, and inspect this lifecycle reconciliation, then correct the asynchronous payment lifecycle.
+
+## 2026-07-29 17:51 WIB - Asynchronous payment outcomes separated from submissions
+
+- Issue / PR: Issue #3; pull request #4
+- Product: NitipCuy application foundation
+- Type: Payment architecture correction, fail-closed assessment, adversarial tests, and lifecycle reconciliation
+- Status: Implemented, full-local-gate verified, and hostile-reviewed; commit, hosted exact-head verification, and external reconciliation pending
+- Objective:
+  - Prevent an accepted payment-provider request, redirect, QR, Virtual Account instruction, callback, timeout, or mock default from being treated as proof that money is held, released, refunded, split, or settled.
+- Scope:
+  - Application payment port, payment-protection assessment, adapter mock and tests, payment and order product contracts, ADR 0003, system architecture, DOKU evaluation, quality gates, roadmap, handoff, changes, and learning.
+- Changes:
+  - Replaced the immediate held-payment contract with provider-neutral initiation, release-request, refund-request, and inspection operations.
+  - Modeled accepted-for-processing, rejected, and unknown submission receipts without assigning completed financial outcomes.
+  - Added provider-neutral redirect, QR, and Virtual Account customer actions to accepted initiation receipts.
+  - Separated provider observations for collection, hold, release, refund, settlement, and chargeback.
+  - Limited provider events to status-change signals that require inspection and reconciliation.
+  - Added a stable internal payment-attempt ID so an ambiguous initiation remains inspectable even when no provider payment reference was returned.
+  - Added explicit held-amount evidence and a pure initial-protection assessment that confirms `HELD` only when the observation matches the expected attempt, retains a provider payment reference, both collected and held amounts exactly match, and no contradictory post-hold status or amount evidence exists.
+  - Made unknown, contradictory, amount-mismatched, paid-but-not-held, and post-hold observations fail closed into pending or reconciliation.
+  - Changed the deterministic mock to require explicit configured receipts and snapshots instead of inventing financial success.
+  - Added adversarial application and adapter coverage for accepted, rejected, unknown, pending, expired, contradictory, mismatched, and post-hold cases.
+- Impact:
+  - Application code can no longer infer a completed hold from payment initiation or a completed release or refund from request acceptance.
+  - Core contracts remain independent of DOKU and expose no provider object model.
+  - The correction does not mutate an order or ledger and does not process money.
+  - Product roles, service modes, seller-defined prices, platform-fee direction, evidence rules, logistics direction, and roadmap stage order remain unchanged.
+- Validation:
+  - The correction started from clean synchronized head `81fb1f5ceab5ba2445d6606a255471b1dca75a86`, whose application run `30355124146` and lifecycle run `30355122231` passed with zero annotations.
+  - Exact Node.js `24.18.0` and pnpm `11.17.0` application and adapter type checking passed.
+  - All 18 application tests and 10 adapter tests passed after the ambiguous-initiation, cross-attempt, missing-reference, exact-held-amount, paid-but-hold-failed, terminal-with-money, and status-versus-amount hostile corrections.
+  - Exact-toolchain frozen install, peer validation, formatting, lint, live dependency scan, strict type checking, all 20 boundary tests, all 44 package tests, production build, production dependency audit, and lifecycle participation passed.
+  - The live dependency scan covered four projects, 26 governed source files, and 51 module references.
+  - Internal Markdown links passed across 19 files and 33 local targets; `git diff --check` and the stale immediate-held contract scan passed.
+  - The rebuilt production runtime returned `200` for home and a known trip and `404` for an unknown trip; the public-page pricing-privacy assertion passed.
+  - Complete correction-diff hostile review found and corrected ambiguous-initiation lookup, missing held amount, cross-attempt matching, paid-but-hold-failed, terminal-with-money, missing provider reference, and status-versus-amount contradictions; no further material issue remained.
+- Documentation:
+  - Updated all four lifecycle documents plus the master specification, order lifecycle, ADR 0003, system architecture, DOKU evaluation, and quality gates.
+- Residual risks / exclusions:
+  - Commit, push, hosted exact-head, issue, and pull-request reconciliation evidence is pending.
+  - Idempotency enforcement remains the next implementation blocker.
+  - No callback authentication, replay protection, durable inbox, worker, retry scheduler, ledger, database transaction, order transition, real provider adapter, release/refund/settlement assessment, or money movement exists.
+- Follow-up:
+  - Commit and push the correction, inspect its exact hosted head, and reconcile issue #3 and pull request #4 before beginning idempotency enforcement.

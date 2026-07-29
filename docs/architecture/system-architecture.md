@@ -437,6 +437,7 @@ Implemented in issue #3:
 - trip discovery use cases;
 - in-memory trip repository;
 - provider-neutral payment, logistics, identity verification, evidence storage, clock, identifier, audit, and outbox ports;
+- provider-neutral asynchronous payment submissions and observations, stable payment-attempt correlation, and a fail-closed pure assessment for initial exact collected-and-held amount confirmation;
 - deterministic in-memory and mock adapters for those boundaries;
 - server-only composition;
 - destination and date search;
@@ -446,7 +447,11 @@ Implemented in issue #3:
 - correct HTTP `404` behavior for unknown simulated trip paths;
 - PR quality workflow.
 
-The callback-only transaction interface and passthrough adapter were removed rather than misrepresented as atomic infrastructure. Transaction requirements are designed, but no transaction implementation or verification exists. Payment, logistics, evidence, audit, and outbox interfaces and mocks remain provisional while their asynchronous-state, idempotency, evidence-integrity, and future transaction-scoping contracts are corrected.
+The callback-only transaction interface and passthrough adapter were removed rather than misrepresented as atomic infrastructure. Transaction requirements are designed, but no transaction implementation or verification exists.
+
+The payment port now separates initiation, release, and refund submission receipts from provider observations. It models collection, hold, release, refund, settlement, and chargeback independently; provider signals request inspection instead of declaring success. The configured mock never invents a successful outcome, and the pure initial-protection assessment fails closed for unknown, contradictory, mismatched, or post-hold evidence. This is source-tested contract behavior only: no provider callback authentication, durable inbox, worker, idempotency enforcement, ledger, order mutation, real money movement, or full release/refund/settlement reconciliation exists.
+
+Logistics, evidence, audit, and outbox interfaces and mocks remain provisional while their asynchronous-state, idempotency, evidence-integrity, and future transaction-scoping contracts are corrected.
 
 Not implemented:
 

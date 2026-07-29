@@ -2,7 +2,7 @@
 
 Status: Accepted planning model
 
-Last updated: 2026-07-28
+Last updated: 2026-07-29
 
 ## 1. Principles
 
@@ -169,17 +169,62 @@ Each view shows the expected next step, relevant accepted evidence, estimated ar
 
 ## 8. Payment and release
 
-Planned DOKU flow:
+Payment submission, collection, hold, release, refund, settlement, and chargeback are separate dimensions. They must not be collapsed into one optimistic provider status.
+
+An initiation, release, or refund API response has a submission result only:
+
+```text
+SUBMISSION_PENDING
+  -> ACCEPTED_FOR_PROCESSING | REJECTED | UNKNOWN
+```
+
+`ACCEPTED_FOR_PROCESSING` is not collection, hold, release, refund, or settlement completion. Every initiation has a stable internal payment-attempt ID, so `UNKNOWN` remains inspectable even when a timeout yields no provider payment reference. Retry behavior additionally requires the idempotency contract.
+
+The collection and protection flow is:
+
+```text
+NOT_STARTED
+  -> INITIATION_PENDING
+  -> AWAITING_CUSTOMER
+  -> VERIFICATION_PENDING
+  -> HELD | FAILED | EXPIRED | RECONCILIATION_REQUIRED
+```
+
+`HELD` is allowed only after reconciliation confirms the observation belongs to the expected payment attempt, retains a provider payment reference, and shows the exact expected amount was both collected and held, with no contradictory release, refund, settlement, or chargeback status or amount evidence. A confirmed collection with a pending or unconfirmed hold remains awaiting confirmation. A failed hold after confirmed collection, a cross-attempt observation, a missing payment reference, a missing or mismatched collected or held amount, an unknown observation, or contradictory provider evidence enters `RECONCILIATION_REQUIRED`.
+
+Release and settlement progress independently:
+
+```text
+NOT_REQUESTED
+  -> RELEASE_PENDING
+  -> RELEASE_CONFIRMED
+  -> SETTLEMENT_PENDING
+  -> SETTLED | FAILED | RECONCILIATION_REQUIRED
+```
+
+Refund progress also remains independent:
+
+```text
+NOT_REQUESTED
+  -> REFUND_PENDING
+  -> PARTIALLY_REFUNDED | REFUNDED | FAILED | RECONCILIATION_REQUIRED
+```
+
+A chargeback is an overlay on the payment and settlement history, not a backwards rewrite of an earlier state. Provider callbacks only signal that a payment should be inspected and reconciled. They never directly authorize an order transition, ledger write, release, or refund.
+
+The planned DOKU-adapter flow is:
 
 ```text
 Buyer Checkout
-  -> DOKU payment confirmation
-  -> NitipCuy verifies signature and transaction status
-  -> held settlement reconciled
+  -> initiation accepted, rejected, or unknown
+  -> customer completes the presented QRIS or Virtual Account action
+  -> authenticated provider signal or scheduled inspection
+  -> NitipCuy retrieves and reconciles provider state
+  -> exact collected and held amounts confirmed
   -> fulfilment evidence completed
   -> buyer confirmation or no-dispute expiry
   -> release request
-  -> split reconciliation
+  -> release confirmation and split reconciliation
   -> seller and platform settlement reconciliation
 ```
 

@@ -685,3 +685,51 @@ Do not present inference, provider marketing, provisional pricing, or a future i
 - A green integration status is not a review object.
   - Evidence: CodeRabbit was green on the implementation checkpoint but pull request #4 still had no review object, review decision, or CodeRabbit finding.
   - Impact: retain direct hostile review and fresh BurinSN approval as separate merge gates.
+
+## 2026-07-29 17:51 WIB - Payment requests are not financial outcomes
+
+### Accepted
+
+- Payment submission, customer action, provider observation, and internal reconciliation are distinct facts.
+  - Evidence: an API can accept a request before the customer pays, and a timeout can leave the provider outcome unknown.
+  - Impact: initiation, release, and refund return accepted-for-processing, rejected, or unknown receipts; later inspection determines observed financial state.
+- Collection, hold, release, refund, settlement, and chargeback are separate dimensions.
+  - Evidence: collection may succeed while hold fails, and settlement or chargeback activity may occur after an earlier valid hold.
+  - Impact: avoid one giant optimistic status and preserve contradictory evidence for reconciliation.
+- Provider callbacks are wake-up signals, not mutation commands.
+  - Evidence: callback delivery can be duplicated, delayed, replayed, forged, or out of order.
+  - Impact: authenticate and deduplicate future callbacks, then inspect and reconcile provider state before any authoritative transition.
+
+### Corrected
+
+- Payment initiation no longer returns an immediately held payment.
+  - Supersedes: the earlier `createHeldPayment` contract and mock that returned `HELD`.
+  - Impact: payment protection requires exact collected-amount and confirmed-hold observations with no contradictory activity.
+- Accepted release and refund requests no longer imply completion.
+  - Supersedes: `void` release and refund methods that could not represent rejection, timeout, pending work, or reconciliation.
+  - Impact: callers retain a non-terminal operation receipt and must observe the later result.
+- The payment mock no longer has a successful default.
+  - Evidence: an unconfigured financial mock can make missing test setup look like successful payment behavior.
+  - Impact: every payment response or observation used by a test must be configured explicitly.
+
+### Reusable learning
+
+- Use the sequence `requested -> accepted or rejected or unknown -> observed -> reconciled -> authoritative transition`; never skip directly from requested to completed.
+- A confirmed collection plus failed hold is not ordinary payment failure because customer money may already have moved; it requires reconciliation.
+- Exact amount comparison belongs in protection assessment. A payment status alone cannot prove that the correct order amount was protected.
+- A provider payment reference cannot be the only lookup key because a timed-out initiation may have succeeded without returning it. Create a stable internal payment-attempt ID before the external call and retain it through inspection and signals.
+- Reconciliation must compare the observed payment-attempt ID to the expected attempt; a valid payment of the same amount for another order is not protection for this order.
+- A confirmed hold label without a held amount is insufficient. Protection requires the exact expected amount in both collected and held evidence.
+- A confirmed collection and hold still require a retained provider payment reference; otherwise later inspection, release, refund, and support recovery are unsafe.
+- Reconciliation compares status fields with amount fields. A non-null refunded or settled amount cannot be ignored merely because its paired status still says not requested or not started.
+- Customer instructions such as a redirect, QR payload, or Virtual Account number are delivery details for completing payment, not evidence of payment.
+- Unknown and contradictory financial evidence must fail closed without erasing the evidence or blindly retrying.
+
+### Deferred
+
+- Idempotency-key storage and replay semantics, callback authentication and durable inbox handling, retry scheduling, ledger posting, order mutation, and complete release/refund/settlement assessment remain governed future work.
+- Provider-specific URL, QR, Virtual Account, signature, expiry, error, and status mapping belongs in an approved adapter after the DOKU gates are answered.
+
+### No product-model change
+
+- This correction does not change NitipCuy's roles, Shop for me or Carry my item behavior, seller-set pricing, platform fee, trip timelines, fulfilment evidence, logistics direction, moderation duties, or platform-first sequence.

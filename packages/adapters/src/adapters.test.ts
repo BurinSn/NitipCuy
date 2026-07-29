@@ -48,21 +48,197 @@ describe("mock and in-memory adapters", () => {
     expect(result?.rateSummary).toBe("Rp275.000/kg, minimum 1 kg");
   });
 
-  it("records payment commands without contacting a provider", async () => {
-    const gateway = new MockPaymentGateway();
+  it("records payment initiation without inventing a held state", async () => {
+    const gateway = new MockPaymentGateway({
+      initiationReceipt: {
+        submissionStatus: "ACCEPTED_FOR_PROCESSING",
+        operationReference: "operation-initiate-001",
+        paymentReference: "payment-001",
+        expiresAt: "2026-09-20T09:00:00+07:00",
+        customerAction: {
+          kind: "DISPLAY_VIRTUAL_ACCOUNT",
+          bankCode: "FIXTURE",
+          accountNumber: "000000000001",
+        },
+      },
+    });
 
-    const result = await gateway.createHeldPayment({
-      idempotencyKey: "hold-order-001",
+    const result = await gateway.initiatePayment({
+      idempotencyKey: "initiate-order-001",
+      paymentAttemptId: "payment-attempt-001",
       orderId: "order-001",
       amountMinor: 250_000n,
       currency: "IDR",
     });
 
     expect(result).toEqual({
-      paymentReference: "mock-payment-order-001",
-      status: "HELD",
+      submissionStatus: "ACCEPTED_FOR_PROCESSING",
+      operationReference: "operation-initiate-001",
+      paymentReference: "payment-001",
+      expiresAt: "2026-09-20T09:00:00+07:00",
+      customerAction: {
+        kind: "DISPLAY_VIRTUAL_ACCOUNT",
+        bankCode: "FIXTURE",
+        accountNumber: "000000000001",
+      },
     });
-    expect(gateway.heldPayments).toHaveLength(1);
+    expect(result).not.toHaveProperty("status", "HELD");
+    expect(gateway.initiations).toHaveLength(1);
+  });
+
+  it("returns processing receipts instead of completing release or refund", async () => {
+    const gateway = new MockPaymentGateway({
+      releaseReceipt: {
+        submissionStatus: "ACCEPTED_FOR_PROCESSING",
+        operationReference: "operation-release-001",
+      },
+      refundReceipt: {
+        submissionStatus: "UNKNOWN",
+        reasonCode: "TIMEOUT",
+        operationReference: null,
+      },
+    });
+
+    const release = await gateway.requestRelease({
+      idempotencyKey: "release-order-001",
+      orderId: "order-001",
+      paymentReference: "payment-001",
+      sellerAmountMinor: 230_000n,
+      platformAmountMinor: 20_000n,
+      currency: "IDR",
+    });
+    const refund = await gateway.requestRefund({
+      idempotencyKey: "refund-order-001",
+      orderId: "order-001",
+      paymentReference: "payment-001",
+      amountMinor: 250_000n,
+      currency: "IDR",
+    });
+
+    expect(release).toEqual({
+      submissionStatus: "ACCEPTED_FOR_PROCESSING",
+      operationReference: "operation-release-001",
+    });
+    expect(refund).toEqual({
+      submissionStatus: "UNKNOWN",
+      reasonCode: "TIMEOUT",
+      operationReference: null,
+    });
+    expect(gateway.releaseRequests).toHaveLength(1);
+    expect(gateway.refundRequests).toHaveLength(1);
+  });
+
+  it("preserves a provider rejection without inventing a payment reference", async () => {
+    const gateway = new MockPaymentGateway({
+      initiationReceipt: {
+        submissionStatus: "REJECTED",
+        reasonCode: "PROVIDER_REJECTED",
+      },
+    });
+
+    const result = await gateway.initiatePayment({
+      idempotencyKey: "initiate-order-rejected",
+      paymentAttemptId: "payment-attempt-rejected",
+      orderId: "order-rejected",
+      amountMinor: 250_000n,
+      currency: "IDR",
+    });
+
+    expect(result).toEqual({
+      submissionStatus: "REJECTED",
+      reasonCode: "PROVIDER_REJECTED",
+    });
+    expect(result).not.toHaveProperty("paymentReference");
+  });
+
+  it("returns configured provider observations for reconciliation", async () => {
+    const gateway = new MockPaymentGateway({
+      snapshot: {
+        paymentAttemptId: "payment-attempt-001",
+        paymentReference: "payment-001",
+        observedAt: "2026-09-20T08:00:00+07:00",
+        currency: "IDR",
+        collectionStatus: "CONFIRMED",
+        holdStatus: "FAILED",
+        releaseStatus: "NOT_REQUESTED",
+        refundStatus: "NOT_REQUESTED",
+        settlementStatus: "NOT_STARTED",
+        chargebackStatus: "NONE",
+        collectedAmountMinor: 250_000n,
+        heldAmountMinor: null,
+        refundedAmountMinor: null,
+        settledSellerAmountMinor: null,
+        settledPlatformAmountMinor: null,
+      },
+    });
+
+    const result = await gateway.inspectPayment({
+      orderId: "order-001",
+      paymentAttemptId: "payment-attempt-001",
+      paymentReference: "payment-001",
+    });
+
+    expect(result.collectionStatus).toBe("CONFIRMED");
+    expect(result.holdStatus).toBe("FAILED");
+    expect(gateway.inspections).toHaveLength(1);
+  });
+
+  it("can inspect an ambiguous initiation by stable attempt id", async () => {
+    const gateway = new MockPaymentGateway({
+      initiationReceipt: {
+        submissionStatus: "UNKNOWN",
+        reasonCode: "TIMEOUT",
+        operationReference: null,
+      },
+      snapshot: {
+        paymentAttemptId: "payment-attempt-timeout",
+        paymentReference: null,
+        observedAt: "2026-09-20T08:00:00+07:00",
+        currency: "IDR",
+        collectionStatus: "UNKNOWN",
+        holdStatus: "UNKNOWN",
+        releaseStatus: "NOT_REQUESTED",
+        refundStatus: "NOT_REQUESTED",
+        settlementStatus: "NOT_STARTED",
+        chargebackStatus: "NONE",
+        collectedAmountMinor: null,
+        heldAmountMinor: null,
+        refundedAmountMinor: null,
+        settledSellerAmountMinor: null,
+        settledPlatformAmountMinor: null,
+      },
+    });
+
+    await gateway.initiatePayment({
+      idempotencyKey: "initiate-order-timeout",
+      paymentAttemptId: "payment-attempt-timeout",
+      orderId: "order-timeout",
+      amountMinor: 250_000n,
+      currency: "IDR",
+    });
+    const result = await gateway.inspectPayment({
+      orderId: "order-timeout",
+      paymentAttemptId: "payment-attempt-timeout",
+      paymentReference: null,
+    });
+
+    expect(result.paymentAttemptId).toBe("payment-attempt-timeout");
+    expect(result.paymentReference).toBeNull();
+    expect(result.collectionStatus).toBe("UNKNOWN");
+  });
+
+  it("fails closed when a mock payment outcome is not configured", async () => {
+    const gateway = new MockPaymentGateway();
+
+    await expect(
+      gateway.initiatePayment({
+        idempotencyKey: "initiate-order-001",
+        paymentAttemptId: "payment-attempt-001",
+        orderId: "order-001",
+        amountMinor: 250_000n,
+        currency: "IDR",
+      }),
+    ).rejects.toThrow("Mock payment initiation response must be configured.");
   });
 
   it("returns configured logistics quotes without inventing a platform rate", async () => {

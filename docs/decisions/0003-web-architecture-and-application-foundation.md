@@ -146,7 +146,7 @@ The issue #3 shell uses no login adapter because it exposes only public simulate
 
 Application ports describe NitipCuy intent:
 
-- payment hold, release, and refund;
+- payment initiation, release request, refund request, status inspection, and reconciliation;
 - logistics quote and dispatch registration;
 - identity principal resolution;
 - evidence storage and retrieval;
@@ -155,6 +155,8 @@ Application ports describe NitipCuy intent:
 - audit and outbox recording.
 
 Ports must not expose DOKU, Biteship, Vercel, Neon, or another vendor's object model. Provider webhooks and status callbacks are untrusted adapter inputs and never directly mutate an order or ledger.
+
+The provider-neutral payment contract separates command submission from observed outcome. Every initiation has a stable internal payment-attempt ID, allowing inspection after an ambiguous response even when no provider payment reference was returned. Initiation returns accepted-for-processing, rejected, or unknown plus a customer action only when accepted. Release and refund requests use the same non-terminal submission model. A separate provider snapshot reports collection, hold, release, refund, settlement, and chargeback observations; a provider signal only requests fresh inspection. The current pure assessment may confirm initial payment protection only when exact collected and held amounts agree. It does not implement an order mutation, ledger, provider adapter, release/refund reconciliation, or settlement reconciliation.
 
 The architecture probe implements deterministic in-memory trip discovery plus mock payment, logistics, identity-verification, evidence-storage, clock, identifier, audit, and outbox adapters. The mocks move no money, book no delivery, verify no real identity, store no production evidence, start no background work, and contact no service.
 

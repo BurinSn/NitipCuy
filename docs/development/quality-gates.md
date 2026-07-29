@@ -2,7 +2,7 @@
 
 Status: Accepted foundation
 
-Last reviewed: 2026-07-28
+Last reviewed: 2026-07-29
 
 ## 1. Supported toolchain
 
@@ -108,7 +108,9 @@ Unit tests:
 - no external service;
 - no production credential;
 - no database requirement;
-- deterministic clock, ID, provider, and repository behavior.
+- deterministic clock, ID, provider, and repository behavior;
+- distinguish payment request acceptance from completion and cover accepted, rejected, unknown, pending, expired, cross-attempt, missing-reference, contradictory, amount-mismatched, paid-but-not-held, and status-versus-amount post-hold observations;
+- require mock payment outcomes to be configured rather than defaulting to financial success;
 - cover origin and destination timezone validity, source-service ordering, advance PO, inverted windows, late close, departure cutoff, and public-projection invariants.
 
 Architecture tests:
@@ -189,7 +191,8 @@ GitHub branch protection is unavailable for the current private repository plan.
 - The DDoS, WAF, bot, trusted-proxy, canonical-host, shared rate-limit, session, privileged-MFA, SQL-safety, encryption/key-management, cache-safety, CSRF, XSS, SSRF, private-upload, monitoring, incident, backup, deployment-compatibility, and recovery requirements are designed but not production-implemented or runtime-verified.
 - No capacity contract, service-level objective, provider quota review, load or abuse test, backup restore, or incident exercise exists.
 - No transaction abstraction or implementation exists. The callback-only transaction port and passthrough mock were removed because they could not enforce a shared atomic scope.
-- Payment, logistics, evidence, audit, and outbox mocks remain provisional until their asynchronous-state, idempotency, evidence-integrity, and future transaction-scoping findings are resolved.
+- The payment submission and initial-protection assessment contracts are source-tested, but no real adapter, callback authentication, durable inbox, worker, idempotency enforcement, ledger, order mutation, or complete release/refund/settlement reconciliation exists.
+- Logistics, evidence, audit, and outbox mocks remain provisional until their asynchronous-state, idempotency, evidence-integrity, and future transaction-scoping findings are resolved.
 - No PostgreSQL adapter or integration test exists yet.
 - No authoritative trip-offer lifecycle, new-order guard, capacity reservation, archival history, evidence-gated order transition, or private seller/customer dashboard exists yet.
 - No browser automation exists yet.

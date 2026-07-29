@@ -3,16 +3,35 @@ export {
   ListPublishedTrips,
   normalizeTripSearchCriteria,
 } from "./trip-discovery";
+export { assessPaymentProtection } from "./payment-reconciliation";
+export type {
+  PaymentProtectionAssessment,
+  PaymentProtectionExpectation,
+} from "./payment-reconciliation";
 export type {
   TripDiscoveryRepository,
   TripSearchCriteria,
 } from "./trip-discovery";
 export type {
-  CreateHeldPaymentCommand,
-  HeldPayment,
+  AcceptedPaymentSubmission,
+  InitiatePaymentCommand,
+  InspectPaymentQuery,
+  PaymentChargebackObservation,
+  PaymentCollectionObservation,
+  PaymentCustomerAction,
   PaymentGatewayPort,
-  RefundPaymentCommand,
-  ReleasePaymentCommand,
+  PaymentHoldObservation,
+  PaymentInitiationReceipt,
+  PaymentOperationReceipt,
+  PaymentProviderSignal,
+  PaymentProviderSnapshot,
+  PaymentRefundObservation,
+  PaymentReleaseObservation,
+  PaymentSettlementObservation,
+  RejectedPaymentSubmission,
+  RequestPaymentRefundCommand,
+  RequestPaymentReleaseCommand,
+  UnknownPaymentSubmission,
 } from "./ports/payment-gateway";
 export type {
   DispatchRegistration,

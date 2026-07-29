@@ -195,3 +195,5 @@ DOKU must answer:
 10. How are customer funds held, segregated, and treated if NitipCuy or DOKU becomes insolvent or restricted?
 
 Until the written answers are accepted, implementation must use a provider-independent payment port and an internal authoritative ledger rather than embedding DOKU assumptions into the domain.
+
+The issue #3 provider-neutral contract follows that boundary. It assigns every initiation a stable internal payment-attempt ID so an ambiguous response remains inspectable without a returned provider reference. It distinguishes accepted, rejected, and unknown request submissions from later provider observations; represents customer redirect, QR, and Virtual Account instructions without DOKU types; and observes collection, hold, release, refund, settlement, and chargeback separately, including exact collected and held amounts. Provider signals only trigger inspection. This is an architecture contract and deterministic mock, not evidence that DOKU supports the modeled combination or that any provider integration, ledger, reconciliation worker, or money movement exists.

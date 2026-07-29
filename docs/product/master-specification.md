@@ -159,7 +159,9 @@ DOKU is the conditional preferred provider through its Partner/Aggregator, Hold 
 
 MVP payment rails are QRIS and selected Virtual Accounts. Cards, PayLater, and convenience-store payments remain disabled until their cost, refund, chargeback, settlement, and Hold plus Split behavior is explicitly approved.
 
-The internal financial model must be provider-independent and use an auditable ledger. A successful browser redirect or payment webhook is not proof that the correct split, release, refund, or seller settlement completed.
+The internal financial model must be provider-independent and use an auditable ledger. A provider accepting an initiation, release, or refund request means only that processing may have started. A browser redirect, QR or Virtual Account presentation, API response, or payment callback is never by itself proof that collection, hold, release, refund, split, or seller settlement completed.
+
+An order becomes payment-protected only after NitipCuy reconciles an observation for the expected payment attempt showing the exact expected amount both collected and held, with no contradictory release, refund, settlement, or chargeback activity. Unknown, cross-attempt, contradictory, mismatched, or paid-but-not-held evidence fails closed into pending or manual reconciliation. Provider events are wake-up signals to inspect authoritative state, never commands that directly mutate the order or ledger.
 
 ## 10. Explicit non-goals for the first release
 
