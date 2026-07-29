@@ -1,10 +1,10 @@
 # NitipCuy Canonical Roadmap
 
-Last reviewed: 2026-07-29 18:04 WIB
+Last reviewed: 2026-07-29 18:09 WIB
 
 Current stage: Stage 1 - Platform foundation
 
-Current work item: Issue #3 hostile-review remediation; the asynchronous payment contract passed the full local gate and hostile review, with commit, push, hosted exact-head evidence, and external reconciliation pending
+Current work item: Issue #3 hostile-review remediation; the asynchronous payment contract is committed, pushed, hosted-verified, and externally reconciled, and idempotency enforcement is next
 
 ## 1. Role, authority, and freshness contract
 
@@ -158,6 +158,7 @@ Status: In progress
 - [x] Trip-window implementation checkpoint `f4b635abba9fcdf548441254d3da5e29a645e492` passed application-quality run `30316681999` and lifecycle run `30316681979` with zero annotations.
 - [x] Dependency-boundary implementation checkpoint `330b10a85adbd83c151eafdfc0a5ca6d0f36e9ae` passed application-quality run `30336136426` and lifecycle run `30336136464` with zero annotations.
 - [x] Transaction-deferral implementation checkpoint `bf564436bf54815782501bc10280074f16a23fa9` passed application-quality run `30354861825` and lifecycle run `30354861680` with zero annotations.
+- [x] Asynchronous-payment implementation checkpoint `fae92e55fc1117b1b78fc7add244e8ccb940c2e3` passed application-quality run `30446270570` and lifecycle run `30446270568` with zero annotations.
 - [x] Exact-toolchain frozen install, peer, quality, production-audit, lifecycle, runtime, complete-diff, and security gates passed for the original architecture checkpoint.
 - [x] Issue #3 branch is committed, pushed, and opened as pull request #4.
 - [ ] BurinSN gives fresh issue #3 merge approval after all evidence and findings are visible.
@@ -172,7 +173,7 @@ Pull-request head, hosted checks, annotations, reviews, and mergeability are vol
 - [x] Reconcile identity acceptance as documented architecture direction while deferring mapping implementation to the first persisted account slice.
 - [x] Add automated dependency-boundary enforcement.
 - [x] Remove the unenforceable callback-only transaction abstraction and defer a database-backed transaction-scoped unit of work, with explicit atomicity and disposable-PostgreSQL proof gates, to the first persisted write slice.
-- [x] Correct payment initiation, held-state, release, refund, and reconciliation contracts through provider-neutral submissions, observations, signals, stable attempt correlation, exact collected-and-held amount assessment, configured mocks, and adversarial tests. Full local verification passed; hosted exact-head verification remains pending.
+- [x] Correct payment initiation, held-state, release, refund, and reconciliation contracts through provider-neutral submissions, observations, signals, stable attempt correlation, exact collected-and-held amount assessment, configured mocks, and adversarial tests. Full local and hosted exact-head verification passed.
 - [ ] Enforce and contract-test idempotency.
 - [ ] Replace caller-trusted evidence hashes and buffered raw-upload assumptions with a server-authoritative evidence lifecycle.
 - [x] Separate the future authoritative `TripOffer`, public `PublishedTrip`, public history, and private seller/customer order projections; projections never authorize mutation, checkout, or capacity reservation.
@@ -304,7 +305,7 @@ The unresolved DOKU, logistics, policy, legal, and pilot items listed in Stage 3
 
 ### Now
 
-Commit and push the locally verified asynchronous payment correction, then reconcile its hosted exact-head evidence without claiming provider compatibility, money movement, persistence, protected transactions, or production controls.
+Commit and push the asynchronous-payment lifecycle reconciliation, verify its hosted exact head, then enforce and contract-test idempotency without claiming provider compatibility, money movement, persistence, protected transactions, or production controls.
 
 ### Next
 

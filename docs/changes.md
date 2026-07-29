@@ -675,7 +675,7 @@ A session with no material change does not invent an entry. A session that makes
 - Issue / PR: Issue #3; pull request #4
 - Product: NitipCuy application foundation
 - Type: Payment architecture correction, fail-closed assessment, adversarial tests, and lifecycle reconciliation
-- Status: Implemented, full-local-gate verified, and hostile-reviewed; commit, hosted exact-head verification, and external reconciliation pending
+- Status: Implementation committed, pushed, hosted-verified, and externally reconciled; lifecycle reconciliation in progress
 - Objective:
   - Prevent an accepted payment-provider request, redirect, QR, Virtual Account instruction, callback, timeout, or mock default from being treated as proof that money is held, released, refunded, split, or settled.
 - Scope:
@@ -705,11 +705,16 @@ A session with no material change does not invent an entry. A session that makes
   - Internal Markdown links passed across 19 files and 33 local targets; `git diff --check` and the stale immediate-held contract scan passed.
   - The rebuilt production runtime returned `200` for home and a known trip and `404` for an unknown trip; the public-page pricing-privacy assertion passed.
   - Complete correction-diff hostile review found and corrected ambiguous-initiation lookup, missing held amount, cross-attempt matching, paid-but-hold-failed, terminal-with-money, missing provider reference, and status-versus-amount contradictions; no further material issue remained.
+  - Implementation checkpoint `fae92e55fc1117b1b78fc7add244e8ccb940c2e3` was pushed and matched the remote branch.
+  - Application run `30446270570` and lifecycle run `30446270568` passed on that exact head with zero annotations.
+  - Pull request #4 was open, mergeable, and clean with no review object or review decision.
+  - CodeRabbit was green but produced no review object or finding and therefore provided no independent review coverage.
+  - Issue #3 and pull request #4 were updated and read back with the asynchronous-payment scope, exact evidence, explicit non-claims, and remaining blockers.
 - Documentation:
   - Updated all four lifecycle documents plus the master specification, order lifecycle, ADR 0003, system architecture, DOKU evaluation, and quality gates.
 - Residual risks / exclusions:
-  - Commit, push, hosted exact-head, issue, and pull-request reconciliation evidence is pending.
+  - The documentation-only lifecycle reconciliation commit, push, and hosted exact-head evidence is pending.
   - Idempotency enforcement remains the next implementation blocker.
   - No callback authentication, replay protection, durable inbox, worker, retry scheduler, ledger, database transaction, order transition, real provider adapter, release/refund/settlement assessment, or money movement exists.
 - Follow-up:
-  - Commit and push the correction, inspect its exact hosted head, and reconcile issue #3 and pull request #4 before beginning idempotency enforcement.
+  - Commit and push this lifecycle reconciliation, inspect its exact hosted head, then begin idempotency enforcement.

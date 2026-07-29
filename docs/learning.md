@@ -733,3 +733,12 @@ Do not present inference, provider marketing, provisional pricing, or a future i
 ### No product-model change
 
 - This correction does not change NitipCuy's roles, Shop for me or Carry my item behavior, seller-set pricing, platform fee, trip timelines, fulfilment evidence, logistics direction, moderation duties, or platform-first sequence.
+
+### Hosted evidence
+
+- Implementation checkpoint `fae92e55fc1117b1b78fc7add244e8ccb940c2e3` reproduced on the supported hosted toolchain.
+  - Evidence: application-quality run `30446270570` and lifecycle run `30446270568` passed with zero annotations.
+  - Impact: the asynchronous payment contract is source-tested and hosted-workflow-verified without implying DOKU compatibility, callback processing, ledger correctness, real money movement, or complete release/refund/settlement reconciliation.
+- External issue and pull-request text must distinguish a green integration from independent review.
+  - Evidence: pull request #4 was mergeable and clean and CodeRabbit was green, but no review object, review decision, or CodeRabbit finding existed.
+  - Impact: retain direct hostile review, final complete-base-diff review, and fresh BurinSN approval as separate merge gates.

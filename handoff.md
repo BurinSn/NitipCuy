@@ -1,6 +1,6 @@
 # NitipCuy Cross-Session Handoff
 
-Last updated: 2026-07-29 18:04 WIB
+Last updated: 2026-07-29 18:09 WIB
 
 Handoff owner: Codex
 
@@ -122,7 +122,8 @@ The shell is a functional architecture probe. It is not a production UI, has no 
 | Dependency-boundary lifecycle checkpoint and transaction-correction starting head | `780563fa784c3ff57d28039b1f6cd491b126d2b4`; application run `30336362159` and lifecycle run `30336362143` passed with zero annotations |
 | Transaction-deferral implementation checkpoint | `bf564436bf54815782501bc10280074f16a23fa9`; application run `30354861825` and lifecycle run `30354861680` passed with zero annotations |
 | Transaction-deferral lifecycle checkpoint and payment-correction starting head | `81fb1f5ceab5ba2445d6606a255471b1dca75a86`; application run `30355124146` and lifecycle run `30355122231` passed with zero annotations |
-| Issue and pull-request reconciliation | Issue #3 and pull request #4 updated and read back at the transaction implementation checkpoint |
+| Asynchronous-payment implementation checkpoint | `fae92e55fc1117b1b78fc7add244e8ccb940c2e3`; application run `30446270570` and lifecycle run `30446270568` passed with zero annotations |
+| Issue and pull-request reconciliation | Issue #3 and pull request #4 updated and read back at the asynchronous-payment implementation checkpoint |
 | Independent review at that checkpoint | No review object or finding exists; CodeRabbit is green but its earlier review run `86ff3d62-b1f7-4429-839e-e07fd4402c20` was rate-limited, so it provides no independent review coverage |
 | First hostile-review correction | Published-trip runtime invariants committed, pushed, and hosted-verified |
 | Second hostile-review correction | Issue #3 identity acceptance and pull-request scope reconciled with the deliberately deferred persisted account implementation; committed, pushed, and hosted-verified |
@@ -149,7 +150,7 @@ The dependency-boundary correction is implemented, committed, pushed, and hosted
 
 The transaction-scope finding is corrected, committed, pushed, hosted-verified, and reconciled with issue #3 and pull request #4. The callback-only `TransactionPort` and `PassthroughTransaction` are removed. Issue #3 has no persisted write aggregate, ledger, or PostgreSQL adapter, so an in-memory replacement would not prove commit, rollback, isolation, shared connection use, or concurrency. ADR 0003 now defers a database-backed transaction-scoped unit of work to the first persisted write slice and makes its disposable-PostgreSQL atomicity tests binding. This removes a false capability claim; it is not transaction implementation or verification.
 
-The asynchronous payment correction is implemented and focused-source-tested locally. Initiation, release, and refund return accepted-for-processing, rejected, or unknown submission receipts instead of completed financial states. Every initiation has a stable internal payment-attempt ID, so an ambiguous response remains inspectable without a returned provider reference. Accepted initiation also returns a provider-neutral redirect, QR, or Virtual Account customer action. Separate observations represent collection, hold, release, refund, settlement, and chargeback; provider events are inspection signals only. A pure assessment confirms initial protection only for the expected attempt, a retained provider reference, and exact collected and held amounts, and fails closed on cross-attempt, unknown, contradictory, mismatched, paid-but-not-held, or status-versus-amount post-hold evidence. This does not implement DOKU, callbacks, a worker, persistence, ledger mutation, real money movement, or full release/refund/settlement reconciliation.
+The asynchronous payment correction is implemented, committed, pushed, hosted-verified, and reconciled with issue #3 and pull request #4. Initiation, release, and refund return accepted-for-processing, rejected, or unknown submission receipts instead of completed financial states. Every initiation has a stable internal payment-attempt ID, so an ambiguous response remains inspectable without a returned provider reference. Accepted initiation also returns a provider-neutral redirect, QR, or Virtual Account customer action. Separate observations represent collection, hold, release, refund, settlement, and chargeback; provider events are inspection signals only. A pure assessment confirms initial protection only for the expected attempt, a retained provider reference, and exact collected and held amounts, and fails closed on cross-attempt, unknown, contradictory, mismatched, paid-but-not-held, or status-versus-amount post-hold evidence. This does not implement DOKU, callbacks, a worker, persistence, ledger mutation, real money movement, or full release/refund/settlement reconciliation.
 
 Implemented locally:
 
@@ -240,7 +241,9 @@ The transaction-deferral correction started from that clean synchronized head. E
 
 Implementation checkpoint `bf564436bf54815782501bc10280074f16a23fa9` was pushed and matched the remote branch. Application run `30354861825` and lifecycle run `30354861680` passed on that exact head with zero annotations. Pull request #4 remained open and GitHub-mergeable with no review object or decision. CodeRabbit was green but produced no review object or finding, so it is not independent review evidence. Issue #3 and pull request #4 were updated and read back with the explicit deferral, exact implementation evidence, and remaining payment, idempotency, evidence, final-lifecycle, and owner-approval gates.
 
-The asynchronous payment correction started from clean synchronized head `81fb1f5ceab5ba2445d6606a255471b1dca75a86`, whose application run `30355124146` and lifecycle run `30355122231` passed with zero annotations. Exact Node.js `24.18.0` and pnpm `11.17.0` frozen install, peer validation, formatting, lint, dependency scan, strict type checking, all 20 boundary tests, all 44 package tests, production build, production dependency audit, and lifecycle participation passed on the final local correction tree. The dependency scan covered four projects, 26 governed source files, and 51 module references. Internal Markdown links passed across 19 files and 33 local targets; `git diff --check` and the stale immediate-held contract scan passed. The rebuilt production runtime returned `200` for home and a known trip and `404` for an unknown trip while preserving the public pricing-privacy assertion. Complete correction-diff hostile review found no remaining material issue. Commit, hosted, issue, and pull-request evidence remains pending and is not claimed.
+The asynchronous payment correction started from clean synchronized head `81fb1f5ceab5ba2445d6606a255471b1dca75a86`, whose application run `30355124146` and lifecycle run `30355122231` passed with zero annotations. Exact Node.js `24.18.0` and pnpm `11.17.0` frozen install, peer validation, formatting, lint, dependency scan, strict type checking, all 20 boundary tests, all 44 package tests, production build, production dependency audit, and lifecycle participation passed on the final local correction tree. The dependency scan covered four projects, 26 governed source files, and 51 module references. Internal Markdown links passed across 19 files and 33 local targets; `git diff --check` and the stale immediate-held contract scan passed. The rebuilt production runtime returned `200` for home and a known trip and `404` for an unknown trip while preserving the public pricing-privacy assertion. Complete correction-diff hostile review found no remaining material issue.
+
+Implementation checkpoint `fae92e55fc1117b1b78fc7add244e8ccb940c2e3` was pushed and matched the remote branch. Application run `30446270570` and lifecycle run `30446270568` passed on that exact head with zero annotations. Pull request #4 was open, mergeable, and clean with no review object or review decision; CodeRabbit was green but produced no review object or finding. Issue #3 and pull request #4 were updated and read back with the implemented payment contract, exact evidence, explicit non-claims, and remaining idempotency, evidence-integrity, final-reconciliation, and owner-approval gates.
 
 ## 8. Blockers and gates
 
@@ -248,14 +251,13 @@ No external blocker prevents continuing provider-independent development with mo
 
 The transaction-abstraction finding is resolved by explicit deferral. No transaction implementation exists or is claimed; its database-backed scope remains a mandatory gate for the first persisted write slice.
 
-The asynchronous payment-lifecycle finding is resolved in the local source. Its focused tests, full repository gate, production runtime regression, internal-link scan, and complete correction-diff hostile review passed. Commit, push, hosted exact-head verification, and issue/pull-request reconciliation remain pending.
+The asynchronous payment-lifecycle finding is resolved and verified at the source-tested, local-runtime-regression, and hosted-workflow levels. Provider integration, money movement, callback processing, ledger behavior, and full settlement reconciliation remain unimplemented and unclaimed.
 
 The following internal findings still block issue #3 merge:
 
 1. payment, logistics, and evidence mocks ignore their idempotency keys;
 2. evidence storage trusts a caller-supplied hash and models raw buffered content without a quarantine or verification lifecycle;
-3. the payment correction still requires its immutable commit and hosted verification checkpoint;
-4. lifecycle, issue, and pull-request claims require reconciliation after every correction.
+3. lifecycle, issue, and pull-request claims require reconciliation after every correction.
 
 The following still block real-money pilot activation:
 
@@ -276,7 +278,7 @@ These are Stage 3 activation gates, not reasons to delay provider-independent pl
 
 ## 9. Exact next action
 
-Commit and push the locally verified payment correction, verify the immutable hosted head and annotations, and reconcile issue #3 and pull request #4 before beginning idempotency enforcement.
+Commit and push this payment lifecycle reconciliation, verify its immutable hosted head and annotations, then enforce and contract-test idempotency across payment, logistics, and evidence mocks.
 
 Do not add account persistence or a production identity provider to issue #3. Those belong to the first persisted account slice after this architecture issue is corrected and merged.
 
