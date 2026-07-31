@@ -1,10 +1,10 @@
 # NitipCuy Canonical Roadmap
 
-Last reviewed: 2026-07-31 09:27 WIB
+Last reviewed: 2026-07-31 09:31 WIB
 
 Current stage: Stage 1 - Platform foundation
 
-Current work item: Issue #3 hostile-review remediation; scoped fail-closed idempotency enforcement is fully source-verified locally, with commit, hosted exact-head evidence, and external reconciliation pending
+Current work item: Issue #3 hostile-review remediation; scoped fail-closed idempotency is committed, pushed, locally and hosted verified, and externally reconciled; evidence-storage integrity is next after the lifecycle checkpoint
 
 ## 1. Role, authority, and freshness contract
 
@@ -305,7 +305,7 @@ The unresolved DOKU, logistics, policy, legal, and pilot items listed in Stage 3
 
 ### Now
 
-Commit and push the locally verified idempotency correction, verify the immutable hosted head, and reconcile issue #3 and pull request #4 without claiming provider compatibility, persistence, protected authorization, shared production state, or money movement.
+Commit and push the idempotency lifecycle reconciliation and verify its immutable hosted head without claiming provider compatibility, persistence, protected authorization, shared production state, or money movement.
 
 ### Next
 

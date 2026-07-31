@@ -721,7 +721,7 @@ A session with no material change does not invent an entry. A session that makes
 
 ## 2026-07-31 09:20 WIB - Scoped fail-closed idempotency correction
 
-- Status: Implemented and fully source-verified locally; commit, push, hosted evidence, and external issue/pull-request reconciliation are pending.
+- Status: Implemented, committed, pushed, locally and hosted verified, and externally reconciled; the documentation-only lifecycle checkpoint is pending.
 - Objective:
   - Make duplicate payment, dispatch, and evidence commands safe without tying the application core to Next.js, a provider SDK, or one storage technology.
 - Changes:
@@ -751,6 +751,11 @@ A session with no material change does not invent an entry. A session that makes
   - The production HTTP regression returned `200` for home and a known trip and `404` for an unknown trip; the public pricing-privacy assertion passed.
   - Internal Markdown links passed across 20 files and 33 local targets.
   - The ambient Node.js `26.0.0` and pnpm `9.15.0` attempt was rejected by `engine-strict` and is not counted as evidence.
+  - Implementation checkpoint `115ecfeb7f4b0876f56ae43d71cfa378f26497fe` was pushed and matched the remote branch.
+  - Application run `30599067671` and lifecycle run `30599067251` passed on that exact head with zero annotations.
+  - Pull request #4 was open and clean with no review object, review decision, review thread, or line finding.
+  - CodeRabbit remained paused/free-summary-only and therefore supplied no independent review coverage.
+  - Issue #3 and pull request #4 were updated and read back; issue comment `5138575547` and PR comment `5138575741` record the exact evidence, non-claims, and remaining blockers.
 - Documentation:
   - Reconciled handoff, changes, roadmap, learning, system architecture, scalability/resilience, and quality-gate claims for the local correction.
 - Residual risks / exclusions:
@@ -758,4 +763,4 @@ A session with no material change does not invent an entry. A session that makes
   - No authenticated use case, shared database-backed idempotency state, cleanup worker, recovery command, provider-native idempotency verification, callback inbox, rate-limit integration, ledger, order mutation, or real money movement exists.
   - Evidence storage still trusts caller-supplied SHA-256 metadata and buffers raw content; its server-authoritative evidence lifecycle remains the next implementation blocker.
 - Follow-up:
-  - Complete the staged base-diff hostile review, then commit, push, verify the immutable hosted head, and reconcile issue #3 and pull request #4.
+  - Commit and push the idempotency lifecycle reconciliation, verify its immutable hosted head, then begin the evidence-storage integrity correction.

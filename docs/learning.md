@@ -792,3 +792,12 @@ Do not present inference, provider marketing, provisional pricing, or a future i
 ### No product-model change
 
 - This correction changes retry safety only. It does not change roles, seller-defined pricing, service modes, trip timelines, platform fees, evidence requirements, logistics choices, or order-state UX.
+
+### Hosted evidence
+
+- Idempotency implementation checkpoint `115ecfeb7f4b0876f56ae43d71cfa378f26497fe` reproduced on the supported hosted toolchain.
+  - Evidence: application run `30599067671` and lifecycle run `30599067251` passed with zero annotations.
+  - Impact: the scoped replay, conflict, concurrency, recovery, expiry, authority-outage, and cross-scope contracts are source- and hosted-workflow-verified without implying authenticated, shared, persistent, provider-native, or production idempotency.
+- GitHub integration status remains separate from review coverage.
+  - Evidence: pull request #4 was clean, but no review object, review decision, review thread, or line finding existed; CodeRabbit was paused and limited to its Free-plan summary/walkthrough.
+  - Impact: retain direct hostile review, evidence-integrity correction, final exact-head review, and fresh BurinSN approval as separate gates.

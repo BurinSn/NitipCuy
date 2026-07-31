@@ -1,6 +1,6 @@
 # NitipCuy Cross-Session Handoff
 
-Last updated: 2026-07-31 09:27 WIB
+Last updated: 2026-07-31 09:31 WIB
 
 Handoff owner: Codex
 
@@ -124,9 +124,10 @@ The shell is a functional architecture probe. It is not a production UI, has no 
 | Transaction-deferral lifecycle checkpoint and payment-correction starting head | `81fb1f5ceab5ba2445d6606a255471b1dca75a86`; application run `30355124146` and lifecycle run `30355122231` passed with zero annotations |
 | Asynchronous-payment implementation checkpoint | `fae92e55fc1117b1b78fc7add244e8ccb940c2e3`; application run `30446270570` and lifecycle run `30446270568` passed with zero annotations |
 | Asynchronous-payment lifecycle checkpoint and current remote pull-request head | `fb9f662a51da32053cf40511f079eed16c3cf58c`; application run `30446607390` and lifecycle run `30446607399` passed with zero annotations |
-| Current local worktree | Idempotency correction is uncommitted on `fb9f662a51da32053cf40511f079eed16c3cf58c`; no unrelated generated mockup change remains |
-| Issue and pull-request reconciliation | Issue #3 and pull request #4 were last updated at the asynchronous-payment checkpoint; idempotency claims remain pending until the correction is committed and hosted-verified |
-| Independent review at current remote head | No review object, review decision, or line finding exists; CodeRabbit reports success but detailed review is paused on the current plan, so it provides no independent review coverage |
+| Idempotency implementation checkpoint and current remote pull-request head | `115ecfeb7f4b0876f56ae43d71cfa378f26497fe`; application run `30599067671` and lifecycle run `30599067251` passed with zero annotations |
+| Current local worktree | Clean and synchronized at `115ecfeb7f4b0876f56ae43d71cfa378f26497fe` before this lifecycle reconciliation |
+| Issue and pull-request reconciliation | Issue #3 and pull request #4 were updated and read back at the idempotency checkpoint; issue comment `5138575547` and PR comment `5138575741` record the exact evidence and residual blockers |
+| Independent review at current remote head | No review object, review decision, review thread, or line finding exists; CodeRabbit reports success but detailed review is paused and the Free plan provides summary/walkthrough only, so it provides no independent review coverage |
 | First hostile-review correction | Published-trip runtime invariants committed, pushed, and hosted-verified |
 | Second hostile-review correction | Issue #3 identity acceptance and pull-request scope reconciled with the deliberately deferred persisted account implementation; committed, pushed, and hosted-verified |
 | Security and scale amendment | Initial amendment and six-gap hostile-review correction accepted, committed, pushed, and required hosted workflows verified; production controls remain unimplemented |
@@ -154,7 +155,7 @@ The transaction-scope finding is corrected, committed, pushed, hosted-verified, 
 
 The asynchronous payment correction is implemented, committed, pushed, hosted-verified, and reconciled with issue #3 and pull request #4. Initiation, release, and refund return accepted-for-processing, rejected, or unknown submission receipts instead of completed financial states. Every initiation has a stable internal payment-attempt ID, so an ambiguous response remains inspectable without a returned provider reference. Accepted initiation also returns a provider-neutral redirect, QR, or Virtual Account customer action. Separate observations represent collection, hold, release, refund, settlement, and chargeback; provider events are inspection signals only. A pure assessment confirms initial protection only for the expected attempt, a retained provider reference, and exact collected and held amounts, and fails closed on cross-attempt, unknown, contradictory, mismatched, paid-but-not-held, or status-versus-amount post-hold evidence. This does not implement DOKU, callbacks, a worker, persistence, ledger mutation, real money movement, or full release/refund/settlement reconciliation.
 
-The idempotency correction is implemented and fully source-verified locally but is not committed, pushed, hosted-verified, or externally reconciled yet. A framework-independent application contract defines atomic claim, stored-result replay, changed-payload conflict, active-operation denial, recovery-required ambiguous failure, and completion-based result retention. Payment initiation, release, and refund use order-scoped keys with 90-day mock retention; logistics dispatch uses order scope and evidence storage uses owner-account scope with 30-day mock retention. Canonical SHA-256 fingerprints cover semantic command payloads, including evidence bytes. Unexpected execution errors require reconciliation rather than releasing a key for a potentially duplicating retry. The in-memory authority is explicitly test-only and process-local; it does not prove persistence, authenticated authorization, shared multi-instance state, provider-native behavior, or production recovery.
+The idempotency correction is implemented, committed, pushed, locally verified, hosted-verified, and reconciled with issue #3 and pull request #4. A framework-independent application contract defines atomic claim, stored-result replay, changed-payload conflict, active-operation denial, recovery-required ambiguous failure, and completion-based result retention. Payment initiation, release, and refund use order-scoped keys with 90-day mock retention; logistics dispatch uses order scope and evidence storage uses owner-account scope with 30-day mock retention. Type-tagged canonical SHA-256 fingerprints cover semantic command payloads, including evidence bytes. Unexpected execution errors require reconciliation rather than releasing a key for a potentially duplicating retry. The in-memory authority is explicitly test-only and process-local; it does not prove persistence, authenticated authorization, shared multi-instance state, provider-native behavior, or production recovery.
 
 Implemented locally:
 
@@ -203,6 +204,7 @@ Verified locally with Node.js `24.18.0` and pnpm `11.17.0`:
 - payment-focused application and adapter type checking passed; 18 application tests and 10 adapter tests cover accepted, rejected, unknown, pending, expired, cross-attempt, missing-reference, contradictory, amount-mismatched, missing-amount, paid-but-not-held, terminal-with-money, status-versus-amount post-hold, and ambiguous-initiation lookup outcomes;
 - idempotency-focused application and adapter type checking passed; all 24 adapter tests cover unambiguous fingerprint types, exact replay, changed-payload conflict, concurrent denial, recovery-required ambiguous failure, completion-based expiry, malformed keys, unavailable authority, cross-scope isolation, and payment, release, refund, dispatch, and evidence enforcement;
 - final exact-toolchain `pnpm check` passed a four-project dependency scan covering 29 source files and 67 module references, strict type checking, all 20 boundary tests, all 58 package tests, and the production build after the last hostile correction;
+- idempotency implementation head `115ecfeb7f4b0876f56ae43d71cfa378f26497fe` passed application run `30599067671` and lifecycle run `30599067251` with zero annotations; GitHub reported the pull request clean, and issue #3 plus pull request #4 were updated and read back;
 - Next.js production routes built for `/`, `/_not-found`, and three generated `/trips/[tripId]` fixture paths;
 - production HTTP probe returned `200` for home, filtered search, and a known trip, `404` for an unknown trip, passed content assertions, and emitted no fallback error;
 - lifecycle, diff, workflow YAML, internal-link, credential-pattern, placeholder, dependency-direction, provider-SDK, unsafe-`any`, console, and source-network scans passed;
@@ -262,9 +264,8 @@ The asynchronous payment-lifecycle finding is resolved and verified at the sourc
 
 The following internal findings still block issue #3 merge:
 
-1. the locally verified idempotency correction requires commit, push, hosted exact-head evidence, and issue/pull-request reconciliation;
-2. evidence storage trusts a caller-supplied hash and models raw buffered content without a quarantine or verification lifecycle;
-3. lifecycle, issue, and pull-request claims require final reconciliation after every correction.
+1. evidence storage trusts a caller-supplied hash and models raw buffered content without a quarantine or verification lifecycle;
+2. lifecycle, issue, and pull-request claims require final reconciliation after every correction.
 
 The following still block real-money pilot activation:
 
@@ -285,7 +286,7 @@ These are Stage 3 activation gates, not reasons to delay provider-independent pl
 
 ## 9. Exact next action
 
-Commit and push the locally verified idempotency correction, inspect its immutable hosted head and annotations, reconcile issue #3 and pull request #4, then replace the evidence-storage assumptions as the next bounded correction.
+Commit and push this idempotency lifecycle reconciliation, inspect its immutable hosted head and annotations, then replace the caller-trusted evidence hash and buffered raw-upload assumptions as the next bounded correction.
 
 Do not add account persistence or a production identity provider to issue #3. Those belong to the first persisted account slice after this architecture issue is corrected and merged.
 
