@@ -1,10 +1,10 @@
 # NitipCuy Canonical Roadmap
 
-Last reviewed: 2026-07-29 18:09 WIB
+Last reviewed: 2026-07-31 09:27 WIB
 
 Current stage: Stage 1 - Platform foundation
 
-Current work item: Issue #3 hostile-review remediation; the asynchronous payment contract is committed, pushed, hosted-verified, and externally reconciled, and idempotency enforcement is next
+Current work item: Issue #3 hostile-review remediation; scoped fail-closed idempotency enforcement is fully source-verified locally, with commit, hosted exact-head evidence, and external reconciliation pending
 
 ## 1. Role, authority, and freshness contract
 
@@ -174,7 +174,7 @@ Pull-request head, hosted checks, annotations, reviews, and mergeability are vol
 - [x] Add automated dependency-boundary enforcement.
 - [x] Remove the unenforceable callback-only transaction abstraction and defer a database-backed transaction-scoped unit of work, with explicit atomicity and disposable-PostgreSQL proof gates, to the first persisted write slice.
 - [x] Correct payment initiation, held-state, release, refund, and reconciliation contracts through provider-neutral submissions, observations, signals, stable attempt correlation, exact collected-and-held amount assessment, configured mocks, and adversarial tests. Full local and hosted exact-head verification passed.
-- [ ] Enforce and contract-test idempotency.
+- [x] Enforce and contract-test idempotency through scoped keys, canonical payload fingerprints, exact replay, changed-payload conflict, concurrent denial, recovery-required ambiguous outcomes, expiry, authority-outage denial, and cross-scope isolation. Shared durable production state remains a later implementation gate.
 - [ ] Replace caller-trusted evidence hashes and buffered raw-upload assumptions with a server-authoritative evidence lifecycle.
 - [x] Separate the future authoritative `TripOffer`, public `PublishedTrip`, public history, and private seller/customer order projections; projections never authorize mutation, checkout, or capacity reservation.
 - [x] Establish the binding defense-in-depth security and evidence-based scale baseline without claiming the controls are implemented.
@@ -305,11 +305,11 @@ The unresolved DOKU, logistics, policy, legal, and pilot items listed in Stage 3
 
 ### Now
 
-Commit and push the asynchronous-payment lifecycle reconciliation, verify its hosted exact head, then enforce and contract-test idempotency without claiming provider compatibility, money movement, persistence, protected transactions, or production controls.
+Commit and push the locally verified idempotency correction, verify the immutable hosted head, and reconcile issue #3 and pull request #4 without claiming provider compatibility, persistence, protected authorization, shared production state, or money movement.
 
 ### Next
 
-Enforce idempotency, replace the evidence-storage assumptions, then reconcile exact-head evidence and obtain fresh owner approval for issue #3. After merge, implement the persisted account-to-public-Q&A vertical slice through a new governed issue with its applicable security and resource controls.
+Replace the caller-trusted evidence hash and buffered raw-upload assumptions with a server-authoritative quarantine, hashing, scanning, and verification lifecycle. Then reconcile final exact-head evidence and obtain fresh owner approval for issue #3. After merge, implement the persisted account-to-public-Q&A vertical slice through a new governed issue with its applicable security and resource controls.
 
 ### Later
 

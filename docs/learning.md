@@ -742,3 +742,53 @@ Do not present inference, provider marketing, provisional pricing, or a future i
 - External issue and pull-request text must distinguish a green integration from independent review.
   - Evidence: pull request #4 was mergeable and clean and CodeRabbit was green, but no review object, review decision, or CodeRabbit finding existed.
   - Impact: retain direct hostile review, final complete-base-diff review, and fresh BurinSN approval as separate merge gates.
+
+## 2026-07-31 09:20 WIB - Safe idempotency is more than storing a key
+
+### Accepted
+
+- Idempotency identity is `authorization scope + operation + caller key + canonical payload fingerprint`.
+  - Evidence: a globally keyed result cache can collide across accounts, orders, or endpoint semantics.
+  - Impact: authorize first, scope payment and dispatch to their order aggregate, scope evidence to its owner account, and never use replay as an ownership check.
+- Exact completed duplicates replay the stored result; changed payloads conflict.
+  - Evidence: executing an exact duplicate repeats a side effect, while silently accepting a changed payload hides a caller defect or attack.
+  - Impact: fingerprint every semantic field and reject key reuse with a different fingerprint.
+- Concurrent and ambiguous duplicates are different states.
+  - Evidence: a matching command may still be executing, or it may have thrown after a provider accepted it.
+  - Impact: active duplicates fail as in-progress; unexpected execution failures become recovery-required and cannot be blindly retried.
+- Expected provider ambiguity is a result, not an exception.
+  - Evidence: a timeout may yield an `UNKNOWN` receipt that remains inspectable through the stable payment-attempt ID.
+  - Impact: store and replay `UNKNOWN`, then reconcile; reserve recovery-required for unclassified failures.
+
+### Corrected
+
+- Removed automatic claim release after execution errors.
+  - Supersedes: the first local implementation, which released any thrown execution for immediate retry.
+  - Impact: a provider or storage action that may have succeeded cannot be duplicated merely because the local response path failed.
+- Added explicit idempotency scopes.
+  - Supersedes: the first local store key of only `operation + key`.
+  - Impact: stored results cannot replay across the tested account or order boundary.
+- Moved deterministic validation before claim creation.
+  - Evidence: invalid metadata and missing mock configuration are known before any external side effect.
+  - Impact: invalid local input does not create a false ambiguous-operation record.
+
+### Reusable learning
+
+- Never release an idempotency claim after a generic exception unless the system can prove no side effect occurred.
+- Do not let stale in-progress or recovery-required financial records silently expire into permission to execute again.
+- Store a clone of the result and return a clone on replay so caller mutation cannot corrupt later responses.
+- Start completed-result retention when completion is durably recorded, not when execution begins.
+- Fingerprints must be canonical, stable across instances, bounded, and cover semantic binary content as well as visible metadata.
+- Canonical fingerprint encodings need explicit type tags and plain-object restrictions; reserved-looking object keys must not collide with encoded `bigint`, bytes, arrays, or primitives.
+- An unavailable idempotency authority is a fail-closed dependency for protected mutations.
+- Process-local maps can prove contract semantics but cannot prove multi-instance safety, persistence, bounded resource use, atomic database behavior, or operational recovery.
+
+### Deferred
+
+- A production implementation needs authenticated scope derivation, shared durable atomic state, sensitive-result protection, cleanup, monitoring, operator recovery, and disposable-database concurrency tests.
+- Provider-native idempotency behavior and retention must be verified against the selected DOKU and logistics contracts.
+- Callback replay protection remains a separate signed inbox and reconciliation concern.
+
+### No product-model change
+
+- This correction changes retry safety only. It does not change roles, seller-defined pricing, service modes, trip timelines, platform fees, evidence requirements, logistics choices, or order-state UX.

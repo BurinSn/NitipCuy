@@ -1,4 +1,5 @@
 export { InMemoryTripDiscoveryRepository } from "./in-memory-trip-discovery";
+export { InMemoryIdempotencyStore } from "./idempotency-support";
 export {
   FixedClock,
   InMemoryAudit,

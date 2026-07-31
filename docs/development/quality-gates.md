@@ -191,8 +191,9 @@ GitHub branch protection is unavailable for the current private repository plan.
 - The DDoS, WAF, bot, trusted-proxy, canonical-host, shared rate-limit, session, privileged-MFA, SQL-safety, encryption/key-management, cache-safety, CSRF, XSS, SSRF, private-upload, monitoring, incident, backup, deployment-compatibility, and recovery requirements are designed but not production-implemented or runtime-verified.
 - No capacity contract, service-level objective, provider quota review, load or abuse test, backup restore, or incident exercise exists.
 - No transaction abstraction or implementation exists. The callback-only transaction port and passthrough mock were removed because they could not enforce a shared atomic scope.
-- The payment submission and initial-protection assessment contracts are source-tested, but no real adapter, callback authentication, durable inbox, worker, idempotency enforcement, ledger, order mutation, or complete release/refund/settlement reconciliation exists.
-- Logistics, evidence, audit, and outbox mocks remain provisional until their asynchronous-state, idempotency, evidence-integrity, and future transaction-scoping findings are resolved.
+- The payment submission and initial-protection assessment contracts are source-tested. The provider-neutral idempotency contract and payment, dispatch, and evidence mocks source-test scoped replay, payload conflict, concurrency denial, recovery-required ambiguous failure, expiry, malformed input, authority outage, and cross-scope isolation.
+- The idempotency store is deliberately process-local and test-only. No shared durable production authority, authenticated idempotency lookup, database constraint, provider-native verification, callback authentication, durable inbox, worker, ledger, order mutation, or complete release/refund/settlement reconciliation exists.
+- Evidence, audit, and outbox mocks remain provisional until their evidence-integrity, asynchronous-state, and future transaction-scoping findings are resolved.
 - No PostgreSQL adapter or integration test exists yet.
 - No authoritative trip-offer lifecycle, new-order guard, capacity reservation, archival history, evidence-gated order transition, or private seller/customer dashboard exists yet.
 - No browser automation exists yet.

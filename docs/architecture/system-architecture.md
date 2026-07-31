@@ -401,7 +401,7 @@ Plain unit tests must exercise:
 - authorization denials;
 - state-transition conflicts.
 
-The domain invariant tests satisfy the published-trip validation and cross-offset chronology portion. The dependency gate has source-tested manifest, relative, aliased, type-only, dynamic, require, non-static, composition, client/server, and symlink denial coverage. Provider-adapter idempotency tests remain an open issue #3 finding.
+The domain invariant tests satisfy the published-trip validation and cross-offset chronology portion. The dependency gate has source-tested manifest, relative, aliased, type-only, dynamic, require, non-static, composition, client/server, and symlink denial coverage. The provider-neutral idempotency contract and deterministic adapters source-test scoped exact replay, payload conflict, active concurrency, recovery-required ambiguous failure, expiry, invalid input, unavailable-authority denial, cross-scope isolation, and payment, logistics, and evidence behavior. This is not a shared or durable production implementation.
 
 Integration tests later exercise:
 
@@ -449,9 +449,13 @@ Implemented in issue #3:
 
 The callback-only transaction interface and passthrough adapter were removed rather than misrepresented as atomic infrastructure. Transaction requirements are designed, but no transaction implementation or verification exists.
 
-The payment port now separates initiation, release, and refund submission receipts from provider observations. It models collection, hold, release, refund, settlement, and chargeback independently; provider signals request inspection instead of declaring success. The configured mock never invents a successful outcome, and the pure initial-protection assessment fails closed for unknown, contradictory, mismatched, or post-hold evidence. This is source-tested contract behavior only: no provider callback authentication, durable inbox, worker, idempotency enforcement, ledger, order mutation, real money movement, or full release/refund/settlement reconciliation exists.
+The payment port now separates initiation, release, and refund submission receipts from provider observations. It models collection, hold, release, refund, settlement, and chargeback independently; provider signals request inspection instead of declaring success. The configured mock never invents a successful outcome, and the pure initial-protection assessment fails closed for unknown, contradictory, mismatched, or post-hold evidence.
 
-Logistics, evidence, audit, and outbox interfaces and mocks remain provisional while their asynchronous-state, idempotency, evidence-integrity, and future transaction-scoping contracts are corrected.
+Payment initiation, release, refund, logistics dispatch registration, and evidence storage now use a framework-independent idempotency port plus deterministic adapter. The scope is the order aggregate for payment and logistics and the owner account for evidence. SHA-256 fingerprints cover each operation's semantic command payload; exact completed duplicates replay, changed payloads conflict, concurrent duplicates fail closed, unavailable authority blocks execution, and unclassified execution errors require reconciliation instead of releasing the key. Payment results retain 90-day mock replay records and logistics/evidence results retain 30-day mock replay records.
+
+This is source-tested contract behavior only. The default store is process-local and test-only. No shared persistent idempotency authority, authenticated use case, rate-limit integration, database constraint, provider-native verification, callback authentication, durable inbox, worker, ledger, order mutation, real money movement, or full release/refund/settlement reconciliation exists.
+
+Evidence, audit, and outbox interfaces and mocks remain provisional while the evidence-integrity, asynchronous-state, and future transaction-scoping contracts are corrected.
 
 Not implemented:
 

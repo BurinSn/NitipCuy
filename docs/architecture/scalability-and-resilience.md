@@ -107,7 +107,11 @@ Each consistency-critical command uses one enforceable transaction across the re
 
 Provider calls occur before or after a database transaction through explicit pending and reconciliation states. A callback or browser redirect never directly rewrites authoritative state.
 
-Every externally retryable command has a stable idempotency key, payload fingerprint, stored result, expiry policy, and conflict behavior. Duplicate delivery must be safe.
+Every externally retryable command has an authorization-bound scope, operation namespace, stable idempotency key, canonical payload fingerprint, stored result, expiry policy, and conflict behavior. Authorization runs before idempotency lookup; a stored result is never a substitute for ownership checks. Exact duplicates replay the stored result without repeating the side effect. Reusing a scoped operation key with a different fingerprint is rejected.
+
+A concurrent exact duplicate fails closed while the first execution is active. A thrown or otherwise unclassified outcome moves to an explicit recovery-required state instead of releasing the key for a blind retry. Expected provider timeouts or ambiguous responses are modeled as stored `UNKNOWN` results and reconciled. Completed-result retention may expire under an approved policy; an unresolved recovery-required record does not silently expire into permission to repeat a financial, dispatch, or evidence action.
+
+The issue #3 in-memory idempotency store exists only to source-test these semantics. It is process-local, unbounded, non-persistent, and not production infrastructure. Production requires a shared durable implementation with atomic claim, completion, and recovery transitions; authorization and rate limiting before lookup; bounded key, scope, and fingerprint inputs; encrypted and access-controlled stored results where sensitive; retention and cleanup jobs; metrics and alerts; and an audited operator recovery command.
 
 ## 7. Durable asynchronous work
 

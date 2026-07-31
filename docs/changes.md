@@ -718,3 +718,44 @@ A session with no material change does not invent an entry. A session that makes
   - No callback authentication, replay protection, durable inbox, worker, retry scheduler, ledger, database transaction, order transition, real provider adapter, release/refund/settlement assessment, or money movement exists.
 - Follow-up:
   - Commit and push this lifecycle reconciliation, inspect its exact hosted head, then begin idempotency enforcement.
+
+## 2026-07-31 09:20 WIB - Scoped fail-closed idempotency correction
+
+- Status: Implemented and fully source-verified locally; commit, push, hosted evidence, and external issue/pull-request reconciliation are pending.
+- Objective:
+  - Make duplicate payment, dispatch, and evidence commands safe without tying the application core to Next.js, a provider SDK, or one storage technology.
+- Changes:
+  - Added a framework-independent application idempotency port with atomic claim, completion, and recovery-required transitions.
+  - Added validated scope, operation namespace, 8-128-character key, lowercase SHA-256 fingerprint, and bounded completed-result retention contracts.
+  - Added deterministic errors for changed-payload key reuse, an already-running command, malformed input, and an earlier uncertain outcome that requires reconciliation.
+  - Added an explicitly test-only in-memory authority with stored-result cloning, completed-record expiry, cross-scope isolation, and claim ownership checks.
+  - Added canonical SHA-256 command fingerprints, including `bigint` amounts and evidence bytes.
+  - Enforced idempotency for payment initiation, payment release requests, payment refund requests, logistics dispatch registration, and evidence storage.
+  - Scoped payment and logistics keys to the order aggregate and evidence keys to the owner account.
+  - Set mock completed-result retention to 90 days for payment and 30 days for logistics and evidence.
+  - Preserved accepted, rejected, and `UNKNOWN` provider receipts as replayable results instead of treating a request as a completed financial outcome.
+  - Moved deterministic mock-configuration and evidence-metadata validation before claim creation.
+  - Changed unexpected execution errors to `RECOVERY_REQUIRED`; the key is not released for a blind retry that could duplicate an external side effect.
+  - Added contract coverage for exact replay, stored-result isolation, changed payload, concurrent duplicate, uncertain execution, expiry, unsafe key, authority outage, cross-scope isolation, payment, release, refund, dispatch, and evidence bytes.
+- Hostile-review corrections:
+  - Rejected the first automatic-release-on-error design because a provider could have accepted a request before the local exception.
+  - Added recovery-required state so ambiguous outcomes must be inspected or reconciled before another execution.
+  - Added explicit scope after identifying that a globally keyed replay cache could expose or reuse a result across accounts or orders.
+  - Started completed-result retention at recorded completion rather than initial claim so a long-running operation or clock movement cannot make a fresh result immediately expire.
+  - Type-tagged every canonical fingerprint value and rejected non-plain objects after identifying possible collisions between special-looking objects, `bigint`, and byte encodings.
+- Validation so far:
+  - Exact Node.js `24.18.0` and pnpm `11.17.0` application and adapter type checking passed.
+  - All 24 adapter tests and all 58 package tests passed after the final canonical-encoding hostile correction.
+  - Final exact-toolchain `pnpm check` passed formatting, lint, a four-project scan covering 29 source files and 67 module references, strict type checking, all 20 boundary tests, all package tests, and the production build.
+  - Frozen install, peer validation, production dependency audit, lifecycle-document participation, and `git diff --check` passed.
+  - The production HTTP regression returned `200` for home and a known trip and `404` for an unknown trip; the public pricing-privacy assertion passed.
+  - Internal Markdown links passed across 20 files and 33 local targets.
+  - The ambient Node.js `26.0.0` and pnpm `9.15.0` attempt was rejected by `engine-strict` and is not counted as evidence.
+- Documentation:
+  - Reconciled handoff, changes, roadmap, learning, system architecture, scalability/resilience, and quality-gate claims for the local correction.
+- Residual risks / exclusions:
+  - The default authority is process-local, unbounded, non-persistent, and test-only.
+  - No authenticated use case, shared database-backed idempotency state, cleanup worker, recovery command, provider-native idempotency verification, callback inbox, rate-limit integration, ledger, order mutation, or real money movement exists.
+  - Evidence storage still trusts caller-supplied SHA-256 metadata and buffers raw content; its server-authoritative evidence lifecycle remains the next implementation blocker.
+- Follow-up:
+  - Complete the staged base-diff hostile review, then commit, push, verify the immutable hosted head, and reconcile issue #3 and pull request #4.

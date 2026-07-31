@@ -3,7 +3,22 @@ export {
   ListPublishedTrips,
   normalizeTripSearchCriteria,
 } from "./trip-discovery";
+export {
+  executeIdempotently,
+  IdempotencyConflictError,
+  IdempotencyInProgressError,
+  IdempotencyRecoveryRequiredError,
+  IdempotencyValidationError,
+} from "./idempotency";
 export { assessPaymentProtection } from "./payment-reconciliation";
+export type {
+  ClaimIdempotencyCommand,
+  CompleteIdempotencyCommand,
+  IdempotencyClaim,
+  IdempotentOperation,
+  IdempotencyStorePort,
+  RequireIdempotencyRecoveryCommand,
+} from "./idempotency";
 export type {
   PaymentProtectionAssessment,
   PaymentProtectionExpectation,
