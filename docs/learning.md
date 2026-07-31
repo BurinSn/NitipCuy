@@ -801,3 +801,6 @@ Do not present inference, provider marketing, provisional pricing, or a future i
 - GitHub integration status remains separate from review coverage.
   - Evidence: pull request #4 was clean, but no review object, review decision, review thread, or line finding existed; CodeRabbit was paused and limited to its Free-plan summary/walkthrough.
   - Impact: retain direct hostile review, evidence-integrity correction, final exact-head review, and fresh BurinSN approval as separate gates.
+- The idempotency lifecycle reconciliation also reproduced on the supported hosted toolchain.
+  - Evidence: lifecycle head `abe7cd0bdecfd4df3565cfd0e968f4ab461f39f0` passed application run `30599264338` and lifecycle run `30599264345` with zero annotations.
+  - Impact: evidence-storage integrity, final complete-base-diff review, and fresh owner approval—not idempotency documentation—are now the active issue #3 merge gates.

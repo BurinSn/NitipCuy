@@ -721,7 +721,7 @@ A session with no material change does not invent an entry. A session that makes
 
 ## 2026-07-31 09:20 WIB - Scoped fail-closed idempotency correction
 
-- Status: Implemented, committed, pushed, locally and hosted verified, and externally reconciled; the documentation-only lifecycle checkpoint is pending.
+- Status: Implemented, committed, pushed, locally and hosted verified, externally reconciled, and followed by a hosted-verified lifecycle checkpoint.
 - Objective:
   - Make duplicate payment, dispatch, and evidence commands safe without tying the application core to Next.js, a provider SDK, or one storage technology.
 - Changes:
@@ -756,6 +756,8 @@ A session with no material change does not invent an entry. A session that makes
   - Pull request #4 was open and clean with no review object, review decision, review thread, or line finding.
   - CodeRabbit remained paused/free-summary-only and therefore supplied no independent review coverage.
   - Issue #3 and pull request #4 were updated and read back; issue comment `5138575547` and PR comment `5138575741` record the exact evidence, non-claims, and remaining blockers.
+  - Lifecycle checkpoint `abe7cd0bdecfd4df3565cfd0e968f4ab461f39f0` was pushed and matched the remote branch.
+  - Application run `30599264338` and lifecycle run `30599264345` passed on that exact lifecycle head with zero annotations; GitHub again reported pull request #4 clean.
 - Documentation:
   - Reconciled handoff, changes, roadmap, learning, system architecture, scalability/resilience, and quality-gate claims for the local correction.
 - Residual risks / exclusions:
@@ -763,4 +765,4 @@ A session with no material change does not invent an entry. A session that makes
   - No authenticated use case, shared database-backed idempotency state, cleanup worker, recovery command, provider-native idempotency verification, callback inbox, rate-limit integration, ledger, order mutation, or real money movement exists.
   - Evidence storage still trusts caller-supplied SHA-256 metadata and buffers raw content; its server-authoritative evidence lifecycle remains the next implementation blocker.
 - Follow-up:
-  - Commit and push the idempotency lifecycle reconciliation, verify its immutable hosted head, then begin the evidence-storage integrity correction.
+  - Begin the evidence-storage integrity correction after re-verifying the volatile live pull-request state.

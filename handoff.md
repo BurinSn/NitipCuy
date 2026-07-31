@@ -1,6 +1,6 @@
 # NitipCuy Cross-Session Handoff
 
-Last updated: 2026-07-31 09:31 WIB
+Last updated: 2026-07-31 09:34 WIB
 
 Handoff owner: Codex
 
@@ -124,8 +124,9 @@ The shell is a functional architecture probe. It is not a production UI, has no 
 | Transaction-deferral lifecycle checkpoint and payment-correction starting head | `81fb1f5ceab5ba2445d6606a255471b1dca75a86`; application run `30355124146` and lifecycle run `30355122231` passed with zero annotations |
 | Asynchronous-payment implementation checkpoint | `fae92e55fc1117b1b78fc7add244e8ccb940c2e3`; application run `30446270570` and lifecycle run `30446270568` passed with zero annotations |
 | Asynchronous-payment lifecycle checkpoint and current remote pull-request head | `fb9f662a51da32053cf40511f079eed16c3cf58c`; application run `30446607390` and lifecycle run `30446607399` passed with zero annotations |
-| Idempotency implementation checkpoint and current remote pull-request head | `115ecfeb7f4b0876f56ae43d71cfa378f26497fe`; application run `30599067671` and lifecycle run `30599067251` passed with zero annotations |
-| Current local worktree | Clean and synchronized at `115ecfeb7f4b0876f56ae43d71cfa378f26497fe` before this lifecycle reconciliation |
+| Idempotency implementation checkpoint | `115ecfeb7f4b0876f56ae43d71cfa378f26497fe`; application run `30599067671` and lifecycle run `30599067251` passed with zero annotations |
+| Idempotency lifecycle checkpoint and last verified remote pull-request head | `abe7cd0bdecfd4df3565cfd0e968f4ab461f39f0`; application run `30599264338` and lifecycle run `30599264345` passed with zero annotations |
+| Current local worktree | Clean and synchronized at `abe7cd0bdecfd4df3565cfd0e968f4ab461f39f0` before this final next-action reconciliation |
 | Issue and pull-request reconciliation | Issue #3 and pull request #4 were updated and read back at the idempotency checkpoint; issue comment `5138575547` and PR comment `5138575741` record the exact evidence and residual blockers |
 | Independent review at current remote head | No review object, review decision, review thread, or line finding exists; CodeRabbit reports success but detailed review is paused and the Free plan provides summary/walkthrough only, so it provides no independent review coverage |
 | First hostile-review correction | Published-trip runtime invariants committed, pushed, and hosted-verified |
@@ -205,6 +206,7 @@ Verified locally with Node.js `24.18.0` and pnpm `11.17.0`:
 - idempotency-focused application and adapter type checking passed; all 24 adapter tests cover unambiguous fingerprint types, exact replay, changed-payload conflict, concurrent denial, recovery-required ambiguous failure, completion-based expiry, malformed keys, unavailable authority, cross-scope isolation, and payment, release, refund, dispatch, and evidence enforcement;
 - final exact-toolchain `pnpm check` passed a four-project dependency scan covering 29 source files and 67 module references, strict type checking, all 20 boundary tests, all 58 package tests, and the production build after the last hostile correction;
 - idempotency implementation head `115ecfeb7f4b0876f56ae43d71cfa378f26497fe` passed application run `30599067671` and lifecycle run `30599067251` with zero annotations; GitHub reported the pull request clean, and issue #3 plus pull request #4 were updated and read back;
+- idempotency lifecycle head `abe7cd0bdecfd4df3565cfd0e968f4ab461f39f0` passed application run `30599264338` and lifecycle run `30599264345` with zero annotations; GitHub again reported the pull request clean;
 - Next.js production routes built for `/`, `/_not-found`, and three generated `/trips/[tripId]` fixture paths;
 - production HTTP probe returned `200` for home, filtered search, and a known trip, `404` for an unknown trip, passed content assertions, and emitted no fallback error;
 - lifecycle, diff, workflow YAML, internal-link, credential-pattern, placeholder, dependency-direction, provider-SDK, unsafe-`any`, console, and source-network scans passed;
@@ -286,7 +288,7 @@ These are Stage 3 activation gates, not reasons to delay provider-independent pl
 
 ## 9. Exact next action
 
-Commit and push this idempotency lifecycle reconciliation, inspect its immutable hosted head and annotations, then replace the caller-trusted evidence hash and buffered raw-upload assumptions as the next bounded correction.
+Replace the caller-trusted evidence hash and buffered raw-upload assumptions with the server-authoritative quarantine, digest, scanning, and verification lifecycle defined by the accepted architecture. Re-verify the live pull-request head before changing code because head, checks, reviews, and mergeability remain volatile.
 
 Do not add account persistence or a production identity provider to issue #3. Those belong to the first persisted account slice after this architecture issue is corrected and merged.
 
