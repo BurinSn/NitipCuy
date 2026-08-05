@@ -1,10 +1,10 @@
 # NitipCuy Canonical Roadmap
 
-Last reviewed: 2026-08-05 14:28 WIB
+Last reviewed: 2026-08-05 14:33 WIB
 
 Current stage: Stage 1 - Platform foundation
 
-Current work item: Issue #3 hostile-review remediation; the PostCSS correction is fully reconciled, and the server-authoritative evidence lifecycle plus all affected documents passed the complete local exact-toolchain, audit, lifecycle, runtime-regression, link, stale-contract, credential-pattern, and diff gates; create and inspect its immutable implementation checkpoint next
+Current work item: Issue #3 hostile-review remediation; server-authoritative evidence implementation head `f57ef166db9bf6d71e7b2b5b9505f8c71cf38b84` passed complete local gates plus application run `30985369642` and lifecycle run `30985369587` with zero annotations; commit its lifecycle reconciliation, verify that hosted head, then reconcile issue #3 and pull request #4
 
 ## 1. Role, authority, and freshness contract
 
@@ -176,7 +176,7 @@ Pull-request head, hosted checks, annotations, reviews, and mergeability are vol
 - [x] Correct payment initiation, held-state, release, refund, and reconciliation contracts through provider-neutral submissions, observations, signals, stable attempt correlation, exact collected-and-held amount assessment, configured mocks, and adversarial tests. Full local and hosted exact-head verification passed.
 - [x] Enforce and contract-test idempotency through scoped keys, canonical payload fingerprints, exact replay, changed-payload conflict, concurrent denial, recovery-required ambiguous outcomes, expiry, authority-outage denial, and cross-scope isolation. Shared durable production state remains a later implementation gate.
 - [x] Replace the vulnerable PostCSS `8.5.18` override with patched `8.5.23`; implementation head `a086dcf2b9060394756b2bf4ddc57994d7b158c8` passed application run `30983580593` and lifecycle run `30983580611` with zero annotations.
-- [ ] Replace caller-trusted evidence hashes and buffered raw-upload assumptions with a server-authoritative evidence lifecycle. The application contract, test-only quarantine/scanner fixture, adversarial tests, and complete local gates pass; immutable hosted-head evidence and external reconciliation remain pending.
+- [x] Replace caller-trusted evidence hashes and buffered raw-upload assumptions with a server-authoritative evidence lifecycle. Implementation head `f57ef166db9bf6d71e7b2b5b9505f8c71cf38b84` passed application run `30985369642` and lifecycle run `30985369587` with zero annotations after complete local gates.
 - [x] Separate the future authoritative `TripOffer`, public `PublishedTrip`, public history, and private seller/customer order projections; projections never authorize mutation, checkout, or capacity reservation.
 - [x] Establish the binding defense-in-depth security and evidence-based scale baseline without claiming the controls are implemented.
 - [x] Close the follow-up design gaps for sensitive-data encryption and managed-key lifecycle, mandatory privileged assurance, trusted-proxy and canonical-host handling, explicit dependency-outage failure policy, cache poisoning/deception/stampede/hot-key protection, and expand-and-contract mixed-version deployment.
@@ -306,7 +306,7 @@ The unresolved DOKU, logistics, policy, legal, and pilot items listed in Stage 3
 
 ### Now
 
-Commit and push the locally verified evidence-lifecycle correction, inspect both hosted workflows on its immutable implementation head, and reconcile any mismatch before changing the roadmap checkbox.
+Commit and push the documentation-only evidence lifecycle reconciliation, inspect both workflows on its immutable head, then update issue #3 and pull request #4 with the exact evidence and explicit production non-claims.
 
 ### Next
 

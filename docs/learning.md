@@ -890,3 +890,9 @@ Do not present inference, provider marketing, provisional pricing, or a future i
 ### No product-model change
 
 - This correction implements the accepted evidence boundary without changing who may sell, the two service modes, seller-defined prices, the transaction-fee direction, required evidence classes, or roadmap order.
+
+### Hosted evidence
+
+- Evidence implementation checkpoint `f57ef166db9bf6d71e7b2b5b9505f8c71cf38b84` reproduced on the supported hosted toolchain.
+  - Evidence: application run `30985369642` and lifecycle run `30985369587` passed with zero annotations; the pull request remained open, clean, and mechanically mergeable with no review object or approval.
+  - Impact: the evidence lifecycle is source- and hosted-workflow-verified without implying authenticated upload, real storage or scanning, durable state, order integration, production deletion, independent review, or owner approval.

@@ -1,6 +1,6 @@
 # NitipCuy Cross-Session Handoff
 
-Last updated: 2026-08-05 14:28 WIB
+Last updated: 2026-08-05 14:33 WIB
 
 Handoff owner: Codex
 
@@ -129,7 +129,8 @@ The shell is a functional architecture probe. It is not a production UI, has no 
 | Idempotency final lifecycle and next-action head | `f41d764762f5de611ad25c6e076aee174e63af61`; application run `30599375595` and lifecycle run `30599375568` passed with zero annotations |
 | PostCSS advisory implementation checkpoint and current remote pull-request head | `a086dcf2b9060394756b2bf4ddc57994d7b158c8`; application run `30983580593` and lifecycle run `30983580611` passed with zero annotations |
 | PostCSS lifecycle checkpoint and current remote pull-request head | `27e8aa258615fa95c1615ab7bd5868f008121728`; application run `30983746084` and lifecycle run `30983746061` passed with zero annotations |
-| Current local worktree | Evidence-lifecycle implementation and documentation are locally complete and fully verified on synchronized starting head `27e8aa258615fa95c1615ab7bd5868f008121728`; the tree is intentionally dirty until its implementation checkpoint is committed |
+| Evidence-lifecycle implementation checkpoint and current remote pull-request head | `f57ef166db9bf6d71e7b2b5b9505f8c71cf38b84`; application run `30985369642` and lifecycle run `30985369587` passed with zero annotations |
+| Current local worktree | Clean and synchronized at `f57ef166db9bf6d71e7b2b5b9505f8c71cf38b84` before this evidence lifecycle reconciliation |
 | Issue and pull-request reconciliation | Issue #3 and pull request #4 were updated and read back after the PostCSS lifecycle checkpoint; issue comment `5188674529` and PR comment `5188674788` record its exact evidence and remaining blockers |
 | Independent review at current remote head | No review object, review decision, review thread, or line finding exists; CodeRabbit reports success but detailed review is paused and the Free plan provides summary/walkthrough only, so it provides no independent review coverage |
 | First hostile-review correction | Published-trip runtime invariants committed, pushed, and hosted-verified |
@@ -163,7 +164,7 @@ The idempotency correction is implemented, committed, pushed, locally verified, 
 
 The 2026-08-05 production audit surfaced GitHub advisory `GHSA-fxqj-rqcc-2cmp` against the exact PostCSS `8.5.18` override after the advisory database was updated. The issue is moderate and did not fail the configured high-severity audit threshold, so a green command was not evidence of zero advisories. The exact override and lockfile now select the minimum patched `8.5.23`. The correction passed the complete exact-toolchain local gate and zero-advisory audit, was pushed at `a086dcf2b9060394756b2bf4ddc57994d7b158c8`, and reproduced through application run `30983580593` plus lifecycle run `30983580611`, both with zero annotations. Lifecycle checkpoint `27e8aa258615fa95c1615ab7bd5868f008121728` then passed application run `30983746084` and lifecycle run `30983746061`, both with zero annotations; issue #3 and pull request #4 were updated and read back.
 
-The evidence-integrity correction is implemented and fully locally verified. The application no longer accepts raw bytes or caller-declared MIME, length, digest, path, or scan status. It issues an opaque, short-lived upload intent and consumes only server-observed quarantine metadata, a scanner observation bound to the same digest, and server-generated private object references that retain scan provenance. Empty, oversized, unsupported, expired, unscanned, scanner-unavailable, scanner-rejected, digest-mismatched, invalid runtime policy, cross-owner, mismatched-reference, overwrite, post-acceptance upload, early-deletion, and post-retention deletion paths are covered in the test-only adapter. Exact intent, acceptance, and deletion duplicates replay through the existing scoped idempotency contract. The adapter is process-local and buffers fixture bytes only to simulate private quarantine and accepted storage; it is not authenticated storage, a production scanner, durable metadata, an order transition, duplicate-image review, dimensional decoding, re-encoding, a cleanup worker, or provider verification. Commit, push, immutable hosted-head inspection, issue, pull-request, and final lifecycle reconciliation are pending.
+The evidence-integrity correction is implemented, committed, pushed, fully locally verified, and hosted-verified at `f57ef166db9bf6d71e7b2b5b9505f8c71cf38b84`. Application run `30985369642` and lifecycle run `30985369587` passed with zero annotations; pull request #4 was open, clean, and mechanically mergeable with no review object or approval. The application no longer accepts raw bytes or caller-declared MIME, length, digest, path, or scan status. It issues an opaque, short-lived upload intent and consumes only server-observed quarantine metadata, a scanner observation bound to the same digest, and server-generated private object references that retain scan provenance. Empty, oversized, unsupported, expired, unscanned, scanner-unavailable, scanner-rejected, digest-mismatched, invalid runtime policy, cross-owner, mismatched-reference, overwrite, post-acceptance upload, early-deletion, and post-retention deletion paths are covered in the test-only adapter. Exact intent, acceptance, and deletion duplicates replay through the existing scoped idempotency contract. The adapter is process-local and buffers fixture bytes only to simulate private quarantine and accepted storage; it is not authenticated storage, a production scanner, durable metadata, an order transition, duplicate-image review, dimensional decoding, re-encoding, a cleanup worker, or provider verification. The documentation-only lifecycle checkpoint plus issue and pull-request reconciliation remain pending.
 
 Implemented locally:
 
@@ -275,8 +276,8 @@ The asynchronous payment-lifecycle finding is resolved and verified at the sourc
 
 The following internal findings still block issue #3 merge:
 
-1. the locally verified evidence lifecycle requires an immutable commit, push, hosted-head inspection, and external reconciliation;
-2. lifecycle, issue, and pull-request claims require final reconciliation after the evidence checkpoint;
+1. the hosted-verified evidence lifecycle requires a documentation-only lifecycle checkpoint and its exact hosted-head inspection;
+2. issue and pull-request claims require final reconciliation after that checkpoint;
 3. fresh BurinSN approval remains absent.
 
 The following still block real-money pilot activation:
@@ -298,7 +299,7 @@ These are Stage 3 activation gates, not reasons to delay provider-independent pl
 
 ## 9. Exact next action
 
-Commit the locally verified evidence-lifecycle implementation and all required documentation as one checkpoint, push the existing issue #3 branch, and inspect both workflows plus annotations, reviews, and mergeability on that immutable head. Do not mark the finding complete or post external reconciliation until those exact-head checks pass.
+Commit and push this documentation-only evidence lifecycle reconciliation, then inspect both hosted workflows, annotations, pull-request reviews, and mergeability on its immutable head. If they pass without drift, update issue #3 and pull request #4 with the implementation and reconciliation evidence; do not merge or infer owner approval.
 
 Do not add account persistence or a production identity provider to issue #3. Those belong to the first persisted account slice after this architecture issue is corrected and merged.
 

@@ -804,12 +804,12 @@ A session with no material change does not invent an entry. A session that makes
 - Follow-up:
   - Commit and push this lifecycle reconciliation, inspect both hosted workflows on its immutable head, then begin the evidence lifecycle correction.
 
-## 2026-08-05 14:28 WIB - Server-authoritative evidence lifecycle implemented locally
+## 2026-08-05 14:33 WIB - Server-authoritative evidence lifecycle implementation checkpoint
 
 - Issue / PR: Issue #3; pull request #4
 - Product: NitipCuy application foundation
 - Type: Evidence-integrity contract and deterministic adapter correction
-- Status: Implemented and fully locally verified; immutable checkpoint, hosted evidence, and external reconciliation pending
+- Status: Implemented, committed, pushed, fully locally verified, and hosted-verified; documentation-only lifecycle checkpoint and external reconciliation pending
 - Objective:
   - Remove caller-trusted file truth and raw-buffer transport from the application boundary while preserving a provider-neutral, fail-closed evidence lifecycle.
 - Changes:
@@ -841,7 +841,10 @@ A session with no material change does not invent an entry. A session that makes
   - Markdown links passed across 20 tracked documents, 33 local links, and 17 unique targets.
   - Credential-pattern, stale evidence-contract, application/adapter source-network, unsafe-`any`, console, and placeholder scans passed.
   - The rebuilt exact-toolchain production runtime returned `200` for home, filtered search, and a known trip and `404` for an unknown trip; expected route content was present and private-pricing terms were absent.
-  - Commit, hosted, issue, and pull-request evidence remains pending.
+  - Implementation checkpoint `f57ef166db9bf6d71e7b2b5b9505f8c71cf38b84` was pushed and matched the remote branch.
+  - Application run `30985369642` and lifecycle run `30985369587` passed on that exact head with zero annotations.
+  - Pull request #4 was open, clean, and GitHub-mergeable with no review object or review decision.
+  - The complete `origin/main...HEAD` diff covered 78 files; diff hygiene, source-risk patterns, and credential patterns passed after the evidence files entered the immutable diff.
 - Documentation:
   - Updated all four lifecycle documents, ADR 0003, system architecture, security architecture, scalability and resilience, and quality gates.
 - Residual risks / exclusions:
@@ -849,4 +852,4 @@ A session with no material change does not invent an entry. A session that makes
   - No authenticated ownership or case authorization, signed upload URL, object-storage policy, durable metadata, robust image decoding or dimension checks, malware scanner, re-encoding, duplicate-image review, order transition, cleanup worker, backup behavior, provider verification, runtime upload, or production deletion exists.
   - The accepted-evidence retention fixture does not prove rejected-quarantine cleanup, backup expiry, cryptographic erasure, or durable scheduled deletion.
 - Follow-up:
-  - Run the complete exact-toolchain and hostile-review evidence contract, create and push one implementation checkpoint, inspect its immutable hosted runs, then reconcile issue #3 and pull request #4 without merging.
+  - Commit and push this lifecycle reconciliation, inspect its immutable hosted runs, then reconcile issue #3 and pull request #4 without merging.
