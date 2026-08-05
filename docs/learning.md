@@ -896,3 +896,6 @@ Do not present inference, provider marketing, provisional pricing, or a future i
 - Evidence implementation checkpoint `f57ef166db9bf6d71e7b2b5b9505f8c71cf38b84` reproduced on the supported hosted toolchain.
   - Evidence: application run `30985369642` and lifecycle run `30985369587` passed with zero annotations; the pull request remained open, clean, and mechanically mergeable with no review object or approval.
   - Impact: the evidence lifecycle is source- and hosted-workflow-verified without implying authenticated upload, real storage or scanning, durable state, order integration, production deletion, independent review, or owner approval.
+- Evidence lifecycle reconciliation checkpoint `44359cea5c23cc62bc0ef065682c052613ca0ef1` also reproduced on the supported hosted toolchain.
+  - Evidence: application run `30985575000` and lifecycle run `30985575004` passed with zero annotations; issue comment `5188962019` and pull-request comment `5188964841` were posted and read back.
+  - Impact: all issue #3 acceptance claims are reconciled, but clean checks and mechanical mergeability still do not grant BurinSN approval.

@@ -1,6 +1,6 @@
 # NitipCuy Cross-Session Handoff
 
-Last updated: 2026-08-05 14:33 WIB
+Last updated: 2026-08-05 14:37 WIB
 
 Handoff owner: Codex
 
@@ -130,8 +130,9 @@ The shell is a functional architecture probe. It is not a production UI, has no 
 | PostCSS advisory implementation checkpoint and current remote pull-request head | `a086dcf2b9060394756b2bf4ddc57994d7b158c8`; application run `30983580593` and lifecycle run `30983580611` passed with zero annotations |
 | PostCSS lifecycle checkpoint and current remote pull-request head | `27e8aa258615fa95c1615ab7bd5868f008121728`; application run `30983746084` and lifecycle run `30983746061` passed with zero annotations |
 | Evidence-lifecycle implementation checkpoint and current remote pull-request head | `f57ef166db9bf6d71e7b2b5b9505f8c71cf38b84`; application run `30985369642` and lifecycle run `30985369587` passed with zero annotations |
-| Current local worktree | Clean and synchronized at `f57ef166db9bf6d71e7b2b5b9505f8c71cf38b84` before this evidence lifecycle reconciliation |
-| Issue and pull-request reconciliation | Issue #3 and pull request #4 were updated and read back after the PostCSS lifecycle checkpoint; issue comment `5188674529` and PR comment `5188674788` record its exact evidence and remaining blockers |
+| Evidence lifecycle reconciliation checkpoint and current remote pull-request head | `44359cea5c23cc62bc0ef065682c052613ca0ef1`; application run `30985575000` and lifecycle run `30985575004` passed with zero annotations |
+| Current local worktree | Clean and synchronized at `44359cea5c23cc62bc0ef065682c052613ca0ef1` before this final lifecycle-state record |
+| Issue and pull-request reconciliation | Issue #3 acceptance criteria are checked and final evidence was read back at issue comment `5188962019`; pull request comment `5188964841` records the same exact evidence and non-claims |
 | Independent review at current remote head | No review object, review decision, review thread, or line finding exists; CodeRabbit reports success but detailed review is paused and the Free plan provides summary/walkthrough only, so it provides no independent review coverage |
 | First hostile-review correction | Published-trip runtime invariants committed, pushed, and hosted-verified |
 | Second hostile-review correction | Issue #3 identity acceptance and pull-request scope reconciled with the deliberately deferred persisted account implementation; committed, pushed, and hosted-verified |
@@ -164,7 +165,7 @@ The idempotency correction is implemented, committed, pushed, locally verified, 
 
 The 2026-08-05 production audit surfaced GitHub advisory `GHSA-fxqj-rqcc-2cmp` against the exact PostCSS `8.5.18` override after the advisory database was updated. The issue is moderate and did not fail the configured high-severity audit threshold, so a green command was not evidence of zero advisories. The exact override and lockfile now select the minimum patched `8.5.23`. The correction passed the complete exact-toolchain local gate and zero-advisory audit, was pushed at `a086dcf2b9060394756b2bf4ddc57994d7b158c8`, and reproduced through application run `30983580593` plus lifecycle run `30983580611`, both with zero annotations. Lifecycle checkpoint `27e8aa258615fa95c1615ab7bd5868f008121728` then passed application run `30983746084` and lifecycle run `30983746061`, both with zero annotations; issue #3 and pull request #4 were updated and read back.
 
-The evidence-integrity correction is implemented, committed, pushed, fully locally verified, and hosted-verified at `f57ef166db9bf6d71e7b2b5b9505f8c71cf38b84`. Application run `30985369642` and lifecycle run `30985369587` passed with zero annotations; pull request #4 was open, clean, and mechanically mergeable with no review object or approval. The application no longer accepts raw bytes or caller-declared MIME, length, digest, path, or scan status. It issues an opaque, short-lived upload intent and consumes only server-observed quarantine metadata, a scanner observation bound to the same digest, and server-generated private object references that retain scan provenance. Empty, oversized, unsupported, expired, unscanned, scanner-unavailable, scanner-rejected, digest-mismatched, invalid runtime policy, cross-owner, mismatched-reference, overwrite, post-acceptance upload, early-deletion, and post-retention deletion paths are covered in the test-only adapter. Exact intent, acceptance, and deletion duplicates replay through the existing scoped idempotency contract. The adapter is process-local and buffers fixture bytes only to simulate private quarantine and accepted storage; it is not authenticated storage, a production scanner, durable metadata, an order transition, duplicate-image review, dimensional decoding, re-encoding, a cleanup worker, or provider verification. The documentation-only lifecycle checkpoint plus issue and pull-request reconciliation remain pending.
+The evidence-integrity correction is implemented, committed, pushed, fully locally verified, hosted-verified, lifecycle-reconciled, and externally reconciled. Implementation head `f57ef166db9bf6d71e7b2b5b9505f8c71cf38b84` passed application run `30985369642` and lifecycle run `30985369587`; lifecycle head `44359cea5c23cc62bc0ef065682c052613ca0ef1` passed application run `30985575000` and lifecycle run `30985575004`; all four runs had zero annotations. Issue comment `5188962019` and pull-request comment `5188964841` were read back. Pull request #4 remained open, clean, and mechanically mergeable with no review object or approval. The application no longer accepts raw bytes or caller-declared MIME, length, digest, path, or scan status. It issues an opaque, short-lived upload intent and consumes only server-observed quarantine metadata, a scanner observation bound to the same digest, and server-generated private object references that retain scan provenance. Empty, oversized, unsupported, expired, unscanned, scanner-unavailable, scanner-rejected, digest-mismatched, invalid runtime policy, cross-owner, mismatched-reference, overwrite, post-acceptance upload, early-deletion, and post-retention deletion paths are covered in the test-only adapter. Exact intent, acceptance, and deletion duplicates replay through the existing scoped idempotency contract. The adapter is process-local and buffers fixture bytes only to simulate private quarantine and accepted storage; it is not authenticated storage, a production scanner, durable metadata, an order transition, duplicate-image review, dimensional decoding, re-encoding, a cleanup worker, or provider verification.
 
 Implemented locally:
 
@@ -274,11 +275,11 @@ The transaction-abstraction finding is resolved by explicit deferral. No transac
 
 The asynchronous payment-lifecycle finding is resolved and verified at the source-tested, local-runtime-regression, and hosted-workflow levels. Provider integration, money movement, callback processing, ledger behavior, and full settlement reconciliation remain unimplemented and unclaimed.
 
-The following internal findings still block issue #3 merge:
+No known material implementation or lifecycle reconciliation finding remains for issue #3 after the final hostile review. The following governance gate still blocks merge:
 
-1. the hosted-verified evidence lifecycle requires a documentation-only lifecycle checkpoint and its exact hosted-head inspection;
-2. issue and pull-request claims require final reconciliation after that checkpoint;
-3. fresh BurinSN approval remains absent.
+1. fresh BurinSN review and explicit merge approval remain absent.
+
+The final lifecycle-state commit created from this record must also pass both hosted workflows before it is presented for that approval. Its mechanical mergeability remains non-authoritative.
 
 The following still block real-money pilot activation:
 
@@ -299,7 +300,7 @@ These are Stage 3 activation gates, not reasons to delay provider-independent pl
 
 ## 9. Exact next action
 
-Commit and push this documentation-only evidence lifecycle reconciliation, then inspect both hosted workflows, annotations, pull-request reviews, and mergeability on its immutable head. If they pass without drift, update issue #3 and pull request #4 with the implementation and reconciliation evidence; do not merge or infer owner approval.
+Commit and push this final lifecycle-state record and inspect both hosted workflows plus annotations on its immutable head. If they pass without drift, stop implementation and present pull request #4 to BurinSN for fresh review and explicit merge approval. Do not merge, deploy, or begin the persisted vertical slice without that authority.
 
 Do not add account persistence or a production identity provider to issue #3. Those belong to the first persisted account slice after this architecture issue is corrected and merged.
 

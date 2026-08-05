@@ -1,10 +1,10 @@
 # NitipCuy Canonical Roadmap
 
-Last reviewed: 2026-08-05 14:33 WIB
+Last reviewed: 2026-08-05 14:37 WIB
 
 Current stage: Stage 1 - Platform foundation
 
-Current work item: Issue #3 hostile-review remediation; server-authoritative evidence implementation head `f57ef166db9bf6d71e7b2b5b9505f8c71cf38b84` passed complete local gates plus application run `30985369642` and lifecycle run `30985369587` with zero annotations; commit its lifecycle reconciliation, verify that hosted head, then reconcile issue #3 and pull request #4
+Current work item: Issue #3 hostile-review remediation is complete and externally reconciled; lifecycle head `44359cea5c23cc62bc0ef065682c052613ca0ef1` passed application run `30985575000` and lifecycle run `30985575004` with zero annotations, issue #3 acceptance is checked, and pull request #4 is open and clean with no review or fresh owner approval; commit this final lifecycle state, verify its hosted head, then stop for BurinSN review
 
 ## 1. Role, authority, and freshness contract
 
@@ -180,8 +180,8 @@ Pull-request head, hosted checks, annotations, reviews, and mergeability are vol
 - [x] Separate the future authoritative `TripOffer`, public `PublishedTrip`, public history, and private seller/customer order projections; projections never authorize mutation, checkout, or capacity reservation.
 - [x] Establish the binding defense-in-depth security and evidence-based scale baseline without claiming the controls are implemented.
 - [x] Close the follow-up design gaps for sensitive-data encryption and managed-key lifecycle, mandatory privileged assurance, trusted-proxy and canonical-host handling, explicit dependency-outage failure policy, cache poisoning/deception/stampede/hot-key protection, and expand-and-contract mixed-version deployment.
-- [ ] Reconcile all lifecycle, specialist, issue, and pull-request claims after the corrections.
-- [ ] Run final exact-toolchain, runtime, security, complete-diff, and hosted exact-head review.
+- [x] Reconcile all lifecycle, specialist, issue, and pull-request claims after the corrections; issue comment `5188962019` and pull-request comment `5188964841` record the final evidence and non-claims.
+- [x] Run final exact-toolchain, runtime, security, complete-diff, and hosted exact-head review; implementation and lifecycle heads passed locally and through both hosted workflows with zero annotations.
 
 ### Next persisted vertical slice
 
@@ -306,11 +306,11 @@ The unresolved DOKU, logistics, policy, legal, and pilot items listed in Stage 3
 
 ### Now
 
-Commit and push the documentation-only evidence lifecycle reconciliation, inspect both workflows on its immutable head, then update issue #3 and pull request #4 with the exact evidence and explicit production non-claims.
+Commit and push this final lifecycle-state record and inspect both workflows on its immutable head. If it remains clean, stop implementation and present pull request #4 for fresh BurinSN review; do not merge on mechanical status.
 
 ### Next
 
-Reconcile the evidence checkpoint across hosted checks, lifecycle documents, issue #3, and pull request #4; then run the final complete-base-diff review and obtain fresh owner approval for issue #3. After merge, implement the persisted account-to-public-Q&A vertical slice through a new governed issue with its applicable security and resource controls.
+Obtain fresh BurinSN approval for issue #3. Only after an authorized merge may the persisted account-to-public-Q&A vertical slice begin through a new governed issue with its applicable security and resource controls.
 
 ### Later
 
