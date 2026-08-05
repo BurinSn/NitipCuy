@@ -9,28 +9,6 @@ export interface IdentityVerificationPort {
   verifyProof(proofReference: string): Promise<VerifiedExternalIdentity | null>;
 }
 
-export interface StoreEvidenceCommand {
-  readonly idempotencyKey: string;
-  readonly evidenceId: string;
-  readonly ownerAccountId: string;
-  readonly classification:
-    "PURCHASE" | "COLLECTION" | "WEIGHT" | "DISPATCH" | "DELIVERY";
-  readonly contentType: string;
-  readonly byteLength: number;
-  readonly sha256: string;
-  readonly content: Uint8Array;
-}
-
-export interface StoredEvidence {
-  readonly objectReference: string;
-  readonly sha256: string;
-  readonly byteLength: number;
-}
-
-export interface EvidenceStoragePort {
-  store(command: StoreEvidenceCommand): Promise<StoredEvidence>;
-}
-
 export interface ClockPort {
   now(): string;
 }

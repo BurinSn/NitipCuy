@@ -803,3 +803,50 @@ A session with no material change does not invent an entry. A session that makes
   - Evidence-storage integrity remains the next implementation blocker after this correction is closed.
 - Follow-up:
   - Commit and push this lifecycle reconciliation, inspect both hosted workflows on its immutable head, then begin the evidence lifecycle correction.
+
+## 2026-08-05 14:28 WIB - Server-authoritative evidence lifecycle implemented locally
+
+- Issue / PR: Issue #3; pull request #4
+- Product: NitipCuy application foundation
+- Type: Evidence-integrity contract and deterministic adapter correction
+- Status: Implemented and fully locally verified; immutable checkpoint, hosted evidence, and external reconciliation pending
+- Objective:
+  - Remove caller-trusted file truth and raw-buffer transport from the application boundary while preserving a provider-neutral, fail-closed evidence lifecycle.
+- Changes:
+  - Replaced the application `EvidenceStoragePort` and raw `StoreEvidenceCommand` with upload-intent, inspection, acceptance, retention, and deletion contracts.
+  - Removed raw bytes, client MIME, caller byte length, caller digest, object path, and scan status from the application-facing command surface.
+  - Added a test-only process-local adapter that simulates private quarantine and scanner input outside the application port, computes the SHA-256 digest and byte length from copied fixture bytes, and detects supported JPEG, PNG, or WebP signatures.
+  - Required a clean scanner result bound to the same observed digest before promotion to a server-generated private object reference.
+  - Preserved the scanner reference with accepted metadata so the clean decision remains traceable after quarantine bytes move out of the fixture record.
+  - Made quarantine upload immutable through rejection, acceptance, and deletion; terminal evidence cannot reuse its upload or scanner seam.
+  - Added explicit awaiting-upload, verification-pending, verified, rejected, accepted, and deleted observations with stable reason codes.
+  - Applied scoped idempotency to upload-intent creation, acceptance, and expired-retention deletion.
+  - Added adversarial coverage for false client MIME and digest claims, caller-buffer mutation, replacement, empty, oversized, unsupported, expired, scanner-pending, scanner-unavailable, scanner-rejected, digest-mismatched, cross-owner, wrong-reference, post-acceptance, retention-active, and deletion cases.
+- Hostile-review corrections:
+  - Denied reuse of an upload reference after promotion; the first local version cleared quarantine content at acceptance but did not make the consumed upload reference terminal.
+  - Stopped retaining unused client MIME and digest claims inside the fixture record; the application and accepted evidence use only observations derived from the copied bytes.
+  - Made promise-returning port methods reject asynchronously and kept external storage/scanner fixture methods explicitly synchronous.
+  - Added runtime validation for evidence classification, configured media policy, and scanner status rather than relying on TypeScript unions at external boundaries; an unknown scan status cannot fall through as clean.
+- Impact:
+  - Application code can no longer declare a file safe or identify accepted bytes through caller metadata.
+  - Scanner outage, pending work, malicious content, and digest mismatch cannot promote evidence.
+  - The server-generated accepted reference and retention lifecycle remain independent of a storage or scanner vendor.
+  - Product roles, service modes, seller-defined pricing, platform-fee direction, evidence requirements, order states, provider direction, and roadmap stage order are unchanged.
+- Validation so far:
+  - Exact Node.js `24.18.0` and pnpm `11.17.0` application and adapter type checking passed.
+  - All 36 adapter tests passed, including 14 evidence-lifecycle tests.
+  - Final exact-toolchain frozen install and peer validation passed.
+  - Final exact-toolchain `pnpm check` passed formatting, lint, a four-project dependency scan covering 32 source files and 76 module references, strict type checking, all 20 boundary tests, all 70 package tests, and the production build after the provenance and runtime-policy corrections.
+  - The production dependency audit reported no known vulnerabilities; lifecycle participation and worktree plus complete-base diff hygiene passed.
+  - Markdown links passed across 20 tracked documents, 33 local links, and 17 unique targets.
+  - Credential-pattern, stale evidence-contract, application/adapter source-network, unsafe-`any`, console, and placeholder scans passed.
+  - The rebuilt exact-toolchain production runtime returned `200` for home, filtered search, and a known trip and `404` for an unknown trip; expected route content was present and private-pricing terms were absent.
+  - Commit, hosted, issue, and pull-request evidence remains pending.
+- Documentation:
+  - Updated all four lifecycle documents, ADR 0003, system architecture, security architecture, scalability and resilience, and quality gates.
+- Residual risks / exclusions:
+  - The adapter is process-local, buffers synthetic fixture bytes, and stores no production evidence.
+  - No authenticated ownership or case authorization, signed upload URL, object-storage policy, durable metadata, robust image decoding or dimension checks, malware scanner, re-encoding, duplicate-image review, order transition, cleanup worker, backup behavior, provider verification, runtime upload, or production deletion exists.
+  - The accepted-evidence retention fixture does not prove rejected-quarantine cleanup, backup expiry, cryptographic erasure, or durable scheduled deletion.
+- Follow-up:
+  - Run the complete exact-toolchain and hostile-review evidence contract, create and push one implementation checkpoint, inspect its immutable hosted runs, then reconcile issue #3 and pull request #4 without merging.

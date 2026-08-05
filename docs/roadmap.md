@@ -1,10 +1,10 @@
 # NitipCuy Canonical Roadmap
 
-Last reviewed: 2026-08-05 14:05 WIB
+Last reviewed: 2026-08-05 14:28 WIB
 
 Current stage: Stage 1 - Platform foundation
 
-Current work item: Issue #3 hostile-review remediation; the PostCSS incomplete-fix advisory is corrected, pushed, and locally and hosted verified; commit its lifecycle reconciliation, then begin evidence-storage integrity
+Current work item: Issue #3 hostile-review remediation; the PostCSS correction is fully reconciled, and the server-authoritative evidence lifecycle plus all affected documents passed the complete local exact-toolchain, audit, lifecycle, runtime-regression, link, stale-contract, credential-pattern, and diff gates; create and inspect its immutable implementation checkpoint next
 
 ## 1. Role, authority, and freshness contract
 
@@ -148,7 +148,7 @@ Status: In progress
 - [x] Security architecture covers DDoS and cost abuse, injection, sessions, credential and OTP attacks, authorization, browser threats, uploads, SSRF, callbacks, secrets, monitoring, incident response, and verification.
 - [x] Scalability and resilience architecture covers caching, database and connection budgets, transaction and concurrency rules, durable workers, provider isolation, observability, load profiles, and evidence-driven extraction.
 - [x] Security and scale amendment committed and pushed at `7522bf8d2076101cdc78245f390818eb6125252f`; application-quality run `30256384832` and lifecycle run `30256384917` passed without annotations.
-- [x] Provider-independent payment, logistics, identity-verification, evidence-storage, clock, identifier, audit, and outbox interfaces and deterministic mocks exist.
+- [x] Provider-independent payment, logistics, identity-verification, evidence-lifecycle, clock, identifier, audit, and outbox interfaces and deterministic mocks exist.
 - [x] Framework-free domain, application, adapter, and delivery package layout established.
 - [x] Mechanically enforce dependency direction through package-manifest validation, parsed source edges, and adversarial fixtures covering cross-package relative and other bypass forms.
 - [x] Local development, formatting, lint, strict type, unit test, build, audit, and PR-CI gates established.
@@ -176,7 +176,7 @@ Pull-request head, hosted checks, annotations, reviews, and mergeability are vol
 - [x] Correct payment initiation, held-state, release, refund, and reconciliation contracts through provider-neutral submissions, observations, signals, stable attempt correlation, exact collected-and-held amount assessment, configured mocks, and adversarial tests. Full local and hosted exact-head verification passed.
 - [x] Enforce and contract-test idempotency through scoped keys, canonical payload fingerprints, exact replay, changed-payload conflict, concurrent denial, recovery-required ambiguous outcomes, expiry, authority-outage denial, and cross-scope isolation. Shared durable production state remains a later implementation gate.
 - [x] Replace the vulnerable PostCSS `8.5.18` override with patched `8.5.23`; implementation head `a086dcf2b9060394756b2bf4ddc57994d7b158c8` passed application run `30983580593` and lifecycle run `30983580611` with zero annotations.
-- [ ] Replace caller-trusted evidence hashes and buffered raw-upload assumptions with a server-authoritative evidence lifecycle.
+- [ ] Replace caller-trusted evidence hashes and buffered raw-upload assumptions with a server-authoritative evidence lifecycle. The application contract, test-only quarantine/scanner fixture, adversarial tests, and complete local gates pass; immutable hosted-head evidence and external reconciliation remain pending.
 - [x] Separate the future authoritative `TripOffer`, public `PublishedTrip`, public history, and private seller/customer order projections; projections never authorize mutation, checkout, or capacity reservation.
 - [x] Establish the binding defense-in-depth security and evidence-based scale baseline without claiming the controls are implemented.
 - [x] Close the follow-up design gaps for sensitive-data encryption and managed-key lifecycle, mandatory privileged assurance, trusted-proxy and canonical-host handling, explicit dependency-outage failure policy, cache poisoning/deception/stampede/hot-key protection, and expand-and-contract mixed-version deployment.
@@ -306,11 +306,11 @@ The unresolved DOKU, logistics, policy, legal, and pilot items listed in Stage 3
 
 ### Now
 
-Commit and push the PostCSS lifecycle reconciliation, inspect its immutable hosted head, then begin the evidence-storage integrity correction.
+Commit and push the locally verified evidence-lifecycle correction, inspect both hosted workflows on its immutable implementation head, and reconcile any mismatch before changing the roadmap checkbox.
 
 ### Next
 
-Replace the caller-trusted evidence hash and buffered raw-upload assumptions with a server-authoritative quarantine, hashing, scanning, and verification lifecycle. Then reconcile final exact-head evidence and obtain fresh owner approval for issue #3. After merge, implement the persisted account-to-public-Q&A vertical slice through a new governed issue with its applicable security and resource controls.
+Reconcile the evidence checkpoint across hosted checks, lifecycle documents, issue #3, and pull request #4; then run the final complete-base-diff review and obtain fresh owner approval for issue #3. After merge, implement the persisted account-to-public-Q&A vertical slice through a new governed issue with its applicable security and resource controls.
 
 ### Later
 

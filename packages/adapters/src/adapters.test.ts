@@ -5,7 +5,6 @@ import { createPublishedTrip, tripId } from "@nitipcuy/domain";
 import {
   FixedClock,
   InMemoryAudit,
-  InMemoryEvidenceStorage,
   InMemoryOutbox,
   InMemoryTripDiscoveryRepository,
   MockIdentityVerification,
@@ -276,7 +275,6 @@ describe("mock and in-memory adapters", () => {
         authenticatedAt: clock.now(),
       },
     });
-    const evidence = new InMemoryEvidenceStorage();
 
     await audit.append({
       actorId: "account-001",
@@ -298,46 +296,8 @@ describe("mock and in-memory adapters", () => {
     });
     const result = await identities.verifyProof("proof-001");
 
-    const content = new Uint8Array([1, 2, 3]);
-    const stored = await evidence.store({
-      idempotencyKey: "evidence-001",
-      evidenceId: identifiers.next("evidence"),
-      ownerAccountId: "account-001",
-      classification: "WEIGHT",
-      contentType: "image/jpeg",
-      byteLength: 3,
-      sha256: "a".repeat(64),
-      content,
-    });
-    content[0] = 9;
-
     expect(result?.subject).toBe("subject-001");
     expect(audit.records).toHaveLength(1);
     expect(outbox.messages[0]?.id).toBe("message-0001");
-    expect(stored).toEqual({
-      objectReference: "mock-evidence-evidence-0002",
-      sha256: "a".repeat(64),
-      byteLength: 3,
-    });
-    expect([...new Uint8Array(evidence.stored[0]?.content ?? [])]).toEqual([
-      1, 2, 3,
-    ]);
-  });
-
-  it("rejects inconsistent evidence metadata before storage", async () => {
-    const evidence = new InMemoryEvidenceStorage();
-
-    await expect(
-      evidence.store({
-        idempotencyKey: "evidence-invalid",
-        evidenceId: "evidence-0001",
-        ownerAccountId: "account-001",
-        classification: "DELIVERY",
-        contentType: "image/jpeg",
-        byteLength: 4,
-        sha256: "a".repeat(64),
-        content: new Uint8Array([1, 2, 3]),
-      }),
-    ).rejects.toThrow("Evidence byte length must match non-empty content.");
   });
 });

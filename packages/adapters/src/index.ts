@@ -1,9 +1,15 @@
 export { InMemoryTripDiscoveryRepository } from "./in-memory-trip-discovery";
 export { InMemoryIdempotencyStore } from "./idempotency-support";
 export {
+  InMemoryEvidenceLifecycle,
+  type EvidenceScanFixture,
+  type InMemoryEvidenceLifecycleOptions,
+  type InMemoryEvidencePolicy,
+  type QuarantineUploadFixture,
+} from "./in-memory-evidence-lifecycle";
+export {
   FixedClock,
   InMemoryAudit,
-  InMemoryEvidenceStorage,
   InMemoryOutbox,
   MockIdentityVerification,
   SequenceIdentifier,

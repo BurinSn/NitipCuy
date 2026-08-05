@@ -55,16 +55,31 @@ export type {
   LogisticsQuoteRequest,
   RegisterDispatchCommand,
 } from "./ports/logistics-gateway";
+export { EvidenceLifecycleError } from "./ports/evidence-lifecycle";
+export type {
+  AcceptEvidenceCommand,
+  AcceptedEvidence,
+  CreateEvidenceUploadIntentCommand,
+  DeleteExpiredEvidenceCommand,
+  DeletedEvidence,
+  EvidenceClassification,
+  EvidenceLifecycleErrorCode,
+  EvidenceLifecyclePort,
+  EvidenceLifecycleStatus,
+  EvidenceMediaType,
+  EvidenceObservation,
+  EvidenceScanStatus,
+  EvidenceUploadIntent,
+  EvidenceVerificationReason,
+  InspectEvidenceQuery,
+} from "./ports/evidence-lifecycle";
 export type {
   AuditPort,
   AuditRecord,
   ClockPort,
-  EvidenceStoragePort,
   IdentifierPort,
   IdentityVerificationPort,
   OutboxMessage,
   OutboxPort,
-  StoredEvidence,
-  StoreEvidenceCommand,
   VerifiedExternalIdentity,
 } from "./ports/platform-services";

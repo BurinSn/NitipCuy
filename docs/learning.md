@@ -842,3 +842,51 @@ Do not present inference, provider marketing, provisional pricing, or a future i
 - Implementation checkpoint `a086dcf2b9060394756b2bf4ddc57994d7b158c8` reproduced on the supported hosted toolchain.
   - Evidence: application run `30983580593` and lifecycle run `30983580611` passed with zero annotations.
   - Impact: the exact PostCSS override is advisory-free under the current audit database and source/build verified without changing product behavior or activating production infrastructure.
+
+## 2026-08-05 14:19 WIB - Evidence identity must be observed outside the application command
+
+### Accepted
+
+- The application command carries authorization-scoped identity and opaque references, not raw file content or client-declared file truth.
+  - Evidence: the removed storage command let a caller supply content, MIME, byte length, and SHA-256 together, so equality checks could establish only internal consistency between untrusted claims.
+  - Impact: upload bytes and client claims now enter only the external quarantine fixture; the application sees the upload intent and server observation.
+- Promotion requires both server-observed metadata and a clean scanner result bound to the same digest.
+  - Evidence: a clean label without byte identity could describe a different object, while a matching digest without a clean result says nothing about scanner disposition.
+  - Impact: pending, unavailable, rejected, and digest-mismatched scanner states all fail closed before acceptance.
+- Upload intent, quarantine object, accepted object, and retention deletion are distinct lifecycle references.
+  - Evidence: one generic storage reference cannot safely express short-lived write authority, quarantined bytes, accepted private evidence, and deletion authority.
+  - Impact: each transition verifies the server-generated reference that belongs to its current state.
+
+### Corrected
+
+- A promoted upload reference is terminal even after quarantine bytes are removed from the in-memory record.
+  - Supersedes: the first local adapter version, which cleared quarantine bytes at acceptance but would then accept another upload through the still-known upload reference.
+  - Impact: replacement and post-acceptance upload are denied, and scanner writes cannot resume after acceptance.
+- Client MIME and digest claims are not retained merely to prove that the adapter ignores them.
+  - Evidence: adversarial tests can pass false claims while accepted metadata remains derived exclusively from copied bytes.
+  - Impact: fixture state does not accidentally become a future source of caller-trusted truth.
+- Accepted evidence preserves its scanner reference after promotion.
+  - Evidence: a digest without the decision reference loses the provenance needed to investigate which scan accepted the bytes.
+  - Impact: accepted metadata keeps both the server-observed byte identity and the bound clean-scan reference.
+- Runtime boundaries validate classifications, scan statuses, and media policy values rather than trusting TypeScript unions.
+  - Evidence: JSON, configuration, and adapter inputs do not receive compile-time guarantees.
+  - Impact: unsupported values fail with deterministic validation before creating lifecycle state.
+
+### Reusable learning
+
+- Do not put bytes, a claimed digest, and a claimed byte length in the same trusted application command and call their agreement server verification.
+- A scanner result must name the exact observed bytes, not only the object key or an unbound status.
+- Copy mutable byte buffers at the storage boundary and make a quarantine object write-once.
+- When promotion clears or moves content, preserve a terminal consumed state; `content === null` must not mean the upload slot is reusable.
+- Idempotency prevents duplicate commands, but it does not replace ownership checks, lifecycle-state checks, object-reference binding, or retention policy.
+- A file digest proves byte identity only. Authenticity, order relevance, price, legality, and duplicate-image disposition need separate evidence and policy controls.
+
+### Deferred
+
+- Production needs authenticated owner and case scope, signed direct-to-quarantine upload, robust decoding and dimensions, malware scanning, safe re-encoding where suitable, duplicate-image review, durable metadata, rejected-object cleanup, accepted-object retention, backup expiry, deletion verification, metrics, and operational recovery.
+- Order association and evidence-gated order transitions remain outside issue #3 and must be implemented with the persisted order slice.
+- The deterministic adapter is source evidence only; it provides no storage-provider, scanner-provider, runtime-upload, load, incident, or production-deletion proof.
+
+### No product-model change
+
+- This correction implements the accepted evidence boundary without changing who may sell, the two service modes, seller-defined prices, the transaction-fee direction, required evidence classes, or roadmap order.

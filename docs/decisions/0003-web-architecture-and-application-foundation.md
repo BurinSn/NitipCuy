@@ -25,7 +25,7 @@ Start with one repository and one deployable web application:
 - `apps/web` owns Next.js delivery, server rendering, request parsing, presentation, and the server-only composition root.
 - `packages/domain` owns framework-free entities, value objects, invariants, and domain terminology.
 - `packages/application` owns use cases and driven ports. It may depend only on the domain package.
-- `packages/adapters` owns in-memory, mock, database, payment, logistics, identity, evidence-storage, and other external implementations. It may depend on application and domain.
+- `packages/adapters` owns in-memory, mock, database, payment, logistics, identity, evidence-lifecycle, and other external implementations. It may depend on application and domain.
 
 Dependencies point inward:
 
@@ -150,7 +150,7 @@ Application ports describe NitipCuy intent:
 - payment initiation, release request, refund request, status inspection, and reconciliation;
 - logistics quote and dispatch registration;
 - identity principal resolution;
-- evidence storage and retrieval;
+- evidence upload intent, quarantine observation, scan-gated acceptance, retrieval reference, retention, and deletion;
 - clock and identifier generation;
 - repository boundaries;
 - audit and outbox recording.
@@ -159,7 +159,7 @@ Ports must not expose DOKU, Biteship, Vercel, Neon, or another vendor's object m
 
 The provider-neutral payment contract separates command submission from observed outcome. Every initiation has a stable internal payment-attempt ID, allowing inspection after an ambiguous response even when no provider payment reference was returned. Initiation returns accepted-for-processing, rejected, or unknown plus a customer action only when accepted. Release and refund requests use the same non-terminal submission model. A separate provider snapshot reports collection, hold, release, refund, settlement, and chargeback observations; a provider signal only requests fresh inspection. The current pure assessment may confirm initial payment protection only when exact collected and held amounts agree. It does not implement an order mutation, ledger, provider adapter, release/refund reconciliation, or settlement reconciliation.
 
-The architecture probe implements deterministic in-memory trip discovery plus mock payment, logistics, identity-verification, evidence-storage, clock, identifier, audit, and outbox adapters. The mocks move no money, book no delivery, verify no real identity, store no production evidence, start no background work, and contact no service.
+The architecture probe implements deterministic in-memory trip discovery plus mock payment, logistics, identity-verification, evidence-lifecycle, clock, identifier, audit, and outbox adapters. The evidence application boundary accepts opaque references and server observations rather than raw bytes or caller-declared file truth; raw bytes exist only inside the bounded quarantine/storage fixture. The mocks move no money, book no delivery, verify no real identity, store no production evidence, start no background work, and contact no service.
 
 Issue #3 intentionally exposes no transaction port. A callback-only `execute(work)` contract and passthrough adapter were removed because they could not bind repositories, ledger, audit, and outbox writes to one underlying transaction, enforce rollback, or prove concurrency behavior.
 

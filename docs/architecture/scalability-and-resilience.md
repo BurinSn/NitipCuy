@@ -286,11 +286,12 @@ Implemented and source-tested only for the narrow architecture probe:
 
 - deterministic in-memory public discovery;
 - bounded simulated dataset;
+- provider-neutral evidence upload intent, inspection, scan-gated promotion, retention, and deletion contracts through bounded process-local fixtures;
 - no production provider calls or asynchronous work.
 
 Not implemented or verified:
 
-- production cache or cache-safety controls, shared session/rate-limit/idempotency system, database, object storage, worker, provider, observability, backup, or restore;
+- production cache or cache-safety controls, shared session/rate-limit/idempotency system, database, object storage, scanner, cleanup worker, provider, observability, backup, or restore;
 - expand-and-contract migration, mixed-version rollout, or dependency-outage runtime evidence;
 - capacity targets, load tests, provider quotas, SLOs, RPO, RTO, or production cost budgets;
 - runtime horizontal-scaling or failure-recovery evidence.

@@ -10,7 +10,6 @@ import {
 import type { IdempotencyStorePort } from "@nitipcuy/application";
 
 import {
-  InMemoryEvidenceStorage,
   InMemoryIdempotencyStore,
   MockLogisticsGateway,
   MockPaymentGateway,
@@ -397,35 +396,6 @@ describe("idempotency contract", () => {
       gateway.registerDispatch({
         ...command,
         trackingNumber: "TRACKING-CHANGED",
-      }),
-    ).rejects.toBeInstanceOf(IdempotencyConflictError);
-  });
-
-  it("fingerprints evidence bytes and replays only the exact upload", async () => {
-    const storage = new InMemoryEvidenceStorage();
-    const command = {
-      idempotencyKey: "evidence-key-001",
-      evidenceId: "evidence-001",
-      ownerAccountId: "account-001",
-      classification: "PURCHASE" as const,
-      contentType: "image/jpeg",
-      byteLength: 3,
-      sha256: fingerprintA,
-      content: new Uint8Array([1, 2, 3]),
-    };
-
-    const first = await storage.store(command);
-    const replay = await storage.store({
-      ...command,
-      content: new Uint8Array([1, 2, 3]),
-    });
-
-    expect(replay).toEqual(first);
-    expect(storage.stored).toHaveLength(1);
-    await expect(
-      storage.store({
-        ...command,
-        content: new Uint8Array([3, 2, 1]),
       }),
     ).rejects.toBeInstanceOf(IdempotencyConflictError);
   });

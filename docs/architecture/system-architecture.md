@@ -45,7 +45,7 @@ Application use cases
   |
   +--> Repository / transaction ports ------> PostgreSQL adapter
   +--> Identity port -----------------------> identity adapter
-  +--> Evidence storage port ---------------> private object storage adapter
+  +--> Evidence lifecycle port ------------> quarantine, scan, and private-object adapters
   +--> Payment port ------------------------> DOKU candidate adapter
   +--> Logistics port ----------------------> Biteship candidate adapter
   +--> Audit / outbox ports ----------------> PostgreSQL adapter
@@ -436,7 +436,7 @@ Implemented in issue #3:
 - public trip domain invariants;
 - trip discovery use cases;
 - in-memory trip repository;
-- provider-neutral payment, logistics, identity verification, evidence storage, clock, identifier, audit, and outbox ports;
+- provider-neutral payment, logistics, identity verification, evidence lifecycle, clock, identifier, audit, and outbox ports;
 - provider-neutral asynchronous payment submissions and observations, stable payment-attempt correlation, and a fail-closed pure assessment for initial exact collected-and-held amount confirmation;
 - deterministic in-memory and mock adapters for those boundaries;
 - server-only composition;
@@ -451,11 +451,13 @@ The callback-only transaction interface and passthrough adapter were removed rat
 
 The payment port now separates initiation, release, and refund submission receipts from provider observations. It models collection, hold, release, refund, settlement, and chargeback independently; provider signals request inspection instead of declaring success. The configured mock never invents a successful outcome, and the pure initial-protection assessment fails closed for unknown, contradictory, mismatched, or post-hold evidence.
 
-Payment initiation, release, refund, logistics dispatch registration, and evidence storage now use a framework-independent idempotency port plus deterministic adapter. The scope is the order aggregate for payment and logistics and the owner account for evidence. SHA-256 fingerprints cover each operation's semantic command payload; exact completed duplicates replay, changed payloads conflict, concurrent duplicates fail closed, unavailable authority blocks execution, and unclassified execution errors require reconciliation instead of releasing the key. Payment results retain 90-day mock replay records and logistics/evidence results retain 30-day mock replay records.
+Payment initiation, release, refund, logistics dispatch registration, and evidence lifecycle mutations use a framework-independent idempotency port plus deterministic adapter. The scope is the order aggregate for payment and logistics and the owner account for evidence. SHA-256 fingerprints cover each operation's semantic application command; exact completed duplicates replay, changed payloads conflict, concurrent duplicates fail closed, unavailable authority blocks execution, and unclassified execution errors require reconciliation instead of releasing the key. Payment results retain 90-day mock replay records and logistics/evidence lifecycle results retain 30-day mock replay records.
 
 This is source-tested contract behavior only. The default store is process-local and test-only. No shared persistent idempotency authority, authenticated use case, rate-limit integration, database constraint, provider-native verification, callback authentication, durable inbox, worker, ledger, order mutation, real money movement, or full release/refund/settlement reconciliation exists.
 
-Evidence, audit, and outbox interfaces and mocks remain provisional while the evidence-integrity, asynchronous-state, and future transaction-scoping contracts are corrected.
+The evidence application port no longer accepts raw bytes, file names, client MIME, caller byte length, caller digest, object path, or scan status. It creates a short-lived opaque upload intent, inspects server-observed quarantine metadata and scanner state, promotes only a clean scan whose digest matches the observed bytes, returns a server-generated private reference, and deletes accepted fixture content only after retention expiry. The test-only in-memory adapter source-tests wrong client claims, immutable upload, file bounds and type detection, expiry, scan pending/outage/rejection/digest mismatch, cross-owner and object-reference denial, exact replay, terminal upload denial, retention, and deletion.
+
+That proof is limited to framework-free contracts and deterministic process-local fixtures. No authenticated upload endpoint, signed URL, object-storage policy, durable metadata, scanner provider, dimension decoder, safe re-encoding, duplicate-image decision, order transition, authorization use case, cleanup worker, backup behavior, or provider/runtime verification exists. Audit and outbox mocks remain provisional until asynchronous-state and future transaction-scoping contracts are corrected.
 
 Not implemented:
 
