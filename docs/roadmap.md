@@ -1,10 +1,10 @@
 # NitipCuy Canonical Roadmap
 
-Last reviewed: 2026-07-31 09:34 WIB
+Last reviewed: 2026-08-05 14:02 WIB
 
 Current stage: Stage 1 - Platform foundation
 
-Current work item: Issue #3 hostile-review remediation; scoped fail-closed idempotency and its lifecycle reconciliation are committed, pushed, locally and hosted verified, and externally reconciled; evidence-storage integrity is next
+Current work item: Issue #3 hostile-review remediation; the PostCSS incomplete-fix advisory is corrected and complete-gate verified locally, with commit, push, hosted verification, and lifecycle reconciliation next
 
 ## 1. Role, authority, and freshness contract
 
@@ -175,6 +175,7 @@ Pull-request head, hosted checks, annotations, reviews, and mergeability are vol
 - [x] Remove the unenforceable callback-only transaction abstraction and defer a database-backed transaction-scoped unit of work, with explicit atomicity and disposable-PostgreSQL proof gates, to the first persisted write slice.
 - [x] Correct payment initiation, held-state, release, refund, and reconciliation contracts through provider-neutral submissions, observations, signals, stable attempt correlation, exact collected-and-held amount assessment, configured mocks, and adversarial tests. Full local and hosted exact-head verification passed.
 - [x] Enforce and contract-test idempotency through scoped keys, canonical payload fingerprints, exact replay, changed-payload conflict, concurrent denial, recovery-required ambiguous outcomes, expiry, authority-outage denial, and cross-scope isolation. Shared durable production state remains a later implementation gate.
+- [ ] Replace the vulnerable PostCSS `8.5.18` override with patched `8.5.23`, then reproduce the complete local and hosted gates and reconcile the advisory evidence.
 - [ ] Replace caller-trusted evidence hashes and buffered raw-upload assumptions with a server-authoritative evidence lifecycle.
 - [x] Separate the future authoritative `TripOffer`, public `PublishedTrip`, public history, and private seller/customer order projections; projections never authorize mutation, checkout, or capacity reservation.
 - [x] Establish the binding defense-in-depth security and evidence-based scale baseline without claiming the controls are implemented.
@@ -305,7 +306,7 @@ The unresolved DOKU, logistics, policy, legal, and pilot items listed in Stage 3
 
 ### Now
 
-Replace the caller-trusted evidence hash and buffered raw-upload assumptions with a server-authoritative quarantine, digest, scanning, and verification lifecycle without claiming production object storage, malware scanning, protected authorization, persistence, or provider compatibility.
+Commit, push, and hosted-verify the locally complete PostCSS `8.5.23` advisory correction. The configured high-severity audit threshold allowed the newly disclosed moderate advisory to exit successfully, so zero-advisory evidence must be inspected separately from the command exit code.
 
 ### Next
 

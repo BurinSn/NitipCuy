@@ -804,3 +804,35 @@ Do not present inference, provider marketing, provisional pricing, or a future i
 - The idempotency lifecycle reconciliation also reproduced on the supported hosted toolchain.
   - Evidence: lifecycle head `abe7cd0bdecfd4df3565cfd0e968f4ab461f39f0` passed application run `30599264338` and lifecycle run `30599264345` with zero annotations.
   - Impact: evidence-storage integrity, final complete-base-diff review, and fresh owner approval—not idempotency documentation—are now the active issue #3 merge gates.
+
+## 2026-08-05 14:00 WIB - A passing severity-threshold audit is not a zero-advisory audit
+
+### Verified
+
+- The exact PostCSS `8.5.18` override became vulnerable after GitHub published `GHSA-fxqj-rqcc-2cmp` for all releases through `8.5.22`.
+  - Evidence: the 2026-08-05 exact-toolchain production audit reported one moderate advisory on `apps__web>next>postcss`; the JSON result identified `8.5.23` as the first patched version.
+  - Impact: the override and lockfile now select exact PostCSS `8.5.23`.
+- `pnpm audit:prod` returned success while still printing the moderate advisory.
+  - Evidence: the script uses `--audit-level high`, which controls failure severity rather than suppressing or eliminating lower-severity findings.
+  - Impact: inspect audit content and vulnerability counts separately from the process exit code before claiming no known vulnerabilities.
+
+### Corrected
+
+- PostCSS `8.5.18` is no longer treated as the current fully patched override.
+  - Supersedes: the 2026-07-25 conclusion that `8.5.18` satisfied the then-known PostCSS advisories and release-age constraint.
+  - Impact: time-stamped dependency evidence remains historical; current merge evidence must use a fresh advisory database and exact lockfile.
+
+### Reusable learning
+
+- An exact security override is an expiring decision, not a permanent safe version.
+- A hosted workflow that passed before an advisory database update does not prove that the same lockfile remains advisory-free later.
+- Audit exit thresholds and zero-vulnerability claims are different contracts. Record both the exit result and the severity counts.
+
+### Deferred
+
+- Commit, hosted exact-head verification, and external reconciliation remain pending for this dependency correction; the complete local exact-toolchain gate passed.
+- Removing the override entirely remains dependent on a reviewed Next.js dependency graph that resolves patched PostCSS without weakening compatibility.
+
+### No product-model change
+
+- This dependency correction changes no role, service mode, pricing rule, trip behavior, evidence requirement, payment direction, provider choice, or roadmap stage order.

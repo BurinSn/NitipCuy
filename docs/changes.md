@@ -766,3 +766,37 @@ A session with no material change does not invent an entry. A session that makes
   - Evidence storage still trusts caller-supplied SHA-256 metadata and buffers raw content; its server-authoritative evidence lifecycle remains the next implementation blocker.
 - Follow-up:
   - Begin the evidence-storage integrity correction after re-verifying the volatile live pull-request state.
+
+## 2026-08-05 14:00 WIB - PostCSS incomplete-fix advisory correction started
+
+- Issue / PR: Issue #3; pull request #4
+- Product: NitipCuy application foundation
+- Type: Production dependency security correction and lifecycle reconciliation
+- Status: Exact override and lockfile corrected and complete-gate verified locally; commit, push, hosted, and external evidence pending
+- Objective:
+  - Remove the newly disclosed moderate PostCSS source-map file-read advisory without weakening the frozen toolchain or broadening issue #3.
+- Scope:
+  - Exact PostCSS override, lockfile, architecture dependency record, and all four lifecycle documents.
+- Changes:
+  - Replaced the exact PostCSS `8.5.18` override with the minimum patched `8.5.23` release.
+  - Regenerated the lockfile through exact Node.js `24.18.0` and pnpm `11.17.0`.
+  - Recorded GitHub advisory `GHSA-fxqj-rqcc-2cmp` as superseding the earlier conclusion that `8.5.18` was fully patched.
+  - Kept the existing `sharp` `0.35.3` override and every product, provider, runtime, and architecture boundary unchanged.
+- Impact:
+  - The local production audit now reports no known vulnerabilities.
+  - The correction changes no NitipCuy behavior and activates no provider, deployment, database, identity, payment, evidence, or production control.
+  - The configured audit threshold remains high severity, so a successful exit code alone still does not prove that the audit contains zero lower-severity findings.
+- Validation so far:
+  - The initial exact-toolchain `pnpm audit:prod` reproduced one moderate finding on PostCSS `8.5.18` while returning success because the audit threshold is high.
+  - `pnpm audit --prod --json` identified `GHSA-fxqj-rqcc-2cmp`, affected versions through `8.5.22`, and patched versions beginning at `8.5.23` on the `apps__web>next>postcss` path.
+  - Exact-toolchain lockfile regeneration selected PostCSS `8.5.23`.
+  - The corrected exact-toolchain production audit reports no known vulnerabilities.
+  - Frozen install, peer validation, formatting, lint, the four-project 29-source/67-reference dependency scan, strict types, all 20 boundary tests, all 58 package tests, production build, lifecycle participation, base and worktree diff hygiene, and complete correction-diff review passed.
+- Documentation:
+  - Updated handoff, changes, roadmap, learning, and ADR 0003.
+- Residual risks / exclusions:
+  - Commit, push, hosted exact-head verification, and external reconciliation remain pending.
+  - The override remains temporary until Next.js resolves a reviewed patched graph without it.
+  - Evidence-storage integrity remains the next implementation blocker after this correction is closed.
+- Follow-up:
+  - Commit and push this coherent correction, inspect both hosted workflows on the immutable head, reconcile the checkpoint, then begin the evidence lifecycle correction.

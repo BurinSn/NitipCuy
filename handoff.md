@@ -1,6 +1,6 @@
 # NitipCuy Cross-Session Handoff
 
-Last updated: 2026-07-31 09:34 WIB
+Last updated: 2026-08-05 14:02 WIB
 
 Handoff owner: Codex
 
@@ -126,7 +126,8 @@ The shell is a functional architecture probe. It is not a production UI, has no 
 | Asynchronous-payment lifecycle checkpoint and current remote pull-request head | `fb9f662a51da32053cf40511f079eed16c3cf58c`; application run `30446607390` and lifecycle run `30446607399` passed with zero annotations |
 | Idempotency implementation checkpoint | `115ecfeb7f4b0876f56ae43d71cfa378f26497fe`; application run `30599067671` and lifecycle run `30599067251` passed with zero annotations |
 | Idempotency lifecycle checkpoint and last verified remote pull-request head | `abe7cd0bdecfd4df3565cfd0e968f4ab461f39f0`; application run `30599264338` and lifecycle run `30599264345` passed with zero annotations |
-| Current local worktree | Clean and synchronized at `abe7cd0bdecfd4df3565cfd0e968f4ab461f39f0` before this final next-action reconciliation |
+| Idempotency final lifecycle and next-action head | `f41d764762f5de611ad25c6e076aee174e63af61`; application run `30599375595` and lifecycle run `30599375568` passed with zero annotations |
+| Current local worktree | PostCSS advisory correction is complete-diff reviewed and exact-toolchain verified locally from clean synchronized head `f41d764762f5de611ad25c6e076aee174e63af61`; commit, push, and hosted verification remain pending |
 | Issue and pull-request reconciliation | Issue #3 and pull request #4 were updated and read back at the idempotency checkpoint; issue comment `5138575547` and PR comment `5138575741` record the exact evidence and residual blockers |
 | Independent review at current remote head | No review object, review decision, review thread, or line finding exists; CodeRabbit reports success but detailed review is paused and the Free plan provides summary/walkthrough only, so it provides no independent review coverage |
 | First hostile-review correction | Published-trip runtime invariants committed, pushed, and hosted-verified |
@@ -157,6 +158,8 @@ The transaction-scope finding is corrected, committed, pushed, hosted-verified, 
 The asynchronous payment correction is implemented, committed, pushed, hosted-verified, and reconciled with issue #3 and pull request #4. Initiation, release, and refund return accepted-for-processing, rejected, or unknown submission receipts instead of completed financial states. Every initiation has a stable internal payment-attempt ID, so an ambiguous response remains inspectable without a returned provider reference. Accepted initiation also returns a provider-neutral redirect, QR, or Virtual Account customer action. Separate observations represent collection, hold, release, refund, settlement, and chargeback; provider events are inspection signals only. A pure assessment confirms initial protection only for the expected attempt, a retained provider reference, and exact collected and held amounts, and fails closed on cross-attempt, unknown, contradictory, mismatched, paid-but-not-held, or status-versus-amount post-hold evidence. This does not implement DOKU, callbacks, a worker, persistence, ledger mutation, real money movement, or full release/refund/settlement reconciliation.
 
 The idempotency correction is implemented, committed, pushed, locally verified, hosted-verified, and reconciled with issue #3 and pull request #4. A framework-independent application contract defines atomic claim, stored-result replay, changed-payload conflict, active-operation denial, recovery-required ambiguous failure, and completion-based result retention. Payment initiation, release, and refund use order-scoped keys with 90-day mock retention; logistics dispatch uses order scope and evidence storage uses owner-account scope with 30-day mock retention. Type-tagged canonical SHA-256 fingerprints cover semantic command payloads, including evidence bytes. Unexpected execution errors require reconciliation rather than releasing a key for a potentially duplicating retry. The in-memory authority is explicitly test-only and process-local; it does not prove persistence, authenticated authorization, shared multi-instance state, provider-native behavior, or production recovery.
+
+The 2026-08-05 production audit surfaced GitHub advisory `GHSA-fxqj-rqcc-2cmp` against the exact PostCSS `8.5.18` override after the advisory database was updated. The issue is moderate and did not fail the configured high-severity audit threshold, so a green command was not evidence of zero advisories. The local override and lockfile now select the minimum patched `8.5.23`; the correction passed the complete exact-toolchain local gate and current zero-advisory audit but still needs commit, push, hosted exact-head verification, and lifecycle reconciliation before it is closed.
 
 Implemented locally:
 
@@ -198,7 +201,7 @@ Deliberately excluded:
 Verified locally with Node.js `24.18.0` and pnpm `11.17.0`:
 
 - `pnpm peers check`: no peer-dependency issues;
-- `pnpm audit:prod`: no known production vulnerabilities after the explicit patched overrides;
+- `pnpm audit:prod`: the 2026-08-05 pre-correction run found one moderate PostCSS advisory while exiting successfully at the configured high threshold; the local `8.5.23` override correction now reports no known vulnerabilities and passed the complete exact-toolchain local gate, with hosted evidence still pending;
 - `pnpm check`: format, lint, strict type checking, 18 unit tests, and production build passed on the reconciled domain-correction tree;
 - targeted domain type checking and 10 domain tests passed;
 - an exact-Node adversarial probe rejected `UNSUPPORTED`, rejected `2026-02-30`, and sorted the `+08:00` earlier instant before the `+07:00` later instant;
@@ -225,7 +228,7 @@ Hostile-review corrections already made:
 - compare Q&A timestamps as real instants across timezone offsets;
 - removed false Turbo output warnings and the App-Router-only ESLint warning;
 - replaced vulnerable Next.js transitive `postcss` and `sharp` versions with audited patched overrides;
-- selected `postcss` `8.5.18` instead of a release inside the package-manager minimum-age window;
+- selected `postcss` `8.5.18` for the original checkpoint, then superseded it with `8.5.23` after `GHSA-fxqj-rqcc-2cmp` showed the earlier fix was incomplete;
 - converted simulated trip details to build-time known paths and rejected unknown slugs before streamed rendering so missing trips return a quiet HTTP `404`, not a `200` or an internal fallback error.
 
 Still required before requesting merge:
@@ -266,8 +269,9 @@ The asynchronous payment-lifecycle finding is resolved and verified at the sourc
 
 The following internal findings still block issue #3 merge:
 
-1. evidence storage trusts a caller-supplied hash and models raw buffered content without a quarantine or verification lifecycle;
-2. lifecycle, issue, and pull-request claims require final reconciliation after every correction.
+1. the PostCSS `8.5.23` correction requires complete local and hosted exact-head verification plus lifecycle reconciliation;
+2. evidence storage trusts a caller-supplied hash and models raw buffered content without a quarantine or verification lifecycle;
+3. lifecycle, issue, and pull-request claims require final reconciliation after every correction.
 
 The following still block real-money pilot activation:
 
@@ -288,7 +292,7 @@ These are Stage 3 activation gates, not reasons to delay provider-independent pl
 
 ## 9. Exact next action
 
-Replace the caller-trusted evidence hash and buffered raw-upload assumptions with the server-authoritative quarantine, digest, scanning, and verification lifecycle defined by the accepted architecture. Re-verify the live pull-request head before changing code because head, checks, reviews, and mergeability remain volatile.
+Complete, commit, push, and hosted-verify the PostCSS `8.5.23` advisory correction, then replace the caller-trusted evidence hash and buffered raw-upload assumptions with the server-authoritative quarantine, digest, scanning, and verification lifecycle defined by the accepted architecture. Re-verify the live pull-request head before the evidence correction because head, checks, reviews, and mergeability remain volatile.
 
 Do not add account persistence or a production identity provider to issue #3. Those belong to the first persisted account slice after this architecture issue is corrected and merged.
 
