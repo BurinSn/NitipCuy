@@ -830,9 +830,15 @@ Do not present inference, provider marketing, provisional pricing, or a future i
 
 ### Deferred
 
-- Commit, hosted exact-head verification, and external reconciliation remain pending for this dependency correction; the complete local exact-toolchain gate passed.
+- The documentation-only lifecycle checkpoint, external reconciliation, and its hosted exact-head verification remain pending; the implementation passed complete local and hosted exact-head gates.
 - Removing the override entirely remains dependent on a reviewed Next.js dependency graph that resolves patched PostCSS without weakening compatibility.
 
 ### No product-model change
 
 - This dependency correction changes no role, service mode, pricing rule, trip behavior, evidence requirement, payment direction, provider choice, or roadmap stage order.
+
+### Hosted evidence
+
+- Implementation checkpoint `a086dcf2b9060394756b2bf4ddc57994d7b158c8` reproduced on the supported hosted toolchain.
+  - Evidence: application run `30983580593` and lifecycle run `30983580611` passed with zero annotations.
+  - Impact: the exact PostCSS override is advisory-free under the current audit database and source/build verified without changing product behavior or activating production infrastructure.
