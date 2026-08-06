@@ -33,10 +33,13 @@ result
 - [ ] `docs/learning.md` appended with learning, correction, failure, deferral, or explicit no-new-learning
 - [ ] Relevant specialist documents
 - [ ] `scripts/check-lifecycle-docs.sh origin/main` passed
+- [ ] `pnpm check` passed when application or toolchain code changed
+- [ ] `pnpm audit:prod` passed when dependencies or application code changed
 
 ## Approval
 
 - [ ] Complete diff reviewed
+- [ ] Hosted checks inspected on the exact immutable pull-request head
 - [ ] Lifecycle documents reconciled against Git, GitHub, ADRs, and specialist sources
 - [ ] Material findings resolved or dispositioned
 - [ ] BurinSN product-owner merge approval received

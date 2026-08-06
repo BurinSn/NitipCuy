@@ -264,3 +264,615 @@ A session with no material change does not invent an entry. A session that makes
   - Application architecture, scaffolding, providers, payments, deployment, and product scope remain excluded.
 - Follow-up:
   - Validate, commit, and push the upgrade; confirm an annotation-free exact-head run; post the final audit; and squash-merge under recorded BurinSN authority.
+
+## 2026-07-25 15:55 WIB - Application architecture foundation prepared
+
+- Issue / PR: Issue #3; pull request not yet opened at this checkpoint
+- Product: NitipCuy
+- Type: Architecture, application foundation, security, testing, and documentation
+- Status: Locally validated; commit and pull-request review pending
+- Objective:
+  - Establish a maintainable web-first platform foundation that can support NitipCuy marketplace behavior without coupling the core domain to a framework, ORM, identity vendor, payment provider, logistics provider, or host.
+- Scope:
+  - Architecture ADR and system boundaries; exact toolchain; modular workspace; public trip discovery proof; deterministic mocks; local and hosted quality gates; README, contributor, workflow, and lifecycle documentation.
+- Changes:
+  - Selected one deployable Next.js modular monolith with inward dependencies across domain, application, adapters, and web delivery.
+  - Pinned Node.js `24.18.0`, pnpm `11.17.0`, Next.js `16.2.11`, React `19.2.8`, TypeScript `6.0.3`, ESLint `9.39.5`, Prettier `3.9.6`, Turbo `2.10.6`, and Vitest `4.1.10`.
+  - Recorded PostgreSQL plus isolated future Prisma adapter, external passwordless identity, internal deny-by-default authorization, Vercel `sin1`, and Singapore PostgreSQL direction without provisioning anything.
+  - Added a published-trip domain model, public discovery use cases, in-memory repository, provider-neutral payment, logistics, identity-verification, evidence-storage, clock, identifier, transaction, audit, and outbox ports, and no-network mocks.
+  - Added an Indonesian read-only shell for destination/date search, trip detail, seller-defined terms, and chronological public Q&A using explicitly simulated data.
+  - Modeled both an origin-local departure date and an exact timezone-bearing departure timestamp so deadline and arrival rules compare actual instants.
+  - Added strict formatting, lint, type, unit, build, audit, and PR-CI gates with read-only permissions and immutable action references.
+  - Overrode vulnerable Next.js transitive `postcss` and `sharp` versions with exact patched versions after the production audit blocked the initial graph.
+  - Updated the README, architecture, quality, contributor, Git workflow, PR template, and all four mandatory lifecycle documents.
+- Impact:
+  - Future marketplace slices can develop and test domain behavior without production credentials, money, deliveries, or external-service availability.
+  - Public discovery and private transaction data have an explicit architectural boundary before identity or persistence is introduced.
+  - The platform shell demonstrates working product structure but remains visually provisional and non-production.
+- Validation:
+  - Exact Node.js `24.18.0` and pnpm `11.17.0` toolchain used through the local compatibility wrapper.
+  - `pnpm peers check` passed with no peer-dependency issues.
+  - `pnpm audit:prod` initially failed on vulnerable `postcss` and `sharp`; after reviewed exact overrides it passed with no known production vulnerabilities.
+  - `pnpm check` passed formatting, lint, strict type checking in four packages, 13 unit tests in three files, and the Next.js production build.
+  - Production build emitted `/`, `/_not-found`, and three generated `/trips/[tripId]` fixture paths plus the route proxy.
+  - Production HTTP probe returned `200` for home, filtered search, and a known trip; returned `404` for an unknown trip; and passed content assertions without a server fallback error.
+  - Frozen install, lifecycle freshness, `git diff --check`, workflow YAML, internal links, immutable action references, credential patterns, placeholders, dependency direction, provider SDK, unsafe `any`, console, source network, and complete-base-diff checks passed.
+  - GitHub verified that the checkout and setup-node action tags resolve to the exact immutable commits used by the workflows.
+- Documentation:
+  - Added ADR 0003, system architecture, and quality-gate documentation.
+  - Updated README, `AGENTS.md`, Git workflow, pull-request template, `handoff.md`, `docs/changes.md`, `docs/roadmap.md`, and `docs/learning.md`.
+- Residual risks / exclusions:
+  - The current Next.js release does not yet declare the overridden `sharp` major or patched `postcss` version in its own dependency graph; full build, runtime, and audit evidence is mandatory until upstream resolves the graph.
+  - No persistence, identity provider, protected mutation, account, private data, provider integration, browser automation, visual approval, preview, deployment, or real transaction is included.
+  - DOKU and Biteship remain conditional candidates, not implemented dependencies.
+  - Fresh BurinSN approval is still required before issue #3 can merge.
+- Follow-up:
+  - Commit and push the branch, open the pull request, inspect hosted checks and findings on its immutable head, then request fresh BurinSN merge approval.
+
+## 2026-07-25 16:36 WIB - Architecture pull request opened
+
+- Issue / PR: Issue #3; pull request #4
+- Product: NitipCuy
+- Type: GitHub review-state transition
+- Status: Open; exact-head hosted review pending
+- Objective:
+  - Move the locally validated architecture foundation into its governed hosted review boundary.
+- Scope:
+  - Branch publication, pull-request metadata, all four lifecycle documents, and exact-head review instructions.
+- Changes:
+  - Committed the coherent architecture foundation at `e1d0669e80430c3abc1f4ca4e94637c827bc3f37`.
+  - Pushed branch `feat/3-architecture-foundation`.
+  - Opened pull request #4 against `main` with issue #3 closure metadata, scope, exclusions, risks, local evidence, and explicit approval gaps.
+  - Refreshed all four lifecycle documents for the pull-request transition.
+- Impact:
+  - Hosted automation and review now run against an immutable review boundary.
+  - The pull request remains unapproved and unmerged.
+- Validation:
+  - GitHub reported pull request #4 open and mergeable at the first pushed checkpoint.
+  - Lifecycle workflow passed on that checkpoint.
+  - Application quality remained in progress and CodeRabbit remained pending at 16:36 WIB.
+  - Those results are superseded when this lifecycle checkpoint changes the pull-request head and must be retrieved again.
+- Documentation:
+  - Updated `handoff.md`, `docs/changes.md`, `docs/roadmap.md`, and `docs/learning.md`.
+- Residual risks / exclusions:
+  - Hosted application evidence, annotations, review objects, and findings are not yet final for the resulting head.
+  - Branch protection remains unavailable on the current private-repository plan.
+  - No deployment, provider contact, real transaction, browser automation, or visual approval is included.
+- Follow-up:
+  - Push this documentation checkpoint, wait for hosted workflows and review on its exact head, inspect annotations and the complete diff, resolve findings, and request fresh BurinSN approval only when evidence is complete.
+
+## 2026-07-25 16:39 WIB - Hosted architecture checks verified
+
+- Issue / PR: Issue #3; pull request #4
+- Product: NitipCuy
+- Type: Hosted verification and review-coverage audit
+- Status: Hosted technical checks passed; independent review unavailable; owner approval pending
+- Objective:
+  - Verify hosted evidence and review coverage on the exact post-transition pull-request head without translating a green status into approval.
+- Scope:
+  - Pull-request head `7623526f1058d67f53ff82076330bc6c9f6afed0`, hosted checks, annotations, reviews, comments, mergeability, and lifecycle state.
+- Changes:
+  - Recorded the exact-head hosted result and missing independent review coverage.
+  - Converted the handoff's next action into a durable live-state condition so this documentation checkpoint does not claim its predecessor remains current.
+  - Preserved product scope, architecture, exclusions, and roadmap order unchanged.
+- Impact:
+  - BurinSN can evaluate the architecture with both successful technical evidence and the disclosed review limitation.
+  - No merge authority is implied.
+- Validation:
+  - Application-quality run `30153108868` passed on the exact checkpoint.
+  - Lifecycle run `30153108867` passed on the exact checkpoint.
+  - Both check runs returned no annotations.
+  - GitHub reported the checkpoint mergeable.
+  - CodeRabbit reported success only because the review limit was reached; it created no review object and no findings.
+- Documentation:
+  - Updated `handoff.md`, `docs/changes.md`, `docs/roadmap.md`, and `docs/learning.md`.
+- Residual risks / exclusions:
+  - This documentation commit creates a newer immutable head whose hosted state must be retrieved live.
+  - No independent automated review covers the architecture diff.
+  - Browser automation, visual approval, provider compatibility, persistence, deployment, and real transactions remain excluded.
+- Follow-up:
+  - Push this checkpoint; if the resulting head passes lifecycle and application quality without material annotations, remains mergeable, and introduces only the reviewed lifecycle update, post the final audit and request fresh BurinSN approval. Otherwise fix the live head.
+
+## 2026-07-25 17:07 WIB - Published-trip runtime invariants corrected
+
+- Issue / PR: Issue #3; pull request #4
+- Product: NitipCuy
+- Type: Domain correction, adversarial testing, architecture truth, and lifecycle reconciliation
+- Status: First hostile-review correction implemented and locally validated; commit, push, and hosted exact-head verification pending
+- Objective:
+  - Make the executable published-trip boundary enforce the supported service modes, calendar and timestamp validity, question identity, and chronological behavior already promised by the architecture.
+- Scope:
+  - `packages/domain/src/trip.ts`, its unit tests, all four lifecycle documents, system architecture, and quality limitations.
+- Changes:
+  - Added a runtime allowlist for Shop for me and Carry my item instead of relying on the TypeScript union.
+  - Added strict calendar, clock, and timezone-offset validation so normalized values such as `2026-02-30`, hour `24`, and offset `+14:30` are rejected.
+  - Sorted public questions by parsed instant across timezone offsets.
+  - Required public-question IDs to be unique within a trip.
+  - Added adversarial regression tests for each corrected behavior.
+  - Reopened the remaining identity, dependency-boundary, transaction, payment, idempotency, evidence, and projection findings as explicit issue #3 merge blockers.
+  - Corrected the architecture documentation so package direction is no longer described as mechanically enforced.
+- Impact:
+  - Runtime inputs from future delivery, persistence, or provider adapters cannot bypass these trip invariants merely because their compile-time type was asserted.
+  - Public discussion chronology now reflects actual time rather than lexical timestamp text.
+  - Pull request #4 remains unapproved and unmergeable by project policy while the other hostile-review findings remain open.
+- Validation:
+  - Exact Node.js `24.18.0` and pnpm `11.17.0` targeted domain type checking passed.
+  - All 10 domain tests passed; the workspace now has 18 passing unit tests.
+  - An exact-Node adversarial probe rejected `UNSUPPORTED`, rejected `2026-02-30`, and returned `question-earlier,question-later` for the cross-offset ordering case.
+  - Frozen install was already up to date and `pnpm peers check` found no peer issues.
+  - `pnpm check` passed formatting, lint, four-package strict type checking, 18 tests, and the production build through the exact toolchain wrapper.
+  - `pnpm audit:prod` reported no known production vulnerabilities.
+  - A first full-gate attempt failed correctly because nested package scripts resolved ambient Node `26.0.0` and pnpm `9.15.0`; it is recorded as a failed invocation and not counted as passing evidence.
+- Documentation:
+  - Updated `handoff.md`, `docs/changes.md`, `docs/roadmap.md`, `docs/learning.md`, `docs/architecture/system-architecture.md`, and `docs/development/quality-gates.md`.
+- Residual risks / exclusions:
+  - No persistence, account, protected mutation, provider integration, private data, payment movement, logistics booking, deployment, browser automation, or visual approval was added.
+  - Hosted checks do not cover the correction until it is committed and pushed.
+  - The remaining hostile-review findings still block merge.
+- Follow-up:
+  - Run the final lifecycle and diff gates on the reconciled tree, commit and push this bounded correction, verify pull request #4 on the new exact head, then address the identity-to-internal-account acceptance mismatch as the next correction.
+
+## 2026-07-25 17:15 WIB - Identity acceptance reconciled with persisted-slice scope
+
+- Issue / PR: Issue #3; pull request #4
+- Product: NitipCuy
+- Type: Acceptance correction, scope control, GitHub metadata, and lifecycle reconciliation
+- Status: Second hostile-review correction applied; lifecycle commit, push, and hosted exact-head verification pending
+- Objective:
+  - Remove the false claim that issue #3 implements identity-subject-to-domain-account mapping without expanding the read-only architecture probe into account persistence or production identity integration.
+- Scope:
+  - Issue #3 acceptance criteria, pull request #4 description and approval state, and all four lifecycle documents.
+- Changes:
+  - Replaced the issue's implementation claim with the accepted architecture direction: external identity maps to an internal account, authorization is server-authoritative and deny-by-default, and mapping implementation belongs to the first persisted account slice.
+  - Left production identity-provider selection, account persistence, login, and protected mutations excluded from issue #3.
+  - Unchecked the issue's mechanical dependency-enforcement criterion because that separate hostile-review finding remains open.
+  - Reopened final exact-head verification and lifecycle reconciliation criteria until all corrective findings are complete.
+  - Updated the pull-request description from 13 to 18 tests, recorded the published-trip correction, distinguished the last verified correction checkpoint from final evidence, and replaced premature approval checkmarks with the live remediation gates.
+  - Removed identity mapping from the current merge-blocker list and made automated dependency-boundary enforcement the next bounded correction.
+- Impact:
+  - Issue #3, ADR 0003, code, exclusions, roadmap, and pull request now describe the same identity scope.
+  - The architecture remains provider-independent and avoids premature account or authentication implementation.
+  - Pull request #4 remains open, unapproved, and blocked by the remaining hostile-review findings.
+- Validation:
+  - Live issue #3 and pull request #4 bodies were retrieved before mutation.
+  - Issue #3 remains open and pull request #4 remained open and GitHub-mergeable at the last verified head.
+  - Application-quality run `30154018299` and lifecycle run `30154018297` passed without annotations on correction head `96a7ff9dc9a9a7542770f05070540f4cf7fb3ec1`.
+  - CodeRabbit remained rate-limited and provided no review object or findings.
+- Documentation:
+  - Updated `handoff.md`, `docs/changes.md`, `docs/roadmap.md`, and `docs/learning.md`.
+- Residual risks / exclusions:
+  - This is a governance and scope correction, not identity implementation.
+  - Automated dependency enforcement, transaction scope, payment lifecycle, idempotency, evidence integrity, projection boundaries, and final reconciliation remain open.
+  - Hosted workflows must run again after the lifecycle commit changes the pull-request head.
+- Follow-up:
+  - Validate lifecycle freshness and formatting, commit and push this correction, verify the new exact-head checks and annotations, then implement automated dependency-boundary enforcement.
+
+## 2026-07-27 17:10 WIB - Security, resilience, and scale baseline established
+
+- Issue / PR: Issue #3; pull request #4
+- Product: NitipCuy
+- Type: Security architecture, anti-abuse, resilience, capacity, and lifecycle amendment
+- Status: Accepted design documented, locally validated, committed, pushed, and required hosted workflows verified
+- Objective:
+  - Make security against DDoS and resource exhaustion, SQL injection, session compromise, credential and OTP attacks, and other common web threats a binding project requirement while preserving a realistic, testable path to horizontal growth.
+- Scope:
+  - Architecture decision and specialist documents, system architecture, quality gates, roadmap, contributor rules, README, and all four lifecycle documents.
+- Changes:
+  - Added ADR 0004 to require defense in depth, OWASP ASVS 5.0 Level 2 as the complete production web target, stateless horizontal scaling, bounded expensive work, secure sessions and authorization, safe persistence, hostile file/callback/outbound handling, measurable capacity, and explicit evidence levels.
+  - Added a security architecture covering assets, trust boundaries, a threat-control matrix, DDoS and cost abuse, authentication and sessions, brute force and automation, authorization, SQL injection, XSS, CSRF, uploads, SSRF, callbacks, secrets, private logs, monitoring, incident response, and launch gates.
+  - Added a scalability and resilience architecture covering public caching, pooled PostgreSQL, connection and query budgets, transactions, idempotency, durable workers, provider isolation, graceful degradation, observability, capacity contracts, load profiles, scaling sequence, backup, and recovery.
+  - Updated system architecture and quality gates so “designed,” “implemented,” “source-tested,” “runtime-tested,” “load-tested,” “provider-verified,” and “incident-tested” cannot be collapsed into a false security or scale claim.
+  - Updated Stage 1 through Stage 3 roadmap gates so each protected feature carries its applicable controls and real-money pilot activation requires configuration, load, abuse, restore, revocation, kill-switch, and incident evidence.
+  - Kept the current issue #3 architecture shell explicitly separate from production security implementation.
+- Impact:
+  - Future sessions have concrete, provider-independent acceptance criteria instead of a general instruction to “be secure” or “scale.”
+  - The starting modular monolith remains appropriate, but production correctness may not depend on one process.
+  - Security and capacity work becomes incremental with the feature that introduces risk; it is not deferred until launch and is not falsely claimed by documentation alone.
+- Validation:
+  - Primary guidance was checked from OWASP ASVS 5.0, OWASP cheat sheets and API Security, Next.js, Prisma, Vercel, and Neon documentation on 2026-07-27.
+  - Exact Node.js `24.18.0` and pnpm `11.17.0` were used.
+  - Frozen install was already up to date and `pnpm peers check` found no peer dependency issue.
+  - `pnpm check` passed formatting, lint, strict type checking, all 18 tests, and the production build.
+  - `pnpm audit:prod` reported no known production vulnerability.
+  - Lifecycle participation, internal Markdown links across 19 files, and `git diff --check` passed.
+  - Live issue #3 and pull request #4 were retrieved before mutation, then updated to record the accepted design, exclusions, evidence levels, remaining blockers, and non-claims.
+  - Commit `7522bf8d2076101cdc78245f390818eb6125252f` was pushed to pull request #4.
+  - Application-quality run `30256384832` and lifecycle run `30256384917` passed on that exact head with no annotations, failed steps, or skipped steps.
+  - GitHub reported the pull request open and mergeable with no review decision.
+  - CodeRabbit review run `fe94a2a4-4776-497f-b797-caae88ce6a39` remained pending after the bounded wait and had produced no review object or finding as of 17:10 WIB. It is not counted as independent review coverage or approval.
+- Documentation:
+  - Added `docs/decisions/0004-security-resilience-and-scale-baseline.md`, `docs/security/security-architecture.md`, and `docs/architecture/scalability-and-resilience.md`.
+  - Updated `AGENTS.md`, `README.md`, `handoff.md`, `docs/architecture/system-architecture.md`, `docs/development/quality-gates.md`, `docs/roadmap.md`, `docs/changes.md`, and `docs/learning.md`.
+- Residual risks / exclusions:
+  - This amendment does not activate or verify identity, sessions, WAF, bot controls, shared rate limiting, a database, object storage, a worker, providers, monitoring, backup, load testing, security testing, deployment, or production.
+  - No claim of DDoS immunity, complete injection prevention, session safety, brute-force immunity, OWASP conformance, production capacity, or incident readiness is made.
+  - Existing hostile-review blockers for dependency enforcement, transaction scope, payment lifecycle, idempotency, evidence integrity, projection boundaries, and final reconciliation remain.
+- Follow-up:
+  - Implement automated dependency-boundary enforcement as the next bounded correction; the other transaction, payment, idempotency, evidence, projection, and final-reconciliation blockers follow.
+
+## 2026-07-27 18:27 WIB - Security and scale hostile-review gaps corrected
+
+- Issue / PR: Issue #3; pull request #4
+- Product: NitipCuy
+- Type: Security architecture correction, scale-safety correction, and lifecycle reconciliation
+- Status: Accepted design correction committed, pushed, and hosted-verified; final lifecycle reconciliation in progress
+- Objective:
+  - Close six material gaps found in the accepted security and scale baseline before returning to dependency-boundary implementation.
+- Scope:
+  - ADR 0004, security architecture, scalability and resilience, system architecture, quality gates, roadmap, handoff, changes, learning, issue #3, and pull request #4.
+- Changes:
+  - Made phishing-resistant MFA such as passkeys, or an explicitly approved high-assurance alternative, a provider-selection gate for administrator, support, moderation, payment, payout, refund, bank-change, factor-replacement, and recovery flows.
+  - Added non-downgrading factor recovery with reauthentication, risk, notification, revocation, and audit requirements.
+  - Added an explicit edge-only origin, trusted proxy chain, forwarding-header overwrite, canonical host/origin/client-IP interpretation, direct-origin denial, and absolute-URL safety contract.
+  - Added a route-class dependency-outage matrix: bounded public reads may degrade, while protected identity, transaction, evidence, moderation, support, and administrator actions fail closed when required controls are unavailable.
+  - Added data minimization, provider encryption, threat-modelled application envelope encryption, managed KMS/HSM/key-vault custody, key versioning, rotation, revocation, compromise recovery, encrypted backup restore, retention, deletion, and cryptographic-erasure requirements.
+  - Added canonical public cache keys, protected-response exclusion, poisoning and deception defenses, concurrent-miss coalescing, hot-key budgets, expiry jitter, bounded stale windows, invalidation, and database-stampede prevention.
+  - Added expand-and-contract schema releases, bounded backfills, mixed old/new web and worker compatibility, queued-payload compatibility, destructive-cleanup delay, and rollback or forward-fix evidence.
+  - Expanded protected-preview, pilot, security, integration, load, outage, migration, cache, recovery, and incident gates for these controls.
+  - Corrected the handoff's stale instruction to commit and push the already hosted-verified identity acceptance work.
+- Impact:
+  - Future implementation has explicit provider-independent security and deployment contracts at the designed evidence level.
+  - The correction narrows false assumptions; it does not activate or verify any production control.
+  - Product scope, roadmap stage order, two service modes, seller-set rates, platform-fee direction, and provider-independent core remain unchanged.
+- Validation:
+  - Starting branch head `bf48727ed9f1e65d87919f4fbe11ac0815542355`, issue #3, pull request #4, reviews, and required hosted workflows were retrieved before editing.
+  - Application run `30257081811` and lifecycle run `30257081823` passed on that starting head without annotations.
+  - CodeRabbit run `86ff3d62-b1f7-4429-839e-e07fd4402c20` was rate-limited and created no review object or finding.
+  - Exact Node.js `24.18.0` and pnpm `11.17.0` were used for the current tree.
+  - Frozen install, peer check, formatting, lint, strict types, all 18 tests, production build, and production dependency audit passed.
+  - Lifecycle participation, internal Markdown links across 20 files, stale-control-language scan, six-control presence scan, and `git diff --check` passed.
+  - Issue #3 and pull request #4 were updated and read back successfully; both remain open, and the pull request remains GitHub-mergeable with no review or review decision.
+  - Correction commit `609c23b8bf96be995a9c9347a442d8abaca59ff6` was pushed to pull request #4.
+  - Application-quality run `30262412048` and lifecycle run `30262412059` passed on that exact checkpoint with zero annotations.
+  - Pull request #4 remained open and GitHub-mergeable with no review decision or review object after hosted verification.
+  - CodeRabbit did not review the correction; its only current record remains the earlier rate-limited run and provides no independent review coverage.
+- Documentation:
+  - Updated all four lifecycle documents and every affected canonical architecture, security, scale, and quality document.
+- Residual risks / exclusions:
+  - All six controls remain designed only; no identity provider, MFA, proxy, WAF, limiter, KMS, encryption, cache, database, migration, deployment, backup, security test, load test, or production service was created or configured.
+  - Dependency enforcement, transaction scope, payment lifecycle, idempotency, evidence integrity, projection separation, and final issue/PR reconciliation remain merge blockers.
+  - Pull request #4 remains open and unapproved.
+- Follow-up:
+  - Commit and push the lifecycle reconciliation, verify its exact hosted head, then resume automated dependency-boundary enforcement.
+
+## 2026-07-28 06:56 WIB - Trip windows, order projections, and evidence policy aligned
+
+- Issue / PR: Issue #3; pull request #4
+- Product: NitipCuy
+- Type: Product rule, public projection, domain invariant, evidence policy, and lifecycle correction
+- Status: Implementation checkpoint committed, pushed, and hosted-verified; lifecycle reconciliation in progress
+- Objective:
+  - Formalize seller-defined ordering windows, closed-trip history, seller and customer order workspaces, and evidence-gated fulfilment without exposing fixed-price seller acquisition cost.
+- Scope:
+  - Public simulated trip projection and presentation, product and order specifications, product and architecture ADRs, system and security architecture, quality gates, README, roadmap, handoff, changes, learning, issue #3, and pull request #4.
+- Changes:
+  - Added origin and destination IANA timezones, source-service start and end, and request-opening time to the public `PublishedTrip` projection.
+  - Added domain invariants for valid IANA timezones, advance PO, ordering-window sequence, source-service cutoff, and transport departure.
+  - Updated simulated trips and public list and detail presentation to show source-service and ordering windows in origin time and arrival in destination time.
+  - Defined the future authoritative `TripOffer`, rebuildable public `PublishedTrip`, read-only public history, and private seller/customer order projections; projections cannot authorize mutations, checkout, or capacity reservation.
+  - Split offer availability from physical trip milestones so request closure can coexist with ongoing accepted-order fulfilment.
+  - Required server-side new-order rejection outside the exact ordering window or when capacity, seller, offer, moderation, or risk eligibility fails.
+  - Required a verified actual-product photograph before fixed-price Shop for me can become `PURCHASED`, while removing routine buyer-visible receipt, acquisition-cost, and margin disclosure.
+  - Limited receipt evidence to an explicitly accepted actual-cost pricing formula or a proportionate private dispute, fraud, or compliance purpose.
+  - Required collection photographs and measured weight before Carry my item can become `COLLECTED`, with customer approval for material variance.
+  - Defined private jastipper work queues and customer progress timelines as future projections, not current implementation.
+- Impact:
+  - Customers can see when ordering starts and ends rather than only a deadline.
+  - Jastippers retain seller-defined fixed-price privacy while customers receive item-existence and condition evidence.
+  - Closed offers remain useful reputation history without accepting stale orders or exposing private transaction data.
+  - The prior public-versus-authoritative trip projection finding is resolved at the contract and current-code level.
+- Validation:
+  - Starting local and remote branch head `55eda6bfc903f712b7eeff97e21bf37b99d0ccb5` was clean.
+  - Pull request #4 was open and GitHub-mergeable with application run `30262587723` and lifecycle run `30262587684` passed with zero annotations; no review object or decision existed.
+  - Exact Node.js `24.18.0` and pnpm `11.17.0` formatting, lint, strict type checking, all 24 unit tests, production build, production dependency audit, lifecycle, and `git diff --check` passed after the final hostile-audit correction.
+  - The audit found that source-service chronology was enforced but lacked a direct inverted-window test; that adversarial test was added and passed.
+  - The rebuilt Next.js production runtime returned `200` for home and a known trip and `404` for an unknown trip; exact opening, closing, transport-departure, and estimated-arrival timestamps were present in their documented timezones.
+  - Public-page content assertions found no receipt, acquisition-cost, or margin disclosure.
+  - An initial runtime-start attempt picked up ambient Node.js `26.0.0` and pnpm `9.15.0`; `engine-strict` rejected it before startup. The successful probe used the exact `npx` Node.js and pnpm wrapper, and the failed attempt is not counted as success.
+  - Issue #3 and pull request #4 were updated and read back successfully; both remain open.
+  - Final lifecycle, 20-file internal Markdown-link, formatting, and diff checks passed after GitHub and hostile-audit reconciliation.
+  - Implementation commit `f4b635abba9fcdf548441254d3da5e29a645e492` was pushed to pull request #4.
+  - Application-quality run `30316681999` and lifecycle run `30316681979` passed on that exact implementation checkpoint with zero annotations.
+  - Pull request #4 was open and GitHub-mergeable with no review object or review decision after hosted verification.
+  - Lifecycle-reconciliation commit, push, and exact-head hosted verification remain pending.
+- Documentation:
+  - Updated all four lifecycle documents and every affected canonical product, order, architecture, security, and quality document.
+- Residual risks / exclusions:
+  - No authoritative trip persistence, protected request, capacity reservation, order, evidence upload, payment, dashboard, archive, provider, or production flow was created.
+  - A file hash still does not prove product authenticity, price, payment, ownership, or lawful content.
+  - Dependency enforcement, transaction scope, payment lifecycle, idempotency, evidence-storage integrity, and final lifecycle reconciliation remain issue #3 merge blockers.
+- Follow-up:
+  - Commit and push the lifecycle reconciliation, inspect its exact hosted head and annotations, update pull request #4 with the immutable result, then return to dependency-boundary enforcement.
+
+## 2026-07-28 13:38 WIB - Dependency direction enforced mechanically
+
+- Issue / PR: Issue #3; pull request #4
+- Product: NitipCuy application foundation
+- Type: Architecture enforcement, test, quality-gate, and lifecycle correction
+- Status: Implementation committed, pushed, and hosted-verified; lifecycle reconciliation in progress
+- Objective:
+  - Turn the accepted modular-monolith dependency direction from a review convention into a deterministic failing local and hosted gate.
+- Scope:
+  - Four project manifests, governed source under `packages/*/src` and `apps/web/src`, root quality scripts, adversarial fixtures, ADR 0003, system architecture, quality gates, README, and all four lifecycle documents.
+- Changes:
+  - Added a TypeScript-AST dependency analyzer that validates package manifests and parsed imports, exports, import-type expressions, triple-slash references, dynamic imports, `require`, `require.resolve`, and `module.require`.
+  - Rejected disallowed, unknown, undeclared, non-workspace, deep, cross-project-relative, source-root-escape, non-static, and symlink dependency paths.
+  - Kept domain and application production source free of external runtime packages and Node.js builtins.
+  - Restricted concrete adapters to web server composition and rejected client-to-server and client runtime-core imports while permitting type-only application contracts.
+  - Added `pnpm check:boundaries` for the live tree and 20 disposable adversarial fixture tests through `pnpm test:boundaries`.
+  - Wired both into `pnpm check`, so the existing read-only application-quality workflow executes the enforcement without new permissions or secrets.
+- Impact:
+  - A forbidden dependency edge now fails before merge instead of relying on a reviewer noticing it.
+  - Framework and provider code cannot silently enter domain or application through a relative, aliased, type-only, dynamic, require, manifest, or symlink bypass covered by the gate.
+  - The modular monolith remains one deployable; no microservice, provider, database, deployment, or runtime security control was introduced.
+- Validation:
+  - Starting local and remote branch head `b87e4541569d825c3b686e8954013945f986f1fb` was clean and synchronized.
+  - Exact Node.js `24.18.0` and pnpm `11.17.0` were used.
+  - Live scan passed across four projects, 24 governed source files, and 46 module references.
+  - All 20 boundary tests and 24 existing unit tests passed after the manifest-placement and source-root-symlink corrections.
+  - Complete-diff review found that the configured source root itself could still be a symlink; root-symlink rejection and a twentieth fixture were added, rerun, and passed.
+  - Formatting, lint, strict type checking, production build, production dependency audit, lifecycle, 20-file internal Markdown links, and diff hygiene passed.
+  - Production runtime regression returned `200` for home and a known trip and `404` for an unknown trip; expected timeline content remained present and public pages exposed no receipt, acquisition-cost, or margin language.
+  - Complete-diff hostile review found no further material issue.
+  - Issue #3 and pull request #4 were updated and read back successfully with the dependency scope, evidence, and remaining blockers; both remain open.
+  - Implementation commit `330b10a85adbd83c151eafdfc0a5ca6d0f36e9ae` was pushed to pull request #4.
+  - Application-quality run `30336136426` and lifecycle run `30336136464` passed on that exact implementation checkpoint with zero annotations.
+  - The issue's dependency acceptance criterion is checked; pull request #4 is GitHub-mergeable with no review object or decision.
+  - Lifecycle-reconciliation commit, push, and hosted verification remain pending.
+- Documentation:
+  - Updated all four lifecycle documents plus README, ADR 0003, system architecture, and quality gates.
+- Residual risks / exclusions:
+  - Static enforcement cannot prove runtime authorization, transaction atomicity, payment correctness, idempotency, evidence integrity, provider behavior, or production security.
+  - Transaction scope, payment lifecycle, idempotency, evidence-storage integrity, and final lifecycle reconciliation remain issue #3 merge blockers.
+- Follow-up:
+  - Commit and push the lifecycle reconciliation, inspect its exact hosted head and annotations, update pull request #4 with the immutable result, then begin the transaction-scope correction.
+
+## 2026-07-28 18:21 WIB - Misleading transaction abstraction removed and deferred
+
+- Issue / PR: Issue #3; pull request #4
+- Product: NitipCuy application foundation
+- Type: Architecture correction, false-capability removal, test correction, and lifecycle reconciliation
+- Status: Implementation committed, pushed, hosted-verified, and externally reconciled; lifecycle reconciliation in progress
+- Objective:
+  - Resolve the transaction-scope finding without adding an in-memory abstraction that cannot prove persistence atomicity.
+- Scope:
+  - Application platform-service ports and exports, deterministic adapters and tests, ADR 0003, system architecture, quality gates, roadmap, handoff, changes, and learning.
+- Changes:
+  - Removed the callback-only `TransactionPort`.
+  - Removed `PassthroughTransaction` and the test that treated independently mutated audit and outbox arrays as work performed inside a transaction.
+  - Kept deterministic audit and outbox adapters as standalone provisional test services without claiming shared atomicity.
+  - Amended ADR 0003 to defer a database-backed transaction-scoped unit of work to the first persisted write slice.
+  - Required the future scope to bind repositories, ledger, success audit, inbox, and outbox writers to one PostgreSQL transaction while keeping provider and object-storage calls outside it.
+  - Added future disposable-PostgreSQL proof gates for rollback fault injection, last-capacity contention, stale-version or lock conflict, balanced ledger constraints, state-to-audit and state-to-outbox atomicity, timeouts, and absence of provider calls inside the transaction.
+- Impact:
+  - Issue #3 no longer exposes a transaction-shaped callback that cannot commit, roll back, isolate concurrent work, or bind writers to one connection.
+  - The public read-only architecture probe remains appropriately database-free.
+  - The correction does not implement or verify PostgreSQL transactions, protected writes, ledger behavior, or production atomicity.
+  - Product scope, service modes, seller-defined rates, platform-fee direction, ordering windows, evidence rules, and roadmap stage order remain unchanged.
+- Validation:
+  - Starting local and remote branch head `780563fa784c3ff57d28039b1f6cd491b126d2b4` was clean and synchronized.
+  - Dependency-boundary lifecycle reconciliation at that head had application run `30336362159` and lifecycle run `30336362143` passed with zero annotations.
+  - Exact Node.js `24.18.0` and pnpm `11.17.0` application type checking and all five adapter tests passed after the removal.
+  - Exact-toolchain peer validation, formatting, lint, live boundary scan, strict type checking, all 20 boundary tests, all 24 unit tests, production build, production dependency audit, and lifecycle participation passed.
+  - Internal Markdown links passed across 19 files and 33 local targets; `git diff --check` passed.
+  - The rebuilt production runtime returned `200` for home and a known trip and `404` for an unknown trip; tested public pages exposed no receipt, acquisition-cost, margin, or equivalent Indonesian private-pricing language.
+  - Complete correction-diff hostile review found no material issue.
+  - Implementation checkpoint `bf564436bf54815782501bc10280074f16a23fa9` was pushed and matched the remote branch.
+  - Application run `30354861825` and lifecycle run `30354861680` passed on that exact head with zero annotations.
+  - Pull request #4 remained open and GitHub-mergeable with no review object or review decision.
+  - CodeRabbit was green but produced no review object or finding and therefore provided no independent review coverage.
+  - Issue #3 and pull request #4 were updated and read back with the explicit deferral, exact implementation evidence, and remaining blockers.
+- Documentation:
+  - Updated all four lifecycle documents plus ADR 0003, system architecture, and quality gates.
+- Residual risks / exclusions:
+  - The future transaction-scoped unit of work is designed only and cannot be counted complete until implemented with the first persisted write slice and verified against disposable PostgreSQL.
+  - Payment lifecycle, idempotency, evidence-storage integrity, and final lifecycle and pull-request reconciliation remain issue #3 merge blockers.
+- Follow-up:
+  - Commit, push, and inspect this lifecycle reconciliation, then correct the asynchronous payment lifecycle.
+
+## 2026-07-29 17:51 WIB - Asynchronous payment outcomes separated from submissions
+
+- Issue / PR: Issue #3; pull request #4
+- Product: NitipCuy application foundation
+- Type: Payment architecture correction, fail-closed assessment, adversarial tests, and lifecycle reconciliation
+- Status: Implementation committed, pushed, hosted-verified, and externally reconciled; lifecycle reconciliation in progress
+- Objective:
+  - Prevent an accepted payment-provider request, redirect, QR, Virtual Account instruction, callback, timeout, or mock default from being treated as proof that money is held, released, refunded, split, or settled.
+- Scope:
+  - Application payment port, payment-protection assessment, adapter mock and tests, payment and order product contracts, ADR 0003, system architecture, DOKU evaluation, quality gates, roadmap, handoff, changes, and learning.
+- Changes:
+  - Replaced the immediate held-payment contract with provider-neutral initiation, release-request, refund-request, and inspection operations.
+  - Modeled accepted-for-processing, rejected, and unknown submission receipts without assigning completed financial outcomes.
+  - Added provider-neutral redirect, QR, and Virtual Account customer actions to accepted initiation receipts.
+  - Separated provider observations for collection, hold, release, refund, settlement, and chargeback.
+  - Limited provider events to status-change signals that require inspection and reconciliation.
+  - Added a stable internal payment-attempt ID so an ambiguous initiation remains inspectable even when no provider payment reference was returned.
+  - Added explicit held-amount evidence and a pure initial-protection assessment that confirms `HELD` only when the observation matches the expected attempt, retains a provider payment reference, both collected and held amounts exactly match, and no contradictory post-hold status or amount evidence exists.
+  - Made unknown, contradictory, amount-mismatched, paid-but-not-held, and post-hold observations fail closed into pending or reconciliation.
+  - Changed the deterministic mock to require explicit configured receipts and snapshots instead of inventing financial success.
+  - Added adversarial application and adapter coverage for accepted, rejected, unknown, pending, expired, contradictory, mismatched, and post-hold cases.
+- Impact:
+  - Application code can no longer infer a completed hold from payment initiation or a completed release or refund from request acceptance.
+  - Core contracts remain independent of DOKU and expose no provider object model.
+  - The correction does not mutate an order or ledger and does not process money.
+  - Product roles, service modes, seller-defined prices, platform-fee direction, evidence rules, logistics direction, and roadmap stage order remain unchanged.
+- Validation:
+  - The correction started from clean synchronized head `81fb1f5ceab5ba2445d6606a255471b1dca75a86`, whose application run `30355124146` and lifecycle run `30355122231` passed with zero annotations.
+  - Exact Node.js `24.18.0` and pnpm `11.17.0` application and adapter type checking passed.
+  - All 18 application tests and 10 adapter tests passed after the ambiguous-initiation, cross-attempt, missing-reference, exact-held-amount, paid-but-hold-failed, terminal-with-money, and status-versus-amount hostile corrections.
+  - Exact-toolchain frozen install, peer validation, formatting, lint, live dependency scan, strict type checking, all 20 boundary tests, all 44 package tests, production build, production dependency audit, and lifecycle participation passed.
+  - The live dependency scan covered four projects, 26 governed source files, and 51 module references.
+  - Internal Markdown links passed across 19 files and 33 local targets; `git diff --check` and the stale immediate-held contract scan passed.
+  - The rebuilt production runtime returned `200` for home and a known trip and `404` for an unknown trip; the public-page pricing-privacy assertion passed.
+  - Complete correction-diff hostile review found and corrected ambiguous-initiation lookup, missing held amount, cross-attempt matching, paid-but-hold-failed, terminal-with-money, missing provider reference, and status-versus-amount contradictions; no further material issue remained.
+  - Implementation checkpoint `fae92e55fc1117b1b78fc7add244e8ccb940c2e3` was pushed and matched the remote branch.
+  - Application run `30446270570` and lifecycle run `30446270568` passed on that exact head with zero annotations.
+  - Pull request #4 was open, mergeable, and clean with no review object or review decision.
+  - CodeRabbit was green but produced no review object or finding and therefore provided no independent review coverage.
+  - Issue #3 and pull request #4 were updated and read back with the asynchronous-payment scope, exact evidence, explicit non-claims, and remaining blockers.
+- Documentation:
+  - Updated all four lifecycle documents plus the master specification, order lifecycle, ADR 0003, system architecture, DOKU evaluation, and quality gates.
+- Residual risks / exclusions:
+  - The documentation-only lifecycle reconciliation commit, push, and hosted exact-head evidence is pending.
+  - Idempotency enforcement remains the next implementation blocker.
+  - No callback authentication, replay protection, durable inbox, worker, retry scheduler, ledger, database transaction, order transition, real provider adapter, release/refund/settlement assessment, or money movement exists.
+- Follow-up:
+  - Commit and push this lifecycle reconciliation, inspect its exact hosted head, then begin idempotency enforcement.
+
+## 2026-07-31 09:20 WIB - Scoped fail-closed idempotency correction
+
+- Status: Implemented, committed, pushed, locally and hosted verified, externally reconciled, and followed by a hosted-verified lifecycle checkpoint.
+- Objective:
+  - Make duplicate payment, dispatch, and evidence commands safe without tying the application core to Next.js, a provider SDK, or one storage technology.
+- Changes:
+  - Added a framework-independent application idempotency port with atomic claim, completion, and recovery-required transitions.
+  - Added validated scope, operation namespace, 8-128-character key, lowercase SHA-256 fingerprint, and bounded completed-result retention contracts.
+  - Added deterministic errors for changed-payload key reuse, an already-running command, malformed input, and an earlier uncertain outcome that requires reconciliation.
+  - Added an explicitly test-only in-memory authority with stored-result cloning, completed-record expiry, cross-scope isolation, and claim ownership checks.
+  - Added canonical SHA-256 command fingerprints, including `bigint` amounts and evidence bytes.
+  - Enforced idempotency for payment initiation, payment release requests, payment refund requests, logistics dispatch registration, and evidence storage.
+  - Scoped payment and logistics keys to the order aggregate and evidence keys to the owner account.
+  - Set mock completed-result retention to 90 days for payment and 30 days for logistics and evidence.
+  - Preserved accepted, rejected, and `UNKNOWN` provider receipts as replayable results instead of treating a request as a completed financial outcome.
+  - Moved deterministic mock-configuration and evidence-metadata validation before claim creation.
+  - Changed unexpected execution errors to `RECOVERY_REQUIRED`; the key is not released for a blind retry that could duplicate an external side effect.
+  - Added contract coverage for exact replay, stored-result isolation, changed payload, concurrent duplicate, uncertain execution, expiry, unsafe key, authority outage, cross-scope isolation, payment, release, refund, dispatch, and evidence bytes.
+- Hostile-review corrections:
+  - Rejected the first automatic-release-on-error design because a provider could have accepted a request before the local exception.
+  - Added recovery-required state so ambiguous outcomes must be inspected or reconciled before another execution.
+  - Added explicit scope after identifying that a globally keyed replay cache could expose or reuse a result across accounts or orders.
+  - Started completed-result retention at recorded completion rather than initial claim so a long-running operation or clock movement cannot make a fresh result immediately expire.
+  - Type-tagged every canonical fingerprint value and rejected non-plain objects after identifying possible collisions between special-looking objects, `bigint`, and byte encodings.
+- Validation so far:
+  - Exact Node.js `24.18.0` and pnpm `11.17.0` application and adapter type checking passed.
+  - All 24 adapter tests and all 58 package tests passed after the final canonical-encoding hostile correction.
+  - Final exact-toolchain `pnpm check` passed formatting, lint, a four-project scan covering 29 source files and 67 module references, strict type checking, all 20 boundary tests, all package tests, and the production build.
+  - Frozen install, peer validation, production dependency audit, lifecycle-document participation, and `git diff --check` passed.
+  - The production HTTP regression returned `200` for home and a known trip and `404` for an unknown trip; the public pricing-privacy assertion passed.
+  - Internal Markdown links passed across 20 files and 33 local targets.
+  - The ambient Node.js `26.0.0` and pnpm `9.15.0` attempt was rejected by `engine-strict` and is not counted as evidence.
+  - Implementation checkpoint `115ecfeb7f4b0876f56ae43d71cfa378f26497fe` was pushed and matched the remote branch.
+  - Application run `30599067671` and lifecycle run `30599067251` passed on that exact head with zero annotations.
+  - Pull request #4 was open and clean with no review object, review decision, review thread, or line finding.
+  - CodeRabbit remained paused/free-summary-only and therefore supplied no independent review coverage.
+  - Issue #3 and pull request #4 were updated and read back; issue comment `5138575547` and PR comment `5138575741` record the exact evidence, non-claims, and remaining blockers.
+  - Lifecycle checkpoint `abe7cd0bdecfd4df3565cfd0e968f4ab461f39f0` was pushed and matched the remote branch.
+  - Application run `30599264338` and lifecycle run `30599264345` passed on that exact lifecycle head with zero annotations; GitHub again reported pull request #4 clean.
+- Documentation:
+  - Reconciled handoff, changes, roadmap, learning, system architecture, scalability/resilience, and quality-gate claims for the local correction.
+- Residual risks / exclusions:
+  - The default authority is process-local, unbounded, non-persistent, and test-only.
+  - No authenticated use case, shared database-backed idempotency state, cleanup worker, recovery command, provider-native idempotency verification, callback inbox, rate-limit integration, ledger, order mutation, or real money movement exists.
+  - Evidence storage still trusts caller-supplied SHA-256 metadata and buffers raw content; its server-authoritative evidence lifecycle remains the next implementation blocker.
+- Follow-up:
+  - Begin the evidence-storage integrity correction after re-verifying the volatile live pull-request state.
+
+## 2026-08-05 14:00 WIB - PostCSS incomplete-fix advisory correction started
+
+- Issue / PR: Issue #3; pull request #4
+- Product: NitipCuy application foundation
+- Type: Production dependency security correction and lifecycle reconciliation
+- Status: Implemented, committed, pushed, and locally and hosted verified; lifecycle and external reconciliation in progress
+- Objective:
+  - Remove the newly disclosed moderate PostCSS source-map file-read advisory without weakening the frozen toolchain or broadening issue #3.
+- Scope:
+  - Exact PostCSS override, lockfile, architecture dependency record, and all four lifecycle documents.
+- Changes:
+  - Replaced the exact PostCSS `8.5.18` override with the minimum patched `8.5.23` release.
+  - Regenerated the lockfile through exact Node.js `24.18.0` and pnpm `11.17.0`.
+  - Recorded GitHub advisory `GHSA-fxqj-rqcc-2cmp` as superseding the earlier conclusion that `8.5.18` was fully patched.
+  - Kept the existing `sharp` `0.35.3` override and every product, provider, runtime, and architecture boundary unchanged.
+- Impact:
+  - The local production audit now reports no known vulnerabilities.
+  - The correction changes no NitipCuy behavior and activates no provider, deployment, database, identity, payment, evidence, or production control.
+  - The configured audit threshold remains high severity, so a successful exit code alone still does not prove that the audit contains zero lower-severity findings.
+- Validation so far:
+  - The initial exact-toolchain `pnpm audit:prod` reproduced one moderate finding on PostCSS `8.5.18` while returning success because the audit threshold is high.
+  - `pnpm audit --prod --json` identified `GHSA-fxqj-rqcc-2cmp`, affected versions through `8.5.22`, and patched versions beginning at `8.5.23` on the `apps__web>next>postcss` path.
+  - Exact-toolchain lockfile regeneration selected PostCSS `8.5.23`.
+  - The corrected exact-toolchain production audit reports no known vulnerabilities.
+  - Frozen install, peer validation, formatting, lint, the four-project 29-source/67-reference dependency scan, strict types, all 20 boundary tests, all 58 package tests, production build, lifecycle participation, base and worktree diff hygiene, and complete correction-diff review passed.
+  - Implementation checkpoint `a086dcf2b9060394756b2bf4ddc57994d7b158c8` was pushed and matched the remote branch.
+  - Application run `30983580593` and lifecycle run `30983580611` passed on that exact head with zero annotations.
+  - Pull request #4 remained open, clean, and GitHub-mergeable with no review object or review decision.
+- Documentation:
+  - Updated handoff, changes, roadmap, learning, and ADR 0003.
+- Residual risks / exclusions:
+  - The documentation-only lifecycle checkpoint, external reconciliation, and its hosted exact-head verification remain pending.
+  - The override remains temporary until Next.js resolves a reviewed patched graph without it.
+  - Evidence-storage integrity remains the next implementation blocker after this correction is closed.
+- Follow-up:
+  - Commit and push this lifecycle reconciliation, inspect both hosted workflows on its immutable head, then begin the evidence lifecycle correction.
+
+## 2026-08-05 14:37 WIB - Server-authoritative evidence lifecycle fully reconciled
+
+- Issue / PR: Issue #3; pull request #4
+- Product: NitipCuy application foundation
+- Type: Evidence-integrity contract and deterministic adapter correction
+- Status: Implemented, committed, pushed, fully locally verified, hosted-verified, lifecycle-reconciled, and externally reconciled; final lifecycle-state checkpoint verification and owner approval pending
+- Objective:
+  - Remove caller-trusted file truth and raw-buffer transport from the application boundary while preserving a provider-neutral, fail-closed evidence lifecycle.
+- Changes:
+  - Replaced the application `EvidenceStoragePort` and raw `StoreEvidenceCommand` with upload-intent, inspection, acceptance, retention, and deletion contracts.
+  - Removed raw bytes, client MIME, caller byte length, caller digest, object path, and scan status from the application-facing command surface.
+  - Added a test-only process-local adapter that simulates private quarantine and scanner input outside the application port, computes the SHA-256 digest and byte length from copied fixture bytes, and detects supported JPEG, PNG, or WebP signatures.
+  - Required a clean scanner result bound to the same observed digest before promotion to a server-generated private object reference.
+  - Preserved the scanner reference with accepted metadata so the clean decision remains traceable after quarantine bytes move out of the fixture record.
+  - Made quarantine upload immutable through rejection, acceptance, and deletion; terminal evidence cannot reuse its upload or scanner seam.
+  - Added explicit awaiting-upload, verification-pending, verified, rejected, accepted, and deleted observations with stable reason codes.
+  - Applied scoped idempotency to upload-intent creation, acceptance, and expired-retention deletion.
+  - Added adversarial coverage for false client MIME and digest claims, caller-buffer mutation, replacement, empty, oversized, unsupported, expired, scanner-pending, scanner-unavailable, scanner-rejected, digest-mismatched, cross-owner, wrong-reference, post-acceptance, retention-active, and deletion cases.
+- Hostile-review corrections:
+  - Denied reuse of an upload reference after promotion; the first local version cleared quarantine content at acceptance but did not make the consumed upload reference terminal.
+  - Stopped retaining unused client MIME and digest claims inside the fixture record; the application and accepted evidence use only observations derived from the copied bytes.
+  - Made promise-returning port methods reject asynchronously and kept external storage/scanner fixture methods explicitly synchronous.
+  - Added runtime validation for evidence classification, configured media policy, and scanner status rather than relying on TypeScript unions at external boundaries; an unknown scan status cannot fall through as clean.
+- Impact:
+  - Application code can no longer declare a file safe or identify accepted bytes through caller metadata.
+  - Scanner outage, pending work, malicious content, and digest mismatch cannot promote evidence.
+  - The server-generated accepted reference and retention lifecycle remain independent of a storage or scanner vendor.
+  - Product roles, service modes, seller-defined pricing, platform-fee direction, evidence requirements, order states, provider direction, and roadmap stage order are unchanged.
+- Validation so far:
+  - Exact Node.js `24.18.0` and pnpm `11.17.0` application and adapter type checking passed.
+  - All 36 adapter tests passed, including 14 evidence-lifecycle tests.
+  - Final exact-toolchain frozen install and peer validation passed.
+  - Final exact-toolchain `pnpm check` passed formatting, lint, a four-project dependency scan covering 32 source files and 76 module references, strict type checking, all 20 boundary tests, all 70 package tests, and the production build after the provenance and runtime-policy corrections.
+  - The production dependency audit reported no known vulnerabilities; lifecycle participation and worktree plus complete-base diff hygiene passed.
+  - Markdown links passed across 20 tracked documents, 33 local links, and 17 unique targets.
+  - Credential-pattern, stale evidence-contract, application/adapter source-network, unsafe-`any`, console, and placeholder scans passed.
+  - The rebuilt exact-toolchain production runtime returned `200` for home, filtered search, and a known trip and `404` for an unknown trip; expected route content was present and private-pricing terms were absent.
+  - Implementation checkpoint `f57ef166db9bf6d71e7b2b5b9505f8c71cf38b84` was pushed and matched the remote branch.
+  - Application run `30985369642` and lifecycle run `30985369587` passed on that exact head with zero annotations.
+  - Pull request #4 was open, clean, and GitHub-mergeable with no review object or review decision.
+  - The complete `origin/main...HEAD` diff covered 78 files; diff hygiene, source-risk patterns, and credential patterns passed after the evidence files entered the immutable diff.
+  - Lifecycle reconciliation head `44359cea5c23cc62bc0ef065682c052613ca0ef1` was pushed and matched the remote branch.
+  - Reconciliation application run `30985575000` and lifecycle run `30985575004` passed with zero annotations.
+  - Issue #3 acceptance criteria were checked and issue comment `5188962019` was posted and read back.
+  - Pull request comment `5188964841` was posted and read back; pull request #4 remained open and clean with no review object or fresh owner approval.
+- Documentation:
+  - Updated all four lifecycle documents, ADR 0003, system architecture, security architecture, scalability and resilience, and quality gates.
+- Residual risks / exclusions:
+  - The adapter is process-local, buffers synthetic fixture bytes, and stores no production evidence.
+  - No authenticated ownership or case authorization, signed upload URL, object-storage policy, durable metadata, robust image decoding or dimension checks, malware scanner, re-encoding, duplicate-image review, order transition, cleanup worker, backup behavior, provider verification, runtime upload, or production deletion exists.
+  - The accepted-evidence retention fixture does not prove rejected-quarantine cleanup, backup expiry, cryptographic erasure, or durable scheduled deletion.
+- Follow-up:
+  - Commit and push the final lifecycle-state record, inspect its immutable hosted runs, then stop for fresh BurinSN review without merging.
+
+## 2026-08-06 07:16 WIB - Fresh owner approval recorded for pull request #4
+
+- Issue / PR: Issue #3; pull request #4
+- Product: NitipCuy application foundation
+- Type: Governance approval and merge-state reconciliation
+- Status: Fresh merge approval received; documentation-only approval checkpoint and hosted verification pending
+- Verified state before this record:
+  - Final review-state head `893e46b30718368f1260e837d12147ee5edab005` matched the local and remote feature branch.
+  - Application run `30985838757` and lifecycle run `30985838654` passed on that exact head with zero annotations.
+  - Pull request #4 was open, clean, and GitHub-mergeable; issue #3 acceptance criteria were checked; no GitHub review object or decision existed.
+- Decision:
+  - After the exact pull-request scope, head, checks, and absence of a GitHub review object were presented, BurinSN gave fresh explicit direction to proceed with the pull request #4 merge.
+  - The approval is bounded to a squash merge of pull request #4 after this approval-state head passes both required hosted workflows and the stale pull-request description is reconciled.
+- Scope unchanged:
+  - No product behavior, architecture, provider choice, payment movement, deployment, production control, or visual approval changes in this record.
+  - The roadmap order is unchanged: the persisted account-to-public-Q&A slice begins only through a new governed issue after the merge is verified.
+- Next:
+  - Commit and push this approval-state record, verify both hosted workflows and annotations on its immutable head, update the pull-request description, squash-merge pull request #4, and verify `main`, issue closure, and branch cleanup.

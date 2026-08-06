@@ -1,10 +1,10 @@
 # NitipCuy Canonical Roadmap
 
-Last reviewed: 2026-07-25 11:18 WIB
+Last reviewed: 2026-08-06 07:16 WIB
 
 Current stage: Stage 1 - Platform foundation
 
-Current work item: Issue #1 merge transition; architecture and application scaffolding next
+Current work item: Issue #3 hostile-review remediation and final reconciliation are complete; final review-state head `893e46b30718368f1260e837d12147ee5edab005` passed application run `30985838757` and lifecycle run `30985838654` with zero annotations, issue #3 acceptance is checked, and pull request #4 is open and clean. BurinSN gave fresh explicit merge approval on 2026-08-06 after the exact head and checks were presented. Record that approval, verify the resulting documentation-only head through both hosted workflows, reconcile the pull-request description, then squash-merge pull request #4.
 
 ## 1. Role, authority, and freshness contract
 
@@ -29,8 +29,8 @@ NitipCuy makes jastip activity searchable, explicit, evidence-backed, and safer 
 
 The product must let:
 
-- a jastipper publish where and when they are travelling, what they can buy or carry, remaining capacity, their own rates, deadlines, relevant location, and delivery terms;
-- a customer find a suitable route, inspect products or submit a request, understand the full cost and delivery method, transact through the platform, follow evidence, dispute when necessary, and review a completed transaction;
+- a jastipper publish where and when they are available and travelling, when orders open and close, what they can buy or carry, remaining capacity, their own rates, deadlines, relevant location, and delivery terms;
+- a customer find a suitable route, see the ordering window, inspect products or submit a request, understand the full cost and delivery method, transact through the platform, follow an order timeline and evidence, dispute when necessary, and review a completed transaction;
 - reusable questions remain public on the relevant trip, listing, or request, while private details remain private;
 - both parties use either Shop for me or Carry my item through one authoritative order, evidence, payment, moderation, and reputation system.
 
@@ -53,6 +53,14 @@ The master product specification and accepted ADRs control detailed product beha
 13. Core domain behavior remains independent of DOKU, Biteship, or another provider.
 14. No external-provider unknown blocks building with mock provider ports.
 15. Threads is a later acquisition and feedback channel, not a prerequisite for platform development.
+16. Security is defense in depth and evidence-based: no framework, ORM, cloud provider, checklist, or passed build makes the platform attack-proof.
+17. The production web shape is stateless and horizontally scalable; process-local session, idempotency, rate-limit, lock, cache, or job state is forbidden.
+18. The complete production web application targets OWASP ASVS 5.0 Level 2, with additional risk-based review for high-impact flows.
+19. Capacity, availability, latency, recovery, provider-quota, and cost claims require approved numerical targets and tests.
+20. A closed or ineligible trip offer rejects new orders server-side while remaining read-only public seller history.
+21. Fixed-price Shop for me requires an actual-product photograph before `PURCHASED`, not routine buyer-visible receipt, acquisition-cost, or margin disclosure.
+22. Carry my item requires collection photographs and measured weight before `COLLECTED`; material variance requires customer approval.
+23. Public trip history and private seller/customer order dashboards are projections, never mutation or authorization authority.
 
 ## 4. Drift alarms
 
@@ -62,6 +70,11 @@ Stop and require a new impact analysis and BurinSN decision if work attempts to:
 - replace `Cuy` with `Coy`;
 - remove either primary service mode;
 - make NitipCuy set a universal jastip or kilogram rate;
+- force fixed-price jastippers to reveal routine receipts, acquisition cost, or margin to buyers;
+- mark Shop for me as purchased without an accepted actual-product photograph;
+- mark Carry my item as collected without accepted collection photographs, measured weight, and required variance approval;
+- accept a new request outside the authoritative ordering window or from a stale public projection;
+- delete closed trips that should remain safe public history, or expose their private customers, orders, addresses, or evidence;
 - introduce subscriptions, paid boosts, or advertising as an assumed revenue requirement;
 - make private addresses or identity records public;
 - allow unprotected off-platform transactions to receive protected status or verified reviews;
@@ -71,6 +84,16 @@ Stop and require a new impact analysis and BurinSN decision if work attempts to:
 - move real money before provider, legal, policy, security, and operational gates pass;
 - delay platform development merely to collect more Threads examples;
 - claim T&C removes all platform duties after known illegal or harmful activity.
+- claim that NitipCuy is DDoS-proof, injection-proof, session-hijack-proof, brute-force-proof, generally “secure,” or “scalable” without naming the exact evidence level;
+- rely on Vercel, Prisma, an identity provider, `SameSite`, CSP, or another single control as the complete security boundary;
+- treat privileged MFA, trusted-proxy handling, security-dependency outage behavior, encryption and key custody, cache safety, or deployment compatibility as optional provider details;
+- fail open for protected actions when session, authorization, rate-limit, risk, audit, or idempotency guarantees are unavailable;
+- cache private, personalized, authorization-dependent, error, or redirect responses on a public path;
+- perform destructive database contraction before old and new web, worker, migration, and queued payload versions are proven compatible;
+- store production sessions, idempotency, rate limits, locks, cache authority, or durable jobs only in one web process;
+- add unbounded search, pagination, uploads, provider calls, retries, database queries, or asynchronous work;
+- activate protected or real-money flows before their security, abuse, provider, monitoring, recovery, and incident gates pass;
+- split into microservices without a measured scaling, availability, security-isolation, ownership, or deployment trigger and a new ADR.
 
 ## 5. Delivery strategy
 
@@ -101,44 +124,89 @@ Status: Complete
 Exit evidence:
 
 - initial baseline `70b4c96a0df486b70e626434338e0b20dec7df1f`;
-- repository-state record `6fe622733bdf457448ed0e8670ff5249ce3ca6fe`.
+- repository-state record `6fe622733bdf457448ed0e8670ff5249ce3ca6fe`;
+- lifecycle-governance merge `fd9c98aefff199bb0e8ff954fa3a56e6764cf03a`.
 
 ## 7. Stage 1 - Platform foundation
 
 Status: In progress
 
-### Current slice
+### Completed governance slice
 
-- [x] Issue #1 hardens all four lifecycle documents.
-- [x] Local lifecycle freshness check passes.
-- [x] Pull request #2 opened against `main`.
-- [x] Pull-request lifecycle workflow demonstrated a passing run.
-- [x] Pull-request check result is manually enforced because private branch protection is unavailable on the current GitHub plan.
-- [x] Missing independent CodeRabbit review coverage disclosed to BurinSN.
-- [x] BurinSN explicitly authorized final correction, exact-head audit, and merge of pull request #2.
-- [x] Lifecycle workflow base-ref input hardened against direct GitHub-context interpolation in shell.
-- [x] External workflow action upgraded to supported checkout v7.0.1 and pinned to a verified immutable commit.
+- [x] Issue #1 and pull request #2 established the four-file lifecycle contract.
+- [x] Local and hosted lifecycle freshness checks were demonstrated.
+- [x] GitHub-context handling and workflow dependencies were hardened.
+- [x] Pull request #2 was owner-approved, squash-merged, and issue #1 closed.
+- [x] Branch-protection limitations remain explicitly enforced by project policy.
 
-Pull-request merge state is volatile and must be verified live. Once pull request #2 is confirmed merged and issue #1 is closed, the next slice below becomes current without changing the accepted roadmap order.
+### Current architecture slice
 
-### Next slice
+- [x] Issue #3 created with bounded acceptance and exclusions.
+- [x] Web-first stack, runtime, workspace shape, and deployment posture selected in ADR 0003.
+- [x] Identity, deny-by-default authorization, PostgreSQL, and migration direction recorded.
+- [x] ADR 0004 records the OWASP ASVS 5.0 Level 2 target, evidence-level claims, layered attack controls, stateless horizontal production shape, and capacity/recovery gates.
+- [x] Security architecture covers DDoS and cost abuse, injection, sessions, credential and OTP attacks, authorization, browser threats, uploads, SSRF, callbacks, secrets, monitoring, incident response, and verification.
+- [x] Scalability and resilience architecture covers caching, database and connection budgets, transaction and concurrency rules, durable workers, provider isolation, observability, load profiles, and evidence-driven extraction.
+- [x] Security and scale amendment committed and pushed at `7522bf8d2076101cdc78245f390818eb6125252f`; application-quality run `30256384832` and lifecycle run `30256384917` passed without annotations.
+- [x] Provider-independent payment, logistics, identity-verification, evidence-lifecycle, clock, identifier, audit, and outbox interfaces and deterministic mocks exist.
+- [x] Framework-free domain, application, adapter, and delivery package layout established.
+- [x] Mechanically enforce dependency direction through package-manifest validation, parsed source edges, and adversarial fixtures covering cross-package relative and other bypass forms.
+- [x] Local development, formatting, lint, strict type, unit test, build, audit, and PR-CI gates established.
+- [x] Working local shell implements public trip search, detail, and chronological public Q&A using simulated data.
+- [x] Published-trip runtime invariants reject unsupported modes, impossible calendar and clock values, invalid offsets and IANA timezones, inverted source-service and ordering windows, ordering after source availability, service after departure, and duplicate question IDs; advance PO is supported and cross-offset Q&A sorts by instant.
+- [x] The simulated public shell presents source-service and ordering windows in the origin timezone and arrival in the destination timezone.
+- [x] Trip-window implementation checkpoint `f4b635abba9fcdf548441254d3da5e29a645e492` passed application-quality run `30316681999` and lifecycle run `30316681979` with zero annotations.
+- [x] Dependency-boundary implementation checkpoint `330b10a85adbd83c151eafdfc0a5ca6d0f36e9ae` passed application-quality run `30336136426` and lifecycle run `30336136464` with zero annotations.
+- [x] Transaction-deferral implementation checkpoint `bf564436bf54815782501bc10280074f16a23fa9` passed application-quality run `30354861825` and lifecycle run `30354861680` with zero annotations.
+- [x] Asynchronous-payment implementation checkpoint `fae92e55fc1117b1b78fc7add244e8ccb940c2e3` passed application-quality run `30446270570` and lifecycle run `30446270568` with zero annotations.
+- [x] Exact-toolchain frozen install, peer, quality, production-audit, lifecycle, runtime, complete-diff, and security gates passed for the original architecture checkpoint.
+- [x] Issue #3 branch is committed, pushed, and opened as pull request #4.
+- [x] BurinSN gave fresh issue #3 merge approval on 2026-08-06 after the final exact-head evidence and findings were visible.
 
-- [ ] Create the architecture and application-scaffolding issue.
-- [ ] Select and record the web-first stack and deployment target.
-- [ ] Select and record identity, authorization, database, and migration direction.
-- [ ] Define provider-independent payment and logistics ports.
-- [ ] Establish local development, formatting, linting, type, test, security, migration, build, and CI gates.
-- [ ] Scaffold a working local platform shell.
-- [ ] Implement the first vertical slice:
+The current architecture probe is deliberately public and read-only. It demonstrates the intended package direction without prematurely combining identity selection, persistence, protected mutation, and UI behavior in one change. The hostile-review remediation gate below is complete; the only remaining pre-merge condition is successful hosted verification of the documentation-only approval-state head.
+
+Pull-request head, hosted checks, annotations, reviews, and mergeability are volatile. Retrieve them directly. A missing, pending, skipped, warned, or failed lifecycle or application-quality result blocks approval by project policy.
+
+### Hostile-review remediation gate
+
+- [x] Correct published-trip runtime date, timestamp, service-mode, question-identity, and cross-offset chronology invariants with adversarial tests.
+- [x] Reconcile identity acceptance as documented architecture direction while deferring mapping implementation to the first persisted account slice.
+- [x] Add automated dependency-boundary enforcement.
+- [x] Remove the unenforceable callback-only transaction abstraction and defer a database-backed transaction-scoped unit of work, with explicit atomicity and disposable-PostgreSQL proof gates, to the first persisted write slice.
+- [x] Correct payment initiation, held-state, release, refund, and reconciliation contracts through provider-neutral submissions, observations, signals, stable attempt correlation, exact collected-and-held amount assessment, configured mocks, and adversarial tests. Full local and hosted exact-head verification passed.
+- [x] Enforce and contract-test idempotency through scoped keys, canonical payload fingerprints, exact replay, changed-payload conflict, concurrent denial, recovery-required ambiguous outcomes, expiry, authority-outage denial, and cross-scope isolation. Shared durable production state remains a later implementation gate.
+- [x] Replace the vulnerable PostCSS `8.5.18` override with patched `8.5.23`; implementation head `a086dcf2b9060394756b2bf4ddc57994d7b158c8` passed application run `30983580593` and lifecycle run `30983580611` with zero annotations.
+- [x] Replace caller-trusted evidence hashes and buffered raw-upload assumptions with a server-authoritative evidence lifecycle. Implementation head `f57ef166db9bf6d71e7b2b5b9505f8c71cf38b84` passed application run `30985369642` and lifecycle run `30985369587` with zero annotations after complete local gates.
+- [x] Separate the future authoritative `TripOffer`, public `PublishedTrip`, public history, and private seller/customer order projections; projections never authorize mutation, checkout, or capacity reservation.
+- [x] Establish the binding defense-in-depth security and evidence-based scale baseline without claiming the controls are implemented.
+- [x] Close the follow-up design gaps for sensitive-data encryption and managed-key lifecycle, mandatory privileged assurance, trusted-proxy and canonical-host handling, explicit dependency-outage failure policy, cache poisoning/deception/stampede/hot-key protection, and expand-and-contract mixed-version deployment.
+- [x] Reconcile all lifecycle, specialist, issue, and pull-request claims after the corrections; issue comment `5188962019` and pull-request comment `5188964841` record the final evidence and non-claims.
+- [x] Run final exact-toolchain, runtime, security, complete-diff, and hosted exact-head review; implementation and lifecycle heads passed locally and through both hosted workflows with zero annotations.
+
+### Next persisted vertical slice
+
+- [ ] Create the persisted marketplace-foundation issue only after the remediation gate passes and issue #3 is merged.
+- [ ] Implement the first persisted vertical slice:
 
 ```text
 account
   -> jastipper profile
+  -> trip draft
+  -> moderation gate
   -> trip publication
+  -> source-service and ordering windows
   -> destination and date search
   -> trip detail
   -> public question and answer
 ```
+
+- [ ] Add the first PostgreSQL schema and reviewed expand-and-contract migration through the isolated database adapter, with old/new application compatibility and rollback or forward-fix evidence.
+- [ ] Add external-identity proof and protected server-authoritative mutations without storing passwords; require the approved privileged MFA, high-assurance step-up, and non-downgrading recovery contract where applicable.
+- [ ] Add integration tests using disposable resources and explicit destructive-test guards.
+- [ ] Make new-order eligibility server-authoritative across exact time, offer state, seller eligibility, moderation, and capacity; reserve the final capacity atomically.
+- [ ] Implement the first applicable security controls with the feature that needs them: secure session behavior, central authorization denials, multi-axis shared rate limits for protected actions, trusted-proxy and canonical-host handling, explicit protected fail-closed behavior, safe-query enforcement, CSRF and browser policy, private-data encryption and managed-key boundaries where required, private-data-safe logs, and bounded inputs.
+- [ ] Establish cursor pagination, query and connection budgets, and minimal database, application, and abuse observability for the persisted slice.
+- [ ] Record preliminary pilot capacity, provider-quota, cost, RPO, and RTO questions without inventing targets before the pilot is bounded.
 
 ### Experience slice
 
@@ -149,7 +217,7 @@ account
 
 Exit gate:
 
-- The repository is healthy and the first vertical slice works locally with documented architecture, tests, security boundaries, and approved product behavior.
+  - The repository is healthy and the first vertical slice works locally with documented architecture, automated negative tests, implemented applicable security boundaries, bounded resource use, and approved product behavior.
 
 ## 8. Stage 2 - Core marketplace MVP
 
@@ -158,6 +226,8 @@ Status: Pending Stage 1
 - [ ] Shop for me request and fulfilment.
 - [ ] Carry my item request and fulfilment.
 - [ ] Seller acceptance, rates, capacity, deadlines, addresses, and delivery disclosure.
+- [ ] Private jastipper order workspace grouped by trip, store, and actionable status.
+- [ ] Private customer order timeline with evidence, expected next action, arrival, pickup or delivery, tracking, confirmation, and dispute entry.
 - [ ] Private order communication.
 - [ ] Authoritative order state machine and evidence records.
 - [ ] Mock protected payment, hold, release, split, refund, chargeback, and reconciliation.
@@ -166,6 +236,14 @@ Status: Pending Stage 1
 - [ ] Risk scanning, moderation, enforcement, and appeals.
 - [ ] Disputes and transaction-only reviews.
 - [ ] Administrator and support exception handling.
+- [ ] Shared production-shape session, idempotency, rate-limit, and abuse state; process-local implementations remain test-only.
+- [ ] Public cache safety: canonical keys, protected-response exclusion, poisoning and deception tests, concurrent-miss coalescing, hot-key budgets, bounded stale windows, invalidation, and database-stampede prevention.
+- [ ] Direct private evidence quarantine, server-observed hashes, validation, scanning, retention, and authorization-mediated downloads.
+- [ ] Gate Shop for me `PURCHASED` on an accepted actual-product photograph without routine fixed-price receipt disclosure.
+- [ ] Gate Carry my item `COLLECTED` on accepted collection photographs and measured weight; require customer approval for material variance.
+- [ ] Keep any actual-cost, dispute, fraud, or compliance receipt evidence private, purpose-limited, and retention-bounded.
+- [ ] Transaction-bound outbox and durable retrying worker before asynchronous scans, notifications, provider retries, or reconciliation.
+- [ ] Bounded cursor-paginated reads, request and provider budgets, circuit breakers, kill switches, and actionable observability.
 
 Real funds and production logistics remain disabled.
 
@@ -186,6 +264,11 @@ Required before real transactions:
 - [ ] Cancellation, refund, dispute, insurance, loss, damage, and provider-cost allocation matrix.
 - [ ] Pilot route, category, value, weight, capacity, and participant boundaries.
 - [ ] Legal, privacy, security, incident-response, support, reconciliation, and operational sign-off.
+- [ ] Applicable OWASP ASVS 5.0 Level 2 requirements traced to current evidence, with independent review of high-impact flows.
+- [ ] Actual privileged assurance and recovery, cookie, trusted-proxy, canonical-host, header, edge, WAF, bot, rate-limit, database, cache, managed-key, encrypted-backup, storage, payment, and logistics configurations verified in non-production.
+- [ ] BurinSN-approved user, traffic, latency, availability, data, provider-quota, recovery, and cost capacity contract.
+- [ ] Ramp, spike, soak, abuse, cache-stampede and hot-key, mixed-version deployment, migration-interruption, provider-failure, and recovery profiles passed in an isolated environment against that contract.
+- [ ] Encrypted-backup and key restore, key rotation and compromise response, session revocation, provider kill switches, incident response, and evidence preservation rehearsed.
 
 Initial production payment rails remain QRIS and selected Virtual Accounts. Cards, PayLater, and convenience stores remain disabled until separately approved.
 
@@ -223,11 +306,11 @@ The unresolved DOKU, logistics, policy, legal, and pilot items listed in Stage 3
 
 ### Now
 
-If pull request #2 remains open, complete its exact-head audit and authorized merge. If it is merged, verify `main`, issue closure, and branch cleanup, then start the next slice.
+Commit and push the approval-state record, inspect both workflows and annotations on its immutable head, and reconcile the stale pull-request description. If the new head remains clean and contains no material change beyond the lifecycle record, execute the authorized squash merge of pull request #4.
 
 ### Next
 
-Open the architecture and application-scaffolding issue and implement the first vertical slice through the governed branch and pull-request workflow.
+Verify the squash merge on `main`, issue #3 closure, and branch cleanup. Then create a new governed issue for the persisted account-to-public-Q&A vertical slice with its applicable security and resource controls; do not begin that slice inside issue #3.
 
 ### Later
 

@@ -11,8 +11,11 @@ Before planning or changing NitipCuy, read:
 3. The latest entry in `docs/changes.md`
 4. Relevant entries in `docs/learning.md`
 5. `docs/product/master-specification.md`
-6. The relevant ADR, payment, trust-and-safety, and lifecycle documents
-7. `docs/development/git-workflow.md` before any Git or GitHub mutation
+6. `docs/architecture/system-architecture.md` before architecture or implementation work
+7. `docs/security/security-architecture.md` and `docs/architecture/scalability-and-resilience.md` before protected, data, provider, deployment, performance, or operational work
+8. The relevant ADR, payment, trust-and-safety, and lifecycle documents
+9. `docs/development/quality-gates.md` before dependency, code, test, build, security, load, or CI work
+10. `docs/development/git-workflow.md` before any Git or GitHub mutation
 
 Verified live state and current explicit BurinSN direction override stale documentation.
 
@@ -24,6 +27,10 @@ Verified live state and current explicit BurinSN direction override stale docume
 - `docs/learning.md` owns append-only verified learning, corrections, failed approaches, and deferred questions.
 - `docs/product/master-specification.md` owns the product model.
 - `docs/product/order-lifecycle.md` owns transaction states and evidence gates.
+- `docs/architecture/system-architecture.md` owns accepted system boundaries, dependency direction, data classification, and provider-port rules.
+- `docs/security/security-architecture.md` owns application-security, anti-abuse, data-protection, threat-control, and security-verification requirements.
+- `docs/architecture/scalability-and-resilience.md` owns stateless scaling, capacity, resource budgets, provider isolation, load, and recovery requirements.
+- `docs/development/quality-gates.md` owns the supported toolchain and validation evidence contract.
 - `docs/trust-safety/moderation-model.md` owns marketplace enforcement.
 - ADRs in `docs/decisions/` own accepted product and architecture decisions.
 
@@ -55,6 +62,10 @@ All four lifecycle documents are mandatory for every material session and pull r
 - append the learning, correction, failed approach, deferred question, or an explicit no-new-learning statement.
 
 Run `scripts/check-lifecycle-docs.sh origin/main` before declaring the work complete. Passing the check proves file participation only. It does not replace live-state reconciliation or hostile content review.
+
+For application changes, also use the exact supported Node.js and pnpm versions and run `pnpm check` plus `pnpm audit:prod`. A passed build does not prove runtime, browser, security, provider, payment, legal, or visual readiness.
+
+Security and scale claims must state the highest evidence actually obtained: designed, implemented, source-tested, runtime-tested, load-tested, provider-verified, or incident-tested. Do not describe a control as generally secure, attack-proof, scalable, or production-ready.
 
 Work is incomplete while any lifecycle document is stale. Do not defer lifecycle updates to a later issue, cleanup pass, handoff, or sign-off.
 

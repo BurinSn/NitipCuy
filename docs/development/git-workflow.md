@@ -24,12 +24,13 @@ This exception does not authorize later direct feature work on `main`.
 3. Preserve unrelated and user-owned changes.
 4. Implement code, tests, migrations, security controls, and required documentation together.
 5. Update `handoff.md`, `docs/changes.md`, `docs/roadmap.md`, and `docs/learning.md` in every material pull request.
-6. Run `scripts/check-lifecycle-docs.sh origin/main` plus all relevant local quality gates and record exact results.
+6. Run `scripts/check-lifecycle-docs.sh origin/main` plus all relevant local gates from `docs/development/quality-gates.md` and record exact results.
 7. Open a pull request using `.github/PULL_REQUEST_TEMPLATE.md`.
 8. Review the complete base diff and resolve or explicitly disposition material findings.
-9. Obtain fresh BurinSN product-owner approval before merge.
-10. Prefer squash merge for one coherent issue.
-11. Verify post-merge `main` and clean up the merged branch.
+9. For application work, verify the hosted lifecycle and application-quality workflows on the exact immutable PR head.
+10. Obtain fresh BurinSN product-owner approval before merge.
+11. Prefer squash merge for one coherent issue.
+12. Verify post-merge `main` and clean up the merged branch.
 
 ## Branch names
 
