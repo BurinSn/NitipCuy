@@ -857,3 +857,22 @@ A session with no material change does not invent an entry. A session that makes
   - The accepted-evidence retention fixture does not prove rejected-quarantine cleanup, backup expiry, cryptographic erasure, or durable scheduled deletion.
 - Follow-up:
   - Commit and push the final lifecycle-state record, inspect its immutable hosted runs, then stop for fresh BurinSN review without merging.
+
+## 2026-08-06 07:16 WIB - Fresh owner approval recorded for pull request #4
+
+- Issue / PR: Issue #3; pull request #4
+- Product: NitipCuy application foundation
+- Type: Governance approval and merge-state reconciliation
+- Status: Fresh merge approval received; documentation-only approval checkpoint and hosted verification pending
+- Verified state before this record:
+  - Final review-state head `893e46b30718368f1260e837d12147ee5edab005` matched the local and remote feature branch.
+  - Application run `30985838757` and lifecycle run `30985838654` passed on that exact head with zero annotations.
+  - Pull request #4 was open, clean, and GitHub-mergeable; issue #3 acceptance criteria were checked; no GitHub review object or decision existed.
+- Decision:
+  - After the exact pull-request scope, head, checks, and absence of a GitHub review object were presented, BurinSN gave fresh explicit direction to proceed with the pull request #4 merge.
+  - The approval is bounded to a squash merge of pull request #4 after this approval-state head passes both required hosted workflows and the stale pull-request description is reconciled.
+- Scope unchanged:
+  - No product behavior, architecture, provider choice, payment movement, deployment, production control, or visual approval changes in this record.
+  - The roadmap order is unchanged: the persisted account-to-public-Q&A slice begins only through a new governed issue after the merge is verified.
+- Next:
+  - Commit and push this approval-state record, verify both hosted workflows and annotations on its immutable head, update the pull-request description, squash-merge pull request #4, and verify `main`, issue closure, and branch cleanup.

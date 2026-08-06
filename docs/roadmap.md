@@ -1,10 +1,10 @@
 # NitipCuy Canonical Roadmap
 
-Last reviewed: 2026-08-05 14:37 WIB
+Last reviewed: 2026-08-06 07:16 WIB
 
 Current stage: Stage 1 - Platform foundation
 
-Current work item: Issue #3 hostile-review remediation is complete and externally reconciled; lifecycle head `44359cea5c23cc62bc0ef065682c052613ca0ef1` passed application run `30985575000` and lifecycle run `30985575004` with zero annotations, issue #3 acceptance is checked, and pull request #4 is open and clean with no review or fresh owner approval; commit this final lifecycle state, verify its hosted head, then stop for BurinSN review
+Current work item: Issue #3 hostile-review remediation and final reconciliation are complete; final review-state head `893e46b30718368f1260e837d12147ee5edab005` passed application run `30985838757` and lifecycle run `30985838654` with zero annotations, issue #3 acceptance is checked, and pull request #4 is open and clean. BurinSN gave fresh explicit merge approval on 2026-08-06 after the exact head and checks were presented. Record that approval, verify the resulting documentation-only head through both hosted workflows, reconcile the pull-request description, then squash-merge pull request #4.
 
 ## 1. Role, authority, and freshness contract
 
@@ -161,9 +161,9 @@ Status: In progress
 - [x] Asynchronous-payment implementation checkpoint `fae92e55fc1117b1b78fc7add244e8ccb940c2e3` passed application-quality run `30446270570` and lifecycle run `30446270568` with zero annotations.
 - [x] Exact-toolchain frozen install, peer, quality, production-audit, lifecycle, runtime, complete-diff, and security gates passed for the original architecture checkpoint.
 - [x] Issue #3 branch is committed, pushed, and opened as pull request #4.
-- [ ] BurinSN gives fresh issue #3 merge approval after all evidence and findings are visible.
+- [x] BurinSN gave fresh issue #3 merge approval on 2026-08-06 after the final exact-head evidence and findings were visible.
 
-The current architecture probe is deliberately public and read-only. It demonstrates the intended package direction without prematurely combining identity selection, persistence, protected mutation, and UI behavior in one change. It is not merge-ready while the hostile-review remediation gate below remains open.
+The current architecture probe is deliberately public and read-only. It demonstrates the intended package direction without prematurely combining identity selection, persistence, protected mutation, and UI behavior in one change. The hostile-review remediation gate below is complete; the only remaining pre-merge condition is successful hosted verification of the documentation-only approval-state head.
 
 Pull-request head, hosted checks, annotations, reviews, and mergeability are volatile. Retrieve them directly. A missing, pending, skipped, warned, or failed lifecycle or application-quality result blocks approval by project policy.
 
@@ -306,11 +306,11 @@ The unresolved DOKU, logistics, policy, legal, and pilot items listed in Stage 3
 
 ### Now
 
-Commit and push this final lifecycle-state record and inspect both workflows on its immutable head. If it remains clean, stop implementation and present pull request #4 for fresh BurinSN review; do not merge on mechanical status.
+Commit and push the approval-state record, inspect both workflows and annotations on its immutable head, and reconcile the stale pull-request description. If the new head remains clean and contains no material change beyond the lifecycle record, execute the authorized squash merge of pull request #4.
 
 ### Next
 
-Obtain fresh BurinSN approval for issue #3. Only after an authorized merge may the persisted account-to-public-Q&A vertical slice begin through a new governed issue with its applicable security and resource controls.
+Verify the squash merge on `main`, issue #3 closure, and branch cleanup. Then create a new governed issue for the persisted account-to-public-Q&A vertical slice with its applicable security and resource controls; do not begin that slice inside issue #3.
 
 ### Later
 

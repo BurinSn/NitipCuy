@@ -1,6 +1,6 @@
 # NitipCuy Cross-Session Handoff
 
-Last updated: 2026-08-05 14:37 WIB
+Last updated: 2026-08-06 07:16 WIB
 
 Handoff owner: Codex
 
@@ -131,14 +131,15 @@ The shell is a functional architecture probe. It is not a production UI, has no 
 | PostCSS lifecycle checkpoint and current remote pull-request head | `27e8aa258615fa95c1615ab7bd5868f008121728`; application run `30983746084` and lifecycle run `30983746061` passed with zero annotations |
 | Evidence-lifecycle implementation checkpoint and current remote pull-request head | `f57ef166db9bf6d71e7b2b5b9505f8c71cf38b84`; application run `30985369642` and lifecycle run `30985369587` passed with zero annotations |
 | Evidence lifecycle reconciliation checkpoint and current remote pull-request head | `44359cea5c23cc62bc0ef065682c052613ca0ef1`; application run `30985575000` and lifecycle run `30985575004` passed with zero annotations |
-| Current local worktree | Clean and synchronized at `44359cea5c23cc62bc0ef065682c052613ca0ef1` before this final lifecycle-state record |
+| Final review-state checkpoint and current remote pull-request head | `893e46b30718368f1260e837d12147ee5edab005`; application run `30985838757` and lifecycle run `30985838654` passed with zero annotations |
+| Current local worktree | Clean and synchronized at `893e46b30718368f1260e837d12147ee5edab005` before this approval-state record |
 | Issue and pull-request reconciliation | Issue #3 acceptance criteria are checked and final evidence was read back at issue comment `5188962019`; pull request comment `5188964841` records the same exact evidence and non-claims |
 | Independent review at current remote head | No review object, review decision, review thread, or line finding exists; CodeRabbit reports success but detailed review is paused and the Free plan provides summary/walkthrough only, so it provides no independent review coverage |
 | First hostile-review correction | Published-trip runtime invariants committed, pushed, and hosted-verified |
 | Second hostile-review correction | Issue #3 identity acceptance and pull-request scope reconciled with the deliberately deferred persisted account implementation; committed, pushed, and hosted-verified |
 | Security and scale amendment | Initial amendment and six-gap hostile-review correction accepted, committed, pushed, and required hosted workflows verified; production controls remain unimplemented |
 | Live head, checks, reviews, and mergeability | Volatile; retrieve directly before any approval or merge action |
-| Merge authority | Not granted for issue #3; fresh BurinSN approval is required after exact-head evidence |
+| Merge authority | Fresh explicit BurinSN approval was granted in the current conversation on 2026-08-06 after exact-head evidence was presented; it authorizes only the pull request #4 squash merge after the approval-state head passes both required workflows |
 | Branch protection | Unavailable for this private repository on the current GitHub plan |
 | Deployment | None |
 | Production providers | None activated |
@@ -147,7 +148,7 @@ The tracked handoff cannot contain its own final commit SHA. Copy immutable iden
 
 ## 6. Current work item
 
-Issue #3 owns the architecture and application-foundation slice. A direct hostile review found material implementation and acceptance gaps after the original technical checks passed. Pull request #4 is therefore in corrective review and is not ready for merge.
+Issue #3 owns the architecture and application-foundation slice. Its hostile-review remediation, exact-head verification, acceptance reconciliation, and final review-state checkpoint are complete. Pull request #4 now has fresh BurinSN merge approval; only the documentation-only approval-state checkpoint, hosted verification, pull-request-description reconciliation, and authorized squash merge remain.
 
 The issue now states that external-identity-to-internal-account mapping and deny-by-default authorization are documented architecture directions. Mapping implementation is explicitly deferred to the first persisted account slice, matching the issue scope, exclusions, ADR 0003, current code, and roadmap.
 
@@ -275,11 +276,9 @@ The transaction-abstraction finding is resolved by explicit deferral. No transac
 
 The asynchronous payment-lifecycle finding is resolved and verified at the source-tested, local-runtime-regression, and hosted-workflow levels. Provider integration, money movement, callback processing, ledger behavior, and full settlement reconciliation remain unimplemented and unclaimed.
 
-No known material implementation or lifecycle reconciliation finding remains for issue #3 after the final hostile review. The following governance gate still blocks merge:
+No known material implementation or lifecycle reconciliation finding remains for issue #3 after the final hostile review. BurinSN supplied fresh explicit merge approval on 2026-08-06 after exact head `893e46b30718368f1260e837d12147ee5edab005` and both successful hosted runs were presented.
 
-1. fresh BurinSN review and explicit merge approval remain absent.
-
-The final lifecycle-state commit created from this record must also pass both hosted workflows before it is presented for that approval. Its mechanical mergeability remains non-authoritative.
+The documentation-only approval-state commit created from this record must pass both hosted workflows with zero annotations before the authorized squash merge is executed. Mechanical mergeability remains non-authoritative, and any new material finding or implementation drift cancels the ready-to-merge posture pending renewed review.
 
 The following still block real-money pilot activation:
 
@@ -300,12 +299,12 @@ These are Stage 3 activation gates, not reasons to delay provider-independent pl
 
 ## 9. Exact next action
 
-Commit and push this final lifecycle-state record and inspect both hosted workflows plus annotations on its immutable head. If they pass without drift, stop implementation and present pull request #4 to BurinSN for fresh review and explicit merge approval. Do not merge, deploy, or begin the persisted vertical slice without that authority.
+Commit and push this approval-state record, inspect both hosted workflows plus annotations on its immutable head, and reconcile the stale pull-request description against the verified 70-test evidence. If the head remains clean and no material finding appears, execute the authorized squash merge of pull request #4, verify the immutable merge commit on `origin/main`, confirm issue #3 closure, and clean the merged feature branch.
 
 Do not add account persistence or a production identity provider to issue #3. Those belong to the first persisted account slice after this architecture issue is corrected and merged.
 
 Do not provision WAF, rate-limit, identity, database, storage, worker, monitoring, backup, security-test, load-test, or production infrastructure merely because the requirements are accepted.
 
-Do not create another pull request.
+Do not create another pull request before the pull request #4 merge is verified. The next implementation slice requires its own written issue and focused branch.
 
-Do not merge issue #3, deploy, contact providers, move money, or claim visual approval without the corresponding fresh BurinSN authority.
+Current authority permits only the pull request #4 squash merge after its final hosted gates pass. It does not authorize deployment, provider contact, payment movement, production action, visual approval, or the next implementation slice.

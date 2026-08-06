@@ -899,3 +899,18 @@ Do not present inference, provider marketing, provisional pricing, or a future i
 - Evidence lifecycle reconciliation checkpoint `44359cea5c23cc62bc0ef065682c052613ca0ef1` also reproduced on the supported hosted toolchain.
   - Evidence: application run `30985575000` and lifecycle run `30985575004` passed with zero annotations; issue comment `5188962019` and pull-request comment `5188964841` were posted and read back.
   - Impact: all issue #3 acceptance claims are reconciled, but clean checks and mechanical mergeability still do not grant BurinSN approval.
+
+## 2026-08-06 07:16 WIB - Technical readiness and merge authority are separate gates
+
+### Accepted
+
+- A direct owner instruction given after the exact pull-request scope, immutable head, and hosted evidence are presented can resolve the merge-authority gate even when GitHub has no formal review object.
+  - Evidence: final review-state head `893e46b30718368f1260e837d12147ee5edab005` passed application run `30985838757` and lifecycle run `30985838654` with zero annotations; BurinSN then explicitly directed Codex to proceed.
+  - Impact: record the conversation approval in the lifecycle documents, but still verify the resulting documentation-only head before using that authority.
+- Approval does not make a changed head self-validating.
+  - Evidence: recording approval changes the pull-request head even though it changes no application behavior.
+  - Impact: rerun both required hosted gates and inspect annotations before merge; a material finding or implementation drift requires renewed review.
+
+### No product-model change
+
+- This governance checkpoint changes no role, service mode, pricing rule, evidence rule, provider direction, architecture boundary, or roadmap order, and grants no deployment, provider, production, payment, or visual authority.
