@@ -8,11 +8,21 @@
   },
   "scripts": {
     "build": "pnpm typecheck",
-    "test": "vitest run",
-    "typecheck": "tsc --noEmit"
+    "db:generate": "prisma generate --config prisma.config.ts",
+    "test": "pnpm db:generate && vitest run",
+    "typecheck": "pnpm db:generate && tsc --noEmit"
   },
   "dependencies": {
     "@nitipcuy/application": "workspace:*",
-    "@nitipcuy/domain": "workspace:*"
+    "@nitipcuy/domain": "workspace:*",
+    "@prisma/adapter-pg": "7.9.1",
+    "@prisma/client": "7.9.1",
+    "openid-client": "6.8.4",
+    "pg": "8.22.0"
+  },
+  "devDependencies": {
+    "@types/pg": "8.20.4",
+    "prisma": "7.9.1",
+    "testcontainers": "12.1.0"
   }
 }

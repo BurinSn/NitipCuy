@@ -70,6 +70,22 @@ test("allows the accepted inward dependency direction and test tooling", (t) => 
   assert.deepEqual(check(workspace).violations, []);
 });
 
+test("excludes the exact generated Prisma client root only", (t) => {
+  const workspace = createWorkspace(t);
+  workspace.write(
+    "packages/adapters/src/generated/prisma/client.ts",
+    'export { generated } from "../../../../../outside.ts";\n',
+  );
+
+  assert.deepEqual(check(workspace).violations, []);
+
+  workspace.write(
+    "packages/adapters/src/generated-manual/bad.ts",
+    'export { bad } from "../../../../outside.ts";\n',
+  );
+  assertViolation(workspace, "SOURCE_ROOT_ESCAPE");
+});
+
 test("rejects a type-only outward workspace import", (t) => {
   const workspace = createWorkspace(t);
   workspace.write(

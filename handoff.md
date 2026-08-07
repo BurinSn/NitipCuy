@@ -1,6 +1,6 @@
 # NitipCuy Cross-Session Handoff
 
-Last updated: 2026-08-06 07:16 WIB
+Last updated: 2026-08-07 13:23 WIB
 
 Handoff owner: Codex
 
@@ -8,25 +8,19 @@ Product owner: BurinSN
 
 ## 1. Role, authority, and freshness contract
 
-This file is the single operational resume point. It owns verified repository state, active bounded work, authority boundaries, blockers, verification, and the exact next action.
+This file is the single operational resume point. It owns verified repository state, active bounded work, authority boundaries, blockers, verification, and the exact next action. Live Git and GitHub state override this timestamped record.
 
-It is current-state documentation, not history. Update it whenever the issue, branch, pull request, verification, blocker, approval, or next action changes. Verified live state overrides this file. Reconcile any mismatch before continuing.
-
-This handoff never grants merge, deployment, provider contact, payment movement, production action, visual approval, or product-scope authority.
+This handoff never grants merge, deployment, real-provider configuration, external security testing, payment movement, production action, visual approval, or product-scope authority.
 
 ## 2. Mandatory resume protocol
 
-Before planning or changing NitipCuy:
+Before changing NitipCuy:
 
-1. Read `AGENTS.md`.
-2. Read `docs/roadmap.md`.
-3. Read this handoff.
-4. Read the newest `docs/changes.md` and relevant `docs/learning.md` entries.
-5. Read `docs/product/master-specification.md`.
-6. Read `docs/architecture/system-architecture.md`, relevant ADRs, and relevant specialist documents.
-7. Read `docs/development/git-workflow.md` before Git or GitHub mutation.
-8. Verify local branch, status, head, `origin/main`, issue, pull request, reviews, and exact-head checks.
-9. Reconcile every mismatch before implementation.
+1. Read `AGENTS.md`, `docs/roadmap.md`, this handoff, the latest `docs/changes.md`, and relevant `docs/learning.md`.
+2. Read the master specification, system architecture, ADR 0005, security architecture, scalability/resilience, quality gates, and Git workflow for issue #5 work.
+3. Verify branch, status, local head, `origin/main`, issue #5, pull request, reviews, and exact-head checks.
+4. Preserve unexpected work and reconcile every stale lifecycle claim before implementation.
+5. Do not inspect or expose `.env*`, credentials, keys, browser sessions, private identity data, customer data, or production secrets.
 
 Minimum local verification:
 
@@ -37,274 +31,122 @@ git rev-parse origin/main
 git log --oneline --decorate -5
 ```
 
-Do not inspect or expose `.env*`, credentials, private keys, identity documents, payment data, customer addresses, or production secrets while gathering context.
-
 ## 3. Product compass
 
-NitipCuy is a standalone BurinSN marketplace for independent jastippers and customers. It is separate from BCN and uses `Cuy`, not `Coy`.
+NitipCuy is a standalone BurinSN marketplace connecting customers with independent jastippers. It supports Shop for me and Carry my item. Jastippers set their own prices and terms; NitipCuy earns an approved transaction-protection fee direction rather than subscriptions. Public trip discussion is reusable and contains no private address, identity, order, evidence, or payment data.
 
-The two primary service modes are:
+The current Stage 1 slice deliberately stops before orders, addresses, private chat, real evidence, payments, logistics, disputes, real provider activation, or production deployment.
 
-1. **Shop for me**: a jastipper purchases an item for the customer.
-2. **Carry my item**: the customer already owns or arranged the item and hires a jastipper to collect or carry it.
+## 4. Accepted issue #5 direction
 
-Non-negotiable boundaries:
+Issue [#5](https://github.com/BurinSn/NitipCuy/issues/5) owns this vertical slice:
 
-- discovery is trip-first, route-aware, destination-aware, and timeline-aware;
-- jastippers set their own item, service, kilogram, minimum, maximum, capacity, pickup, and delivery terms;
-- NitipCuy does not impose a mandatory seller rate;
-- public discussion serves reusable questions; private surfaces hold addresses, identity, receipts, disputes, and order details;
-- address and final-delivery terms are known before paid commitment;
-- every trip offer has timezone-explicit source-service, ordering, transport-departure, and arrival instants; advance PO is allowed;
-- closed or ineligible offers reject new orders server-side but remain read-only public seller history;
-- fixed-price Shop for me requires an actual-product photograph before `PURCHASED`, not routine buyer-visible receipt or acquisition-cost disclosure;
-- Carry my item requires collection photographs and measured weight before `COLLECTED`, with customer approval for material variance;
-- jastipper and customer order workspaces are private projections of authoritative state;
-- only protected completed platform transactions receive verified reviews;
-- revenue is a disclosed transaction protection fee, not subscriptions or paid boosts;
-- the planning fee remains 3 percent, minimum Rp15,000 and maximum Rp100,000, pending provider and pilot economics;
-- risk scanning, evidence, enforcement, appeals, disputes, and reconciliation remain platform responsibilities;
-- severe prohibited conduct can receive immediate takedown or suspension;
-- NitipCuy is not designed as the cross-border merchant, importer, customs broker, carrier, or legal seller of jastipper goods.
+```text
+verified Google OIDC proof
+  -> internal account
+  -> revocable base-assurance session
+  -> owned jastipper profile
+  -> owned trip draft
+  -> privileged moderation decision
+  -> published safe projection
+  -> anonymous bounded search/detail
+  -> authenticated public question
+  -> trip-owner answer
+```
 
-The master product specification and accepted ADRs control detailed behavior.
+ADR 0005 records the binding choices:
 
-## 4. Accepted architecture foundation
+- Google OIDC is the only MVP sign-in adapter; no username/password, magic-link, SMS, or email-password fallback.
+- `openid-client` `6.8.4` owns discovery, signature, issuer, audience, lifetime, state, nonce, and S256 PKCE verification.
+- Exact issuer plus immutable subject maps to an opaque account. Verified email is required transiently but is not persisted or used for linking.
+- NitipCuy owns digest-only opaque PostgreSQL sessions, rotation, revocation, expiry, account versioning, and the `__Host-` cookie contract.
+- Google login mints only `BASE` assurance. No live privileged step-up or recovery adapter exists; moderation therefore remains fail-closed through the production HTTP composition.
+- Protected use cases re-check the exact persisted session, account version, assurance, account state, ownership, and capability inside their serializable transaction.
+- Prisma is isolated in the adapter package; PostgreSQL is authoritative.
 
-ADR 0003 selects:
+The same decision is approved in Global Brain as `stage1.identity-security-quality-direction`, memory ID `9b046273-8175-483c-8e98-2d4d496a77af`, version 1.
 
-- a modular monolith with one deployable Next.js App Router web application;
-- framework-free `domain`, application-use-case and port, adapter, and delivery boundaries;
-- Node.js `24.x`, reproducible patch `24.18.0`, pnpm `11.17.0`, Next.js `16.2.11`, and the compatible pinned toolchain;
-- server components by default and a server-only composition root;
-- PostgreSQL authority with a future isolated Prisma adapter;
-- external passwordless or standards-based identity mapped to internal account IDs;
-- server-authoritative, deny-by-default authorization;
-- provider-independent payment, logistics, identity, evidence, repository, audit, and outbox contracts;
-- Vercel Node.js in `sin1` plus Singapore PostgreSQL as the intended first hosting posture, without provisioning or deployment authority.
+## 5. Verified repository and GitHub state
 
-ADR 0004 adds:
+Verified 2026-08-07 before this lifecycle edit:
 
-- OWASP ASVS 5.0 Level 2 as the complete production web-application verification target, with additional risk-based review for high-impact flows;
-- layered edge, WAF, bot, shared rate-limit, resource-budget, session, authorization, query, upload, callback, monitoring, incident, and recovery controls;
-- explicit evidence levels from designed through incident-tested so accepted architecture cannot be mislabeled production security;
-- stateless horizontally scalable web instances, pooled PostgreSQL, shared cross-request control state, private direct-to-quarantine evidence storage, and durable workers before asynchronous work;
-- numerical capacity, provider-quota, cost, RPO, RTO, load, abuse, and recovery evidence before real-money pilot activation;
-- evidence-driven optimization and service extraction instead of premature microservices.
-- mandatory privileged phishing-resistant MFA or approved high-assurance step-up with non-downgrading recovery;
-- an edge-only origin, explicit trusted-proxy chain, canonical host and request interpretation, and protected fail-closed dependency behavior;
-- provider and threat-modelled application encryption, managed-key lifecycle, encrypted backups, restore, retention, and verified deletion;
-- canonical public-only caching with poisoning, deception, stampede, hot-key, and stale-window controls;
-- expand-and-contract migrations with old/new web, worker, payload, and queue compatibility during rolling deployment.
-
-Issue #3 proves these boundaries with simulated public trip discovery, destination/date search, trip detail, chronological public Q&A, and deterministic platform-service mocks. It intentionally implements no account, protected mutation, address, private chat, database, real provider, or payment movement.
-
-The shell is a functional architecture probe. It is not a production UI, has no visual approval, and does not implement or verify the production security and scaling controls in ADR 0004.
-
-## 5. Verified repository state
-
-| Field | Verified state |
+| Field | State |
 |---|---|
 | Local project | `/Users/miclawrencee/Workspace/NitipCuy` |
 | Canonical remote | `https://github.com/BurinSn/NitipCuy` |
 | Visibility / default branch | Private / `main` |
-| Verified `main` and issue #3 base | `fd9c98aefff199bb0e8ff954fa3a56e6764cf03a` |
-| Prior governance work | Issue #1 closed; pull request #2 squash-merged |
-| Active issue | [#3 Establish web architecture and application foundation](https://github.com/BurinSn/NitipCuy/issues/3) |
-| Active branch | `feat/3-architecture-foundation` |
-| Pull request | [#4 feat: establish application architecture foundation](https://github.com/BurinSn/NitipCuy/pull/4) |
-| Last live-verified pre-amendment head | `55eda6bfc903f712b7eeff97e21bf37b99d0ccb5` |
-| Checks at that checkpoint | Application quality run `30262587723` and lifecycle run `30262587684` passed with zero annotations |
-| Trip-window implementation checkpoint | `f4b635abba9fcdf548441254d3da5e29a645e492` |
-| Checks at the implementation checkpoint | Application quality run `30316681999` and lifecycle run `30316681979` passed with zero annotations |
-| Dependency-boundary starting checkpoint | `b87e4541569d825c3b686e8954013945f986f1fb`; application run `30316840816` and lifecycle run `30316840817` passed with zero annotations |
-| Dependency-boundary implementation checkpoint | `330b10a85adbd83c151eafdfc0a5ca6d0f36e9ae`; application run `30336136426` and lifecycle run `30336136464` passed with zero annotations |
-| Dependency-boundary lifecycle checkpoint and transaction-correction starting head | `780563fa784c3ff57d28039b1f6cd491b126d2b4`; application run `30336362159` and lifecycle run `30336362143` passed with zero annotations |
-| Transaction-deferral implementation checkpoint | `bf564436bf54815782501bc10280074f16a23fa9`; application run `30354861825` and lifecycle run `30354861680` passed with zero annotations |
-| Transaction-deferral lifecycle checkpoint and payment-correction starting head | `81fb1f5ceab5ba2445d6606a255471b1dca75a86`; application run `30355124146` and lifecycle run `30355122231` passed with zero annotations |
-| Asynchronous-payment implementation checkpoint | `fae92e55fc1117b1b78fc7add244e8ccb940c2e3`; application run `30446270570` and lifecycle run `30446270568` passed with zero annotations |
-| Asynchronous-payment lifecycle checkpoint and current remote pull-request head | `fb9f662a51da32053cf40511f079eed16c3cf58c`; application run `30446607390` and lifecycle run `30446607399` passed with zero annotations |
-| Idempotency implementation checkpoint | `115ecfeb7f4b0876f56ae43d71cfa378f26497fe`; application run `30599067671` and lifecycle run `30599067251` passed with zero annotations |
-| Idempotency lifecycle checkpoint and last verified remote pull-request head | `abe7cd0bdecfd4df3565cfd0e968f4ab461f39f0`; application run `30599264338` and lifecycle run `30599264345` passed with zero annotations |
-| Idempotency final lifecycle and next-action head | `f41d764762f5de611ad25c6e076aee174e63af61`; application run `30599375595` and lifecycle run `30599375568` passed with zero annotations |
-| PostCSS advisory implementation checkpoint and current remote pull-request head | `a086dcf2b9060394756b2bf4ddc57994d7b158c8`; application run `30983580593` and lifecycle run `30983580611` passed with zero annotations |
-| PostCSS lifecycle checkpoint and current remote pull-request head | `27e8aa258615fa95c1615ab7bd5868f008121728`; application run `30983746084` and lifecycle run `30983746061` passed with zero annotations |
-| Evidence-lifecycle implementation checkpoint and current remote pull-request head | `f57ef166db9bf6d71e7b2b5b9505f8c71cf38b84`; application run `30985369642` and lifecycle run `30985369587` passed with zero annotations |
-| Evidence lifecycle reconciliation checkpoint and current remote pull-request head | `44359cea5c23cc62bc0ef065682c052613ca0ef1`; application run `30985575000` and lifecycle run `30985575004` passed with zero annotations |
-| Final review-state checkpoint and current remote pull-request head | `893e46b30718368f1260e837d12147ee5edab005`; application run `30985838757` and lifecycle run `30985838654` passed with zero annotations |
-| Current local worktree | Clean and synchronized at `893e46b30718368f1260e837d12147ee5edab005` before this approval-state record |
-| Issue and pull-request reconciliation | Issue #3 acceptance criteria are checked and final evidence was read back at issue comment `5188962019`; pull request comment `5188964841` records the same exact evidence and non-claims |
-| Independent review at current remote head | No review object, review decision, review thread, or line finding exists; CodeRabbit reports success but detailed review is paused and the Free plan provides summary/walkthrough only, so it provides no independent review coverage |
-| First hostile-review correction | Published-trip runtime invariants committed, pushed, and hosted-verified |
-| Second hostile-review correction | Issue #3 identity acceptance and pull-request scope reconciled with the deliberately deferred persisted account implementation; committed, pushed, and hosted-verified |
-| Security and scale amendment | Initial amendment and six-gap hostile-review correction accepted, committed, pushed, and required hosted workflows verified; production controls remain unimplemented |
-| Live head, checks, reviews, and mergeability | Volatile; retrieve directly before any approval or merge action |
-| Merge authority | Fresh explicit BurinSN approval was granted in the current conversation on 2026-08-06 after exact-head evidence was presented; it authorizes only the pull request #4 squash merge after the approval-state head passes both required workflows |
-| Branch protection | Unavailable for this private repository on the current GitHub plan |
-| Deployment | None |
-| Production providers | None activated |
+| `main`, `origin/main`, and branch base | `f100b03e0352bad3f969efc7d42a91f46c64f864` |
+| Prior slice | Pull request #4 squash-merged; issue #3 closed |
+| Active issue | #5, open |
+| Active branch | `feat/5-persisted-google-account-slice` |
+| Current reviewed checkpoint | `912bdd3404327cf2615c2033ddc045c354bf3de3`, pushed and matched the remote branch before this lifecycle edit |
+| Pull request | #6, open, not draft, GitHub-mergeable with 59 changed files at the reviewed checkpoint |
+| Current worktree | Clean at the reviewed checkpoint; this final review-state reconciliation is pending commit |
+| Deployment / providers | None deployed; no Google client configured; no production provider activated |
+| Merge authority | None; a future pull request requires exact-head checks, complete review, and fresh BurinSN approval |
 
-The tracked handoff cannot contain its own final commit SHA. Copy immutable identifiers only from direct Git or GitHub output and treat the table as a timestamped checkpoint, never as permission to skip live verification.
+## 6. Implemented working-tree scope
 
-## 6. Current work item
+### Identity and sessions
 
-Issue #3 owns the architecture and application-foundation slice. Its hostile-review remediation, exact-head verification, acceptance reconciliation, and final review-state checkpoint are complete. Pull request #4 now has fresh BurinSN merge approval; only the documentation-only approval-state checkpoint, hosted verification, pull-request-description reconciliation, and authorized squash merge remain.
+- `openid-client` authorization-code adapter with minimum scopes, exact issuer/audience/callback, nonce, state, S256 PKCE, token lifetime/signature validation, and generic callback failure.
+- One-use OAuth attempts store digests of both random state and a separate 256-bit browser-binding cookie plus versioned AES-256-GCM ciphertext for nonce and verifier. A callback initiated in another browser fails closed; safe local return paths reject external, protocol-relative, encoded-slash, backslash, control-character, and fragment inputs.
+- Account mapping uses exact issuer and subject. Same subject resolves the same account; same email with a different subject creates a different account. Email is not persisted.
+- Opaque 256-bit sessions persist only an HMAC-SHA-256 digest and implement base-only minting, idle/absolute expiry, rotation, rotated-family reuse revocation, logout, active-session listing, per-session revocation, and account-wide invalidation.
+- Protected commands revalidate the exact session in their database transaction. Forged assurance and revoked sessions fail closed.
 
-The issue now states that external-identity-to-internal-account mapping and deny-by-default authorization are documented architecture directions. Mapping implementation is explicitly deferred to the first persisted account slice, matching the issue scope, exclusions, ADR 0003, current code, and roadmap.
+### Marketplace persistence
 
-The security and scale amendment answers BurinSN's security and growth requirement through ADR 0004 plus dedicated security and scalability documents. The current hostile-review correction closes six material design gaps: sensitive-data encryption and managed-key lifecycle; mandatory privileged assurance and non-downgrading recovery; trusted-proxy, forwarded-header, and canonical-host rules; explicit fail-open or fail-closed dependency behavior; cache poisoning, deception, stampede, and hot-key controls; and expand-and-contract mixed-version deployment. These are binding design requirements. They are not claims that production infrastructure or controls exist.
+- Prisma `7.9.1`, PostgreSQL driver adapter, reviewed additive migration, and schema for accounts, external identities, capabilities, sessions, OAuth attempts, profiles, authoritative trips, moderation decisions, public Q&A, audit, and outbox.
+- Composite database foreign key binds a trip's owner to its jastipper profile owner.
+- Domain and application use cases implement profile creation, trip draft, moderation submission, privileged approval/rejection, publication, question, and owner answer.
+- One serializable transaction context binds authoritative writes, success audit, and required outbox messages. A three-attempt bounded retry handles PostgreSQL serialization and unique-race conflicts; optimistic version checks reject stale updates.
+- Public projection excludes account IDs, identity data, moderation reasons, and internal records.
+- Published search is indexed, bounded to 1-50 rows, and cursor-paginated.
 
-The current bounded amendment implements explicit source-service and ordering windows plus origin and destination timezones in the simulated public `PublishedTrip` projection. It also makes the future authoritative `TripOffer`, public history, private order dashboards, seller pricing privacy, purchased-product photo gate, and Carry my item collection and weight gate binding contracts. Persisted orders, protected transitions, archival history, and dashboards remain unimplemented.
+### Delivery and quality
 
-The dependency-boundary correction is implemented, committed, pushed, and hosted-verified. A package-manifest and TypeScript-AST gate mechanically enforces the accepted modular-monolith direction. The live scan covers four projects, 24 governed source files, and 46 module references. Twenty adversarial tests cover relative, aliased, type-only, import-type, triple-slash, dynamic, require, manifest placement, composition, client/server, non-static, and symlink bypasses.
-
-The transaction-scope finding is corrected, committed, pushed, hosted-verified, and reconciled with issue #3 and pull request #4. The callback-only `TransactionPort` and `PassthroughTransaction` are removed. Issue #3 has no persisted write aggregate, ledger, or PostgreSQL adapter, so an in-memory replacement would not prove commit, rollback, isolation, shared connection use, or concurrency. ADR 0003 now defers a database-backed transaction-scoped unit of work to the first persisted write slice and makes its disposable-PostgreSQL atomicity tests binding. This removes a false capability claim; it is not transaction implementation or verification.
-
-The asynchronous payment correction is implemented, committed, pushed, hosted-verified, and reconciled with issue #3 and pull request #4. Initiation, release, and refund return accepted-for-processing, rejected, or unknown submission receipts instead of completed financial states. Every initiation has a stable internal payment-attempt ID, so an ambiguous response remains inspectable without a returned provider reference. Accepted initiation also returns a provider-neutral redirect, QR, or Virtual Account customer action. Separate observations represent collection, hold, release, refund, settlement, and chargeback; provider events are inspection signals only. A pure assessment confirms initial protection only for the expected attempt, a retained provider reference, and exact collected and held amounts, and fails closed on cross-attempt, unknown, contradictory, mismatched, paid-but-not-held, or status-versus-amount post-hold evidence. This does not implement DOKU, callbacks, a worker, persistence, ledger mutation, real money movement, or full release/refund/settlement reconciliation.
-
-The idempotency correction is implemented, committed, pushed, locally verified, hosted-verified, and reconciled with issue #3 and pull request #4. A framework-independent application contract defines atomic claim, stored-result replay, changed-payload conflict, active-operation denial, recovery-required ambiguous failure, and completion-based result retention. Payment initiation, release, and refund use order-scoped keys with 90-day mock retention; logistics dispatch uses order scope and evidence lifecycle mutations use owner-account scope with 30-day mock retention. Type-tagged canonical SHA-256 fingerprints cover each semantic application command. Unexpected execution errors require reconciliation rather than releasing a key for a potentially duplicating retry. The in-memory authority is explicitly test-only and process-local; it does not prove persistence, authenticated authorization, shared multi-instance state, provider-native behavior, or production recovery.
-
-The 2026-08-05 production audit surfaced GitHub advisory `GHSA-fxqj-rqcc-2cmp` against the exact PostCSS `8.5.18` override after the advisory database was updated. The issue is moderate and did not fail the configured high-severity audit threshold, so a green command was not evidence of zero advisories. The exact override and lockfile now select the minimum patched `8.5.23`. The correction passed the complete exact-toolchain local gate and zero-advisory audit, was pushed at `a086dcf2b9060394756b2bf4ddc57994d7b158c8`, and reproduced through application run `30983580593` plus lifecycle run `30983580611`, both with zero annotations. Lifecycle checkpoint `27e8aa258615fa95c1615ab7bd5868f008121728` then passed application run `30983746084` and lifecycle run `30983746061`, both with zero annotations; issue #3 and pull request #4 were updated and read back.
-
-The evidence-integrity correction is implemented, committed, pushed, fully locally verified, hosted-verified, lifecycle-reconciled, and externally reconciled. Implementation head `f57ef166db9bf6d71e7b2b5b9505f8c71cf38b84` passed application run `30985369642` and lifecycle run `30985369587`; lifecycle head `44359cea5c23cc62bc0ef065682c052613ca0ef1` passed application run `30985575000` and lifecycle run `30985575004`; all four runs had zero annotations. Issue comment `5188962019` and pull-request comment `5188964841` were read back. Pull request #4 remained open, clean, and mechanically mergeable with no review object or approval. The application no longer accepts raw bytes or caller-declared MIME, length, digest, path, or scan status. It issues an opaque, short-lived upload intent and consumes only server-observed quarantine metadata, a scanner observation bound to the same digest, and server-generated private object references that retain scan provenance. Empty, oversized, unsupported, expired, unscanned, scanner-unavailable, scanner-rejected, digest-mismatched, invalid runtime policy, cross-owner, mismatched-reference, overwrite, post-acceptance upload, early-deletion, and post-retention deletion paths are covered in the test-only adapter. Exact intent, acceptance, and deletion duplicates replay through the existing scoped idempotency contract. The adapter is process-local and buffers fixture bytes only to simulate private quarantine and accepted storage; it is not authenticated storage, a production scanner, durable metadata, an order transition, duplicate-image review, dimensional decoding, re-encoding, a cleanup worker, or provider verification.
-
-Implemented locally:
-
-- ADR 0003 and the supporting system-architecture document;
-- exact Node.js, pnpm, framework, compiler, lint, format, task, and test pins;
-- modular workspace packages for domain, application, adapters, and web delivery;
-- validated published-trip domain behavior, including origin-local departure date plus exact timezone-bearing departure timestamp;
-- strict runtime rejection of unsupported service modes, impossible calendar and clock values, invalid timezone offsets, and duplicate public-question IDs;
-- public-question sorting by actual instant across differing timezone offsets;
-- source-service and ordering-window validation, including advance PO, source cutoff, transport departure, and IANA timezone rules;
-- public source-service and ordering-window presentation in origin time and estimated arrival in destination time;
-- read-only trip discovery and detail use cases;
-- deterministic in-memory repository plus mock payment, logistics, identity-verification, evidence-lifecycle, clock, identifier, audit, and outbox adapters with no external calls;
-- a local Indonesian web shell with explicit simulated-data and inactive-transaction notices;
-- PR-only application-quality CI with read-only permission and immutable action references;
-- local quality-gate documentation and production dependency overrides for audited patched `postcss` and `sharp` versions.
-- accepted security, anti-abuse, resilience, and scale requirements with explicit evidence-level claims and pilot gates.
-- accepted encryption, managed-key, privileged-assurance, trusted-edge, dependency-outage, cache-safety, and deployment-compatibility requirements at the **designed** evidence level only.
-- explicit separation of future authoritative `TripOffer`, public `PublishedTrip`, public history, and private seller/customer order projections.
-- automated package-manifest and parsed-source dependency enforcement wired into `pnpm check`, with a separate live-tree command and adversarial fixture suite.
-- explicit removal of the unenforceable callback-only transaction port and passthrough adapter, with future database-backed scope and proof gates documented.
-- provider-neutral asynchronous payment submission receipts, customer actions, observations, and inspection signals;
-- provider-neutral evidence upload-intent, server-observation, scan-gate, acceptance, retention, and deletion contracts whose application boundary carries no raw file content or caller-declared file truth;
-- fail-closed initial collection-and-hold assessment plus configured payment mocks that never default to financial success.
-- scoped provider-neutral idempotency contracts and deterministic payment, dispatch, and evidence enforcement covering exact replay, conflict, concurrency, recovery, expiry, invalid input, authority outage, and cross-scope isolation.
-
-Deliberately excluded:
-
-- production or preview deployment;
-- visual approval or final experience design;
-- account creation, seller verification, protected authorization, and persistence;
-- real DOKU, Biteship, identity, storage, or database integration;
-- orders, money movement, delivery booking, customer PII, or production secrets;
-- callback authentication, durable payment inbox or worker, authoritative ledger or order mutation, and complete release/refund/settlement reconciliation;
-- authoritative offer mutation, capacity reservation, historical trip persistence, evidence-gated order transitions, or seller/customer order dashboards;
-- provider outreach, Threads promotion, public launch, microservices, or event sourcing.
+- Dynamic routes cover Google start/callback, logout, session inspection, profile, trip draft, submit, moderate, public question/answer, and anonymous persisted trip search/detail.
+- State-changing routes require exact origin, `Sec-Fetch-Site: same-origin`, JSON content type, and an 8 KiB body ceiling.
+- Missing runtime configuration fails closed. No real credential or provider call is present in fixtures or documentation.
+- The dependency gate explicitly excludes only ignored generated Prisma output and continues scanning every hand-written source root.
+- Native install scripts allow Prisma engine/CLI only; optional native test-container dependencies remain denied.
 
 ## 7. Verification checkpoint
 
-Verified locally with Node.js `24.18.0` and pnpm `11.17.0`:
+Passed locally on exact Node.js `24.18.0` and pnpm `11.17.0` after the final source review:
 
-- `pnpm peers check`: no peer-dependency issues;
-- `pnpm audit:prod`: the 2026-08-05 pre-correction run found one moderate PostCSS advisory while exiting successfully at the configured high threshold; the exact `8.5.23` correction now reports no known vulnerabilities and passed the complete local plus hosted exact-head gates;
-- `pnpm check`: format, lint, strict type checking, 18 unit tests, and production build passed on the reconciled domain-correction tree;
-- targeted domain type checking and 10 domain tests passed;
-- an exact-Node adversarial probe rejected `UNSUPPORTED`, rejected `2026-02-30`, and sorted the `+08:00` earlier instant before the `+07:00` later instant;
-- payment-focused application and adapter type checking passed; 18 application tests and 10 adapter tests cover accepted, rejected, unknown, pending, expired, cross-attempt, missing-reference, contradictory, amount-mismatched, missing-amount, paid-but-not-held, terminal-with-money, status-versus-amount post-hold, and ambiguous-initiation lookup outcomes;
-- idempotency-focused application and adapter type checking passed; all 24 adapter tests cover unambiguous fingerprint types, exact replay, changed-payload conflict, concurrent denial, recovery-required ambiguous failure, completion-based expiry, malformed keys, unavailable authority, cross-scope isolation, and payment, release, refund, dispatch, and evidence enforcement;
-- final exact-toolchain `pnpm check` passed a four-project dependency scan covering 29 source files and 67 module references, strict type checking, all 20 boundary tests, all 58 package tests, and the production build after the last hostile correction;
-- evidence-lifecycle final local `pnpm check` passed a four-project dependency scan covering 32 source files and 76 module references, strict type checking, all 20 boundary tests, all 70 package tests, and the production build; frozen install, peer validation, zero-known-vulnerability production audit, lifecycle participation, 20-document/33-link validation, stale-contract, credential-pattern, source-network, unsafe-any, console, placeholder, worktree/base-diff hygiene, and production HTTP `200`/`200`/`200`/`404` regression checks also passed;
-- idempotency implementation head `115ecfeb7f4b0876f56ae43d71cfa378f26497fe` passed application run `30599067671` and lifecycle run `30599067251` with zero annotations; GitHub reported the pull request clean, and issue #3 plus pull request #4 were updated and read back;
-- idempotency lifecycle head `abe7cd0bdecfd4df3565cfd0e968f4ab461f39f0` passed application run `30599264338` and lifecycle run `30599264345` with zero annotations; GitHub again reported the pull request clean;
-- Next.js production routes built for `/`, `/_not-found`, and three generated `/trips/[tripId]` fixture paths;
-- production HTTP probe returned `200` for home, filtered search, and a known trip, `404` for an unknown trip, passed content assertions, and emitted no fallback error;
-- lifecycle, diff, workflow YAML, internal-link, credential-pattern, placeholder, dependency-direction, provider-SDK, unsafe-`any`, console, and source-network scans passed;
-- workflow action tags resolve to their pinned immutable commits and both commits are verified by GitHub;
-- no external service or production credential was required.
+- dependency installation and Prisma generation;
+- adapter, application, and web type checks;
+- deterministic Google protocol tests for scopes, state, nonce, PKCE, issuer, audience, signature, expiry, and invalid claims;
+- disposable PostgreSQL 18 clean migration plus seven integration scenarios covering the full persisted flow, rollback, stale and concurrent identity conflicts, database ownership, pagination, session lifecycle, OAuth cross-browser binding/replay/expiry/ciphertext failure, hidden-question denial, missing capability, email/password absence, forged assurance, and revoked-session denial;
+- `pnpm check`: formatting, lint, a four-project scan covering 61 source files and 193 module references, strict types, all 21 boundary tests, all 104 package/web tests, and the production Next.js build;
+- route build output includes all issue #5 auth and marketplace endpoints.
+- frozen install and peer validation, production audit with zero findings at every severity, lifecycle participation, 33 local links across 20 documents, high-confidence credential and unsafe-source scans, core-network and identity-schema scans, and diff hygiene;
+- the production server without persistence or provider configuration returned `200` for the existing public shell, `503` for Google start and persisted trip discovery, and `401` for anonymous session inspection with only generic error bodies.
 
-The first direct full-gate attempt invoked pnpm `11.17.0` through Node `24.18.0`, but nested package-script calls resolved the ambient Node `26.0.0` and pnpm `9.15.0`; `engine-strict` correctly failed the attempt. Re-running through the exact `npx` Node and pnpm wrapper propagated the supported toolchain to child processes and passed. The failed attempt is not counted as verification success.
+This evidence is source-tested, production-build-tested, and local disposable-database-runtime-tested. It is not real-Google-verified, browser-verified, hosted-workflow-verified, managed-database-verified, load-tested, guarded-security-tested, provider-verified, incident-tested, visually approved, or production-ready.
 
-Hostile-review corrections already made:
+Final post-documentation exact-toolchain verification, zero-advisory audit, lifecycle participation, link, secret/static, diff-hygiene, DRY, hostile-security, and missing-configuration runtime checks pass locally. Hosted workflow evidence remains pending until the branch is committed, pushed, and opened as a pull request.
 
-- reject unsupported service modes at runtime rather than relying on a TypeScript union;
-- reject normalized impossible dates, invalid clock values, and invalid timezone offsets;
-- sort public questions by parsed instants and require unique question IDs;
-- rejected TypeScript 7 and ESLint 10 because the installed peer graph does not support them;
-- removed a hard-coded Jakarta-midnight comparison from the trip timeline;
-- compare Q&A timestamps as real instants across timezone offsets;
-- removed false Turbo output warnings and the App-Router-only ESLint warning;
-- replaced vulnerable Next.js transitive `postcss` and `sharp` versions with audited patched overrides;
-- selected `postcss` `8.5.18` for the original checkpoint, then superseded it with `8.5.23` after `GHSA-fxqj-rqcc-2cmp` showed the earlier fix was incomplete;
-- converted simulated trip details to build-time known paths and rejected unknown slugs before streamed rendering so missing trips return a quiet HTTP `404`, not a `200` or an internal fallback error.
+## 8. Review and approval boundaries
 
-Still required before requesting merge:
+- The user approved implementation of issue #5 and the Google-only/no-password direction.
+- After the exact pull-request scope, final head `f64b2b6c77bde0284c22163f9740d46408ea1a43`, green hosted runs, zero annotations, absent review objects, and remaining non-claims were presented, BurinSN gave fresh explicit direction to proceed. This authorizes squash-merging pull request #6 only after the approval-state documentation head passes both required hosted workflows and the pull-request description is reconciled.
+- The required `review-code-dryness` pass on all 59 changed files is **CLEAN WITH NOTES**. It corrected duplicated transaction budgets, browser-cookie policy/options, session actor mapping, and multiple clock samples for one atomic event. Separate application, provider, and database validations remain intentionally repeated across trust boundaries.
+- Guarded Strix doctor passed earlier: binary installed, Docker ready, pinned sandbox present, no active authorizations. No authorization, dry-run plan, or scan exists.
+- Strix requires a new explicit exact local or staging target, environment, modes, expiry, and maximum budget. Scan execution needs a separate instruction after the plan; production would require another approval.
+- No real Google client creation/configuration, deployment, paid service, external message, provider onboarding, public launch, or merge is authorized.
+- At reviewed head `912bdd3404327cf2615c2033ddc045c354bf3de3`, application run `31152304569` and lifecycle run `31152304528` passed with zero annotations. GitHub reported the PR open and mergeable with zero review objects and no review decision.
+- CodeRabbit's status succeeded only with a Free-plan walkthrough. Its comment states that the review limit was reached, so no CodeRabbit line review or independent approval exists.
 
-1. Resolve each remaining implementation finding through the same branch, one coherent correction at a time.
-2. Reconcile issue #3 and pull-request claims after the final correction.
-3. Ask BurinSN for fresh merge approval only when no material finding remains.
+## 9. Remaining blockers and exact next action
 
-Browser automation and visual approval were not performed and are not claimed.
+Remaining governed work:
 
-The first security and scale amendment passed the exact-toolchain frozen install, peer, format, lint, type, 18-test, production-build, production-audit, lifecycle, internal-link, and diff gates. The later identity and lifecycle reconciliation is hosted-verified at exact head `bf48727ed9f1e65d87919f4fbe11ac0815542355` through application run `30257081811` and lifecycle run `30257081823`, both without annotations. CodeRabbit was rate-limited and produced no review object or finding; this is unavailable independent-review evidence, not approval.
+1. commit and push this owner-approval state record;
+2. inspect both hosted workflows and annotations on the resulting immutable head;
+3. reconcile the pull-request description with the final head and approval state;
+4. squash-merge pull request #6, then verify `main`, issue #5 closure, and branch cleanup.
 
-The six-gap design correction changed documentation only. Exact Node.js `24.18.0` and pnpm `11.17.0` frozen install, peer, format, lint, type, 18-test, production-build, production-audit, lifecycle, 20-file internal-link, stale-language, control-presence, and diff gates passed locally. Application run `30262412048` and lifecycle run `30262412059` then passed at exact pushed checkpoint `609c23b8bf96be995a9c9347a442d8abaca59ff6` with zero annotations. No WAF, proxy policy, bot control, shared limiter, privileged MFA, encryption key, production session, database, cache, private upload pipeline, worker, monitoring, backup, load test, security test, deployment, or provider configuration was activated by the documentation.
-
-The current trip-window and evidence-policy amendment has passed exact Node.js `24.18.0` and pnpm `11.17.0` formatting, lint, strict type checking, all 24 unit tests, production build, production dependency audit, lifecycle, 20-file internal Markdown-link, and diff gates after the final hostile-audit correction. Its rebuilt Next.js production runtime returned `200` for home and a known trip and `404` for an unknown trip. The runtime rendered the exact opening, closing, transport-departure, and estimated-arrival timestamps in the documented origin or destination timezone and exposed no receipt, acquisition-cost, or margin language on the public pages.
-
-One runtime-start attempt resolved ambient Node.js `26.0.0` and pnpm `9.15.0`; `engine-strict` correctly rejected it before the server started. The successful probe used the documented `npx` wrapper for exact Node.js `24.18.0` and pnpm `11.17.0`. The failed attempt is not counted as verification success.
-
-Issue #3 and pull request #4 have been updated and read back successfully for this amendment. Both remain open; pull request #4 was GitHub-mergeable at implementation checkpoint `f4b635abba9fcdf548441254d3da5e29a645e492` with no review object or review decision. Application quality run `30316681999` and lifecycle run `30316681979` passed on that exact checkpoint with zero annotations. The issue and pull request distinguish the implemented public projection from the deferred authoritative offer, order, dashboard, history-persistence, and evidence-upload flows.
-
-For the dependency correction, exact Node.js `24.18.0` and pnpm `11.17.0` formatting, lint, live boundary scan, strict type checking, all 20 boundary tests, 24 existing unit tests, production build, production dependency audit, lifecycle, 20-file internal-link, diff-hygiene, and production-runtime regression checks passed after the final source-root-symlink correction. The live scan covers four projects, 24 governed source files, and 46 module references. Complete-diff hostile review found no further material issue. Issue #3 and pull request #4 were updated and read back successfully. Implementation checkpoint `330b10a85adbd83c151eafdfc0a5ca6d0f36e9ae` passed application run `30336136426` and lifecycle run `30336136464` with zero annotations; the issue acceptance criterion is checked, the pull request is open and GitHub-mergeable, and no review object or decision exists. Dependency-boundary lifecycle reconciliation `780563fa784c3ff57d28039b1f6cd491b126d2b4` then passed application run `30336362159` and lifecycle run `30336362143` with zero annotations.
-
-The transaction-deferral correction started from that clean synchronized head. Exact Node.js `24.18.0` and pnpm `11.17.0` peer validation, formatting, lint, live boundary scan, strict type checking, all 20 boundary tests, all 24 unit tests, production build, production dependency audit, and lifecycle participation passed. Internal Markdown links passed across 19 files and 33 local targets; `git diff --check` passed. The rebuilt production runtime returned `200` for home and a known trip and `404` for an unknown trip, and its tested public pages exposed no receipt, acquisition-cost, margin, or equivalent Indonesian private-pricing language. Complete correction-diff hostile review found no material issue.
-
-Implementation checkpoint `bf564436bf54815782501bc10280074f16a23fa9` was pushed and matched the remote branch. Application run `30354861825` and lifecycle run `30354861680` passed on that exact head with zero annotations. Pull request #4 remained open and GitHub-mergeable with no review object or decision. CodeRabbit was green but produced no review object or finding, so it is not independent review evidence. Issue #3 and pull request #4 were updated and read back with the explicit deferral, exact implementation evidence, and remaining payment, idempotency, evidence, final-lifecycle, and owner-approval gates.
-
-The asynchronous payment correction started from clean synchronized head `81fb1f5ceab5ba2445d6606a255471b1dca75a86`, whose application run `30355124146` and lifecycle run `30355122231` passed with zero annotations. Exact Node.js `24.18.0` and pnpm `11.17.0` frozen install, peer validation, formatting, lint, dependency scan, strict type checking, all 20 boundary tests, all 44 package tests, production build, production dependency audit, and lifecycle participation passed on the final local correction tree. The dependency scan covered four projects, 26 governed source files, and 51 module references. Internal Markdown links passed across 19 files and 33 local targets; `git diff --check` and the stale immediate-held contract scan passed. The rebuilt production runtime returned `200` for home and a known trip and `404` for an unknown trip while preserving the public pricing-privacy assertion. Complete correction-diff hostile review found no remaining material issue.
-
-Implementation checkpoint `fae92e55fc1117b1b78fc7add244e8ccb940c2e3` was pushed and matched the remote branch. Application run `30446270570` and lifecycle run `30446270568` passed on that exact head with zero annotations. Pull request #4 was open, mergeable, and clean with no review object or review decision; CodeRabbit was green but produced no review object or finding. Issue #3 and pull request #4 were updated and read back with the implemented payment contract, exact evidence, explicit non-claims, and remaining idempotency, evidence-integrity, final-reconciliation, and owner-approval gates.
-
-## 8. Blockers and gates
-
-No external blocker prevents continuing provider-independent development with mocks.
-
-The transaction-abstraction finding is resolved by explicit deferral. No transaction implementation exists or is claimed; its database-backed scope remains a mandatory gate for the first persisted write slice.
-
-The asynchronous payment-lifecycle finding is resolved and verified at the source-tested, local-runtime-regression, and hosted-workflow levels. Provider integration, money movement, callback processing, ledger behavior, and full settlement reconciliation remain unimplemented and unclaimed.
-
-No known material implementation or lifecycle reconciliation finding remains for issue #3 after the final hostile review. BurinSN supplied fresh explicit merge approval on 2026-08-06 after exact head `893e46b30718368f1260e837d12147ee5edab005` and both successful hosted runs were presented.
-
-The documentation-only approval-state commit created from this record must pass both hosted workflows with zero annotations before the authorized squash merge is executed. Mechanical mergeability remains non-authoritative, and any new material finding or implementation drift cancels the ready-to-merge posture pending renewed review.
-
-The following still block real-money pilot activation:
-
-1. written DOKU Partner/Aggregator approval and complete commercial terms;
-2. confirmed Hold plus Split channels, maximum hold, partial release, refund, reserve, and failure behavior;
-3. approved logistics integration and exception model;
-4. route-aware prohibited and restricted-item taxonomy;
-5. cancellation, refund, dispute, insurance, loss, damage, customs, and provider-cost allocation policy;
-6. bounded pilot route, category, value, weight, capacity, and participant rules;
-7. legal, privacy, security, incident-response, support, reconciliation, and operational sign-off.
-8. applicable OWASP ASVS 5.0 Level 2 traceability and independent review of high-impact flows;
-9. verified identity, cookie, header, edge, WAF, bot, rate-limit, database, storage, payment, and logistics configuration;
-10. approved capacity, latency, availability, provider-quota, cost, RPO, and RTO contract;
-11. isolated ramp, spike, soak, abuse, provider-failure, and recovery evidence;
-12. backup restore, session revocation, provider kill switch, incident response, and evidence-preservation exercises.
-
-These are Stage 3 activation gates, not reasons to delay provider-independent platform work.
-
-## 9. Exact next action
-
-Commit and push this approval-state record, inspect both hosted workflows plus annotations on its immutable head, and reconcile the stale pull-request description against the verified 70-test evidence. If the head remains clean and no material finding appears, execute the authorized squash merge of pull request #4, verify the immutable merge commit on `origin/main`, confirm issue #3 closure, and clean the merged feature branch.
-
-Do not add account persistence or a production identity provider to issue #3. Those belong to the first persisted account slice after this architecture issue is corrected and merged.
-
-Do not provision WAF, rate-limit, identity, database, storage, worker, monitoring, backup, security-test, load-test, or production infrastructure merely because the requirements are accepted.
-
-Do not create another pull request before the pull request #4 merge is verified. The next implementation slice requires its own written issue and focused branch.
-
-Current authority permits only the pull request #4 squash merge after its final hosted gates pass. It does not authorize deployment, provider contact, payment movement, production action, visual approval, or the next implementation slice.
+The first exact next action is to commit and push this owner-approval state record, then wait for and inspect both required workflows on that exact new head before squash-merging pull request #6.

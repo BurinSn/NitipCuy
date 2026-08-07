@@ -57,6 +57,7 @@ export const defaultProjects = Object.freeze([
     allowedWorkspaceProjects: Object.freeze(["application", "domain"]),
     allowRuntimeExternalPackages: true,
     allowNodeBuiltins: true,
+    ignoredSourceRoots: Object.freeze(["packages/adapters/src/generated"]),
   }),
   Object.freeze({
     id: "web",
@@ -159,6 +160,11 @@ function normalizeProject(project, workspaceRoot) {
     ...project,
     absoluteRoot: path.resolve(workspaceRoot, project.root),
     absoluteSourceRoot: path.resolve(workspaceRoot, project.sourceRoot),
+    ignoredSourceRoots: new Set(
+      (project.ignoredSourceRoots ?? []).map((root) =>
+        path.resolve(workspaceRoot, root),
+      ),
+    ),
     allowedWorkspaceProjects: new Set(project.allowedWorkspaceProjects),
     manifest: {},
     workspaceRoot,
@@ -328,6 +334,9 @@ function collectSourceFiles(project, violations) {
       }
 
       if (entry.isDirectory()) {
+        if (project.ignoredSourceRoots.has(entryPath)) {
+          continue;
+        }
         pendingDirectories.push(entryPath);
         continue;
       }

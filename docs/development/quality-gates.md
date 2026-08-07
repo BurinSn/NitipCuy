@@ -2,7 +2,7 @@
 
 Status: Accepted foundation
 
-Last reviewed: 2026-07-29
+Last reviewed: 2026-08-07
 
 ## 1. Supported toolchain
 
@@ -42,7 +42,7 @@ pnpm audit:prod
 
 Review both `package.json` and `pnpm-lock.yaml`. Do not accept peer warnings, ignored native build scripts, unreviewed overrides, or unexplained package-manager mutations.
 
-Native dependency scripts are fail-closed. `pnpm-workspace.yaml` explicitly allows only the packages required by the selected Next.js and lint stack.
+Native dependency scripts are fail-closed. `pnpm-workspace.yaml` explicitly allows only reviewed packages required by the selected Next.js and Prisma stacks. The Prisma engine and CLI scripts are allowed; optional native scripts reached through disposable test-container support remain explicitly denied.
 
 The workspace also applies exact security overrides for transitive `postcss` and `sharp` releases that the current Next.js graph resolves below patched versions. Treat an override as a temporary reviewed dependency decision: keep the full build and runtime evidence, audit it on every pull request, and remove it when the framework publishes a supported patched graph.
 
@@ -132,10 +132,12 @@ Integration tests:
 - atomic last-capacity reservation and accepted-order commercial snapshot behavior;
 - one database-backed transaction scope for every repository, ledger, success-audit, inbox, and outbox write in a consistency-critical command;
 - rollback after injected failure at every write boundary, including proof that no success audit or outbox message survives without its authoritative state;
-- stale-version or lock-conflict behavior, balanced ledger constraints, bounded transaction and lock timeouts, and no provider network call while the transaction is open;
+- order-capacity or ledger lock-conflict behavior, balanced ledger constraints, a database-level lock timeout, and transaction-level proof that no provider network call occurs while the transaction is open; issue #5 already tests stale trip versions and enforces application query/transaction timeouts;
 - purchased and collected transitions denied until required evidence and customer-approved variance state exist;
 - cleanup verified;
 - no fallback to a development or production database.
+
+The issue #5 integration suite starts a disposable `postgres:18-alpine` container, applies the committed migration from a clean database, and stops the container after the suite. It covers repeated and concurrent issuer-subject mapping, email non-persistence, sessions, browser-bound OAuth attempts, ownership constraints, authoritative trip lifecycle, moderation assurance and capability, moderation-safe public Q&A, rollback, optimistic concurrency, cursor reads, and public projection privacy. This is local disposable-database runtime evidence, not managed-provider or production evidence.
 
 Browser tests:
 
@@ -188,17 +190,17 @@ GitHub branch protection is unavailable for the current private repository plan.
 - Published-trip runtime validation rejects unsupported service modes, impossible calendar and clock values, invalid offsets and IANA timezones, inverted source-service and ordering windows, ordering after source availability, service after departure, and duplicate question IDs; it supports advance PO and sorts cross-offset public questions by instant.
 - Package dependency direction is implemented and source-tested through the manifest plus TypeScript-AST boundary gate. It does not replace complete-diff review, runtime authorization, or provider and data-flow security verification.
 - OWASP ASVS 5.0 Level 2 is the accepted production verification target, but no traceability matrix or complete ASVS verification exists.
-- The DDoS, WAF, bot, trusted-proxy, canonical-host, shared rate-limit, session, privileged-MFA, SQL-safety, encryption/key-management, cache-safety, CSRF, XSS, SSRF, private-upload, monitoring, incident, backup, deployment-compatibility, and recovery requirements are designed but not production-implemented or runtime-verified.
+- The issue #5 working tree has source-tested OIDC, session, authorization, CSRF-origin, bounded-input, Prisma, and disposable-PostgreSQL controls. DDoS, WAF, bot, trusted-proxy, canonical-host, shared rate-limit, privileged-MFA minting and recovery, managed encryption/key custody, cache safety, XSS/SSRF coverage, private upload, monitoring, incident, backup, deployment compatibility, and recovery remain unimplemented or unverified.
 - No capacity contract, service-level objective, provider quota review, load or abuse test, backup restore, or incident exercise exists.
-- No transaction abstraction or implementation exists. The callback-only transaction port and passthrough mock were removed because they could not enforce a shared atomic scope.
+- The issue #5 marketplace unit of work uses a Prisma serializable transaction and one transaction client for state, success audit, and required outbox records. This does not implement order, ledger, inbox, worker, payment, or provider transaction boundaries.
 - The payment submission and initial-protection assessment contracts are source-tested. The provider-neutral idempotency contract and payment, dispatch, and evidence-lifecycle mocks source-test scoped replay, payload conflict, concurrency denial, recovery-required ambiguous failure, expiry, malformed input, authority outage, and cross-scope isolation.
 - The idempotency store is deliberately process-local and test-only. No shared durable production authority, authenticated idempotency lookup, database constraint, provider-native verification, callback authentication, durable inbox, worker, ledger, order mutation, or complete release/refund/settlement reconciliation exists.
 - The evidence lifecycle application seam and deterministic fixture are source-tested for server-observed digest, byte length, bounded image signatures, immutable quarantine upload, expiry, scan pending/outage/rejection/digest mismatch, acceptance, cross-owner and reference denial, retention, and deletion. No authenticated upload, signed URL, production object storage, robust image decoder, scanner, durable metadata, order transition, cleanup worker, or provider/runtime evidence exists.
-- Audit and outbox mocks remain provisional until their asynchronous-state and future transaction-scoping findings are resolved.
-- No PostgreSQL adapter or integration test exists yet.
-- No authoritative trip-offer lifecycle, new-order guard, capacity reservation, archival history, evidence-gated order transition, or private seller/customer dashboard exists yet.
+- Durable success audit and outbox rows now share the issue #5 marketplace transaction; publication to a worker and asynchronous retry remain unimplemented.
+- The first PostgreSQL adapter and disposable-database integration suite exist; managed PostgreSQL, migration-role separation, backup, restore, and mixed-version deployment do not.
+- An authoritative moderated trip-offer lifecycle exists. New-order guard, capacity reservation, archival history, evidence-gated order transition, and private seller/customer dashboards do not.
 - No browser automation exists yet.
-- No identity, provider, payment, logistics, or storage integration exists.
+- Google OIDC is implemented against deterministic protocol fixtures only. No real identity, payment, logistics, or storage provider is configured or verified.
 - No production or preview environment exists.
 - The current shell has not received visual approval.
 

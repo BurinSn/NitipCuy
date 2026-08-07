@@ -1,0 +1,275 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum AccountStatus {
+  ACTIVE
+  SUSPENDED
+  CLOSED
+}
+
+enum AssuranceLevel {
+  BASE
+  STRONG
+  PHISHING_RESISTANT
+}
+
+enum AccountCapability {
+  MODERATE_TRIPS
+}
+
+enum SessionStatus {
+  ACTIVE
+  ROTATED
+  REVOKED
+  EXPIRED
+}
+
+enum OAuthAttemptStatus {
+  PENDING
+  CONSUMED
+  EXPIRED
+}
+
+enum JastipperProfileStatus {
+  ACTIVE
+  SUSPENDED
+}
+
+enum TripOfferStatus {
+  DRAFT
+  PENDING_MODERATION
+  PUBLISHED
+  REJECTED
+  ARCHIVED
+}
+
+enum DiscussionStatus {
+  VISIBLE
+  HIDDEN
+}
+
+model Account {
+  id             String        @id @db.Uuid
+  status         AccountStatus @default(ACTIVE)
+  sessionVersion Int           @default(1) @map("session_version")
+  displayName    String        @map("display_name") @db.VarChar(120)
+  createdAt      DateTime      @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt      DateTime      @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  identities      ExternalIdentity[]
+  capabilities    AccountCapabilityGrant[]
+  sessions        BrowserSession[]
+  profile         JastipperProfile?
+  ownedTrips      TripOffer[]              @relation("TripOwner")
+  moderatedTrips  ModerationDecision[]     @relation("TripModerator")
+  publicQuestions PublicQuestion[]         @relation("QuestionAuthor")
+  publicAnswers   PublicAnswer[]           @relation("AnswerAuthor")
+
+  @@map("account")
+}
+
+model ExternalIdentity {
+  id                  String         @id @db.Uuid
+  accountId           String         @map("account_id") @db.Uuid
+  provider            String         @db.VarChar(32)
+  issuer              String         @db.VarChar(255)
+  subject             String         @db.VarChar(255)
+  emailVerified       Boolean        @default(false) @map("email_verified")
+  assurance           AssuranceLevel @default(BASE)
+  lastAuthenticatedAt DateTime       @map("last_authenticated_at") @db.Timestamptz(3)
+  createdAt           DateTime       @default(now()) @map("created_at") @db.Timestamptz(3)
+
+  account Account @relation(fields: [accountId], references: [id], onDelete: Restrict)
+
+  @@unique([issuer, subject], map: "external_identity_issuer_subject_key")
+  @@unique([accountId, provider], map: "external_identity_account_provider_key")
+  @@index([accountId], map: "external_identity_account_idx")
+  @@map("external_identity")
+}
+
+model AccountCapabilityGrant {
+  accountId  String            @map("account_id") @db.Uuid
+  capability AccountCapability
+  grantedAt  DateTime          @default(now()) @map("granted_at") @db.Timestamptz(3)
+
+  account Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+
+  @@id([accountId, capability])
+  @@map("account_capability_grant")
+}
+
+model BrowserSession {
+  id                    String         @id @db.Uuid
+  accountId             String         @map("account_id") @db.Uuid
+  familyId              String         @map("family_id") @db.Uuid
+  parentSessionId       String?        @unique(map: "browser_session_parent_key") @map("parent_session_id") @db.Uuid
+  tokenDigest           String         @unique(map: "browser_session_token_digest_key") @map("token_digest") @db.Char(64)
+  accountSessionVersion Int            @map("account_session_version")
+  assurance             AssuranceLevel @default(BASE)
+  status                SessionStatus  @default(ACTIVE)
+  createdAt             DateTime       @default(now()) @map("created_at") @db.Timestamptz(3)
+  lastSeenAt            DateTime       @map("last_seen_at") @db.Timestamptz(3)
+  idleExpiresAt         DateTime       @map("idle_expires_at") @db.Timestamptz(3)
+  absoluteExpiresAt     DateTime       @map("absolute_expires_at") @db.Timestamptz(3)
+  revokedAt             DateTime?      @map("revoked_at") @db.Timestamptz(3)
+  revocationReason      String?        @map("revocation_reason") @db.VarChar(80)
+
+  account Account         @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  parent  BrowserSession? @relation("SessionRotation", fields: [parentSessionId], references: [id], onDelete: Restrict)
+  child   BrowserSession? @relation("SessionRotation")
+
+  @@index([accountId, status], map: "browser_session_account_status_idx")
+  @@index([familyId], map: "browser_session_family_idx")
+  @@map("browser_session")
+}
+
+model OAuthAttempt {
+  id                   String             @id @db.Uuid
+  stateDigest          String             @unique(map: "oauth_attempt_state_digest_key") @map("state_digest") @db.Char(64)
+  browserBindingDigest String             @map("browser_binding_digest") @db.Char(64)
+  sealedNonce          String             @map("sealed_nonce") @db.Text
+  sealedCodeVerifier   String             @map("sealed_code_verifier") @db.Text
+  returnTo             String             @map("return_to") @db.VarChar(512)
+  status               OAuthAttemptStatus @default(PENDING)
+  createdAt            DateTime           @default(now()) @map("created_at") @db.Timestamptz(3)
+  expiresAt            DateTime           @map("expires_at") @db.Timestamptz(3)
+  consumedAt           DateTime?          @map("consumed_at") @db.Timestamptz(3)
+
+  @@index([expiresAt, status], map: "oauth_attempt_expiry_idx")
+  @@map("oauth_attempt")
+}
+
+model JastipperProfile {
+  id                  String                 @id @db.Uuid
+  accountId           String                 @unique(map: "jastipper_profile_account_key") @map("account_id") @db.Uuid
+  displayName         String                 @map("display_name") @db.VarChar(120)
+  sellerLocationLabel String                 @map("seller_location_label") @db.VarChar(160)
+  deliverySummary     String                 @map("delivery_summary") @db.VarChar(500)
+  rateSummary         String                 @map("rate_summary") @db.VarChar(500)
+  status              JastipperProfileStatus @default(ACTIVE)
+  createdAt           DateTime               @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt           DateTime               @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  account Account     @relation(fields: [accountId], references: [id], onDelete: Restrict)
+  trips   TripOffer[]
+
+  @@unique([id, accountId], map: "jastipper_profile_id_account_key")
+  @@map("jastipper_profile")
+}
+
+model TripOffer {
+  id                   String          @id @db.VarChar(64)
+  ownerAccountId       String          @map("owner_account_id") @db.Uuid
+  jastipperProfileId   String          @map("jastipper_profile_id") @db.Uuid
+  status               TripOfferStatus @default(DRAFT)
+  version              Int             @default(1)
+  originLabel          String          @map("origin_label") @db.VarChar(160)
+  originTimeZone       String          @map("origin_time_zone") @db.VarChar(80)
+  destinationLabel     String          @map("destination_label") @db.VarChar(160)
+  destinationTimeZone  String          @map("destination_time_zone") @db.VarChar(80)
+  serviceWindowStartAt DateTime        @map("service_window_start_at") @db.Timestamptz(3)
+  serviceWindowEndAt   DateTime        @map("service_window_end_at") @db.Timestamptz(3)
+  departureDate        DateTime        @map("departure_date") @db.Date
+  departureAt          DateTime        @map("departure_at") @db.Timestamptz(3)
+  requestOpenAt        DateTime        @map("request_open_at") @db.Timestamptz(3)
+  requestDeadline      DateTime        @map("request_deadline") @db.Timestamptz(3)
+  estimatedArrivalAt   DateTime        @map("estimated_arrival_at") @db.Timestamptz(3)
+  serviceModes         String[]        @map("service_modes")
+  remainingCapacityKg  Decimal         @map("remaining_capacity_kg") @db.Decimal(8, 2)
+  moderationReason     String?         @map("moderation_reason") @db.VarChar(500)
+  publishedAt          DateTime?       @map("published_at") @db.Timestamptz(3)
+  createdAt            DateTime        @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt            DateTime        @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  owner               Account              @relation("TripOwner", fields: [ownerAccountId], references: [id], onDelete: Restrict)
+  profile             JastipperProfile     @relation(fields: [jastipperProfileId, ownerAccountId], references: [id, accountId], onDelete: Restrict)
+  moderationDecisions ModerationDecision[]
+  questions           PublicQuestion[]
+
+  @@index([ownerAccountId, status], map: "trip_offer_owner_status_idx")
+  @@index([status, departureDate, id], map: "trip_offer_public_search_idx")
+  @@map("trip_offer")
+}
+
+model ModerationDecision {
+  id                 String   @id @db.Uuid
+  tripId             String   @map("trip_id") @db.VarChar(64)
+  moderatorAccountId String   @map("moderator_account_id") @db.Uuid
+  decision           String   @db.VarChar(32)
+  reasonCode         String   @map("reason_code") @db.VarChar(80)
+  createdAt          DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+
+  trip      TripOffer @relation(fields: [tripId], references: [id], onDelete: Restrict)
+  moderator Account   @relation("TripModerator", fields: [moderatorAccountId], references: [id], onDelete: Restrict)
+
+  @@index([tripId, createdAt], map: "moderation_decision_trip_idx")
+  @@map("moderation_decision")
+}
+
+model PublicQuestion {
+  id                String           @id @db.Uuid
+  tripId            String           @map("trip_id") @db.VarChar(64)
+  authorAccountId   String           @map("author_account_id") @db.Uuid
+  authorDisplayName String           @map("author_display_name") @db.VarChar(120)
+  message           String           @db.VarChar(500)
+  status            DiscussionStatus @default(VISIBLE)
+  createdAt         DateTime         @default(now()) @map("created_at") @db.Timestamptz(3)
+
+  trip   TripOffer     @relation(fields: [tripId], references: [id], onDelete: Restrict)
+  author Account       @relation("QuestionAuthor", fields: [authorAccountId], references: [id], onDelete: Restrict)
+  answer PublicAnswer?
+
+  @@index([tripId, status, createdAt, id], map: "public_question_trip_idx")
+  @@map("public_question")
+}
+
+model PublicAnswer {
+  id                String           @id @db.Uuid
+  questionId        String           @unique(map: "public_answer_question_key") @map("question_id") @db.Uuid
+  authorAccountId   String           @map("author_account_id") @db.Uuid
+  authorDisplayName String           @map("author_display_name") @db.VarChar(120)
+  message           String           @db.VarChar(500)
+  status            DiscussionStatus @default(VISIBLE)
+  createdAt         DateTime         @default(now()) @map("created_at") @db.Timestamptz(3)
+
+  question PublicQuestion @relation(fields: [questionId], references: [id], onDelete: Restrict)
+  author   Account        @relation("AnswerAuthor", fields: [authorAccountId], references: [id], onDelete: Restrict)
+
+  @@map("public_answer")
+}
+
+model AuditEvent {
+  id             String   @id @db.Uuid
+  actorAccountId String?  @map("actor_account_id") @db.Uuid
+  action         String   @db.VarChar(120)
+  targetType     String   @map("target_type") @db.VarChar(80)
+  targetId       String   @map("target_id") @db.VarChar(160)
+  outcome        String   @db.VarChar(32)
+  reasonCode     String   @map("reason_code") @db.VarChar(80)
+  correlationId  String   @map("correlation_id") @db.VarChar(120)
+  occurredAt     DateTime @map("occurred_at") @db.Timestamptz(3)
+
+  @@index([targetType, targetId, occurredAt], map: "audit_event_target_idx")
+  @@index([actorAccountId, occurredAt], map: "audit_event_actor_idx")
+  @@map("audit_event")
+}
+
+model OutboxEvent {
+  id            String    @id @db.Uuid
+  topic         String    @db.VarChar(120)
+  aggregateType String    @map("aggregate_type") @db.VarChar(80)
+  aggregateId   String    @map("aggregate_id") @db.VarChar(160)
+  occurredAt    DateTime  @map("occurred_at") @db.Timestamptz(3)
+  payload       Json
+  claimedAt     DateTime? @map("claimed_at") @db.Timestamptz(3)
+  publishedAt   DateTime? @map("published_at") @db.Timestamptz(3)
+
+  @@index([publishedAt, occurredAt], map: "outbox_event_unpublished_idx")
+  @@map("outbox_event")
+}

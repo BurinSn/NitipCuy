@@ -2,7 +2,7 @@
 
 Status: Accepted product foundation
 
-Last updated: 2026-07-28
+Last updated: 2026-08-07
 
 ## 1. Objective
 
@@ -40,6 +40,14 @@ A jastipper may:
 - build reputation from completed platform transactions.
 
 A person may act in both roles, but permissions, evidence, balances, reviews, and disputes remain transaction-role specific.
+
+### Account and access foundation
+
+- MVP sign-in is Google OIDC only. NitipCuy does not offer or store a username/password fallback.
+- A verified exact Google issuer and immutable subject resolve an opaque NitipCuy account. Email is required to be verified during authentication but is not persisted or used to merge accounts in the Stage 1 slice.
+- Login, contact verification, jastipper verification, moderation eligibility, and privileged assurance are separate facts.
+- Google login creates only base assurance. Moderation, support, payment, recovery, and administrator powers require a separately approved phishing-resistant step-up and explicit capability.
+- Sessions are NitipCuy-controlled, revocable, and server-authoritative. A visible button, route, email, Google profile, or client-claimed role never grants a business permission.
 
 ## 3. Service modes
 

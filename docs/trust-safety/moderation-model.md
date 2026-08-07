@@ -2,7 +2,7 @@
 
 Status: Accepted direction, taxonomy and legal review pending
 
-Last updated: 2026-07-25
+Last updated: 2026-08-07
 
 ## 1. Objective
 
@@ -90,3 +90,15 @@ No moderator can alter the authoritative ledger without a reasoned, auditable fi
 - Reviewer training and quality audit.
 - False-positive, appeal, and repeat-offender metrics.
 - Indonesian legal review of platform duties, consumer protection, electronic systems, payments, data protection, import, customs, and dangerous goods.
+
+## 7. Stage 1 implementation boundary
+
+Issue #5 implements only the trip-publication moderation gate:
+
+- a trip moves from draft to pending moderation before publication;
+- an approval or rejection records a reasoned moderation decision, success audit, and outbox event in the same PostgreSQL transaction as the trip transition;
+- the command requires an active persisted session, persisted `MODERATE_TRIPS` capability, and persisted `PHISHING_RESISTANT` assurance;
+- a Google base session, forged assurance claim, missing capability, stale version, or missing trip fails closed;
+- the public projection excludes moderation reason, moderator identity, internal account IDs, and private identity data.
+
+No privileged step-up adapter is implemented, so the production HTTP moderation route cannot obtain the required assurance and remains fail-closed. Item taxonomy, automated scanning, reports, notices, appeals, strikes, account restriction, settlement handling, and legal review remain future work.
