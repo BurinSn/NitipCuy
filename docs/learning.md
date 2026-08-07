@@ -972,3 +972,14 @@ Do not present inference, provider marketing, provisional pricing, or a future i
 ### No product-model change
 
 - This slice implements the already accepted marketplace path and Google-only access direction. It does not change roles, seller-defined pricing, the two service modes, transaction-fee direction, order/evidence rules, payment/provider choices, or roadmap stage order.
+
+## 2026-08-07 12:56 WIB - Pull-request creation produced no new product learning
+
+### Verified
+
+- Pull request #6 accurately exposed the locally verified issue #5 scope and kept hosted-check and owner-approval boxes unchecked.
+- Recording the PR number creates a newer documentation head, so the workflow results on implementation head `815414662f509f7ae960f44917e0bddfbc7cf4ef` cannot be reused as final exact-head evidence.
+
+### No new product or architecture learning
+
+- This checkpoint changes only GitHub and lifecycle state. The Google-only identity direction, persisted marketplace boundary, security controls, Stage 1 order, and all exclusions remain unchanged.

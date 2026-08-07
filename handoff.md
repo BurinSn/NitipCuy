@@ -1,6 +1,6 @@
 # NitipCuy Cross-Session Handoff
 
-Last updated: 2026-08-07 12:54 WIB
+Last updated: 2026-08-07 12:56 WIB
 
 Handoff owner: Codex
 
@@ -79,8 +79,9 @@ Verified 2026-08-07 before this lifecycle edit:
 | Prior slice | Pull request #4 squash-merged; issue #3 closed |
 | Active issue | #5, open |
 | Active branch | `feat/5-persisted-google-account-slice` |
-| Pull request | None yet |
-| Current worktree | Material issue #5 application, migration, test, route, dependency, and documentation changes; not committed |
+| Implementation checkpoint | `815414662f509f7ae960f44917e0bddfbc7cf4ef`, pushed and matched the remote branch before this lifecycle edit |
+| Pull request | #6, open, not draft, GitHub-mergeable at the implementation checkpoint |
+| Current worktree | Clean at the implementation checkpoint; this pull-request lifecycle reconciliation is pending commit |
 | Deployment / providers | None deployed; no Google client configured; no production provider activated |
 | Merge authority | None; a future pull request requires exact-head checks, complete review, and fresh BurinSN approval |
 
@@ -135,14 +136,15 @@ Final post-documentation exact-toolchain verification, zero-advisory audit, life
 - Guarded Strix doctor passed earlier: binary installed, Docker ready, pinned sandbox present, no active authorizations. No authorization, dry-run plan, or scan exists.
 - Strix requires a new explicit exact local or staging target, environment, modes, expiry, and maximum budget. Scan execution needs a separate instruction after the plan; production would require another approval.
 - No real Google client creation/configuration, deployment, paid service, external message, provider onboarding, public launch, or merge is authorized.
+- At implementation head `815414662f509f7ae960f44917e0bddfbc7cf4ef`, application run `31152244163` was in progress, lifecycle run `31152244168` was queued, CodeRabbit was pending, and GitHub had no review object or review decision. These are volatile and must be retrieved again on the final lifecycle head.
 
 ## 9. Remaining blockers and exact next action
 
 Remaining governed work:
 
-1. commit one coherent issue #5 change, push the branch, and open the focused pull request;
-2. inspect both hosted workflows and annotations on the immutable head;
-3. reconcile the PR number and exact head in lifecycle documents if needed;
+1. commit and push this pull-request lifecycle reconciliation;
+2. inspect both hosted workflows and annotations on the resulting immutable head;
+3. inspect the complete final base diff and current review objects;
 4. report exact evidence and residual gates to BurinSN without merging.
 
-The first exact next action is to commit the reviewed issue #5 implementation and lifecycle state, push `feat/5-persisted-google-account-slice`, and open its focused pull request without merging.
+The first exact next action is to commit and push this pull-request #6 lifecycle record, then wait for and inspect both required workflows on that exact new head without merging.
