@@ -1,10 +1,10 @@
 # NitipCuy Canonical Roadmap
 
-Last reviewed: 2026-08-07 13:23 WIB
+Last reviewed: 2026-08-07 14:08 WIB
 
 Current stage: Stage 1 - Platform foundation
 
-Current work item: Issue #5 and pull request #6 implement the first persisted Google-account-to-public-Q&A vertical slice on `feat/5-persisted-google-account-slice` from merged pull request #4 base `f100b03e0352bad3f969efc7d42a91f46c64f864`. Final review head `f64b2b6c77bde0284c22163f9740d46408ea1a43` passed both hosted workflows with zero annotations, and BurinSN gave fresh merge approval after that evidence was presented. Commit and push the approval-state checkpoint, verify its exact hosted runs, reconcile the PR description, then squash-merge and verify `main` plus issue closure.
+Current work item: Issue #7 and pull request #8 implement versioned DRY and guarded-Strix progress governance on `chore/7-review-governance` from merged pull request #6 base `f38cdaf144ff3c22c39e7a28544363fdb0fd0a19`. Implementation head `fcf9628241dd12a2e0a04dc88225a6a776243a19` passed the new hosted review-governance run `31156499668` with zero annotations, proving real issue lookup and PR/head validation. This PR-state lifecycle checkpoint creates one newer head; final exact-head DRY re-review, PR-body pinning, and all hosted workflow checks remain required before owner review.
 
 ## 1. Role, authority, and freshness contract
 
@@ -163,7 +163,7 @@ Status: In progress
 - [x] Issue #3 branch is committed, pushed, and opened as pull request #4.
 - [x] BurinSN gave fresh issue #3 merge approval on 2026-08-06 after the final exact-head evidence and findings were visible.
 
-Pull request #4 was squash-merged and issue #3 closed at `f100b03e0352bad3f969efc7d42a91f46c64f864`. Issue #5 now combines identity, persistence, protected mutation, and public projection through the separately governed first persisted slice. The original simulated UI remains an architecture probe; the new persisted HTTP routes are source/build verified and the core flow is disposable-database verified, but no real Google, browser, preview, production, or visual evidence exists.
+Pull request #4 was squash-merged and issue #3 closed at `f100b03e0352bad3f969efc7d42a91f46c64f864`. Issue #5 was then squash-merged through pull request #6 at `f38cdaf144ff3c22c39e7a28544363fdb0fd0a19`, combining identity, persistence, protected mutation, and public projection through the first persisted slice. The original simulated UI remains an architecture probe; the persisted HTTP routes are source/build verified and the core flow is disposable-database verified, but no real Google, browser, preview, production, or visual evidence exists.
 
 Pull-request head, hosted checks, annotations, reviews, and mergeability are volatile. Retrieve them directly. A missing, pending, skipped, warned, or failed lifecycle or application-quality result blocks approval by project policy.
 
@@ -207,6 +207,18 @@ account
 - [ ] Complete the remaining protected-preview controls. Implemented and source/integration-tested now: opaque digest-only sessions, rotation/revocation, exact transactional session/assurance/ownership checks, generic errors, exact-origin and Fetch-Metadata checks, parameterized Prisma queries, database ownership constraints, and bounded inputs. Still required: shared multi-axis rate limits, trusted-proxy/direct-origin configuration, browser headers/CSP, managed key custody, logging-redaction and observability, complete safe-query static/security scans, browser automation, and privileged step-up/recovery.
 - [x] Establish bounded cursor pagination plus connection, query, statement, transaction, and request budgets for the persisted slice. Minimal production observability remains open with the prior item.
 - [ ] Record preliminary pilot capacity, provider-quota, cost, RPO, and RTO questions without inventing targets before the pilot is bounded.
+
+### Review-evidence governance slice
+
+- [x] Create governed issue #7 for visible DRY and guarded-Strix progress in every future material issue and pull request.
+- [x] Define one versioned status/evidence contract with exact-head DRY review and guarded-Strix applicability.
+- [x] Add a required material-change issue form and expand the pull-request template.
+- [x] Add a dependency-free validator, adversarial fixtures, and a read-only `Review governance` pull-request workflow that never invokes Strix.
+- [x] Classify issue #7 Strix applicability as `NOT REQUIRED` because this policy/tooling slice introduces no runnable application target; hostile source review remains required.
+- [x] Run exact-toolchain quality, audit, lifecycle, link, diff, candidate-diff DRY, and hostile security review gates; final exact-head review pinning remains part of pull-request reconciliation.
+- [x] Commit and push implementation head `fcf9628241dd12a2e0a04dc88225a6a776243a19`, open pull request #8, and verify the new review-governance workflow once with zero annotations.
+- [ ] Commit/push the PR-state lifecycle checkpoint, re-review and pin the final exact head, then verify all three hosted workflows on that immutable head.
+- [ ] Obtain fresh BurinSN review after the exact review states, evidence, limitations, and checks are visible; do not merge from automation alone.
 
 ### Experience slice
 
@@ -306,11 +318,11 @@ The unresolved DOKU, logistics, policy, legal, and pilot items listed in Stage 3
 
 ### Now
 
-Commit and push the pull-request #6 owner-approval record, verify its hosted gates, then perform the approved squash merge and post-merge reconciliation.
+Commit and push this pull-request-state lifecycle checkpoint, re-review the resulting immutable head, update the linked issue and PR evidence, and verify review-governance, lifecycle, and application-quality workflows on that exact head.
 
 ### Next
 
-Verify both hosted workflows on the immutable issue #5 pull-request head and review the complete base diff. Guarded Strix remains a separate gate: obtain current explicit authorization for one exact local or staging target, create the narrow authorization, show the dry-run plan and budget, and execute only after a separate scan instruction. Then request fresh BurinSN review without merging.
+Present pull request #8's final exact-head scope, review verdict, Strix non-applicability, hosted evidence, and limitations for fresh BurinSN review without merging. After this governance slice, continue the remaining Stage 1 protected-preview controls and server-authoritative new-order eligibility through separately governed issues.
 
 ### Later
 

@@ -1013,3 +1013,49 @@ Do not present inference, provider marketing, provisional pricing, or a future i
 ### No product-model change
 
 - This governance record changes no identity, marketplace, security, architecture, commercial, provider, or roadmap decision.
+
+## 2026-08-07 13:41 WIB - Review visibility must not become scanner authority
+
+### Accepted
+
+- Every material issue now declares the intended DRY scope and whether guarded Strix is required; every PR exposes the matching final state.
+- An exact-head DRY verdict is merge-eligible only as `CLEAN` or `CLEAN WITH NOTES`.
+- Required Strix work is merge-eligible only after independent triage or verified remediation. Non-required work must record a concrete rationale rather than silently omitting the scanner.
+
+### Reusable learning
+
+- Review progress, authorization, and execution are different facts. A visible `REQUIRED` state cannot create permission to scan, and a CI token cannot substitute for exact-target user authority.
+- Exact-head evidence is safest in an editable PR record: a new commit invalidates the recorded SHA without requiring a self-referential documentation commit.
+- A policy validator can make omissions and contradictions fail closed, but it cannot prove review competence or evidence truth. Human hostile review remains the authority for findings and claims.
+- DRY and security review overlap around duplicated permission and security rules, but they are not interchangeable. DRY finds competing authority; adversarial testing exercises an authorized runnable target.
+
+### Corrected
+
+- The lifecycle and specialist documents still described pull request #6 as pending after its verified merge. Issue #7 reconciles that stale snapshot with live Git and GitHub state before adding new governance claims.
+- A parser that finds only the first heading or deduplicates issue numbers can falsely pass contradictory governance text. Duplicate governed headings and closing lines now fail, and fenced or commented content cannot supply evidence.
+- A required scanner state without exact revision, target/environment consistency, mode, scope mode, and bounded budget can describe the wrong assessment while appearing complete. Those fields are now fail-closed and the budget cannot exceed USD 25.
+- GitHub issue forms reserve `none` as a dropdown option and document `required` enforcement as public-repository-only. A private repository therefore needs a later validator gate rather than trusting the form UI to enforce completion.
+
+### Deferred
+
+- No Strix target is authorized for issue #7. Future issues that classify Strix as required must separately establish the exact owned target, environment, modes, expiry, budget, reviewed guard plan, execution instruction, and production approval when applicable.
+
+### No product-model change
+
+- The review-governance slice changes no product role, service mode, commercial rule, identity model, provider choice, transaction rule, or roadmap stage order.
+
+## 2026-08-07 14:08 WIB - The review-governance check passed its first real pair
+
+### Verified
+
+- Hosted run `31156499668` loaded issue #7, parsed pull request #8, matched both review states, checked DRY revision `fcf9628241dd12a2e0a04dc88225a6a776243a19`, and completed with zero annotations.
+- The workflow used only read permissions and did not invoke Strix or mutate the issue or PR.
+
+### Reusable learning
+
+- Synthetic parser fixtures and a real hosted event prove different things. The first real pair verified GitHub event shape, token scope, issue API access, checked-out validator execution, and step-summary compatibility.
+- Recording that proof in lifecycle documents creates a newer head, so the earlier exact-head DRY pin and hosted run cannot be reused as final merge evidence.
+
+### No product-model change
+
+- Pull-request creation and hosted governance verification change no NitipCuy product, architecture, identity, transaction, provider, or stage decision.

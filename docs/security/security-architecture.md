@@ -8,7 +8,7 @@ Binding decision: [ADR 0004](../decisions/0004-security-resilience-and-scale-bas
 
 ## 1. Authority and claim discipline
 
-This document governs application-security, abuse-resistance, data-protection, and security-verification requirements. The moderation model governs marketplace content and conduct. The system architecture governs package and provider boundaries. The quality gates govern required evidence.
+This document governs application-security, abuse-resistance, data-protection, and security-verification requirements. The moderation model governs marketplace content and conduct. The system architecture governs package and provider boundaries. The quality gates govern required evidence. The review-governance document owns per-issue and per-PR DRY and guarded-Strix progress states.
 
 NitipCuy does not claim to be DDoS-proof, injection-proof, session-hijack-proof, brute-force-proof, or secure against every future attack. The required outcome is a layered system that reduces likelihood and impact, detects abuse, fails safely, preserves evidence, and can recover.
 
@@ -148,7 +148,7 @@ Required session properties:
 
 The system treats a session identifier as untrusted input even after signature or storage validation. Requirements follow the [OWASP session-management guidance](https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html) and the [Next.js authentication guidance](https://nextjs.org/docs/app/guides/authentication).
 
-The active issue #5 slice implements the narrow source and local-integration boundary in ADR 0005: Google-only OIDC code flow through `openid-client`, exact issuer and audience, state plus a distinct digest-only browser-binding cookie, nonce, S256 PKCE, safe local return paths, one-use encrypted OAuth attempts, digest-only opaque PostgreSQL sessions, the `__Host-` cookie contracts, rotation-family reuse revocation, idle and absolute expiry, account-version invalidation, and exact-session revalidation inside protected transactions. A callback prepared in another browser fails closed, and Google login mints only `BASE` assurance. No production step-up, recovery, shared abuse control, managed-key custody, provider configuration, or browser verification exists.
+The merged issue #5 slice implements the narrow source and local-integration boundary in ADR 0005: Google-only OIDC code flow through `openid-client`, exact issuer and audience, state plus a distinct digest-only browser-binding cookie, nonce, S256 PKCE, safe local return paths, one-use encrypted OAuth attempts, digest-only opaque PostgreSQL sessions, the `__Host-` cookie contracts, rotation-family reuse revocation, idle and absolute expiry, account-version invalidation, and exact-session revalidation inside protected transactions. A callback prepared in another browser fails closed, and Google login mints only `BASE` assurance. No production step-up, recovery, shared abuse control, managed-key custody, provider configuration, or browser verification exists.
 
 ## 8. Credential, OTP, and automation attacks
 
@@ -326,6 +326,7 @@ Before protected preview:
 - encryption-format, KMS authorization, rotation, re-wrapping, key-unavailability, log-redaction, retention, and deletion tests appropriate to stored private data;
 - secret, dependency, static, and workflow scans;
 - logging-redaction tests.
+- every material issue classifies guarded Strix applicability; a required runnable-target assessment reaches independent finding triage or verified remediation before merge, while a non-required classification records a concrete rationale and hostile source-review evidence.
 
 Before closed pilot:
 
@@ -338,7 +339,7 @@ Before closed pilot:
 - independent security review of high-impact flows;
 - no unresolved critical or high finding without explicit documented risk acceptance.
 
-Security testing against an external or production target requires separate explicit authorization. Strix may be used only through the guarded project process with an exact target, dry-run review, budget, and additional production approval. Generated findings and fixes remain untrusted until independently reviewed and verified.
+Security testing against an external or production target requires separate explicit authorization. Strix may be used only through the guarded project process with an exact target, dry-run review, budget, separate execution instruction, and additional production approval. The review-governance workflow validates only declared progress and never launches a scanner. Generated findings and fixes remain untrusted until independently reviewed and verified.
 
 ## 17. Current status
 
@@ -354,7 +355,7 @@ Designed:
 - dependency and workflow supply-chain controls;
 - pooled PostgreSQL and modular-monolith direction.
 
-Implemented and source-tested for issue #3 plus the active issue #5 slice:
+Implemented and source-tested for issue #3 plus the merged issue #5 slice:
 
 - strict public-trip runtime invariants;
 - Google OIDC protocol fixtures covering exact scopes, issuer, audience, signature, expiry, state, nonce, and PKCE denial without real provider credentials;
@@ -367,6 +368,7 @@ Implemented and source-tested for issue #3 plus the active issue #5 slice:
 - disposable PostgreSQL tests for cross-account denial, forged assurance denial, revoked-session denial, rollback, concurrency, projection privacy, and OAuth/session failure paths;
 - no production secrets or real provider calls;
 - frozen dependency graph, production audit, and immutable workflow action references.
+- versioned issue/PR review evidence, exact-head DRY gating, guarded-Strix state consistency, and adversarial validator fixtures in issue #7; hosted workflow evidence remains pending until its pull request exists.
 
 Not implemented or verified:
 

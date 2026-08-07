@@ -53,7 +53,7 @@ pnpm audit:prod
 ./scripts/check-lifecycle-docs.sh origin/main
 ```
 
-See [development and quality gates](docs/development/quality-gates.md) for the evidence contract and supported commands.
+See [development and quality gates](docs/development/quality-gates.md) for the evidence contract and supported commands. Material issues and pull requests also follow the [DRY and guarded Strix review governance](docs/development/review-governance.md).
 
 ## Repository shape
 
@@ -82,6 +82,7 @@ The [system architecture](docs/architecture/system-architecture.md), [ADR 0003](
 | [Architecture ADR](docs/decisions/0003-web-architecture-and-application-foundation.md) | Stack, deployment posture, alternatives, and extraction triggers |
 | [Security and scale ADR](docs/decisions/0004-security-resilience-and-scale-baseline.md) | Accepted security target, layered controls, scalable runtime, and evidence levels |
 | [Quality gates](docs/development/quality-gates.md) | Supported toolchain and validation requirements |
+| [Review governance](docs/development/review-governance.md) | DRY and guarded Strix issue/PR evidence contract |
 | [Moderation model](docs/trust-safety/moderation-model.md) | Scanning, enforcement, evidence, and appeals |
 | [DOKU evaluation](docs/payments/doku-evaluation.md) | Payment-provider fit, costs, settlement, and blockers |
 | [Git workflow](docs/development/git-workflow.md) | Issue, branch, review, and merge governance |

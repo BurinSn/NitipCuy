@@ -1,0 +1,159 @@
+name: Material change
+description: Govern a bounded NitipCuy product, code, security, architecture, or workflow change.
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form for every material change. Never place credentials, tokens, private data, or production secrets in an issue.
+
+  - type: dropdown
+    id: review_governance_schema
+    attributes:
+      label: Review governance schema
+      description: Keep the current evidence-contract version selected.
+      options:
+        - v1
+    validations:
+      required: true
+
+  - type: textarea
+    id: objective
+    attributes:
+      label: Objective
+      description: State the user or system outcome.
+    validations:
+      required: true
+
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope
+      description: Define the bounded work included.
+    validations:
+      required: true
+
+  - type: textarea
+    id: exclusions
+    attributes:
+      label: Exclusions
+      description: Name work and authority deliberately excluded.
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: Use checkboxes for observable completion conditions.
+      value: "- [ ]"
+    validations:
+      required: true
+
+  - type: textarea
+    id: risk
+    attributes:
+      label: Risk and security
+      description: Identify affected trust boundaries, failure modes, and evidence limits.
+    validations:
+      required: true
+
+  - type: textarea
+    id: validation
+    attributes:
+      label: Validation plan
+      description: List exact local, hosted, runtime, browser, provider, security, and load evidence as applicable.
+    validations:
+      required: true
+
+  - type: textarea
+    id: documentation
+    attributes:
+      label: Documentation impact
+      description: Include all four lifecycle documents and every affected specialist authority.
+      value: |
+        - [ ] `handoff.md`
+        - [ ] `docs/changes.md`
+        - [ ] `docs/roadmap.md`
+        - [ ] `docs/learning.md`
+    validations:
+      required: true
+
+  - type: dropdown
+    id: dry_status
+    attributes:
+      label: DRY review status
+      description: Update this field as the issue progresses; merge-ready states are CLEAN or CLEAN WITH NOTES.
+      options:
+        - NOT STARTED
+        - IN PROGRESS
+        - CHANGES REQUIRED
+        - CLEAN WITH NOTES
+        - CLEAN
+    validations:
+      required: true
+
+  - type: textarea
+    id: dry_scope
+    attributes:
+      label: DRY review scope
+      description: Pin the intended diff/range and the authority, security, schema, and business-knowledge areas to inspect.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: strix_applicability
+    attributes:
+      label: Strix applicability
+      description: REQUIRED means a guarded scan must reach triage before merge; NOT REQUIRED needs a concrete rationale.
+      options:
+        - REQUIRED
+        - NOT REQUIRED
+    validations:
+      required: true
+
+  - type: dropdown
+    id: strix_status
+    attributes:
+      label: Strix review status
+      description: Update this field as guarded authorization, plan, execution, triage, and remediation progress.
+      options:
+        - NOT STARTED
+        - AUTHORIZATION REQUIRED
+        - AUTHORIZED
+        - PLAN REVIEWED
+        - EXECUTED
+        - TRIAGED
+        - REMEDIATION VERIFIED
+        - NOT APPLICABLE
+    validations:
+      required: true
+
+  - type: dropdown
+    id: strix_target_class
+    attributes:
+      label: Strix target class
+      description: This class does not authorize a target or a scan.
+      options:
+        - LOCAL REPOSITORY
+        - LOCAL APPLICATION
+        - STAGING APPLICATION
+        - PRODUCTION APPLICATION
+        - NO TARGET
+    validations:
+      required: true
+
+  - type: textarea
+    id: strix_rationale
+    attributes:
+      label: Strix rationale
+      description: Explain why Strix is required or why hostile source review is proportionate instead.
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: guarded_acknowledgement
+    attributes:
+      label: Guarded-testing acknowledgement
+      options:
+        - label: I understand that this issue does not authorize Strix; exact-target authority, a reviewed guard plan, a fixed budget, and separate execution approval remain mandatory.
+          required: true

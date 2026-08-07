@@ -57,6 +57,7 @@ pnpm check:boundaries
 pnpm typecheck
 pnpm test
 pnpm test:boundaries
+pnpm test:review-governance
 pnpm build
 pnpm audit:prod
 pnpm check
@@ -77,8 +78,10 @@ Before requesting merge:
 6. run the lifecycle document check against `origin/main`;
 7. run `git diff --check`;
 8. inspect the complete base diff;
-9. inspect hosted checks on the immutable PR head;
-10. record warnings, skipped checks, unavailable checks, and residual risks honestly.
+9. complete the DRY review on the immutable PR head and reconcile its verdict with the linked issue;
+10. reconcile guarded Strix applicability and evidence under `docs/development/review-governance.md`;
+11. inspect hosted checks on the immutable PR head;
+12. record warnings, skipped checks, unavailable checks, and residual risks honestly.
 
 For every security or scale control, record the highest evidence actually obtained:
 
@@ -120,6 +123,14 @@ Architecture tests:
 - reject non-static module specifiers and source-root symlinks rather than silently skipping unverifiable edges;
 - verify that allowed workspace imports are declared through the workspace protocol, production runtime imports use runtime dependency sections, and domain and application cannot declare external runtime dependencies;
 - run synthetic disposable fixtures only; the live tree is scanned separately by `pnpm check:boundaries`.
+
+Review-governance tests:
+
+- exercise both justified Strix non-applicability and required guarded-review completion;
+- reject unfinished or stale-revision DRY evidence;
+- reject inconsistent issue and pull-request statuses;
+- reject missing guarded authorization evidence, invalid target/environment combinations, and required Strix work that has not reached triage;
+- use synthetic Markdown only and never invoke Strix or the GitHub API.
 
 Integration tests:
 
@@ -170,10 +181,11 @@ Load and resilience tests:
 
 ## 6. Hosted pull-request gates
 
-Two GitHub workflows run on pull requests:
+Three GitHub workflows run on pull requests:
 
 - `Lifecycle documentation` requires all four lifecycle documents.
 - `Application quality` installs the exact Node/pnpm toolchain, performs a frozen install, runs `pnpm check`, and audits production dependencies.
+- `Review governance` tests the dependency-free evidence validator, retrieves the one linked issue using read-only permissions, requires matching issue/PR states, pins the DRY verdict to the exact PR head, and exposes DRY plus Strix progress in the step summary. It never invokes Strix.
 
 Both workflows:
 
@@ -190,7 +202,7 @@ GitHub branch protection is unavailable for the current private repository plan.
 - Published-trip runtime validation rejects unsupported service modes, impossible calendar and clock values, invalid offsets and IANA timezones, inverted source-service and ordering windows, ordering after source availability, service after departure, and duplicate question IDs; it supports advance PO and sorts cross-offset public questions by instant.
 - Package dependency direction is implemented and source-tested through the manifest plus TypeScript-AST boundary gate. It does not replace complete-diff review, runtime authorization, or provider and data-flow security verification.
 - OWASP ASVS 5.0 Level 2 is the accepted production verification target, but no traceability matrix or complete ASVS verification exists.
-- The issue #5 working tree has source-tested OIDC, session, authorization, CSRF-origin, bounded-input, Prisma, and disposable-PostgreSQL controls. DDoS, WAF, bot, trusted-proxy, canonical-host, shared rate-limit, privileged-MFA minting and recovery, managed encryption/key custody, cache safety, XSS/SSRF coverage, private upload, monitoring, incident, backup, deployment compatibility, and recovery remain unimplemented or unverified.
+- The merged issue #5 slice has source-tested OIDC, session, authorization, CSRF-origin, bounded-input, Prisma, and disposable-PostgreSQL controls. DDoS, WAF, bot, trusted-proxy, canonical-host, shared rate-limit, privileged-MFA minting and recovery, managed encryption/key custody, cache safety, XSS/SSRF coverage, private upload, monitoring, incident, backup, deployment compatibility, and recovery remain unimplemented or unverified.
 - No capacity contract, service-level objective, provider quota review, load or abuse test, backup restore, or incident exercise exists.
 - The issue #5 marketplace unit of work uses a Prisma serializable transaction and one transaction client for state, success audit, and required outbox records. This does not implement order, ledger, inbox, worker, payment, or provider transaction boundaries.
 - The payment submission and initial-protection assessment contracts are source-tested. The provider-neutral idempotency contract and payment, dispatch, and evidence-lifecycle mocks source-test scoped replay, payload conflict, concurrency denial, recovery-required ambiguous failure, expiry, malformed input, authority outage, and cross-scope isolation.
@@ -231,4 +243,4 @@ Before a real-money closed pilot:
 - no unresolved critical or high security finding without explicit documented BurinSN risk acceptance;
 - legal, privacy, support, moderation, reconciliation, and operational gates in the roadmap passed.
 
-Strix is not a routine build command. It may be used only through the guarded project process after explicit authorization for the exact target, a reviewed dry-run plan, and a fixed budget. Production execution requires a second approval. Its findings and proposed fixes remain untrusted until independently reviewed and verified.
+Strix is not a routine build command. Each material issue must classify its applicability under `docs/development/review-governance.md`. When required, it may be used only through the guarded project process after explicit authorization for the exact target, a reviewed dry-run plan, and a fixed budget. Production execution requires a second approval. Its findings and proposed fixes remain untrusted until independently reviewed and verified.
