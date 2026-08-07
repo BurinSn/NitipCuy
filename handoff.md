@@ -1,6 +1,6 @@
 # NitipCuy Cross-Session Handoff
 
-Last updated: 2026-08-07 14:01 WIB
+Last updated: 2026-08-07 14:08 WIB
 
 Handoff owner: Codex
 
@@ -95,8 +95,8 @@ Verified 2026-08-07 before the current uncommitted documentation reconciliation:
 | Persisted foundation | Pull request #6 merged; issue #5 closed |
 | Active issue | #7, open |
 | Active branch | `chore/7-review-governance`, based on `f38cdaf144ff3c22c39e7a28544363fdb0fd0a19` |
-| Pull request | Not opened |
-| Current worktree | Intentionally dirty with issue #7 implementation and lifecycle reconciliation |
+| Pull request | #8, open, not draft, GitHub-mergeable at implementation head `fcf9628241dd12a2e0a04dc88225a6a776243a19` before this lifecycle edit |
+| Current worktree | Clean at pushed implementation head before this PR-state lifecycle edit |
 | Deployment / providers | None deployed; no provider configured or activated |
 | Strix authority | None; no authorization, plan, or execution requested for a target |
 | Merge authority | None; a future pull request requires exact-head evidence and fresh BurinSN approval |
@@ -123,13 +123,14 @@ Passed on exact Node.js `24.18.0` and pnpm `11.17.0`:
 - candidate complete-diff DRY review: `CLEAN WITH NOTES` after fixing status-vocabulary drift risk, duplicate-heading/closing-line bypasses, target/environment mismatch, and missing tested-revision/mode/scope/budget binding;
 - hostile security review: no unresolved actionable finding; workflow remains read-only and has no scanner-execution path.
 - manual live-state verification of `main`, pull request #6, issue #5, and issue #7 before editing.
+- hosted `Review governance` run `31156499668` passed at implementation head `fcf9628241dd12a2e0a04dc88225a6a776243a19` with zero annotations, exercising the real PR body and linked issue #7.
 
 Still required before pull-request creation:
 
-- final exact-toolchain rerun after documentation closes;
+- commit and push this PR-state lifecycle checkpoint;
 - final exact committed-head DRY review and PR-body pin;
-- issue #7 progress update to the final review states;
-- commit, push, and hosted evidence.
+- all three hosted workflows and annotations on that final head;
+- live PR/review/mergeability reconciliation before fresh owner review.
 
 ## 9. Authority and non-claims
 
@@ -140,4 +141,4 @@ Still required before pull-request creation:
 
 ## 10. Exact next action
 
-Run the final exact-toolchain gate on the reconciled candidate, commit and re-review the exact head, then update issue #7, push `chore/7-review-governance`, and open the governed pull request.
+Commit and push this PR-state lifecycle checkpoint, then re-review the exact new head, update pull request #8's reviewed revision, and inspect all hosted runs and annotations before requesting fresh BurinSN review.

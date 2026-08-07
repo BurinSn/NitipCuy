@@ -1021,3 +1021,18 @@ A session with no material change does not invent an entry. A session that makes
   - Stage and product delivery order are unchanged. Issue #7 is the current governance slice before remaining Stage 1 protected-preview and new-order-eligibility work.
 - Next:
   - Finish exact-toolchain validation, complete-diff DRY and hostile security review, update issue #7 progress, then commit, push, and open the pull request.
+
+## 2026-08-07 14:08 WIB - Pull request #8 opened and review-governance workflow proved
+
+- Issue / PR: Issue #7; pull request #8
+- Type: GitHub state and lifecycle checkpoint
+- Status: Pull request open; final lifecycle head and hosted evidence pending
+- Verified:
+  - Implementation commit `fcf9628241dd12a2e0a04dc88225a6a776243a19` was pushed on `chore/7-review-governance` from base `f38cdaf144ff3c22c39e7a28544363fdb0fd0a19`.
+  - Pull request #8 opened as not draft and GitHub-mergeable with issue #7 linked through one standalone closing line.
+  - Issue #7 and the PR matched as DRY `CLEAN WITH NOTES`, Strix `NOT REQUIRED` / `NOT APPLICABLE`, and target class `NO TARGET`.
+  - Review-governance run `31156499668` passed on the exact implementation head with zero annotations, proving the dependency-free tests, real issue lookup, state comparison, exact-head pin, and GitHub summary path.
+- Scope unchanged:
+  - No product behavior, scanner authorization/execution, provider, deployment, production, payment, or visual change.
+- Next:
+  - Commit and push this lifecycle checkpoint, perform the final exact-head DRY review, update PR evidence to the new SHA, and inspect all hosted checks and annotations.

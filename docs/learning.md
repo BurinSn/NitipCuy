@@ -1043,3 +1043,19 @@ Do not present inference, provider marketing, provisional pricing, or a future i
 ### No product-model change
 
 - The review-governance slice changes no product role, service mode, commercial rule, identity model, provider choice, transaction rule, or roadmap stage order.
+
+## 2026-08-07 14:08 WIB - The review-governance check passed its first real pair
+
+### Verified
+
+- Hosted run `31156499668` loaded issue #7, parsed pull request #8, matched both review states, checked DRY revision `fcf9628241dd12a2e0a04dc88225a6a776243a19`, and completed with zero annotations.
+- The workflow used only read permissions and did not invoke Strix or mutate the issue or PR.
+
+### Reusable learning
+
+- Synthetic parser fixtures and a real hosted event prove different things. The first real pair verified GitHub event shape, token scope, issue API access, checked-out validator execution, and step-summary compatibility.
+- Recording that proof in lifecycle documents creates a newer head, so the earlier exact-head DRY pin and hosted run cannot be reused as final merge evidence.
+
+### No product-model change
+
+- Pull-request creation and hosted governance verification change no NitipCuy product, architecture, identity, transaction, provider, or stage decision.

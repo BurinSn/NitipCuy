@@ -1,10 +1,10 @@
 # NitipCuy Canonical Roadmap
 
-Last reviewed: 2026-08-07 14:01 WIB
+Last reviewed: 2026-08-07 14:08 WIB
 
 Current stage: Stage 1 - Platform foundation
 
-Current work item: Issue #7 implements versioned DRY and guarded-Strix progress governance on `chore/7-review-governance` from merged pull request #6 base `f38cdaf144ff3c22c39e7a28544363fdb0fd0a19`. The material-change issue form, pull-request template, dependency-free validator, 17 adversarial fixtures, read-only hosted workflow, and governing documentation are implemented locally. Exact-toolchain quality/audit/lifecycle/static gates pass. Candidate-diff DRY and hostile security review found and resolved four fail-closed gaps; final exact-head pinning, commit/push, and pull-request creation remain pending.
+Current work item: Issue #7 and pull request #8 implement versioned DRY and guarded-Strix progress governance on `chore/7-review-governance` from merged pull request #6 base `f38cdaf144ff3c22c39e7a28544363fdb0fd0a19`. Implementation head `fcf9628241dd12a2e0a04dc88225a6a776243a19` passed the new hosted review-governance run `31156499668` with zero annotations, proving real issue lookup and PR/head validation. This PR-state lifecycle checkpoint creates one newer head; final exact-head DRY re-review, PR-body pinning, and all hosted workflow checks remain required before owner review.
 
 ## 1. Role, authority, and freshness contract
 
@@ -216,7 +216,8 @@ account
 - [x] Add a dependency-free validator, adversarial fixtures, and a read-only `Review governance` pull-request workflow that never invokes Strix.
 - [x] Classify issue #7 Strix applicability as `NOT REQUIRED` because this policy/tooling slice introduces no runnable application target; hostile source review remains required.
 - [x] Run exact-toolchain quality, audit, lifecycle, link, diff, candidate-diff DRY, and hostile security review gates; final exact-head review pinning remains part of pull-request reconciliation.
-- [ ] Commit, push, open the pull request, and verify all three hosted workflows on its immutable head.
+- [x] Commit and push implementation head `fcf9628241dd12a2e0a04dc88225a6a776243a19`, open pull request #8, and verify the new review-governance workflow once with zero annotations.
+- [ ] Commit/push the PR-state lifecycle checkpoint, re-review and pin the final exact head, then verify all three hosted workflows on that immutable head.
 - [ ] Obtain fresh BurinSN review after the exact review states, evidence, limitations, and checks are visible; do not merge from automation alone.
 
 ### Experience slice
@@ -317,11 +318,11 @@ The unresolved DOKU, logistics, policy, legal, and pilot items listed in Stage 3
 
 ### Now
 
-Finish issue #7 locally: reconcile the review-governance implementation and all lifecycle/specialist documents, run the exact-toolchain gates, perform the complete-diff DRY and hostile security reviews, then commit and push the focused branch.
+Commit and push this pull-request-state lifecycle checkpoint, re-review the resulting immutable head, update the linked issue and PR evidence, and verify review-governance, lifecycle, and application-quality workflows on that exact head.
 
 ### Next
 
-Open the issue #7 pull request, reconcile its exact-head review evidence with the issue, and inspect review-governance, lifecycle, and application-quality checks before requesting fresh BurinSN review. After this governance slice, continue the remaining Stage 1 protected-preview controls and server-authoritative new-order eligibility through separately governed issues.
+Present pull request #8's final exact-head scope, review verdict, Strix non-applicability, hosted evidence, and limitations for fresh BurinSN review without merging. After this governance slice, continue the remaining Stage 1 protected-preview controls and server-authoritative new-order eligibility through separately governed issues.
 
 ### Later
 
