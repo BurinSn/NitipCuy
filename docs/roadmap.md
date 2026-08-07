@@ -1,10 +1,10 @@
 # NitipCuy Canonical Roadmap
 
-Last reviewed: 2026-08-07 12:56 WIB
+Last reviewed: 2026-08-07 13:00 WIB
 
 Current stage: Stage 1 - Platform foundation
 
-Current work item: Issue #5 and pull request #6 implement the first persisted Google-account-to-public-Q&A vertical slice on `feat/5-persisted-google-account-slice` from merged pull request #4 base `f100b03e0352bad3f969efc7d42a91f46c64f864`. Implementation head `815414662f509f7ae960f44917e0bddfbc7cf4ef` is pushed and fully locally verified. Record and push the PR lifecycle checkpoint, then inspect both hosted workflows, annotations, the complete exact-head diff, and review objects without merging.
+Current work item: Issue #5 and pull request #6 implement the first persisted Google-account-to-public-Q&A vertical slice on `feat/5-persisted-google-account-slice` from merged pull request #4 base `f100b03e0352bad3f969efc7d42a91f46c64f864`. Reviewed head `912bdd3404327cf2615c2033ddc045c354bf3de3` is pushed, fully locally verified, and passed both hosted workflows with zero annotations. Commit and push the final review-state checkpoint, verify its exact hosted runs and review objects, then stop for fresh BurinSN review without merging.
 
 ## 1. Role, authority, and freshness contract
 
@@ -306,7 +306,7 @@ The unresolved DOKU, logistics, policy, legal, and pilot items listed in Stage 3
 
 ### Now
 
-Commit and push the pull-request #6 lifecycle reconciliation. Do not merge.
+Commit and push the final pull-request #6 review-state reconciliation. Do not merge.
 
 ### Next
 

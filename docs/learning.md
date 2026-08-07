@@ -983,3 +983,18 @@ Do not present inference, provider marketing, provisional pricing, or a future i
 ### No new product or architecture learning
 
 - This checkpoint changes only GitHub and lifecycle state. The Google-only identity direction, persisted marketplace boundary, security controls, Stage 1 order, and all exclusions remain unchanged.
+
+## 2026-08-07 13:00 WIB - Summary status is not independent review
+
+### Verified
+
+- CodeRabbit returned a successful status and a high-level walkthrough, but its own comment says the line-review limit was reached.
+- GitHub contained zero pull-request review objects, zero review comments, and no review decision at reviewed head `912bdd3404327cf2615c2033ddc045c354bf3de3`.
+
+### Reusable learning
+
+- Treat a review integration's own limitation text as authoritative for what it did. A successful summary status does not become an independent code review or product-owner approval.
+
+### No product-model change
+
+- Hosted verification and review-state reconciliation change no NitipCuy product, identity, security, architecture, or roadmap decision.
