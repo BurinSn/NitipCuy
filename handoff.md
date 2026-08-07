@@ -1,6 +1,6 @@
 # NitipCuy Cross-Session Handoff
 
-Last updated: 2026-08-07 13:00 WIB
+Last updated: 2026-08-07 13:23 WIB
 
 Handoff owner: Codex
 
@@ -132,6 +132,7 @@ Final post-documentation exact-toolchain verification, zero-advisory audit, life
 ## 8. Review and approval boundaries
 
 - The user approved implementation of issue #5 and the Google-only/no-password direction.
+- After the exact pull-request scope, final head `f64b2b6c77bde0284c22163f9740d46408ea1a43`, green hosted runs, zero annotations, absent review objects, and remaining non-claims were presented, BurinSN gave fresh explicit direction to proceed. This authorizes squash-merging pull request #6 only after the approval-state documentation head passes both required hosted workflows and the pull-request description is reconciled.
 - The required `review-code-dryness` pass on all 59 changed files is **CLEAN WITH NOTES**. It corrected duplicated transaction budgets, browser-cookie policy/options, session actor mapping, and multiple clock samples for one atomic event. Separate application, provider, and database validations remain intentionally repeated across trust boundaries.
 - Guarded Strix doctor passed earlier: binary installed, Docker ready, pinned sandbox present, no active authorizations. No authorization, dry-run plan, or scan exists.
 - Strix requires a new explicit exact local or staging target, environment, modes, expiry, and maximum budget. Scan execution needs a separate instruction after the plan; production would require another approval.
@@ -143,9 +144,9 @@ Final post-documentation exact-toolchain verification, zero-advisory audit, life
 
 Remaining governed work:
 
-1. commit and push this final review-state reconciliation;
+1. commit and push this owner-approval state record;
 2. inspect both hosted workflows and annotations on the resulting immutable head;
-3. inspect the complete final base diff and current review objects;
-4. report exact evidence and residual gates to BurinSN without merging.
+3. reconcile the pull-request description with the final head and approval state;
+4. squash-merge pull request #6, then verify `main`, issue #5 closure, and branch cleanup.
 
-The first exact next action is to commit and push this final pull-request #6 review-state record, then wait for and inspect both required workflows on that exact new head without merging.
+The first exact next action is to commit and push this owner-approval state record, then wait for and inspect both required workflows on that exact new head before squash-merging pull request #6.

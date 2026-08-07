@@ -998,3 +998,18 @@ Do not present inference, provider marketing, provisional pricing, or a future i
 ### No product-model change
 
 - Hosted verification and review-state reconciliation change no NitipCuy product, identity, security, architecture, or roadmap decision.
+
+## 2026-08-07 13:23 WIB - Pull request #6 merge authority is explicit and bounded
+
+### Accepted
+
+- BurinSN's direction to proceed, given after the final PR purpose, exact head, hosted checks, review limitations, and exclusions were presented, resolves the product-owner merge-authority gate for pull request #6.
+- Recording that authority creates a new documentation head. Both required workflows must pass on that approval-state head before the approved squash merge is executed.
+
+### Reusable learning
+
+- Owner approval applies to the reviewed scope and merge operation; it does not authorize Google provider configuration, guarded Strix, deployment, production activation, payment movement, or another external action.
+
+### No product-model change
+
+- This governance record changes no identity, marketplace, security, architecture, commercial, provider, or roadmap decision.
