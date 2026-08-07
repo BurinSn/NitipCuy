@@ -1,7 +1,13 @@
+import type { AssuranceLevel } from "@nitipcuy/domain";
+
 export interface VerifiedExternalIdentity {
-  readonly provider: string;
+  readonly provider: "GOOGLE";
+  readonly issuer: string;
   readonly subject: string;
-  readonly assurance: "BASE" | "STRONG";
+  readonly email?: string;
+  readonly emailVerified: boolean;
+  readonly displayName: string;
+  readonly assurance: AssuranceLevel;
   readonly authenticatedAt: string;
 }
 

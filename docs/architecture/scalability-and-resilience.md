@@ -282,16 +282,22 @@ Designed:
 - direct private evidence storage direction;
 - observability, capacity, load, and recovery gates.
 
-Implemented and source-tested only for the narrow architecture probe:
+Implemented and source-tested for the architecture probe plus the active issue #5 slice:
 
 - deterministic in-memory public discovery;
 - bounded simulated dataset;
+- additive PostgreSQL schema and isolated Prisma adapter;
+- bounded connection pool, connection wait, statement/query, serializable-transaction, JSON-body, field, result-page, and cursor controls;
+- indexed published-trip search ordered by departure date and ID;
+- database-backed OAuth attempts, sessions, authoritative trip state, audit, and outbox;
+- one transaction budget, a three-attempt serialization/unique-conflict retry ceiling, and one connection-bound context for authoritative state, success audit, and required outbox writes;
+- disposable PostgreSQL 18 tests for migration constraints, rollback, repeated and concurrent identity resolution, optimistic concurrency, ownership foreign keys, cursor pages, session revocation, and OAuth browser-binding/replay;
 - provider-neutral evidence upload intent, inspection, scan-gated promotion, retention, and deletion contracts through bounded process-local fixtures;
 - no production provider calls or asynchronous work.
 
 Not implemented or verified:
 
-- production cache or cache-safety controls, shared session/rate-limit/idempotency system, database, object storage, scanner, cleanup worker, provider, observability, backup, or restore;
+- production cache or cache-safety controls, shared rate-limit/idempotency system, managed PostgreSQL, object storage, scanner, cleanup worker, provider, observability, backup, or restore;
 - expand-and-contract migration, mixed-version rollout, or dependency-outage runtime evidence;
 - capacity targets, load tests, provider quotas, SLOs, RPO, RTO, or production cost budgets;
 - runtime horizontal-scaling or failure-recovery evidence.

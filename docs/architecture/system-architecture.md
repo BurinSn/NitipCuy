@@ -244,7 +244,7 @@ The proof intentionally contains public simulated data only. Its `PublishedTrip`
 
 ## 7. Persistence direction
 
-PostgreSQL is authoritative. Prisma lives only in a future database adapter.
+PostgreSQL is authoritative. Prisma lives only in the isolated database adapter; it does not enter the domain or application core.
 
 Core rules:
 
@@ -260,9 +260,9 @@ Core rules:
 - use expand-and-contract releases: additive schema and compatible code first, bounded backfill and observed cutover next, destructive cleanup only after the rollback and version-skew window closes;
 - keep old and new web and worker versions compatible throughout rolling deployment, including queued outbox payloads and retries.
 
-Issue #3 deliberately has no transaction implementation. The removed callback-only transaction port did not provide scoped repositories or append-only writers and therefore could not enforce commit, rollback, isolation, or shared connection use.
+Issue #3 deliberately had no transaction implementation. The removed callback-only transaction port did not provide scoped repositories or append-only writers and therefore could not enforce commit, rollback, isolation, or shared connection use.
 
-The first persisted write slice must introduce a database-backed transaction-scoped unit of work. The scope supplies only repository, ledger, audit, inbox, and outbox writers bound to the same PostgreSQL transaction. A consistency-critical use case may not combine scoped and independently constructed write adapters. Authoritative state, balanced financial entries, success audit, and required outbox records commit together or roll back together. Provider and object-storage network calls occur outside the transaction through explicit pending and reconciliation states.
+Issue #5 introduces the first database-backed transaction-scoped unit of work. Its account/profile/trip/public-discussion scope supplies repositories, audit, and outbox writers bound to the same PostgreSQL transaction. Later order slices must add ledger and inbox writers without combining scoped and independently constructed write adapters. Authoritative state, balanced financial entries when applicable, success audit, and required outbox records commit together or roll back together. Provider and object-storage network calls occur outside the transaction through explicit pending and reconciliation states.
 
 Initial target:
 
@@ -281,7 +281,7 @@ Runtime database access must also use separate least-privilege application and m
 
 ### Identity
 
-The system stores:
+ADR 0005 implements the first narrow version of this boundary. The system stores:
 
 - internal `AccountId`;
 - provider name;
@@ -290,7 +290,9 @@ The system stores:
 - contact references;
 - session version or revocation state.
 
-It does not store passwords.
+It does not store passwords. The MVP sign-in adapter is Google OIDC authorization code flow through `openid-client`; exact issuer plus immutable subject resolves an internal account. A verified email is required at authentication time but is neither persisted nor used for account linking. Real Google configuration remains unapproved and unverified.
+
+NitipCuy persists only a digest of each opaque browser-session token. Protected use cases re-check the exact active session, account session version, assurance, expiry, account state, ownership, and applicable capability inside the authoritative transaction. The Google callback can mint only `BASE` assurance. No privileged-assurance minting or recovery adapter exists yet.
 
 Seller verification is not the same as login. It may include liveness, identity, bank ownership, provider KYB, and platform trust review.
 
@@ -403,12 +405,18 @@ Plain unit tests must exercise:
 
 The domain invariant tests satisfy the published-trip validation and cross-offset chronology portion. The dependency gate has source-tested manifest, relative, aliased, type-only, dynamic, require, non-static, composition, client/server, and symlink denial coverage. The provider-neutral idempotency contract and deterministic adapters source-test scoped exact replay, payload conflict, active concurrency, recovery-required ambiguous failure, expiry, invalid input, unavailable-authority denial, cross-scope isolation, and payment, logistics, and evidence behavior. This is not a shared or durable production implementation.
 
-Integration tests later exercise:
+Integration tests now exercise the issue #5 account/profile/trip/public-discussion boundary for:
 
-- expand-and-contract migrations, interrupted backfills, mixed old/new application versions, rollback or forward-fix, and constraints on disposable PostgreSQL;
-- repository mapping and the transaction-scoped unit of work;
-- rollback after fault injection at every consistency-critical write boundary;
-- atomic last-capacity contention, stale-version or lock conflicts, balanced ledger constraints, and state-to-audit and state-to-outbox atomicity;
+- the additive initial migration and constraints on disposable PostgreSQL 18;
+- repository mapping and the serializable transaction-scoped unit of work;
+- rollback after a duplicate authoritative write, bounded concurrent issuer-subject resolution, stale-version conflict, and state-to-audit and state-to-outbox atomicity;
+- exact profile-owner foreign keys, session revocation, rotation-family reuse, account-version invalidation, OAuth browser-binding, attempt replay and expiry, bounded cursor reads, and private-field projection exclusion;
+
+Later persisted-order slices must still exercise:
+
+- interrupted backfills, mixed old/new application versions, rollback or forward-fix;
+- fault injection at every new consistency-critical boundary;
+- atomic last-capacity contention, balanced ledger constraints, provider inbox, and worker/outbox processing;
 - bounded transaction and lock timeouts, with no provider network call while a database transaction is open;
 - provider signature and event inbox handling;
 - private object-storage authorization;
@@ -447,7 +455,18 @@ Implemented in issue #3:
 - correct HTTP `404` behavior for unknown simulated trip paths;
 - PR quality workflow.
 
-The callback-only transaction interface and passthrough adapter were removed rather than misrepresented as atomic infrastructure. Transaction requirements are designed, but no transaction implementation or verification exists.
+Implemented in the active issue #5 working tree and locally verified before pull-request creation:
+
+- additive PostgreSQL 18 account, external-identity, capability, browser-session, OAuth-attempt, jastipper-profile, authoritative-trip, moderation, public-discussion, audit, and outbox schema;
+- isolated Prisma 7 database adapter with bounded pool, statement, transaction, and cursor-page budgets;
+- exact Google OIDC code-flow adapter with state, a separate digest-only browser-binding cookie, nonce, S256 PKCE, issuer, audience, lifetime, signature, callback, and minimum-scope enforcement through `openid-client`;
+- email-minimized immutable issuer-subject account mapping with no password model or email linking;
+- digest-only opaque sessions, base-assurance minting, idle and absolute expiry, rotation-family reuse revocation, per-session logout, listing, and account-wide invalidation;
+- transactional session revalidation, deny-by-default profile/trip/discussion ownership, persisted capability checks, phishing-resistant moderation gate, bounded serializable conflict retries, optimistic concurrency, success audit, and outbox writes;
+- protected JSON routes with exact-origin and Fetch-Metadata checks plus bounded request bodies; anonymous persisted search/detail routes use bounded cursor reads;
+- disposable PostgreSQL integration and deterministic Google protocol fixtures.
+
+Issue #3 removed its callback-only transaction interface rather than misrepresent it as atomic infrastructure. Issue #5 now implements and disposable-database-tests a connection-bound serializable unit of work for the persisted marketplace slice; this does not yet cover order capacity, ledger, payment, provider callback, worker, or outbox-delivery transactions.
 
 The payment port now separates initiation, release, and refund submission receipts from provider observations. It models collection, hold, release, refund, settlement, and chargeback independently; provider signals request inspection instead of declaring success. The configured mock never invents a successful outcome, and the pure initial-protection assessment fails closed for unknown, contradictory, mismatched, or post-hold evidence.
 
@@ -461,13 +480,13 @@ That proof is limited to framework-free contracts and deterministic process-loca
 
 Not implemented:
 
-- persistence;
-- identity and protected authorization;
-- mutations;
+- real Google configuration or provider-verified authentication;
+- privileged step-up or recovery, so production moderation remains fail-closed;
+- shared rate-limit, risk, idempotency, canonical-proxy, CSP/header, or browser-test completion for protected preview;
 - private data;
 - real providers;
-- order, payment, evidence, logistics, moderation, dispute, or review workflows;
-- authoritative `TripOffer`, new-order eligibility, capacity reservation, archival history, or private seller and customer order dashboards;
+- order, payment, evidence, logistics, item moderation, dispute, or review workflows;
+- new-order eligibility, capacity reservation, archival history, or private seller and customer order dashboards;
 - shared WAF, rate-limit, bot, session, idempotency, cache, worker, observability, backup, or recovery infrastructure;
 - trusted-proxy/canonical-host configuration, privileged MFA, managed-key encryption lifecycle, cache-safety controls, or mixed-version deployment evidence;
 - runtime security configuration, load and abuse tests, provider configuration review, incident exercises, or penetration testing;

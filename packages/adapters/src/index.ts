@@ -1,4 +1,32 @@
 export { InMemoryTripDiscoveryRepository } from "./in-memory-trip-discovery";
+export { SystemClock, UuidIdentifier } from "./node-platform-services";
+export {
+  GoogleOidcClient,
+  googleIdentityFromClaims,
+  type GoogleOidcConfiguration,
+} from "./google-oidc-client";
+export {
+  PostgresOAuthAttemptAuthority,
+  oauthAttemptCookie,
+  safeLocalReturnPath,
+  type ConsumedOAuthAttempt,
+  type OAuthAttemptAuthorityOptions,
+  type OAuthAttemptStart,
+} from "./postgres-oauth-attempts";
+export {
+  PostgresSessionAuthority,
+  sessionCookie,
+  type ActiveSessionSummary,
+  type SessionAuthorityOptions,
+  type SessionGrant,
+} from "./postgres-session-authority";
+export { createPrismaClient } from "./prisma-client";
+export type { PrismaClientOptions } from "./prisma-client";
+export {
+  OptimisticConcurrencyError,
+  PrismaMarketplaceUnitOfWork,
+  PrismaTripDiscoveryRepository,
+} from "./prisma-marketplace";
 export { InMemoryIdempotencyStore } from "./idempotency-support";
 export {
   InMemoryEvidenceLifecycle,

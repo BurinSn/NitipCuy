@@ -11,6 +11,30 @@ export {
   IdempotencyValidationError,
 } from "./idempotency";
 export { assessPaymentProtection } from "./payment-reconciliation";
+export {
+  AnswerPublicQuestion,
+  AskPublicQuestion,
+  CreateJastipperProfile,
+  CreateTripDraft,
+  MarketplaceUseCaseError,
+  ModerateTrip,
+  ResolveGoogleAccount,
+  SubmitTripForModeration,
+} from "./marketplace-foundation";
+export type {
+  AccountRecord,
+  AccountRepository,
+  JastipperProfileRecord,
+  JastipperProfileRepository,
+  MarketplaceErrorCode,
+  MarketplaceTransactionContext,
+  MarketplaceUnitOfWork,
+  PublicDiscussionRepository,
+  ResolveGoogleIdentityInput,
+  ResolveGoogleIdentityResult,
+  StoredPublicQuestion,
+  TripOfferRepository,
+} from "./marketplace-foundation";
 export type {
   ClaimIdempotencyCommand,
   CompleteIdempotencyCommand,

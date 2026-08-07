@@ -876,3 +876,51 @@ A session with no material change does not invent an entry. A session that makes
   - The roadmap order is unchanged: the persisted account-to-public-Q&A slice begins only through a new governed issue after the merge is verified.
 - Next:
   - Commit and push this approval-state record, verify both hosted workflows and annotations on its immutable head, update the pull-request description, squash-merge pull request #4, and verify `main`, issue closure, and branch cleanup.
+
+## 2026-08-07 12:38 WIB - Persisted Google-account marketplace slice implemented locally
+
+- Issue / PR: Issue #5; no pull request yet
+- Product: NitipCuy Stage 1 platform foundation
+- Type: Identity, session, persistence, protected-mutation, public-projection, security, and quality implementation
+- Status: Implemented and fully locally verified; commit, push, hosted verification, guarded Strix, and owner review pending
+- Objective:
+  - Connect a verified Google OIDC proof to one internal account and carry that authority through a persisted jastipper profile, owned trip draft, privileged moderation decision, safe publication, bounded anonymous discovery, and authenticated public Q&A.
+- Product and identity decisions:
+  - Added ADR 0005 and preserved Google OIDC as the only MVP sign-in path; no username/password, email-password, magic-link, or SMS fallback exists.
+  - Map identities by exact Google issuer plus immutable subject. Require verified email transiently, but do not persist it or use it to link accounts.
+  - Mint only base assurance from Google login. The delivery composition has no privileged step-up or recovery path, so moderation remains fail-closed outside controlled integration fixtures.
+- Persistence and application changes:
+  - Added exact Prisma `7.9.1`, PostgreSQL driver-adapter, `openid-client` `6.8.4`, `pg` `8.22.0`, and disposable-container test dependencies with reviewed native-build policy.
+  - Added an additive PostgreSQL schema and SQL migration for accounts, external identities, capabilities, opaque sessions, one-use OAuth attempts, profiles, authoritative trip offers, moderation decisions, public Q&A, audit records, and outbox messages.
+  - Added domain state, application use cases, isolated Prisma repositories, a serializable transaction-scoped unit of work with a three-attempt conflict retry ceiling, optimistic concurrency, bounded cursor discovery, and database-enforced profile ownership.
+  - Added Google authorization start/callback, logout, session, profile, trip, moderation, question, and answer HTTP routes with exact-origin, Fetch Metadata, JSON, and request-size controls.
+- Security corrections during review:
+  - Removed persisted email from the identity schema and retained only the minimum `emailVerified` proof metadata.
+  - Restricted normal session creation to base assurance so an arbitrary caller cannot mint privileged assurance.
+  - Revalidate the exact persisted session, account version, assurance, account state, ownership, and capability inside every protected serializable transaction.
+  - Validate the exact callback origin and path before consuming one-use OAuth state.
+  - Bind each OAuth attempt to a separate high-entropy, digest-only browser cookie after hostile review found that globally stored state alone did not prevent cross-browser account substitution.
+  - Make corrupted encrypted OAuth-attempt material terminal instead of leaving a permanently pending replay surface.
+  - Deny answers to hidden questions or questions whose trip is no longer published, and add a persisted missing-capability moderation denial.
+- DRY review:
+  - Consolidated serializable transaction budgets, the session-cookie policy, and one authoritative timestamp per atomic state/audit/outbox event.
+  - Intentionally retained validation at the OIDC adapter, application, domain, and database trust boundaries where removing repetition would weaken defense in depth.
+- Validation so far:
+  - Exact Node.js `24.18.0` and pnpm `11.17.0` were restored after an ambient Node.js `26.0.0` and pnpm `9.15.0` attempt was rejected as evidence.
+  - Prisma schema formatting and client generation passed.
+  - Adapter and web strict type checks passed.
+  - All 60 adapter tests passed after the hostile-review correction, including deterministic signed Google protocol cases and seven disposable PostgreSQL integration scenarios for repeated and concurrent identity mapping, transaction rollback, ownership, moderation, public projection, pagination, session rotation/revocation, forged assurance, missing persisted capability, OAuth cross-browser binding/replay/expiry/ciphertext failure, hidden-question denial, and password/email absence.
+  - Final exact-toolchain frozen install and peer validation passed.
+  - Final `pnpm check` passed formatting, lint, a four-project dependency scan covering 61 source files and 193 module references, strict types, all 21 boundary tests, all 104 package/web tests, and the production Next.js build.
+  - The production audit reported zero findings at every severity; lifecycle participation, 33 local links across 20 documents, high-confidence credential and unsafe-source scans, core-network and identity-schema scans, and diff hygiene passed.
+  - The production server without persistence or provider configuration returned `200` for the existing public shell, `503` for Google start and persisted trip discovery, and `401` for anonymous session inspection with generic errors.
+  - Complete-diff hostile review corrected cross-browser login substitution, hidden-question answering, concurrent first-login conflict handling, and unknown internal-error classification.
+  - Complete-diff DRY verdict: **CLEAN WITH NOTES** across all 59 changed files after consolidating transaction policy, cookie policy/options, session actor mapping, and atomic-event timestamps; repeated provider, application, domain, and SQL validation remains intentional defense in depth.
+- Evidence level and exclusions:
+  - Current evidence is implemented, source-tested, production-build-tested, missing-configuration-runtime-tested, and local disposable-database-runtime-tested.
+  - No real Google configuration, privileged step-up/recovery provider, managed database, browser validation, rate-limit authority, managed-key custody, deployment, payment, order, logistics, private address, or production action is included.
+  - Guarded Strix doctor passed previously, but no target authorization, dry-run plan, or scan has been created. Exact-target approval and a separate execution instruction remain mandatory.
+- Roadmap effect:
+  - Stage 1 and its order remain unchanged. Issue #5 completes the bounded persisted account-to-public-Q&A implementation items while new-order eligibility, remaining protected-preview controls, and numerical pilot targets remain open.
+- Next:
+  - Commit, push, open the focused pull request, and inspect both hosted workflows and annotations on the immutable head without merging.

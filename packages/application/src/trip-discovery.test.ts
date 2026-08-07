@@ -48,21 +48,26 @@ class RepositoryStub implements TripDiscoveryRepository {
   searchPublished(
     criteria: TripSearchCriteria,
   ): Promise<readonly PublishedTrip[]> {
-    return Promise.resolve(
-      this.values.filter((value) => {
-        const destinationMatches =
-          !criteria.destination ||
-          value.destinationLabel
-            .toLocaleLowerCase()
-            .includes(criteria.destination.toLocaleLowerCase());
-        const fromMatches =
-          !criteria.departureFrom ||
-          value.departureDate >= criteria.departureFrom;
-        const toMatches =
-          !criteria.departureTo || value.departureDate <= criteria.departureTo;
+    const filtered = this.values.filter((value) => {
+      const destinationMatches =
+        !criteria.destination ||
+        value.destinationLabel
+          .toLocaleLowerCase()
+          .includes(criteria.destination.toLocaleLowerCase());
+      const fromMatches =
+        !criteria.departureFrom ||
+        value.departureDate >= criteria.departureFrom;
+      const toMatches =
+        !criteria.departureTo || value.departureDate <= criteria.departureTo;
 
-        return destinationMatches && fromMatches && toMatches;
-      }),
+      return destinationMatches && fromMatches && toMatches;
+    });
+    const cursorIndex = criteria.cursor
+      ? filtered.findIndex((value) => value.id === criteria.cursor)
+      : -1;
+    const start = criteria.cursor ? cursorIndex + 1 : 0;
+    return Promise.resolve(
+      filtered.slice(start, start + (criteria.limit ?? 20)),
     );
   }
 
@@ -102,5 +107,20 @@ describe("trip discovery use cases", () => {
     );
 
     expect(result?.destinationLabel).toBe("Surabaya");
+  });
+
+  it("normalizes a bounded cursor page", async () => {
+    const results = await new ListPublishedTrips(repository).execute({
+      cursor: tripId("trip-jakarta"),
+      limit: 1,
+    });
+
+    expect(results.map(({ id }) => id)).toEqual(["trip-surabaya"]);
+  });
+
+  it("rejects unbounded page sizes", () => {
+    expect(() =>
+      new ListPublishedTrips(repository).execute({ limit: 51 }),
+    ).toThrow("Trip page size must be between 1 and 50.");
   });
 });

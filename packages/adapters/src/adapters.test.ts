@@ -10,7 +10,9 @@ import {
   MockIdentityVerification,
   MockLogisticsGateway,
   MockPaymentGateway,
+  oauthAttemptCookie,
   SequenceIdentifier,
+  sessionCookie,
 } from "./index";
 
 describe("mock and in-memory adapters", () => {
@@ -269,8 +271,12 @@ describe("mock and in-memory adapters", () => {
     const outbox = new InMemoryOutbox();
     const identities = new MockIdentityVerification({
       "proof-001": {
-        provider: "fixture",
+        provider: "GOOGLE",
+        issuer: "https://accounts.google.com",
         subject: "subject-001",
+        email: "sari@example.test",
+        emailVerified: true,
+        displayName: "Sari",
         assurance: "BASE",
         authenticatedAt: clock.now(),
       },
@@ -299,5 +305,22 @@ describe("mock and in-memory adapters", () => {
     expect(result?.subject).toBe("subject-001");
     expect(audit.records).toHaveLength(1);
     expect(outbox.messages[0]?.id).toBe("message-0001");
+  });
+
+  it("keeps session and OAuth browser-binding cookies host-only", () => {
+    expect(sessionCookie).toEqual({
+      httpOnly: true,
+      name: "__Host-nitipcuy-session",
+      path: "/",
+      sameSite: "lax",
+      secure: true,
+    });
+    expect(oauthAttemptCookie).toEqual({
+      httpOnly: true,
+      name: "__Host-nitipcuy-oauth-attempt",
+      path: "/",
+      sameSite: "lax",
+      secure: true,
+    });
   });
 });

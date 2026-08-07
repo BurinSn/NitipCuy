@@ -1,10 +1,10 @@
 # NitipCuy Canonical Roadmap
 
-Last reviewed: 2026-08-06 07:16 WIB
+Last reviewed: 2026-08-07 12:54 WIB
 
 Current stage: Stage 1 - Platform foundation
 
-Current work item: Issue #3 hostile-review remediation and final reconciliation are complete; final review-state head `893e46b30718368f1260e837d12147ee5edab005` passed application run `30985838757` and lifecycle run `30985838654` with zero annotations, issue #3 acceptance is checked, and pull request #4 is open and clean. BurinSN gave fresh explicit merge approval on 2026-08-06 after the exact head and checks were presented. Record that approval, verify the resulting documentation-only head through both hosted workflows, reconcile the pull-request description, then squash-merge pull request #4.
+Current work item: Issue #5 implements the first persisted Google-account-to-public-Q&A vertical slice on `feat/5-persisted-google-account-slice` from merged pull request #4 base `f100b03e0352bad3f969efc7d42a91f46c64f864`. Exact-toolchain source, production-build, deterministic OIDC, disposable PostgreSQL, dependency/audit, lifecycle, link, secret/static, DRY, hostile-security, and fail-closed runtime gates pass locally. Commit, push, and open the focused pull request, then inspect hosted exact-head workflows without merging.
 
 ## 1. Role, authority, and freshness contract
 
@@ -163,7 +163,7 @@ Status: In progress
 - [x] Issue #3 branch is committed, pushed, and opened as pull request #4.
 - [x] BurinSN gave fresh issue #3 merge approval on 2026-08-06 after the final exact-head evidence and findings were visible.
 
-The current architecture probe is deliberately public and read-only. It demonstrates the intended package direction without prematurely combining identity selection, persistence, protected mutation, and UI behavior in one change. The hostile-review remediation gate below is complete; the only remaining pre-merge condition is successful hosted verification of the documentation-only approval-state head.
+Pull request #4 was squash-merged and issue #3 closed at `f100b03e0352bad3f969efc7d42a91f46c64f864`. Issue #5 now combines identity, persistence, protected mutation, and public projection through the separately governed first persisted slice. The original simulated UI remains an architecture probe; the new persisted HTTP routes are source/build verified and the core flow is disposable-database verified, but no real Google, browser, preview, production, or visual evidence exists.
 
 Pull-request head, hosted checks, annotations, reviews, and mergeability are volatile. Retrieve them directly. A missing, pending, skipped, warned, or failed lifecycle or application-quality result blocks approval by project policy.
 
@@ -185,8 +185,8 @@ Pull-request head, hosted checks, annotations, reviews, and mergeability are vol
 
 ### Next persisted vertical slice
 
-- [ ] Create the persisted marketplace-foundation issue only after the remediation gate passes and issue #3 is merged.
-- [ ] Implement the first persisted vertical slice:
+- [x] Create governed issue #5 after pull request #4 and issue #3 were merged and closed.
+- [x] Implement the first persisted vertical slice:
 
 ```text
 account
@@ -200,12 +200,12 @@ account
   -> public question and answer
 ```
 
-- [ ] Add the first PostgreSQL schema and reviewed expand-and-contract migration through the isolated database adapter, with old/new application compatibility and rollback or forward-fix evidence.
-- [ ] Add external-identity proof and protected server-authoritative mutations without storing passwords; require the approved privileged MFA, high-assurance step-up, and non-downgrading recovery contract where applicable.
-- [ ] Add integration tests using disposable resources and explicit destructive-test guards.
+- [x] Add the first additive PostgreSQL schema and SQL-reviewed migration through the isolated Prisma adapter, with disposable clean-apply evidence. Mixed-version and destructive contraction evidence is not applicable to this initial un-deployed schema and remains mandatory when evolution begins.
+- [x] Add Google OIDC identity proof and protected server-authoritative mutations without passwords or email linking. Google creates base assurance only; moderation requires a separately persisted phishing-resistant session, and no real privileged step-up/recovery path exists yet.
+- [x] Add integration tests using a container created and destroyed by the suite, with no configurable fallback to development or production databases.
 - [ ] Make new-order eligibility server-authoritative across exact time, offer state, seller eligibility, moderation, and capacity; reserve the final capacity atomically.
-- [ ] Implement the first applicable security controls with the feature that needs them: secure session behavior, central authorization denials, multi-axis shared rate limits for protected actions, trusted-proxy and canonical-host handling, explicit protected fail-closed behavior, safe-query enforcement, CSRF and browser policy, private-data encryption and managed-key boundaries where required, private-data-safe logs, and bounded inputs.
-- [ ] Establish cursor pagination, query and connection budgets, and minimal database, application, and abuse observability for the persisted slice.
+- [ ] Complete the remaining protected-preview controls. Implemented and source/integration-tested now: opaque digest-only sessions, rotation/revocation, exact transactional session/assurance/ownership checks, generic errors, exact-origin and Fetch-Metadata checks, parameterized Prisma queries, database ownership constraints, and bounded inputs. Still required: shared multi-axis rate limits, trusted-proxy/direct-origin configuration, browser headers/CSP, managed key custody, logging-redaction and observability, complete safe-query static/security scans, browser automation, and privileged step-up/recovery.
+- [x] Establish bounded cursor pagination plus connection, query, statement, transaction, and request budgets for the persisted slice. Minimal production observability remains open with the prior item.
 - [ ] Record preliminary pilot capacity, provider-quota, cost, RPO, and RTO questions without inventing targets before the pilot is bounded.
 
 ### Experience slice
@@ -306,11 +306,11 @@ The unresolved DOKU, logistics, policy, legal, and pilot items listed in Stage 3
 
 ### Now
 
-Commit and push the approval-state record, inspect both workflows and annotations on its immutable head, and reconcile the stale pull-request description. If the new head remains clean and contains no material change beyond the lifecycle record, execute the authorized squash merge of pull request #4.
+Commit the fully reviewed issue #5 implementation and lifecycle state, push the focused branch, and open its pull request. Do not merge.
 
 ### Next
 
-Verify the squash merge on `main`, issue #3 closure, and branch cleanup. Then create a new governed issue for the persisted account-to-public-Q&A vertical slice with its applicable security and resource controls; do not begin that slice inside issue #3.
+Verify both hosted workflows on the immutable issue #5 pull-request head and review the complete base diff. Guarded Strix remains a separate gate: obtain current explicit authorization for one exact local or staging target, create the narrow authorization, show the dry-run plan and budget, and execute only after a separate scan instruction. Then request fresh BurinSN review without merging.
 
 ### Later
 

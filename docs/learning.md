@@ -914,3 +914,61 @@ Do not present inference, provider marketing, provisional pricing, or a future i
 ### No product-model change
 
 - This governance checkpoint changes no role, service mode, pricing rule, evidence rule, provider direction, architecture boundary, or roadmap order, and grants no deployment, provider, production, payment, or visual authority.
+
+## 2026-08-07 12:38 WIB - Persisted identity authority must remain narrower than identity proof
+
+### Accepted
+
+- Google issuer plus immutable subject, not email, is the external-identity key.
+  - Evidence: two verified Google proofs with the same email but different subjects create separate internal accounts, while repeated proof for one issuer and subject resolves the same account.
+  - Impact: verified email is checked transiently and is neither persisted nor an account-linking authority.
+- A successful Google login establishes base assurance only.
+  - Evidence: the normal session-creation API no longer accepts a caller-selected assurance value, while moderation requires both a persisted privileged capability and a persisted phishing-resistant session.
+  - Impact: the production HTTP composition cannot perform moderation until a separately governed privileged step-up and recovery flow exists.
+- Session validation at the delivery boundary is insufficient for protected mutation.
+  - Evidence: revocation can occur after a request first resolves its actor and before its database write begins.
+  - Impact: every protected use case revalidates the exact persisted session, account version, assurance, state, ownership, and capability inside its serializable transaction.
+- Identity data minimization is an application invariant, not only a privacy-policy promise.
+  - Evidence: the schema stores provider, issuer, subject, and whether the email claim was verified, but no email address.
+  - Impact: the first slice cannot accidentally query, display, or link by an email it never retained.
+
+### Corrected
+
+- Do not let a generic session factory accept arbitrary assurance.
+  - Supersedes: the first local adapter form, where a caller could pass `PHISHING_RESISTANT` into normal session creation.
+  - Impact: privileged assurance can only be represented by controlled persisted fixtures until a real step-up adapter is approved and implemented.
+- Do not consume one-use OAuth state before verifying the callback destination.
+  - Supersedes: the first callback ordering, which validated the callback URL after consuming the attempt.
+  - Impact: an invalid callback request cannot destroy a legitimate pending login attempt.
+- Do not leave undecryptable OAuth-attempt ciphertext in an apparently live state.
+  - Supersedes: returning a generic failure while retaining the pending expiry.
+  - Impact: corrupt sealed material is marked terminal and cannot become a persistent retry surface.
+- Do not treat globally persisted OAuth state as browser binding.
+  - Supersedes: the first local callback form, where any browser presenting the valid pending state could consume the attempt and receive the resulting NitipCuy session.
+  - Impact: a second 256-bit value is kept only in a short-lived host-only cookie and matched by digest during atomic consumption, so a callback prepared in another browser fails closed.
+- Do not duplicate operational transaction constants or clock samples across one atomic event.
+  - Evidence: review found three copies of the same serializable transaction budget and separate state/audit/outbox timestamps.
+  - Impact: one transaction-options authority and one sampled event time now keep operational policy and emitted facts consistent.
+
+### Failed approach
+
+- The ambient shell used Node.js `26.0.0` and pnpm `9.15.0`, so the initial Prisma command failed and was excluded from evidence.
+  - Recovery: execute the repository commands through exact Node.js `24.18.0` and pnpm `11.17.0`, then record only those results.
+- Waiting on the first PostgreSQL readiness indication in the disposable-container test caused an early connection reset.
+  - Recovery: wait for the later server-ready log emitted after initialization restarts before applying the clean migration.
+
+### Reusable learning
+
+- Identity proof, internal account identity, session authority, assurance, and authorization are separate layers; combining them makes privilege escalation and revocation races easier to miss.
+- A duplicated validation is intentional when it protects a different trust boundary. DRY applies to repeated policy and implementation, not to removing domain, adapter, and database defense in depth.
+- One-use encrypted OAuth state needs confidentiality, integrity, expiry, replay prevention, browser-initiator binding, and deterministic terminal handling for corruption.
+- Disposable database tests should fail rather than fall back to a development or production database when containers are unavailable.
+- Immutable issuer-subject uniqueness still needs a bounded transaction-conflict policy: two valid first logins can race after both observe no identity. Retry only known serialization or unique conflicts, rerun the whole database transaction, and keep all provider calls outside it.
+
+### Deferred
+
+- Real Google client configuration and callback verification, browser behavior, phishing-resistant step-up and recovery, managed encryption-key custody and rotation, multi-axis rate limits, trusted-proxy handling, observability and redaction, guarded Strix execution, managed-database compatibility, load, incident, and production evidence remain separate gates.
+
+### No product-model change
+
+- This slice implements the already accepted marketplace path and Google-only access direction. It does not change roles, seller-defined pricing, the two service modes, transaction-fee direction, order/evidence rules, payment/provider choices, or roadmap stage order.

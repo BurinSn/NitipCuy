@@ -15,24 +15,35 @@ export class InMemoryTripDiscoveryRepository implements TripDiscoveryRepository 
     criteria: TripSearchCriteria,
   ): Promise<readonly PublishedTrip[]> {
     const destination = criteria.destination?.toLocaleLowerCase();
+    const filtered = this.trips
+      .filter((trip) => {
+        const destinationMatches =
+          !destination ||
+          trip.destinationLabel.toLocaleLowerCase().includes(destination);
+        const fromMatches =
+          !criteria.departureFrom ||
+          trip.departureDate >= criteria.departureFrom;
+        const toMatches =
+          !criteria.departureTo || trip.departureDate <= criteria.departureTo;
 
+        return destinationMatches && fromMatches && toMatches;
+      })
+      .sort(
+        (left, right) =>
+          left.departureDate.localeCompare(right.departureDate) ||
+          left.id.localeCompare(right.id),
+      );
+    const cursorIndex = criteria.cursor
+      ? filtered.findIndex((trip) => trip.id === criteria.cursor)
+      : -1;
+
+    if (criteria.cursor && cursorIndex < 0) {
+      return Promise.resolve([]);
+    }
+
+    const start = criteria.cursor ? cursorIndex + 1 : 0;
     return Promise.resolve(
-      this.trips
-        .filter((trip) => {
-          const destinationMatches =
-            !destination ||
-            trip.destinationLabel.toLocaleLowerCase().includes(destination);
-          const fromMatches =
-            !criteria.departureFrom ||
-            trip.departureDate >= criteria.departureFrom;
-          const toMatches =
-            !criteria.departureTo || trip.departureDate <= criteria.departureTo;
-
-          return destinationMatches && fromMatches && toMatches;
-        })
-        .sort((left, right) =>
-          left.departureDate.localeCompare(right.departureDate),
-        ),
+      filtered.slice(start, start + (criteria.limit ?? 20)),
     );
   }
 

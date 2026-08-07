@@ -148,6 +148,8 @@ Required session properties:
 
 The system treats a session identifier as untrusted input even after signature or storage validation. Requirements follow the [OWASP session-management guidance](https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html) and the [Next.js authentication guidance](https://nextjs.org/docs/app/guides/authentication).
 
+The active issue #5 slice implements the narrow source and local-integration boundary in ADR 0005: Google-only OIDC code flow through `openid-client`, exact issuer and audience, state plus a distinct digest-only browser-binding cookie, nonce, S256 PKCE, safe local return paths, one-use encrypted OAuth attempts, digest-only opaque PostgreSQL sessions, the `__Host-` cookie contracts, rotation-family reuse revocation, idle and absolute expiry, account-version invalidation, and exact-session revalidation inside protected transactions. A callback prepared in another browser fails closed, and Google login mints only `BASE` assurance. No production step-up, recovery, shared abuse control, managed-key custody, provider configuration, or browser verification exists.
+
 ## 8. Credential, OTP, and automation attacks
 
 Brute force, credential stuffing, password spraying, account enumeration, OTP flooding, and recovery abuse require independent controls:
@@ -352,20 +354,28 @@ Designed:
 - dependency and workflow supply-chain controls;
 - pooled PostgreSQL and modular-monolith direction.
 
-Implemented and source-tested only for the narrow issue #3 shell:
+Implemented and source-tested for issue #3 plus the active issue #5 slice:
 
 - strict public-trip runtime invariants;
-- no production secrets or provider calls in the architecture probe;
+- Google OIDC protocol fixtures covering exact scopes, issuer, audience, signature, expiry, state, nonce, and PKCE denial without real provider credentials;
+- no password persistence, no email persistence or linking, and no provider-token persistence;
+- encrypted one-use OAuth attempts, separate digest-only browser binding, and safe local redirect validation;
+- opaque digest-only sessions with base-only minting, rotation, expiry, revocation, account versioning, and rotated-token family invalidation;
+- exact persisted-session, assurance, account, capability, and ownership revalidation inside protected PostgreSQL transactions;
+- exact-origin, same-origin Fetch-Metadata, JSON-content-type, and body-size checks on protected HTTP mutations;
+- parameterized Prisma persistence, database ownership constraints, bounded queries, and generic external route errors;
+- disposable PostgreSQL tests for cross-account denial, forged assurance denial, revoked-session denial, rollback, concurrency, projection privacy, and OAuth/session failure paths;
+- no production secrets or real provider calls;
 - frozen dependency graph, production audit, and immutable workflow action references.
 
 Not implemented or verified:
 
-- production identity or sessions;
-- privileged MFA or recovery controls;
+- real Google configuration, provider compatibility, production identity, production cookies, or managed runtime keys;
+- privileged MFA, privileged-session minting, factor enrollment, or recovery controls;
 - trusted-proxy, canonical-host, shared rate-limiting, WAF, bot, cache-safety, or DDoS runtime configuration;
-- database adapter or SQL safety gate;
+- production database identity, least-privilege grants, migration runner, backup, or independent safe-query static scan;
 - application-level encryption, managed keys, key rotation, encrypted-backup restore, or verified deletion;
 - private upload quarantine or scanner;
-- protected commands or authorization matrix;
+- complete protected-command authorization matrix beyond profile, trip publication, and public discussion;
 - provider callbacks, payment, logistics, ledger, reconciliation, or worker;
 - security monitoring, incident response, backup restore, load tests, or penetration testing.
