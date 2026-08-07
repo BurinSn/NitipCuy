@@ -981,3 +981,43 @@ A session with no material change does not invent an entry. A session that makes
   - No application behavior, architecture, provider configuration, guarded Strix execution, deployment, production control, payment movement, or visual approval changes in this record.
 - Next:
   - Commit and push this approval-state record, verify both hosted workflows and annotations on its immutable head, update the PR description, squash-merge pull request #6, and verify `main`, issue #5 closure, and branch cleanup.
+
+## 2026-08-07 13:41 WIB - DRY and guarded Strix review governance implemented locally
+
+- Issue: #7
+- Product: NitipCuy Stage 1 platform foundation
+- Type: Review governance, CI, validation, and lifecycle reconciliation
+- Status: Implemented in the working tree; exact-toolchain and complete-diff review pending
+- Verified prior-state reconciliation:
+  - Pull request #6 was squash-merged as `f38cdaf144ff3c22c39e7a28544363fdb0fd0a19` after application run `31153847007` and lifecycle run `31153847009` passed on approved head `18213db14f373a7a17c5496ed6bc6b04034e08a2` with zero annotations.
+  - Issue #5 is closed, the remote feature branch is deleted, and local `main` matched `origin/main` before issue #7 began.
+- Added:
+  - one material-change issue form with required DRY scope/status and guarded-Strix applicability/status/target-class fields;
+  - expanded pull-request evidence fields for exact-head DRY verdict, findings, retained intentional duplication, guarded authorization, plan, execution, triage, remediation, and production-approval state;
+  - a dependency-free validator that compares the single linked open issue with the PR, rejects stale DRY revisions and incomplete/mismatched states, and writes a concise GitHub step summary;
+  - seventeen adversarial validator fixtures covering final and unfinished DRY states, status-vocabulary drift, fenced Markdown, duplicate governed headings and closing lines, stale DRY and Strix revisions, required and non-required Strix paths, target/environment mismatch, budget ceiling, missing authorization, mismatched state, multiple closing issues, and schema failure;
+  - a read-only `Review governance` pull-request workflow using pinned actions and no scanner-execution path;
+  - `docs/development/review-governance.md` as the canonical status and evidence authority.
+- Updated:
+  - `AGENTS.md`, `README.md`, quality gates, Git workflow, security architecture, system architecture, and scalability/resilience documentation;
+  - all four lifecycle documents, including correction of the stale pre-merge pull request #6 state.
+- Security boundary:
+  - Issue #7 is `NOT REQUIRED` / `NOT APPLICABLE` for Strix because it changes policy, templates, validation code, and read-only CI without adding a runnable application target.
+  - No Strix authorization, plan, execution, production action, provider configuration, deployment, credential, or secret is included.
+  - The new workflow validates declared evidence only and never claims that a green check proves security.
+- Validation so far:
+  - exact Node.js `24.18.0` and pnpm `11.17.0` confirmed;
+  - `pnpm test:review-governance`: 11 passed;
+  - `pnpm check`: passed with formatting, lint, 61-source/193-reference dependency scan, strict types, 21 boundary tests, all 104 existing package/web tests, the 11 governance tests, disposable PostgreSQL, and the production build;
+  - frozen install and peer checks passed; `pnpm audit:prod` reported no known vulnerabilities;
+  - lifecycle participation, YAML parsing, and diff hygiene passed.
+- Candidate review:
+  - DRY verdict: `CLEAN WITH NOTES` after the executable vocabulary became authoritative and issue-form options became test-synchronized; repeated human-facing status text remains intentionally retained in templates and policy documentation.
+  - Hostile review fixed four fail-closed gaps: duplicate governed headings, repeated closing lines, target/environment mismatch, and required Strix evidence not bound to the exact tested revision plus declared mode/scope/budget.
+  - The tightened suite now also ignores governed-looking content hidden in fenced Markdown and enforces the guard's USD 25 budget ceiling.
+  - GitHub's 2026-08-07 primary issue-form documentation check removed the reserved `none` dropdown option in favor of `NO TARGET`, removed an unnecessary empty title, and recorded the private-repository limitation of form-level required validation.
+  - No unresolved actionable security or duplication finding remains in the candidate diff. Final exact committed-head review pinning is still required.
+- Roadmap:
+  - Stage and product delivery order are unchanged. Issue #7 is the current governance slice before remaining Stage 1 protected-preview and new-order-eligibility work.
+- Next:
+  - Finish exact-toolchain validation, complete-diff DRY and hostile security review, update issue #7 progress, then commit, push, and open the pull request.

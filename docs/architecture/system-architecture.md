@@ -1,8 +1,8 @@
 # NitipCuy System Architecture
 
-Status: Accepted direction; issue #3 implementation corrections in progress
+Status: Accepted direction; Stage 1 account-to-public-Q&A slice implemented
 
-Last reviewed: 2026-07-28
+Last reviewed: 2026-08-07
 
 Binding decisions:
 
@@ -455,7 +455,7 @@ Implemented in issue #3:
 - correct HTTP `404` behavior for unknown simulated trip paths;
 - PR quality workflow.
 
-Implemented in the active issue #5 working tree and locally verified before pull-request creation:
+Implemented by issue #5, merged through pull request #6, and locally verified before merge:
 
 - additive PostgreSQL 18 account, external-identity, capability, browser-session, OAuth-attempt, jastipper-profile, authoritative-trip, moderation, public-discussion, audit, and outbox schema;
 - isolated Prisma 7 database adapter with bounded pool, statement, transaction, and cursor-page budgets;

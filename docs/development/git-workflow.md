@@ -19,18 +19,19 @@ This exception does not authorize later direct feature work on `main`.
 
 ## Material work
 
-1. Create a hosted issue containing objective, scope, exclusions, acceptance criteria, risk, validation, and documentation impact.
+1. Create a hosted issue with the material-change form, including objective, scope, exclusions, acceptance criteria, risk, validation, documentation impact, DRY scope/progress, and guarded-Strix applicability/progress.
 2. Create a focused branch from current `main`.
 3. Preserve unrelated and user-owned changes.
 4. Implement code, tests, migrations, security controls, and required documentation together.
 5. Update `handoff.md`, `docs/changes.md`, `docs/roadmap.md`, and `docs/learning.md` in every material pull request.
 6. Run `scripts/check-lifecycle-docs.sh origin/main` plus all relevant local gates from `docs/development/quality-gates.md` and record exact results.
 7. Open a pull request using `.github/PULL_REQUEST_TEMPLATE.md`.
-8. Review the complete base diff and resolve or explicitly disposition material findings.
-9. For application work, verify the hosted lifecycle and application-quality workflows on the exact immutable PR head.
-10. Obtain fresh BurinSN product-owner approval before merge.
-11. Prefer squash merge for one coherent issue.
-12. Verify post-merge `main` and clean up the merged branch.
+8. Review the complete base diff, finish the exact-head DRY review as `CLEAN` or `CLEAN WITH NOTES`, and resolve or explicitly disposition material findings.
+9. Reconcile the linked issue and pull-request guarded-Strix state. A required assessment must reach `TRIAGED` or `REMEDIATION VERIFIED`; a non-required assessment needs a concrete rationale and the explicit not-applicable evidence state.
+10. Verify hosted review-governance, lifecycle, and application-quality workflows on the exact immutable PR head as applicable.
+11. Obtain fresh BurinSN product-owner approval after all review states, evidence, limitations, and hosted checks are visible.
+12. Prefer squash merge for one coherent issue.
+13. Verify post-merge `main` and clean up the merged branch.
 
 ## Branch names
 
@@ -66,6 +67,7 @@ GitHub returned `403` for branch-protection access because private-repository br
 
 - the lifecycle workflow still runs on pull requests;
 - a missing, skipped, or failed lifecycle result blocks merge by project policy;
+- a missing, skipped, or failed review-governance result blocks merge by project policy;
 - merge-button availability does not override the policy;
 - fresh explicit BurinSN approval remains required after all checks and findings are visible;
 - the handoff must record the exact check and approval state before merge.

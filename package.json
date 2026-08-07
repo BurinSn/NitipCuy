@@ -17,8 +17,9 @@
     "format:check": "prettier --check .",
     "lint": "eslint .",
     "start": "pnpm --filter=@nitipcuy/web start",
-    "test": "pnpm test:boundaries && turbo test",
+    "test": "pnpm test:review-governance && pnpm test:boundaries && turbo test",
     "test:boundaries": "node --test scripts/dependency-boundaries.test.mjs",
+    "test:review-governance": "node --test scripts/review-governance.test.mjs",
     "typecheck": "turbo typecheck"
   },
   "devDependencies": {

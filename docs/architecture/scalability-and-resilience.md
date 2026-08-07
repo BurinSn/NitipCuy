@@ -282,7 +282,7 @@ Designed:
 - direct private evidence storage direction;
 - observability, capacity, load, and recovery gates.
 
-Implemented and source-tested for the architecture probe plus the active issue #5 slice:
+Implemented and source-tested for the architecture probe plus the merged issue #5 slice:
 
 - deterministic in-memory public discovery;
 - bounded simulated dataset;
