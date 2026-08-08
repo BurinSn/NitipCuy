@@ -44,7 +44,7 @@ Review both `package.json` and `pnpm-lock.yaml`. Do not accept peer warnings, ig
 
 Native dependency scripts are fail-closed. `pnpm-workspace.yaml` explicitly allows only reviewed packages required by the selected Next.js and Prisma stacks. The Prisma engine and CLI scripts are allowed; optional native scripts reached through disposable test-container support remain explicitly denied.
 
-The workspace also applies exact security overrides for transitive `postcss` and `sharp` releases that the current Next.js graph resolves below patched versions. Treat an override as a temporary reviewed dependency decision: keep the full build and runtime evidence, audit it on every pull request, and remove it when the framework publishes a supported patched graph.
+The workspace also applies exact security overrides for transitive `postcss`, `sharp`, and `nanoid` releases that the current Next.js graph resolves below patched versions. `nanoid` `3.3.17` is the first release that patches `GHSA-2v37-7h3g-55p8`; the 2026-08-08 production audit found `3.3.16` through Next.js -> PostCSS despite no direct manifest change. Treat an override as a temporary reviewed dependency decision: keep the full build and runtime evidence, audit it on every pull request, and remove it when the framework publishes a supported patched graph.
 
 ## 3. Local commands
 
@@ -54,6 +54,7 @@ pnpm format
 pnpm format:check
 pnpm lint
 pnpm check:boundaries
+pnpm check:perimeter-runtime
 pnpm typecheck
 pnpm test
 pnpm test:boundaries
@@ -64,7 +65,9 @@ pnpm check
 ./scripts/check-lifecycle-docs.sh origin/main
 ```
 
-`pnpm check` runs formatting, lint, the live dependency-boundary scan, strict type checking, boundary and unit tests, and the production build. The production dependency audit and lifecycle check remain explicit gates so their results cannot be hidden inside a generic command.
+`pnpm check` runs formatting, lint, the live dependency-boundary scan, strict type checking, boundary and unit tests, the production build, and the built request-perimeter runtime probe. The production dependency audit and lifecycle check remain explicit gates so their results cannot be hidden inside a generic command.
+
+`pnpm check:perimeter-runtime` starts the already-built application twice with deterministic non-secret configuration: once in loopback-only direct mode and once behind a simulated trusted proxy. It verifies fresh CSP nonce propagation into rendered HTML, production CSP without `unsafe-inline` or `unsafe-eval`, browser headers, private- and denied-response `no-store`, exact unknown-trip `404`, hostile host/forwarding/prefetch denial, edge-proof enforcement, proof non-disclosure, and HSTS. The probe uses no real database, Google account, provider, preview deployment, or production secret and therefore proves only local runtime behavior.
 
 ## 4. Evidence requirements
 

@@ -58,7 +58,7 @@ The issue #3 baseline is pinned to:
 
 TypeScript 7 and ESLint 10 were evaluated and rejected for this baseline. Installation proved that TypeScript-ESLint does not yet support TypeScript 7 and transitive Next.js lint plugins do not yet support ESLint 10. “Latest” is not accepted when the actual peer graph is incompatible.
 
-The current Next.js release also resolves transitive `postcss` `8.4.31` and `sharp` `0.34.5`. The production audit rejects those versions because patched security releases are available. The workspace therefore applies narrow, exact overrides to `postcss` `8.5.23` and `sharp` `0.35.3`. PostCSS `8.5.23` supersedes the earlier `8.5.18` override after the GitHub Advisory Database published a later incomplete-fix advisory affecting every version through `8.5.22`. The full peer, unit, build, runtime, and audit gates must remain green, and the overrides must be removed or revised when Next.js publishes a supported patched graph.
+The current Next.js release also resolves transitive `postcss` `8.4.31`, `sharp` `0.34.5`, and, through PostCSS, `nanoid` below its current patched release. The production audit rejects those versions because patched security releases are available. The workspace therefore applies narrow, exact overrides to `postcss` `8.5.23`, `sharp` `0.35.3`, and `nanoid` `3.3.17`. PostCSS `8.5.23` supersedes the earlier `8.5.18` override after the GitHub Advisory Database published a later incomplete-fix advisory affecting every version through `8.5.22`; Nano ID `3.3.17` supersedes `3.3.16` after the 2026-08-08 audit reported `GHSA-2v37-7h3g-55p8`. The full peer, unit, build, runtime, and audit gates must remain green, and the overrides must be removed or revised when Next.js publishes a supported patched graph.
 
 Primary evidence checked on 2026-07-25:
 
@@ -68,6 +68,7 @@ Primary evidence checked on 2026-07-25:
 - [PostCSS source-map file disclosure advisory](https://github.com/advisories/GHSA-r28c-9q8g-f849)
 - [PostCSS incomplete source-map fix advisory](https://github.com/advisories/GHSA-fxqj-rqcc-2cmp)
 - [sharp inherited libvips advisory](https://github.com/advisories/GHSA-f88m-g3jw-g9cj)
+- [Nano ID predictable results and infinite loop advisory](https://github.com/advisories/GHSA-2v37-7h3g-55p8)
 - npm package metadata for the exact package versions
 - the installed pnpm peer-dependency graph
 

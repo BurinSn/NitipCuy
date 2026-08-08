@@ -282,7 +282,7 @@ Designed:
 - direct private evidence storage direction;
 - observability, capacity, load, and recovery gates.
 
-Implemented and source-tested for the architecture probe plus the merged issue #5 slice:
+Implemented and source-tested for the architecture probe, merged issue #5 slice, and issue #9 working tree:
 
 - deterministic in-memory public discovery;
 - bounded simulated dataset;
@@ -293,11 +293,14 @@ Implemented and source-tested for the architecture probe plus the merged issue #
 - one transaction budget, a three-attempt serialization/unique-conflict retry ceiling, and one connection-bound context for authoritative state, success audit, and required outbox writes;
 - disposable PostgreSQL 18 tests for migration constraints, rollback, repeated and concurrent identity resolution, optimistic concurrency, ownership foreign keys, cursor pages, session revocation, and OAuth browser-binding/replay;
 - provider-neutral evidence upload intent, inspection, scan-gated promotion, retention, and deletion contracts through bounded process-local fixtures;
+- stateless per-request canonical-origin and CSP-nonce derivation; no session, limiter, lock, cache, or durable authority is added to web-process memory;
+- dynamic rendering for nonce integrity and explicit private or denied-response `no-store` policy, with a later public-cache design still required before reintroducing cacheable public HTML;
+- a two-mode built-runtime probe that starts and stops isolated local processes with deterministic non-secret configuration;
 - no production provider calls or asynchronous work.
 
 Not implemented or verified:
 
-- production cache or cache-safety controls, shared rate-limit/idempotency system, managed PostgreSQL, object storage, scanner, cleanup worker, provider, observability, backup, or restore;
+- production cache or cache-safety controls, shared rate-limit/idempotency system, live edge/direct-origin configuration, managed PostgreSQL, object storage, scanner, cleanup worker, provider, observability, backup, or restore;
 - expand-and-contract migration, mixed-version rollout, or dependency-outage runtime evidence;
 - capacity targets, load tests, provider quotas, SLOs, RPO, RTO, or production cost budgets;
 - runtime horizontal-scaling or failure-recovery evidence.

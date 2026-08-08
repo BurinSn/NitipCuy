@@ -2,7 +2,7 @@
 
 Status: Accepted design baseline; controls are not yet production-implemented or verified
 
-Last reviewed: 2026-07-27
+Last reviewed: 2026-08-08
 
 Binding decision: [ADR 0004](../decisions/0004-security-resilience-and-scale-baseline.md)
 
@@ -355,7 +355,7 @@ Designed:
 - dependency and workflow supply-chain controls;
 - pooled PostgreSQL and modular-monolith direction.
 
-Implemented and source-tested for issue #3 plus the merged issue #5 slice:
+Implemented and source-tested for issue #3, merged issue #5, and the issue #9 working tree:
 
 - strict public-trip runtime invariants;
 - Google OIDC protocol fixtures covering exact scopes, issuer, audience, signature, expiry, state, nonce, and PKCE denial without real provider credentials;
@@ -368,16 +368,19 @@ Implemented and source-tested for issue #3 plus the merged issue #5 slice:
 - disposable PostgreSQL tests for cross-account denial, forged assurance denial, revoked-session denial, rollback, concurrency, projection privacy, and OAuth/session failure paths;
 - no production secrets or real provider calls;
 - frozen dependency graph, production audit, and immutable workflow action references.
-- versioned issue/PR review evidence, exact-head DRY gating, guarded-Strix state consistency, and adversarial validator fixtures in issue #7; hosted workflow evidence remains pending until its pull request exists.
+- versioned issue/PR review evidence, exact-head DRY gating, guarded-Strix state consistency, and adversarial validator fixtures merged through issue #7 and pull request #8;
+- one canonical request-perimeter authority with explicit loopback-only direct mode and HTTPS trusted-proxy mode, exact forwarded metadata, timing-safe bounded edge proof, generic fail-closed errors, and downstream stripping of proof and forwarding headers;
+- server-owned Google callback reconstruction, fresh per-request nonce CSP without production `unsafe-inline` or `unsafe-eval`, forced dynamic rendering, defensive browser headers, HSTS output for HTTPS policy, and private auth/API plus hostile-denial `no-store`;
+- source-tested hostile host, forwarding, ambiguity, proof, callback, internal-header, CSP, cache, and matcher cases plus a built local runtime gate in direct and simulated trusted-proxy modes.
 
 Not implemented or verified:
 
 - real Google configuration, provider compatibility, production identity, production cookies, or managed runtime keys;
 - privileged MFA, privileged-session minting, factor enrollment, or recovery controls;
-- trusted-proxy, canonical-host, shared rate-limiting, WAF, bot, cache-safety, or DDoS runtime configuration;
+- provider-verified trusted-proxy header overwrite, ingress restriction, alternate-origin denial, shared rate-limiting, WAF, bot, public-cache safety, or DDoS configuration;
 - production database identity, least-privilege grants, migration runner, backup, or independent safe-query static scan;
 - application-level encryption, managed keys, key rotation, encrypted-backup restore, or verified deletion;
 - private upload quarantine or scanner;
 - complete protected-command authorization matrix beyond profile, trip publication, and public discussion;
 - provider callbacks, payment, logistics, ledger, reconciliation, or worker;
-- security monitoring, incident response, backup restore, load tests, or penetration testing.
+- security monitoring, incident response, backup restore, load tests, browser automation, real-browser testing, or penetration testing. Issue #9 requires guarded Strix before merge, but no exact target is authorized and no plan or execution exists yet.

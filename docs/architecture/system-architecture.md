@@ -294,6 +294,8 @@ It does not store passwords. The MVP sign-in adapter is Google OIDC authorizatio
 
 NitipCuy persists only a digest of each opaque browser-session token. Protected use cases re-check the exact active session, account session version, assurance, expiry, account state, ownership, and applicable capability inside the authoritative transaction. The Google callback can mint only `BASE` assurance. No privileged-assurance minting or recovery adapter exists yet.
 
+The application request perimeter owns canonical origin and proxy interpretation before any route executes. Explicit `LOCAL_DIRECT` mode accepts only an exact loopback host and scheme. Every non-local origin requires `TRUSTED_PROXY`, HTTPS, exact forwarded host/protocol/port values, and a timing-safe edge proof; ambiguous or missing evidence fails closed. Validated forwarding and proof headers are stripped before delivery code receives server-owned canonical-origin and nonce metadata. The Google callback is reconstructed from that canonical context rather than a request-controlled URL. This source and local-runtime contract does not prove that a hosting provider strips client headers, injects the proof, or blocks alternate origins.
+
 Seller verification is not the same as login. It may include liveness, identity, bank ownership, provider KYB, and platform trust review.
 
 Administrator, support, moderation, payment, payout, refund, bank-detail change, factor replacement, and account-recovery flows require an approved phishing-resistant MFA or high-assurance step-up contract. Identity-provider selection must satisfy that contract; unavailable capability is not a reason to downgrade it. Recovery must not be weaker than the assurance it replaces.
@@ -466,6 +468,14 @@ Implemented by issue #5, merged through pull request #6, and locally verified be
 - protected JSON routes with exact-origin and Fetch-Metadata checks plus bounded request bodies; anonymous persisted search/detail routes use bounded cursor reads;
 - disposable PostgreSQL integration and deterministic Google protocol fixtures.
 
+Implemented in the issue #9 working tree and source/local-runtime-tested before pull-request creation:
+
+- one canonical request-perimeter authority shared by the proxy, runtime origin, mutation checks, and Google callback reconstruction;
+- explicit loopback-only direct mode and HTTPS trusted-proxy mode with bounded edge proof, exact forwarded host/protocol/port checks, timing-safe comparison, and downstream metadata stripping;
+- fresh nonce CSP, forced dynamic rendering, anti-framing, content-type, referrer, permissions, cross-origin, HSTS, and private auth/API cache headers;
+- generic non-cacheable `503` for missing configuration and non-cacheable, non-redirecting `421` for hostile request authority;
+- an automated post-build local runtime gate for nonce propagation/freshness, unsafe CSP keywords, no-store, hostile host/forwarding/prefetch denial, exact unknown-trip `404`, trusted-edge proof, proof non-disclosure, and HSTS.
+
 Issue #3 removed its callback-only transaction interface rather than misrepresent it as atomic infrastructure. Issue #5 now implements and disposable-database-tests a connection-bound serializable unit of work for the persisted marketplace slice; this does not yet cover order capacity, ledger, payment, provider callback, worker, or outbox-delivery transactions.
 
 The payment port now separates initiation, release, and refund submission receipts from provider observations. It models collection, hold, release, refund, settlement, and chargeback independently; provider signals request inspection instead of declaring success. The configured mock never invents a successful outcome, and the pure initial-protection assessment fails closed for unknown, contradictory, mismatched, or post-hold evidence.
@@ -482,7 +492,7 @@ Not implemented:
 
 - real Google configuration or provider-verified authentication;
 - privileged step-up or recovery, so production moderation remains fail-closed;
-- shared rate-limit, risk, idempotency, canonical-proxy, CSP/header, or browser-test completion for protected preview;
+- provider-verified edge header overwrite and direct-origin restriction, shared rate-limit, risk, idempotency, browser automation, or real-browser completion for protected preview;
 - private data;
 - real providers;
 - order, payment, evidence, logistics, item moderation, dispute, or review workflows;

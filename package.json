@@ -10,8 +10,9 @@
   "scripts": {
     "audit:prod": "pnpm audit --prod --audit-level high",
     "build": "turbo build",
-    "check": "pnpm format:check && pnpm lint && pnpm check:boundaries && pnpm typecheck && pnpm test && pnpm build",
+    "check": "pnpm format:check && pnpm lint && pnpm check:boundaries && pnpm typecheck && pnpm test && pnpm build && pnpm check:perimeter-runtime",
     "check:boundaries": "node scripts/check-dependency-boundaries.mjs",
+    "check:perimeter-runtime": "node scripts/check-request-perimeter-runtime.mjs",
     "dev": "turbo dev --filter=@nitipcuy/web",
     "format": "prettier --write .",
     "format:check": "prettier --check .",

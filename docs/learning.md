@@ -1059,3 +1059,69 @@ Do not present inference, provider marketing, provisional pricing, or a future i
 ### No product-model change
 
 - Pull-request creation and hosted governance verification change no NitipCuy product, architecture, identity, transaction, provider, or stage decision.
+
+## 2026-08-08 11:50 WIB - Request authority must survive framework behavior, not only pure tests
+
+### Accepted
+
+- Canonical origin is security authority, not formatting configuration.
+  - Evidence: the proxy, protected mutation checks, Google client redirect URI, callback completion URL, and safe redirects all need the same exact origin for different enforcement boundaries.
+  - Impact: one request-perimeter module parses the value and supplies server-owned downstream context; delivery code may repeat enforcement but may not invent another parser or trust request host/forwarding values directly.
+- A trusted-proxy claim needs both application and provider halves.
+  - Evidence: the application can require an HTTPS canonical origin, exact overwritten forwarding values, and timing-safe edge proof, but only the real edge can prove it strips attacker headers, injects proof, restricts ingress, and blocks alternate origins.
+  - Impact: issue #9 may claim source-tested and simulated local-runtime behavior only. Provider-verified direct-origin denial remains a later activation gate.
+- Nonce CSP changes rendering and caching architecture.
+  - Evidence: Next.js attaches proxy-generated nonces only during dynamic rendering; the first production build still classified trip pages as static.
+  - Impact: the root layout now forces dynamic rendering, and the runtime gate verifies that CSP and rendered HTML use the same fresh nonce. Public HTML caching must be redesigned rather than silently re-enabled.
+- Runtime probes belong in the normal quality path when framework integration is the subject of the change.
+  - Evidence: unit tests passed before live `next start` revealed rewrite re-entry and soft-404 behavior.
+  - Impact: `pnpm check` now runs a deterministic post-build perimeter probe in direct and simulated trusted-proxy modes.
+- A security audit is current evidence, not a property inherited from an unchanged direct manifest.
+  - Evidence: the issue #9 production audit found Nano ID `3.3.16` through Next.js -> PostCSS even though this slice added no direct runtime package; `GHSA-2v37-7h3g-55p8` identifies `3.3.17` as patched.
+  - Impact: one exact workspace override now resolves `3.3.17`, the lockfile records the only production path, and dependency overrides remain subject to fresh audit plus peer/build/runtime validation on every pull request.
+
+### Corrected
+
+- Do not copy a CSP-only prefetch matcher exclusion into a security perimeter.
+  - Supersedes: the initial matcher followed Next.js CSP guidance and skipped requests carrying prefetch headers.
+  - Evidence: an attacker controls those headers and could have bypassed host/proxy validation for matching application routes.
+  - Impact: relevant page, auth, and API requests always traverse the decision regardless of prefetch markers.
+- Do not forward validated proxy metadata deeper into the application.
+  - Supersedes: the initial successful path removed only the edge-proof header.
+  - Impact: edge proof, standard forwarding fields, and equivalent original-host/original-URL headers are stripped; downstream routes receive only server-owned canonical-origin and nonce metadata.
+- Do not remove the early unknown-trip rewrite merely because the page calls `notFound()`.
+  - Supersedes: the first DRY cleanup removed the proxy check after centralizing demo-trip IDs.
+  - Evidence: forced dynamic rendering returned a streamed soft `200`; restoring the rewrite without excluding the internal target re-entered the proxy and returned `421`.
+  - Impact: the proxy derives its check from the existing shared trip-ID source, returns a real `404`, and excludes only the framework's internal `/_not-found` path. This is intentional enforcement duplication at a framework boundary, not a second data authority.
+- Local-direct request validation cannot assume Next.js preserves the external host inside `request.url`.
+  - Evidence: the built server may normalize its internal URL host while retaining the exact direct `Host` header.
+  - Impact: local-direct mode validates the request scheme plus exact canonical `Host`; non-local operation remains forbidden outside trusted-proxy mode.
+- A hostile request decision must also be a cache decision.
+  - Supersedes: the first implementation applied `no-store` according to auth/API path only, so a rejected public-path request returned `421` without an explicit cache prohibition.
+  - Impact: every authority denial now forces the same centralized private no-store policy, preventing a future shared edge from retaining an attacker-shaped denial for an otherwise public URL.
+- Security-critical deployment modes are exact values, not user-facing input.
+  - Supersedes: the first parser trimmed proxy-mode whitespace before validation.
+  - Impact: missing, unknown, or whitespace-padded modes all fail configuration closed; operational configuration must match the documented enum exactly.
+
+### DRY review disposition
+
+- Exact origin parsing, mode selection, callback reconstruction, CSP/header construction, and runtime trusted-proxy fixture values each have one code authority in the candidate.
+- Static configuration-failure headers remain separately literal because the normal policy cannot be constructed on that path; sharing a configurable builder would weaken the fallback boundary.
+- The proxy's shared-ID unknown-trip check remains alongside page-level `notFound()` because it owns the actual HTTP status after dynamic streaming, while the shared trip-ID source prevents a second data authority.
+- Unit tests, built-runtime probes, ADR/security requirements, and lifecycle evidence intentionally restate critical outcomes for different audiences and evidence levels; they do not make policy decisions independently.
+
+### Failed or rejected evidence
+
+- The ambient Node.js `26.0.0` / pnpm `9.15.0` command was rejected by engine policy before tests and is not verification.
+- The first inline runtime-probe program mixed CommonJS `require` with top-level `await`; Node rejected it before application requests and it is not verification.
+- Intermediate `421`/soft-`200` results were useful defect evidence but do not count as passed runtime behavior.
+
+### Deferred
+
+- Issue #9 still has no authorized Strix URL, guard record, reviewed plan, budget, or execution. `REQUIRED` / `AUTHORIZATION REQUIRED` is progress visibility, not scanner authority.
+- Real edge ingress restriction and header overwrite, real TLS/domain/HSTS readiness, browser automation, Google browser flow, shared rate limits, WAF/bot controls, observability/redaction, managed keys, privileged step-up/recovery, load, and incident evidence remain separate gates.
+- Nonce-driven dynamic rendering intentionally defers public HTML cache optimization. A future cache design must preserve public/private classification and CSP integrity.
+
+### No product-model change
+
+- The perimeter changes no product role, service mode, seller-rate right, fee direction, order/evidence rule, provider choice, or roadmap stage order.

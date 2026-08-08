@@ -1036,3 +1036,57 @@ A session with no material change does not invent an entry. A session that makes
   - No product behavior, scanner authorization/execution, provider, deployment, production, payment, or visual change.
 - Next:
   - Commit and push this lifecycle checkpoint, perform the final exact-head DRY review, update PR evidence to the new SHA, and inspect all hosted checks and annotations.
+
+## 2026-08-08 11:50 WIB - Inbound browser and session perimeter implemented locally
+
+- Issue: #9
+- Product: NitipCuy Stage 1 platform foundation
+- Type: Request trust boundary, browser security, OAuth callback authority, runtime verification, and lifecycle reconciliation
+- Status: Reviewed local candidate complete; guarded Strix, pull request, and hosted evidence pending
+- Verified prior-state reconciliation:
+  - BurinSN approved pull request #8 after the exact scope and hosted evidence were visible.
+  - Pull request #8 squash-merged as `d09747b1a8072eaafe23f7bc604b82bb7eae5bf3` on 2026-08-07 14:29 WIB; issue #7 closed and local/remote feature branches were removed.
+  - Local `main` matched `origin/main` at that merge before issue #9 began; GitHub had no open issue or pull request.
+- Added:
+  - one canonical request-perimeter module owning exact origin parsing, explicit local-direct/trusted-proxy modes, forwarding interpretation, timing-safe edge-proof validation, canonical downstream context, callback URL reconstruction, CSP, browser/cache headers, and generic failure headers;
+  - explicit loopback-only direct mode and HTTPS-only trusted-proxy mode with exact forwarded host/protocol/port, minimum 32-character edge proof, ambiguity rejection, and stripping of proof/forwarding headers before route execution;
+  - a fresh per-request nonce CSP with no production `unsafe-inline` or `unsafe-eval`, forced dynamic rendering, anti-framing, content-type, permissions, referrer, cross-origin, HSTS, and auth/API no-store policy;
+  - proxy and policy adversarial tests plus a post-build runtime gate that starts isolated direct and simulated-proxy servers with deterministic non-secret configuration;
+  - issue #9 as `REQUIRED` / `AUTHORIZATION REQUIRED` for guarded Strix against a future exact local-application target.
+- Changed:
+  - Google callback completion now receives a URL reconstructed from the server-owned canonical origin instead of `request.url`;
+  - runtime origin configuration now uses the perimeter authority instead of a second parser;
+  - `pnpm check` now includes the built request-perimeter runtime gate after the production build;
+  - README, ADR 0005, system architecture, security, resilience, quality, roadmap, handoff, changes, and learning authorities now describe the implemented boundary and its evidence limits.
+- Corrections during hostile implementation review:
+  - removed request-header-based proxy matcher exclusions because attacker-supplied prefetch headers could bypass the perimeter;
+  - forced all pages dynamic after the build showed that statically generated pages cannot receive Next.js request nonces;
+  - retained the early trip-ID rewrite using the existing shared ID source and excluded only `/_not-found` from proxy re-entry, preserving an actual HTTP `404` instead of a streamed soft `200` or recursive `421`;
+  - stripped edge and forwarding metadata before downstream delivery code and replaced any client-supplied internal origin/nonce headers;
+  - made every hostile-authority `421` non-cacheable after complete-diff review found that path-based private caching alone left a public-path denial eligible for unsafe shared caching;
+  - rejected whitespace-padded proxy modes instead of silently normalizing a security-critical deployment setting.
+- Validation so far using Node.js `24.18.0` and pnpm `11.17.0`:
+  - 30 focused proxy/perimeter/mutation-boundary tests passed;
+  - web strict typecheck passed;
+  - production build passed with every application route reported dynamic;
+  - `pnpm check:perimeter-runtime` passed in loopback direct and simulated trusted-proxy modes, including root `200`, API `401`, unknown trip `404`, hostile cases `421`, matching/fresh CSP nonces, private/denied no-store, HSTS, and edge-proof non-disclosure.
+  - the fresh production audit initially blocked on Nano ID `3.3.16` through Next.js -> PostCSS under `GHSA-2v37-7h3g-55p8`; one exact workspace override and lockfile update now resolve only patched `3.3.17`;
+  - `pnpm why nanoid --prod --recursive` confirmed the single expected production path, peer validation passed, and the repeated production audit reported no known vulnerabilities.
+  - the final exact-toolchain frozen install and `pnpm check` passed formatting, lint, the four-project scan over 64 source files and 203 references, strict types, all 17 governance tests, 21 boundary tests, 19 domain tests, 20 application tests, 60 adapter tests including seven disposable-PostgreSQL cases, 30 web tests, the fully dynamic production build, and the two-mode built-runtime probe;
+  - lifecycle participation, 36 local links across 20 documents, all workflow/issue-form YAML, diff hygiene, and high-confidence credential patterns passed.
+- Review result:
+  - complete base-to-candidate DRY verdict: **CLEAN WITH NOTES**; the second origin parser and duplicated trusted-proxy runtime fixture were consolidated;
+  - retained repetition is intentional across application/provider/database validation, static configuration-failure headers, the shared-ID framework `404` boundary, unit versus runtime assertions, and canonical human documentation;
+  - complete-diff hostile review has no unresolved actionable source finding; guarded Strix remains mandatory runtime evidence, not a substitute for or consequence of this verdict.
+- Rejected evidence:
+  - the ambient Node.js `26.0.0` / pnpm `9.15.0` command stopped at engine validation before tests;
+  - the first ad-hoc runtime script failed from mixed CommonJS/top-level-await syntax and did not exercise the application;
+  - intermediate runtime failures were used as correction evidence and are not claimed as passing verification.
+- Authority and exclusions:
+  - BurinSN authorized this bounded implementation and normal issue/branch/test/documentation workflow.
+  - No Strix target, authorization record, plan, execution, deployment, real edge, real Google, provider activation, production secret/data, payment, public launch, or merge is authorized.
+  - Shared rate limits, WAF/bot controls, observability, managed keys, privileged step-up/recovery, browser automation, load, order, payment, upload, and public caching remain separate issues.
+- Roadmap:
+  - Stage and delivery order remain unchanged. Issue #9 is the current protected-preview slice before shared abuse/observability controls and server-authoritative new-order eligibility.
+- Next:
+  - commit and push the immutable candidate, update issue #9 review progress to that revision, then present a narrow exact-local-target Strix authority proposal without authorizing, planning, or executing until the applicable separate BurinSN approval.

@@ -27,6 +27,11 @@ import {
   SubmitTripForModeration,
 } from "@nitipcuy/application";
 
+import {
+  RequestPerimeterConfigurationError,
+  readRequestPerimeterPolicy,
+} from "./request-perimeter-core";
+
 interface RuntimeConfiguration {
   readonly appOrigin: string;
   readonly databaseUrl: string;
@@ -147,18 +152,28 @@ function createRuntime(configuration: RuntimeConfiguration) {
 }
 
 function readRuntimeConfiguration(): RuntimeConfiguration {
-  return Object.freeze({
-    appOrigin: exactOrigin(requiredEnvironment("NITIPCUY_APP_ORIGIN")),
-    databaseUrl: requiredEnvironment("DATABASE_URL"),
-    oauthEncryptionKey: base64Key(
-      requiredEnvironment("OAUTH_ATTEMPT_ENCRYPTION_KEY_BASE64"),
-      "OAuth attempt encryption key",
-    ),
-    sessionHmacKey: base64Key(
-      requiredEnvironment("SESSION_TOKEN_HMAC_KEY_BASE64"),
-      "Session HMAC key",
-    ),
-  });
+  try {
+    return Object.freeze({
+      appOrigin: readRequestPerimeterPolicy().appOrigin,
+      databaseUrl: requiredEnvironment("DATABASE_URL"),
+      oauthEncryptionKey: base64Key(
+        requiredEnvironment("OAUTH_ATTEMPT_ENCRYPTION_KEY_BASE64"),
+        "OAuth attempt encryption key",
+      ),
+      sessionHmacKey: base64Key(
+        requiredEnvironment("SESSION_TOKEN_HMAC_KEY_BASE64"),
+        "Session HMAC key",
+      ),
+    });
+  } catch (error) {
+    if (
+      error instanceof RuntimeConfigurationError ||
+      error instanceof RequestPerimeterConfigurationError
+    ) {
+      throw new RuntimeConfigurationError();
+    }
+    throw error;
+  }
 }
 
 function requiredEnvironment(name: string): string {
@@ -167,24 +182,6 @@ function requiredEnvironment(name: string): string {
     throw new RuntimeConfigurationError();
   }
   return value;
-}
-
-function exactOrigin(value: string): string {
-  const url = new URL(value);
-  const localDevelopment =
-    url.protocol === "http:" &&
-    (url.hostname === "localhost" || url.hostname === "127.0.0.1");
-  if (
-    (url.protocol !== "https:" && !localDevelopment) ||
-    url.username ||
-    url.password ||
-    url.pathname !== "/" ||
-    url.search ||
-    url.hash
-  ) {
-    throw new Error("NitipCuy application origin is invalid.");
-  }
-  return url.origin;
 }
 
 function base64Key(value: string, field: string): Uint8Array {
