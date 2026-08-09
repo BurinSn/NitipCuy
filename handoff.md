@@ -1,6 +1,6 @@
 # NitipCuy Cross-Session Handoff
 
-Last updated: 2026-08-09 21:28 WIB
+Last updated: 2026-08-09 21:35 WIB
 
 Handoff owner: Codex
 
@@ -65,7 +65,7 @@ Excluded:
 
 - real edge/provider configuration, deployment, domain, Google provider activation, production secrets or data;
 - shared rate limits, WAF/bot controls, observability backend, KMS, privileged step-up/recovery, browser automation, load, payment, order, upload, and public-cache implementation;
-- Strix authorization, plan, execution, or external-AI source disclosure; issue #9 now uses a documented non-applicability path.
+- Strix authorization, plan, execution, or transfer of source/runtime context to a Strix LLM provider; issue #9 now uses a documented non-applicability path.
 
 ## 6. Verified live repository state
 
@@ -79,11 +79,12 @@ Verified 2026-08-09 before the current documentation reconciliation:
 | `main` and `origin/main` base | `d09747b1a8072eaafe23f7bc604b82bb7eae5bf3` |
 | Active issue | #9, open |
 | Active branch | `sec/9-browser-session-perimeter` |
-| Pull request | [#10](https://github.com/BurinSn/NitipCuy/pull/10), open, not draft, mergeable at checkpoint `b9c1a2f833c02c0998596c6ed939cdb9d14a07d6` |
-| Worktree | Expected final conditional lifecycle successor only; no unrelated dirty files observed |
+| Pull request | [#10](https://github.com/BurinSn/NitipCuy/pull/10), open, not draft, mergeable at checkpoint `aabeb930040d0ade9e9a21f7a4c5ca00426ad034` |
+| Worktree | Expected external-AI disclosure correction only; no unrelated dirty files observed |
 | Deployment / providers | None deployed; no provider configured or activated |
 | Strix issue state | `NOT REQUIRED` / `NOT APPLICABLE`, target class `NO TARGET` |
-| Strix authority | None; no target, authorization record, plan, budget, execution, report, or external-AI provider approval exists |
+| Strix authority | None; no target, authorization record, plan, budget, execution, report, or hosted Strix LLM provider approval exists |
+| Other external AI | The pre-existing CodeRabbit GitHub integration processed the PR diff for a walkthrough and release notes; it produced no review object, line finding, or Strix assessment |
 | Merge authority | None; a future exact-head PR requires complete evidence and fresh BurinSN approval |
 
 ## 7. Working-tree implementation state
@@ -147,16 +148,24 @@ Hosted checkpoint `b9c1a2f833c02c0998596c6ed939cdb9d14a07d6`:
 - the PR remained open, not draft, and mergeable with no review decision or review objects;
 - CodeRabbit was rate-limited on the four-file lifecycle delta and supplied no new review. Its successful status is not line-review coverage or approval.
 
+Hosted checkpoint `aabeb930040d0ade9e9a21f7a4c5ca00426ad034`:
+
+- application-quality run `31318593577` passed in 1m36s with zero annotations;
+- lifecycle run `31318593575` passed in 5s with zero annotations;
+- review-governance runs `31318593578` and `31318693990` passed in 7s and 9s respectively with zero annotations;
+- the PR remained open, not draft, and mergeable with no review decision or review object;
+- CodeRabbit was rate-limited and supplied no security finding or independent review.
+
 ## 9. Authority and non-claims
 
 - BurinSN authorized implementation of the bounded inbound browser/session perimeter issue.
 - This permits the governed issue, branch, code, tests, documentation, local deterministic runtime probes, verification, push, and pull-request workflow normally required for the change.
-- BurinSN selected the zero-external-AI security-review path for issue #9. Strix is `NOT REQUIRED` / `NOT APPLICABLE` for this pull request because no hosted model is approved to receive project context and no verified local Strix model is configured; the bounded perimeter instead retains complete hostile source review and deterministic local runtime evidence.
-- This does not authorize a Strix target, external AI provider, guard authorization, dry-run plan, scan execution, external preview, provider configuration, real Google, production testing, deployment, public launch, payment movement, or merge.
+- BurinSN selected the zero-external-Strix-AI security-review path for issue #9. Strix is `NOT REQUIRED` / `NOT APPLICABLE` for this pull request because no hosted Strix model is approved to receive project context and no verified local Strix model is configured; the bounded perimeter instead retains complete hostile source review and deterministic local runtime evidence.
+- This does not authorize a Strix target, hosted Strix LLM provider, guard authorization, dry-run plan, scan execution, external preview, provider configuration, real Google, production testing, deployment, public launch, payment movement, or merge.
 - The trusted-proxy runtime is simulated. It does not prove an actual edge strips attacker headers, injects edge proof, restricts origin ingress, supplies TLS, or blocks alternate domains.
 - A nonce CSP and successful local probes do not make NitipCuy generally secure or production-ready.
-- No AI-driven penetration test, real browser, Google account, hosting edge, WAF/rate limit, private data, load, incident, staging, or production environment was tested, and no NitipCuy code was sent to an external AI model for this review.
+- No AI-driven penetration test, real browser, Google account, hosting edge, WAF/rate limit, private data, load, incident, staging, or production environment was tested. Strix sent no NitipCuy source, tests, or runtime context to an external LLM provider. The pre-existing CodeRabbit integration did process the pull-request diff for summaries and release notes; that is external AI processing, not a Strix assessment or independent security review.
 
 ## 10. Exact next action
 
-Commit and push this final conditional lifecycle successor, repin issue #9 and pull request #10 to its exact SHA, and verify the live head. If and only if the live PR head matches both DRY pins, all three required checks pass with zero annotations, the PR remains mergeable, and no unresolved review finding exists, the next action is to request fresh BurinSN merge approval. Otherwise fix the live head. Do not merge without that approval.
+Commit and push this disclosure-correction successor, repin issue #9 and pull request #10 to its exact SHA, and verify the live head. If and only if the live PR head matches both DRY pins, all three required checks pass with zero annotations, the PR remains mergeable, and no unresolved review finding exists, the next action is to request fresh BurinSN merge approval. Otherwise fix the live head. Do not merge without that approval.

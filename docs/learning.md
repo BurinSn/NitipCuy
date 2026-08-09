@@ -1179,3 +1179,20 @@ Do not present inference, provider marketing, provisional pricing, or a future i
 ### No new product or security-control learning
 
 - This lifecycle-only checkpoint changes no implementation, control, provider decision, external-AI boundary, product model, or roadmap order.
+
+## 2026-08-09 21:35 WIB - External-AI claims must account for automatic repository integrations
+
+### Corrected
+
+- The earlier `zero-external-AI` wording was overbroad. Issue #9's approved decision is specifically `zero-external-Strix-AI`: no Strix assessment, hosted Strix LLM provider, or Strix transfer of source/test/runtime context is authorized or used.
+- The pre-existing CodeRabbit GitHub integration automatically processed the pull-request diff for a walkthrough and release notes. That is external AI processing even though it produced no GitHub review object, security finding, or independent approval.
+
+### Reusable learning
+
+- A privacy statement must name the tool and data path it actually governs. Open-source scanner choice, model-provider choice, and unrelated repository-review integrations are separate facts.
+- Before claiming that no external AI processed a change, inspect installed GitHub integrations, status contexts, bot-authored PR body changes, comments, and review objects. Opening a pull request can trigger an existing integration without a new scan command.
+- Disclose automated summary processing separately from security evidence. A bot walkthrough or release-note edit is neither a Strix assessment nor an independent security review.
+
+### No product or security-control change
+
+- This correction changes disclosure precision only. It changes no application behavior, security control, Strix applicability, product model, provider direction, or roadmap order.

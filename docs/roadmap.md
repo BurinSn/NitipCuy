@@ -1,10 +1,10 @@
 # NitipCuy Canonical Roadmap
 
-Last reviewed: 2026-08-09 21:28 WIB
+Last reviewed: 2026-08-09 21:35 WIB
 
 Current stage: Stage 1 - Platform foundation
 
-Current work item: Issue #9 and pull request #10 implement the first bounded protected-preview security slice on `sec/9-browser-session-perimeter` from review-governance merge `d09747b1a8072eaafe23f7bc604b82bb7eae5bf3`. Candidate `f6d63e25426f705fd38ed01d0ca5242ea12014b2` centralizes canonical request authority, hardens local-direct and future trusted-proxy interpretation, adds nonce CSP and browser/cache headers, reconstructs the Google callback from server-owned context, adds a built local runtime gate, and moves the Next.js -> PostCSS Nano ID resolution to patched `3.3.17`. BurinSN selected a zero-external-AI review path: Strix is `NOT REQUIRED` / `NOT APPLICABLE`, backed by a concrete rationale, complete hostile source review, and local built-runtime evidence rather than a scanner claim. Application, lifecycle, and review-governance checks passed with zero annotations on PR checkpoints `4b5b44d` and `b9c1a2f`; final conditional lifecycle-head pinning and owner approval remain pending. Stage and delivery order are unchanged.
+Current work item: Issue #9 and pull request #10 implement the first bounded protected-preview security slice on `sec/9-browser-session-perimeter` from review-governance merge `d09747b1a8072eaafe23f7bc604b82bb7eae5bf3`. Candidate `f6d63e25426f705fd38ed01d0ca5242ea12014b2` centralizes canonical request authority, hardens local-direct and future trusted-proxy interpretation, adds nonce CSP and browser/cache headers, reconstructs the Google callback from server-owned context, adds a built local runtime gate, and moves the Next.js -> PostCSS Nano ID resolution to patched `3.3.17`. BurinSN selected a zero-external-Strix-AI review path: Strix is `NOT REQUIRED` / `NOT APPLICABLE`, backed by a concrete rationale, complete hostile source review, and local built-runtime evidence rather than a scanner claim. The pre-existing CodeRabbit integration separately processed the PR diff for summaries; it supplied no independent security review. Application, lifecycle, and review-governance checks passed with zero annotations through checkpoint `aabeb93`; final disclosure-correction head pinning and owner approval remain pending. Stage and delivery order are unchanged.
 
 ## 1. Role, authority, and freshness contract
 
@@ -205,7 +205,7 @@ account
 - [x] Add integration tests using a container created and destroyed by the suite, with no configurable fallback to development or production databases.
 - [ ] Make new-order eligibility server-authoritative across exact time, offer state, seller eligibility, moderation, and capacity; reserve the final capacity atomically.
 - [ ] Complete the remaining protected-preview controls. Implemented and source/integration-tested now: opaque digest-only sessions, rotation/revocation, exact transactional session/assurance/ownership checks, generic errors, exact-origin and Fetch-Metadata checks, parameterized Prisma queries, database ownership constraints, and bounded inputs. Still required: shared multi-axis rate limits, trusted-proxy/direct-origin configuration, browser headers/CSP, managed key custody, logging-redaction and observability, complete safe-query static/security scans, browser automation, and privileged step-up/recovery.
-- [ ] Complete issue #9's inbound browser/session perimeter. Candidate `f6d63e2` has source and local built-runtime evidence for canonical request interpretation, simulated edge proof, nonce CSP, defensive headers, private no-store, callback reconstruction, and hostile request denial. Strix is explicitly not applicable to this bounded pull request under the approved zero-external-AI path; final governance reconciliation, PR review, and merge remain open.
+- [ ] Complete issue #9's inbound browser/session perimeter. Candidate `f6d63e2` has source and local built-runtime evidence for canonical request interpretation, simulated edge proof, nonce CSP, defensive headers, private no-store, callback reconstruction, and hostile request denial. Strix is explicitly not applicable to this bounded pull request under the approved zero-external-Strix-AI path; final governance reconciliation, PR review, and merge remain open.
 - [x] Establish bounded cursor pagination plus connection, query, statement, transaction, and request budgets for the persisted slice. Minimal production observability remains open with the prior item.
 - [ ] Record preliminary pilot capacity, provider-quota, cost, RPO, and RTO questions without inventing targets before the pilot is bounded.
 
@@ -319,7 +319,7 @@ The unresolved DOKU, logistics, policy, legal, and pilot items listed in Stage 3
 
 ### Now
 
-Commit and push the final conditional lifecycle successor, repin issue #9 and pull request #10 to its exact SHA, and verify the live exact-head checks, annotations, mergeability, and review state without merging.
+Commit and push the disclosure-correction successor, repin issue #9 and pull request #10 to its exact SHA, and verify the live exact-head checks, annotations, mergeability, and review state without merging.
 
 ### Next
 

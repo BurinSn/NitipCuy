@@ -1155,3 +1155,21 @@ A session with no material change does not invent an entry. A session that makes
   - otherwise the live head must be fixed and re-reviewed. This record never authorizes merge.
 - Scope and roadmap:
   - No application, dependency, security-control, product, provider, external-AI, deployment, or production behavior changes. Stage and delivery order remain unchanged.
+
+## 2026-08-09 21:35 WIB - Issue #9 external-AI disclosure corrected
+
+- Issue / PR: Issue #9; pull request #10
+- Type: Security-review privacy disclosure and lifecycle correction
+- Status: Repository authorities corrected; disclosure-correction commit, exact-head pins, and hosted re-verification pending
+- Correction:
+  - The 21:15, 21:23, and 21:28 records used `zero-external-AI` or equivalent language too broadly. They are superseded on that point by this record.
+  - The approved boundary is `zero-external-Strix-AI`: no Strix target, guard authorization, plan, budget, execution, report, finding, or hosted Strix LLM provider approval exists, and Strix sent no NitipCuy source, tests, or runtime context to an external provider.
+  - The repository's pre-existing CodeRabbit GitHub integration separately processed the pull-request diff, generated a walkthrough and release notes, and later reported rate limiting. It created no GitHub review object, line finding, independent approval, or Strix security assessment.
+- Evidence and limitation:
+  - the candidate diff's high-confidence credential-pattern gate found no match, and the pull request contains no production data or runtime context;
+  - a successful CodeRabbit status is disclosure of external AI processing, not security-test evidence or owner approval;
+  - no AI-driven dynamic assessment or penetration test ran. Issue #9's highest security evidence remains complete hostile source review plus deterministic local built-runtime testing.
+- Scope and roadmap:
+  - This is a documentation and disclosure correction only. It changes no application code, security control, product model, provider selection, stage, or delivery order.
+- Next:
+  - commit and push this correction, pin its exact SHA in issue #9 and pull request #10, rerun all required exact-head checks, and request fresh BurinSN merge approval only if the live head remains fully green and finding-free.
