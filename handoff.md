@@ -1,6 +1,6 @@
 # NitipCuy Cross-Session Handoff
 
-Last updated: 2026-08-09 21:23 WIB
+Last updated: 2026-08-09 21:28 WIB
 
 Handoff owner: Codex
 
@@ -79,8 +79,8 @@ Verified 2026-08-09 before the current documentation reconciliation:
 | `main` and `origin/main` base | `d09747b1a8072eaafe23f7bc604b82bb7eae5bf3` |
 | Active issue | #9, open |
 | Active branch | `sec/9-browser-session-perimeter` |
-| Pull request | [#10](https://github.com/BurinSn/NitipCuy/pull/10), open, not draft, mergeable at checkpoint `4b5b44dd3ed3486768a38dcc4e76e70af0c015de` |
-| Worktree | Expected pull-request lifecycle checkpoint changes only; no unrelated dirty files observed |
+| Pull request | [#10](https://github.com/BurinSn/NitipCuy/pull/10), open, not draft, mergeable at checkpoint `b9c1a2f833c02c0998596c6ed939cdb9d14a07d6` |
+| Worktree | Expected final conditional lifecycle successor only; no unrelated dirty files observed |
 | Deployment / providers | None deployed; no provider configured or activated |
 | Strix issue state | `NOT REQUIRED` / `NOT APPLICABLE`, target class `NO TARGET` |
 | Strix authority | None; no target, authorization record, plan, budget, execution, report, or external-AI provider approval exists |
@@ -139,6 +139,14 @@ Hosted checkpoint `4b5b44dd3ed3486768a38dcc4e76e70af0c015de`:
 - the live issue/PR pair also passed the local governance validator with DRY `CLEAN WITH NOTES` and Strix `NOT REQUIRED` / `NOT APPLICABLE` / `NO TARGET`;
 - CodeRabbit supplied a Free-plan walkthrough over 21 selected files, excluded `pnpm-lock.yaml`, created no review object or line finding, and is not independent approval.
 
+Hosted checkpoint `b9c1a2f833c02c0998596c6ed939cdb9d14a07d6`:
+
+- application-quality run `31318415910` passed in 1m33s with zero annotations;
+- lifecycle run `31318415935` passed in 6s with zero annotations;
+- review-governance run `31318415920` passed in 11s with zero annotations and the live pair passed the local validator;
+- the PR remained open, not draft, and mergeable with no review decision or review objects;
+- CodeRabbit was rate-limited on the four-file lifecycle delta and supplied no new review. Its successful status is not line-review coverage or approval.
+
 ## 9. Authority and non-claims
 
 - BurinSN authorized implementation of the bounded inbound browser/session perimeter issue.
@@ -151,4 +159,4 @@ Hosted checkpoint `4b5b44dd3ed3486768a38dcc4e76e70af0c015de`:
 
 ## 10. Exact next action
 
-Commit and push this pull-request checkpoint, repeat the exact-head DRY pin in issue #9 and pull request #10, then verify every hosted check and annotation on that immutable head without merging. Fresh BurinSN approval remains mandatory.
+Commit and push this final conditional lifecycle successor, repin issue #9 and pull request #10 to its exact SHA, and verify the live head. If and only if the live PR head matches both DRY pins, all three required checks pass with zero annotations, the PR remains mergeable, and no unresolved review finding exists, the next action is to request fresh BurinSN merge approval. Otherwise fix the live head. Do not merge without that approval.

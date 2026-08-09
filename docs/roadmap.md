@@ -1,10 +1,10 @@
 # NitipCuy Canonical Roadmap
 
-Last reviewed: 2026-08-09 21:23 WIB
+Last reviewed: 2026-08-09 21:28 WIB
 
 Current stage: Stage 1 - Platform foundation
 
-Current work item: Issue #9 and pull request #10 implement the first bounded protected-preview security slice on `sec/9-browser-session-perimeter` from review-governance merge `d09747b1a8072eaafe23f7bc604b82bb7eae5bf3`. Candidate `f6d63e25426f705fd38ed01d0ca5242ea12014b2` centralizes canonical request authority, hardens local-direct and future trusted-proxy interpretation, adds nonce CSP and browser/cache headers, reconstructs the Google callback from server-owned context, adds a built local runtime gate, and moves the Next.js -> PostCSS Nano ID resolution to patched `3.3.17`. BurinSN selected a zero-external-AI review path: Strix is `NOT REQUIRED` / `NOT APPLICABLE`, backed by a concrete rationale, complete hostile source review, and local built-runtime evidence rather than a scanner claim. Application, lifecycle, and review-governance checks passed with zero annotations on PR checkpoint `4b5b44dd3ed3486768a38dcc4e76e70af0c015de`; final lifecycle-head pinning, repeated hosted evidence, and owner approval remain pending. Stage and delivery order are unchanged.
+Current work item: Issue #9 and pull request #10 implement the first bounded protected-preview security slice on `sec/9-browser-session-perimeter` from review-governance merge `d09747b1a8072eaafe23f7bc604b82bb7eae5bf3`. Candidate `f6d63e25426f705fd38ed01d0ca5242ea12014b2` centralizes canonical request authority, hardens local-direct and future trusted-proxy interpretation, adds nonce CSP and browser/cache headers, reconstructs the Google callback from server-owned context, adds a built local runtime gate, and moves the Next.js -> PostCSS Nano ID resolution to patched `3.3.17`. BurinSN selected a zero-external-AI review path: Strix is `NOT REQUIRED` / `NOT APPLICABLE`, backed by a concrete rationale, complete hostile source review, and local built-runtime evidence rather than a scanner claim. Application, lifecycle, and review-governance checks passed with zero annotations on PR checkpoints `4b5b44d` and `b9c1a2f`; final conditional lifecycle-head pinning and owner approval remain pending. Stage and delivery order are unchanged.
 
 ## 1. Role, authority, and freshness contract
 
@@ -319,11 +319,11 @@ The unresolved DOKU, logistics, policy, legal, and pilot items listed in Stage 3
 
 ### Now
 
-Commit and push the pull request #10 lifecycle checkpoint, repin the issue and PR DRY evidence to the exact head, and verify all hosted checks and annotations without merging.
+Commit and push the final conditional lifecycle successor, repin issue #9 and pull request #10 to its exact SHA, and verify the live exact-head checks, annotations, mergeability, and review state without merging.
 
 ### Next
 
-If the final exact head remains clean, mergeable, and fully green with no unresolved finding, request fresh BurinSN merge approval. Continue shared abuse/observability controls and server-authoritative new-order eligibility through separate governed issues. Reconsider guarded Strix only when an approved local model exists or a later materially expanded target receives explicit provider/privacy authority.
+If the live final head matches both DRY pins and remains clean, mergeable, and fully green with no unresolved finding, request fresh BurinSN merge approval. Continue shared abuse/observability controls and server-authoritative new-order eligibility through separate governed issues. Reconsider guarded Strix only when an approved local model exists or a later materially expanded target receives explicit provider/privacy authority.
 
 ### Later
 

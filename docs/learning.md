@@ -1167,3 +1167,15 @@ Do not present inference, provider marketing, provisional pricing, or a future i
 ### No product-model change
 
 - The heading correction and hosted checkpoint change no product, architecture, security control, provider, evidence requirement, or roadmap order.
+
+## 2026-08-09 21:28 WIB - Final tracked evidence needs a live conditional transition
+
+### Reusable learning
+
+- A tracked lifecycle commit cannot contain the hosted result of its own future SHA without creating another commit and invalidating that SHA.
+- The durable record therefore preserves the last verified checkpoint and defines the exact live condition for transition: matching issue/PR DRY pins, required checks green with zero annotations, clean mergeability, and no unresolved review finding.
+- The editable PR description owns final exact-head evidence; the handoff owns how a future session must verify and interpret it. Neither grants merge authority.
+
+### No new product or security-control learning
+
+- This lifecycle-only checkpoint changes no implementation, control, provider decision, external-AI boundary, product model, or roadmap order.
