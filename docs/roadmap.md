@@ -1,10 +1,10 @@
 # NitipCuy Canonical Roadmap
 
-Last reviewed: 2026-08-08 12:08 WIB
+Last reviewed: 2026-08-09 21:15 WIB
 
 Current stage: Stage 1 - Platform foundation
 
-Current work item: Issue #9 implements the first bounded protected-preview security slice on `sec/9-browser-session-perimeter` from review-governance merge `d09747b1a8072eaafe23f7bc604b82bb7eae5bf3`. The reviewed local candidate centralizes canonical request authority, hardens local-direct and future trusted-proxy interpretation, adds nonce CSP and browser/cache headers, reconstructs the Google callback from server-owned context, adds a built local runtime gate, and moves the Next.js -> PostCSS Nano ID resolution to patched `3.3.17` after a fresh audit found the previous version vulnerable. Complete local gates and a `CLEAN WITH NOTES` base-to-candidate DRY review pass; immutable candidate push, guarded Strix authorization/plan/execution/triage, pull-request creation, hosted exact-head evidence, and owner approval remain pending. Stage and delivery order are unchanged.
+Current work item: Issue #9 implements the first bounded protected-preview security slice on `sec/9-browser-session-perimeter` from review-governance merge `d09747b1a8072eaafe23f7bc604b82bb7eae5bf3`. Candidate `f6d63e25426f705fd38ed01d0ca5242ea12014b2` centralizes canonical request authority, hardens local-direct and future trusted-proxy interpretation, adds nonce CSP and browser/cache headers, reconstructs the Google callback from server-owned context, adds a built local runtime gate, and moves the Next.js -> PostCSS Nano ID resolution to patched `3.3.17`. BurinSN selected a zero-external-AI review path: issue #9 is now Strix `NOT REQUIRED` / `NOT APPLICABLE`, backed by a concrete rationale, complete hostile source review, and local built-runtime evidence rather than a scanner claim. Governance reconciliation, exact-head DRY pinning, pull-request creation, hosted evidence, and owner approval remain pending. Stage and delivery order are unchanged.
 
 ## 1. Role, authority, and freshness contract
 
@@ -205,7 +205,7 @@ account
 - [x] Add integration tests using a container created and destroyed by the suite, with no configurable fallback to development or production databases.
 - [ ] Make new-order eligibility server-authoritative across exact time, offer state, seller eligibility, moderation, and capacity; reserve the final capacity atomically.
 - [ ] Complete the remaining protected-preview controls. Implemented and source/integration-tested now: opaque digest-only sessions, rotation/revocation, exact transactional session/assurance/ownership checks, generic errors, exact-origin and Fetch-Metadata checks, parameterized Prisma queries, database ownership constraints, and bounded inputs. Still required: shared multi-axis rate limits, trusted-proxy/direct-origin configuration, browser headers/CSP, managed key custody, logging-redaction and observability, complete safe-query static/security scans, browser automation, and privileged step-up/recovery.
-- [ ] Complete issue #9's inbound browser/session perimeter. The working tree has source and local built-runtime evidence for canonical request interpretation, simulated edge proof, nonce CSP, defensive headers, private no-store, callback reconstruction, and hostile request denial; full gates, guarded Strix triage, PR review, and merge remain open.
+- [ ] Complete issue #9's inbound browser/session perimeter. Candidate `f6d63e2` has source and local built-runtime evidence for canonical request interpretation, simulated edge proof, nonce CSP, defensive headers, private no-store, callback reconstruction, and hostile request denial. Strix is explicitly not applicable to this bounded pull request under the approved zero-external-AI path; final governance reconciliation, PR review, and merge remain open.
 - [x] Establish bounded cursor pagination plus connection, query, statement, transaction, and request budgets for the persisted slice. Minimal production observability remains open with the prior item.
 - [ ] Record preliminary pilot capacity, provider-quota, cost, RPO, and RTO questions without inventing targets before the pilot is bounded.
 
@@ -319,11 +319,11 @@ The unresolved DOKU, logistics, policy, legal, and pilot items listed in Stage 3
 
 ### Now
 
-Finish issue #9 specialist/lifecycle reconciliation and the complete exact-toolchain, runtime, DRY, hostile-security, audit, link, lifecycle, and diff gates. Then present a narrow guarded-Strix proposal for an exact owned local application URL without creating authorization or executing a scan before explicit BurinSN approval.
+Finish the issue #9 zero-external-AI governance/lifecycle reconciliation, rerun the exact-toolchain, runtime, DRY, hostile-security, audit, link, lifecycle, and diff gates, then open the focused pull request on the immutable reviewed head.
 
 ### Next
 
-After separate Strix target and plan approval, execute only the approved local assessment, independently triage every result, remediate and verify as needed, then open and reconcile the issue #9 pull request on one exact head. Continue shared abuse/observability controls and server-authoritative new-order eligibility through separate governed issues.
+Verify issue #9's hosted exact-head application, lifecycle, and review-governance checks; reconcile any findings; and request fresh BurinSN merge approval. Continue shared abuse/observability controls and server-authoritative new-order eligibility through separate governed issues. Reconsider guarded Strix only when an approved local model exists or a later materially expanded target receives explicit provider/privacy authority.
 
 ### Later
 

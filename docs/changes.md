@@ -1090,3 +1090,30 @@ A session with no material change does not invent an entry. A session that makes
   - Stage and delivery order remain unchanged. Issue #9 is the current protected-preview slice before shared abuse/observability controls and server-authoritative new-order eligibility.
 - Next:
   - commit and push the immutable candidate, update issue #9 review progress to that revision, then present a narrow exact-local-target Strix authority proposal without authorizing, planning, or executing until the applicable separate BurinSN approval.
+
+## 2026-08-09 21:15 WIB - Issue #9 adopts the zero-external-AI review path
+
+- Issue: #9
+- Product: NitipCuy Stage 1 platform foundation
+- Type: Security-review governance, privacy boundary, and lifecycle reconciliation
+- Status: Approved direction recorded; exact-head documentation commit, pull request, and hosted evidence pending
+- Decision:
+  - BurinSN approved a zero-external-AI path for this bounded local request-perimeter slice.
+  - Issue #9 now records Strix as `NOT REQUIRED` / `NOT APPLICABLE` with target class `NO TARGET`.
+  - No target, guard authorization, plan, budget, execution, report, finding, or triage exists; no NitipCuy source or test context was sent to an external AI model.
+- Rationale:
+  - No hosted model is approved to receive NitipCuy code or test context, and no verified local Strix model is configured.
+  - The bounded slice already has proportionate complete hostile source review, adversarial unit tests, disposable-PostgreSQL account/session coverage, a two-mode built-runtime HTTP probe, exact-toolchain build gates, and a current dependency audit.
+  - This classification does not convert those checks into penetration-test evidence and applies only to this pull request.
+- Explicit limitations:
+  - No AI-driven dynamic assessment, real browser, Google account, hosting edge, direct-origin provider rule, TLS/domain, WAF, bot control, shared rate limit, observability backend, managed key, private data, load, denial-of-service, incident, staging, or production environment was tested.
+  - Real preview, provider-edge, browser-authentication, private-data, payment, upload, or another materially expanded runnable attack surface must classify guarded Strix again under the then-current privacy and provider authority.
+- Validation:
+  - exact Node.js `24.18.0` and pnpm `11.17.0` frozen install and peer validation passed;
+  - `pnpm check` passed formatting, lint, dependency boundaries, strict types, all 167 tests, the fully dynamic production build, and the two-mode built-runtime perimeter probe;
+  - `pnpm audit:prod` reported no known vulnerabilities and lifecycle participation passed;
+  - 36 local links across 20 documents, workflow and issue-form YAML parsing, diff hygiene, and high-confidence credential patterns passed.
+- Roadmap:
+  - Stage, product scope, and delivery order are unchanged. This decision removes a scanner gate from issue #9; it does not mark the overall protected-preview security stage complete.
+- Next:
+  - Run the complete exact-toolchain and documentation gates, commit and push this reconciliation, repeat the DRY review on the exact resulting head, open the focused pull request, and inspect hosted evidence without merging.

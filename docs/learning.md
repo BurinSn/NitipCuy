@@ -1125,3 +1125,27 @@ Do not present inference, provider marketing, provisional pricing, or a future i
 ### No product-model change
 
 - The perimeter changes no product role, service mode, seller-rate right, fee direction, order/evidence rule, provider choice, or roadmap stage order.
+
+## 2026-08-09 21:15 WIB - Open-source security tooling and model privacy are separate decisions
+
+### Accepted
+
+- The local Strix CLI is Apache-2.0 open-source, while its AI-driven workflow still requires an LLM provider and local policy requires a nominal budget ceiling.
+  - Evidence: the [official Strix repository](https://github.com/usestrix/strix), checked 2026-08-09, identifies the CLI as open source, lists Docker plus an LLM provider as prerequisites, and documents a local-model API base as an option.
+- BurinSN does not approve sending NitipCuy source or test context to an external AI model for issue #9.
+- No verified local Strix model is configured, so issue #9 uses the governed `NOT REQUIRED` / `NOT APPLICABLE` path rather than inventing scanner evidence.
+
+### Reusable learning
+
+- Tool availability is not the same as approved compute, privacy, or data-processing authority. Separate the open-source engine, the model provider, the target authorization, the execution decision, and the evidence claim.
+- A non-required scanner classification needs positive evidence and explicit gaps. For issue #9 those are complete hostile source review, deterministic unit/integration/runtime checks, dependency audit, and an exact list of untested browser/provider/production factors.
+- Never relabel source review or scripted HTTP probes as penetration testing merely because an offensive-capable tool was considered.
+
+### Deferred
+
+- A future guarded assessment may use a verified approved local model or separately approved hosted provider, but it must begin with a new exact target, privacy decision, authorization, plan, and execution approval.
+- Real browser, Google, hosting edge, direct-origin restriction, TLS/domain, WAF/rate-limit, observability, managed-key, private-data, load, incident, staging, and production evidence remain open.
+
+### No product-model change
+
+- The review-method decision changes no NitipCuy role, service mode, seller pricing right, transaction fee direction, order/evidence rule, provider selection, or stage order.
