@@ -1196,3 +1196,16 @@ Do not present inference, provider marketing, provisional pricing, or a future i
 ### No product or security-control change
 
 - This correction changes disclosure precision only. It changes no application behavior, security control, Strix applicability, product model, provider direction, or roadmap order.
+
+## 2026-08-09 23:25 WIB - Conditional merge approval must bound its lifecycle successor
+
+### Reusable learning
+
+- Fresh owner approval can be conditional on a final review outcome, but the repository must still record that approval before merge because the handoff is the authority boundary.
+- Recording approval creates a new immutable head and therefore invalidates the previous DRY SHA. The safe transition is to restrict the successor to the four lifecycle documents, repin both governed records, repeat exact-head review and hosted checks, and merge only if every original condition remains true.
+- Conditional approval does not survive any source, dependency, configuration, product, provider, security-control, scope, review, or check change. Such a change requires fresh owner review rather than interpreting the earlier approval broadly.
+- A successful squash merge must be followed by live verification of the merge commit, default branch, automatic issue closure, and feature-branch cleanup. Merge-button success alone is not the durable result.
+
+### No new product or security-control learning
+
+- This approval record changes no implementation, security control, Strix applicability, provider decision, product model, roadmap stage, or delivery order.

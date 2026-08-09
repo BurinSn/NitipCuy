@@ -1,6 +1,6 @@
 # NitipCuy Cross-Session Handoff
 
-Last updated: 2026-08-09 21:35 WIB
+Last updated: 2026-08-09 23:25 WIB
 
 Handoff owner: Codex
 
@@ -79,13 +79,13 @@ Verified 2026-08-09 before the current documentation reconciliation:
 | `main` and `origin/main` base | `d09747b1a8072eaafe23f7bc604b82bb7eae5bf3` |
 | Active issue | #9, open |
 | Active branch | `sec/9-browser-session-perimeter` |
-| Pull request | [#10](https://github.com/BurinSn/NitipCuy/pull/10), open, not draft, mergeable at checkpoint `aabeb930040d0ade9e9a21f7a4c5ca00426ad034` |
-| Worktree | Expected external-AI disclosure correction only; no unrelated dirty files observed |
+| Pull request | [#10](https://github.com/BurinSn/NitipCuy/pull/10), open, not draft, mergeable at reviewed checkpoint `aa053ea6c4667c67a6a1370d59835c42ab485966` |
+| Worktree | Expected owner-approval lifecycle record only; no unrelated dirty files observed |
 | Deployment / providers | None deployed; no provider configured or activated |
 | Strix issue state | `NOT REQUIRED` / `NOT APPLICABLE`, target class `NO TARGET` |
 | Strix authority | None; no target, authorization record, plan, budget, execution, report, or hosted Strix LLM provider approval exists |
 | Other external AI | The pre-existing CodeRabbit GitHub integration processed the PR diff for a walkthrough and release notes; it produced no review object, line finding, or Strix assessment |
-| Merge authority | None; a future exact-head PR requires complete evidence and fresh BurinSN approval |
+| Merge authority | BurinSN approved squash merge on 2026-08-09 after final review, conditional on the lifecycle-only approval successor matching both DRY pins, passing all required checks with zero annotations, remaining mergeable, and introducing no finding or non-documentation change |
 
 ## 7. Working-tree implementation state
 
@@ -156,16 +156,28 @@ Hosted checkpoint `aabeb930040d0ade9e9a21f7a4c5ca00426ad034`:
 - the PR remained open, not draft, and mergeable with no review decision or review object;
 - CodeRabbit was rate-limited and supplied no security finding or independent review.
 
+Hosted checkpoint `aa053ea6c4667c67a6a1370d59835c42ab485966`:
+
+- application-quality run `31319066141` passed in 1m29s with zero annotations;
+- lifecycle run `31319066150` passed in 5s with zero annotations;
+- review-governance runs `31319066146` and `31319162769` passed in 10s and 9s respectively with zero annotations;
+- the live issue/PR validator passed, the PR remained open, not draft, and mergeable, and GitHub contained no review object, review decision, or line finding;
+- the exact source implementation remained unchanged after `f6d63e25426f705fd38ed01d0ca5242ea12014b2`; all later commits through this checkpoint changed lifecycle or specialist documentation only;
+- final hostile review retained DRY `CLEAN WITH NOTES`, Strix `NOT REQUIRED` / `NOT APPLICABLE` / `NO TARGET`, and no unresolved actionable finding;
+- CodeRabbit's only live comment was a rate-limited walkthrough, not an independent review or approval.
+
 ## 9. Authority and non-claims
 
 - BurinSN authorized implementation of the bounded inbound browser/session perimeter issue.
 - This permits the governed issue, branch, code, tests, documentation, local deterministic runtime probes, verification, push, and pull-request workflow normally required for the change.
 - BurinSN selected the zero-external-Strix-AI security-review path for issue #9. Strix is `NOT REQUIRED` / `NOT APPLICABLE` for this pull request because no hosted Strix model is approved to receive project context and no verified local Strix model is configured; the bounded perimeter instead retains complete hostile source review and deterministic local runtime evidence.
-- This does not authorize a Strix target, hosted Strix LLM provider, guard authorization, dry-run plan, scan execution, external preview, provider configuration, real Google, production testing, deployment, public launch, payment movement, or merge.
+- After the exact `aa053ea6c4667c67a6a1370d59835c42ab485966` evidence and final review were visible, BurinSN authorized squash merge if the approval-state successor changes only the four required lifecycle documents, both DRY pins move to that exact SHA, all required checks pass with zero annotations, mergeability remains clean, and no unresolved finding appears.
+- Any source, dependency, configuration, product, provider, security-control, or scope change invalidates that approval and requires fresh BurinSN review.
+- This does not authorize a Strix target, hosted Strix LLM provider, guard authorization, dry-run plan, scan execution, external preview, provider configuration, real Google, production testing, deployment, public launch, or payment movement.
 - The trusted-proxy runtime is simulated. It does not prove an actual edge strips attacker headers, injects edge proof, restricts origin ingress, supplies TLS, or blocks alternate domains.
 - A nonce CSP and successful local probes do not make NitipCuy generally secure or production-ready.
 - No AI-driven penetration test, real browser, Google account, hosting edge, WAF/rate limit, private data, load, incident, staging, or production environment was tested. Strix sent no NitipCuy source, tests, or runtime context to an external LLM provider. The pre-existing CodeRabbit integration did process the pull-request diff for summaries and release notes; that is external AI processing, not a Strix assessment or independent security review.
 
 ## 10. Exact next action
 
-Commit and push this disclosure-correction successor, repin issue #9 and pull request #10 to its exact SHA, and verify the live head. If and only if the live PR head matches both DRY pins, all three required checks pass with zero annotations, the PR remains mergeable, and no unresolved review finding exists, the next action is to request fresh BurinSN merge approval. Otherwise fix the live head. Do not merge without that approval.
+Commit and push this lifecycle-only approval record, repin issue #9 and pull request #10 to its exact SHA, and repeat the exact-head DRY, governance, check, annotation, mergeability, and review-state verification. If and only if the new head changes only the four lifecycle documents, matches both pins, passes every required check with zero annotations, remains mergeable, and introduces no unresolved finding, squash-merge pull request #10 under BurinSN's conditional approval. Then verify `main`, automatic issue #9 closure, and remote/local feature-branch cleanup. If live state fails any condition, do not merge and obtain fresh direction after correction.
