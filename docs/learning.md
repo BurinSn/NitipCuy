@@ -1149,3 +1149,21 @@ Do not present inference, provider marketing, provisional pricing, or a future i
 ### No product-model change
 
 - The review-method decision changes no NitipCuy role, service mode, seller pricing right, transaction fee direction, order/evidence rule, provider selection, or stage order.
+
+## 2026-08-09 21:23 WIB - A manually created governed issue must match issue-form heading structure
+
+### Corrected
+
+- Issue #9 used level-two headings for its governed DRY and Strix fields even though the accepted issue form and validator require level-three headings.
+  - Evidence: the first hosted review-governance runs could not find the issue fields; the live local issue/PR validator reproduced the failure before the headings were corrected.
+  - Impact: the six governed headings now match the issue-form output, both failed runs passed on rerun, and the live pair validates with no error.
+
+### Reusable learning
+
+- Manually composing an issue from a visual template is not schema equivalence. Run the validator against the real issue body before opening or re-saving its PR.
+- Editing a linked issue does not by itself attach a new check to the PR. Re-save the PR body or rerun the failed workflow after correcting the issue, then inspect the exact run and annotations.
+- A successful CodeRabbit status with only a Free-plan walkthrough and no GitHub review object is summary coverage, not independent approval.
+
+### No product-model change
+
+- The heading correction and hosted checkpoint change no product, architecture, security control, provider, evidence requirement, or roadmap order.

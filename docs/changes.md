@@ -1117,3 +1117,24 @@ A session with no material change does not invent an entry. A session that makes
   - Stage, product scope, and delivery order are unchanged. This decision removes a scanner gate from issue #9; it does not mark the overall protected-preview security stage complete.
 - Next:
   - Run the complete exact-toolchain and documentation gates, commit and push this reconciliation, repeat the DRY review on the exact resulting head, open the focused pull request, and inspect hosted evidence without merging.
+
+## 2026-08-09 21:23 WIB - Pull request #10 opened and hosted governance proved
+
+- Issue / PR: Issue #9; pull request #10
+- Type: GitHub state, hosted verification, and lifecycle checkpoint
+- Status: Pull request open and mergeable; final lifecycle head and repeated hosted evidence pending
+- Verified checkpoint:
+  - pull request #10 opened from `sec/9-browser-session-perimeter` to `main` at head `4b5b44dd3ed3486768a38dcc4e76e70af0c015de` and base `d09747b1a8072eaafe23f7bc604b82bb7eae5bf3`;
+  - the live issue/PR pair passed the local validator as DRY `CLEAN WITH NOTES`, Strix `NOT REQUIRED` / `NOT APPLICABLE`, and target class `NO TARGET`;
+  - application-quality run `31318186764` passed in 1m34s with zero annotations;
+  - lifecycle run `31318186792` passed in 6s with zero annotations;
+  - review-governance runs `31318186785` and `31318218749` passed after the manually created issue's governed headings were corrected from level two to the issue-form's required level three; the current successful run had zero annotations.
+- Review coverage:
+  - CodeRabbit status succeeded and posted a Free-plan walkthrough over 21 selected files while excluding `pnpm-lock.yaml`;
+  - GitHub contains no CodeRabbit review object, review decision, or line finding, so it is not independent approval.
+- Authority:
+  - No Strix/external-AI action, deployment, provider configuration, production action, or merge is authorized.
+- Roadmap:
+  - Stage, scope, and delivery order remain unchanged. Pull request #10 is the active issue #9 review surface.
+- Next:
+  - commit and push this lifecycle checkpoint, repin the exact-head DRY evidence in issue #9 and pull request #10, verify every hosted check and annotation on the resulting head, and request fresh BurinSN approval only if it remains clean.

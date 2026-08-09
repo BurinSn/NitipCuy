@@ -1,6 +1,6 @@
 # NitipCuy Cross-Session Handoff
 
-Last updated: 2026-08-09 21:15 WIB
+Last updated: 2026-08-09 21:23 WIB
 
 Handoff owner: Codex
 
@@ -79,8 +79,8 @@ Verified 2026-08-09 before the current documentation reconciliation:
 | `main` and `origin/main` base | `d09747b1a8072eaafe23f7bc604b82bb7eae5bf3` |
 | Active issue | #9, open |
 | Active branch | `sec/9-browser-session-perimeter` |
-| Pull request | None yet |
-| Worktree | Issue #9 implementation commit `f6d63e25426f705fd38ed01d0ca5242ea12014b2` is pushed; expected governance/lifecycle reconciliation is in progress with no unrelated dirty files observed |
+| Pull request | [#10](https://github.com/BurinSn/NitipCuy/pull/10), open, not draft, mergeable at checkpoint `4b5b44dd3ed3486768a38dcc4e76e70af0c015de` |
+| Worktree | Expected pull-request lifecycle checkpoint changes only; no unrelated dirty files observed |
 | Deployment / providers | None deployed; no provider configured or activated |
 | Strix issue state | `NOT REQUIRED` / `NOT APPLICABLE`, target class `NO TARGET` |
 | Strix authority | None; no target, authorization record, plan, budget, execution, report, or external-AI provider approval exists |
@@ -131,6 +131,14 @@ Complete local candidate review:
 - complete base-to-candidate DRY verdict: `CLEAN WITH NOTES`; origin parsing and runtime trusted-proxy fixtures have one owner, while boundary validation, generic configuration-failure headers, framework-status handling, unit/runtime assertions, and canonical documentation remain intentionally repeated at distinct trust or evidence boundaries;
 - hostile source/runtime review corrected attacker-controlled prefetch bypass, static nonce mismatch, rewrite re-entry/soft `200`, downstream proxy-metadata leakage, cacheable public-path `421`, and whitespace-normalized proxy mode; no unresolved actionable source finding remains.
 
+Hosted checkpoint `4b5b44dd3ed3486768a38dcc4e76e70af0c015de`:
+
+- application-quality run `31318186764` passed in 1m34s with zero annotations;
+- lifecycle run `31318186792` passed in 6s with zero annotations;
+- review-governance runs `31318186785` and `31318218749` passed after the issue-form heading correction; the successful current run had zero annotations;
+- the live issue/PR pair also passed the local governance validator with DRY `CLEAN WITH NOTES` and Strix `NOT REQUIRED` / `NOT APPLICABLE` / `NO TARGET`;
+- CodeRabbit supplied a Free-plan walkthrough over 21 selected files, excluded `pnpm-lock.yaml`, created no review object or line finding, and is not independent approval.
+
 ## 9. Authority and non-claims
 
 - BurinSN authorized implementation of the bounded inbound browser/session perimeter issue.
@@ -143,4 +151,4 @@ Complete local candidate review:
 
 ## 10. Exact next action
 
-Finish this non-applicability reconciliation, run the exact-toolchain and governance gates, commit and push the resulting documentation head, repeat the exact-head DRY review, then open and verify the focused issue #9 pull request without merging.
+Commit and push this pull-request checkpoint, repeat the exact-head DRY pin in issue #9 and pull request #10, then verify every hosted check and annotation on that immutable head without merging. Fresh BurinSN approval remains mandatory.
