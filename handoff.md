@@ -1,6 +1,6 @@
 # NitipCuy Cross-Session Handoff
 
-Last updated: 2026-08-07 14:08 WIB
+Last updated: 2026-08-09 23:25 WIB
 
 Handoff owner: Codex
 
@@ -17,128 +17,167 @@ This handoff never grants merge, deployment, real-provider configuration, extern
 Before changing NitipCuy:
 
 1. read `AGENTS.md`, `docs/roadmap.md`, this handoff, the latest `docs/changes.md`, and relevant `docs/learning.md`;
-2. read the relevant product, architecture, security, resilience, quality, Git, and review-governance authorities;
-3. verify branch, status, local head, `origin/main`, issue #7, any pull request, reviews, and exact-head checks;
+2. read the product, ADR 0005, system architecture, security, resilience, quality, Git, and review-governance authorities relevant to the request perimeter;
+3. verify branch, status, local head, `origin/main`, issue #9, any pull request, reviews, and exact-head checks;
 4. preserve unexpected work and reconcile stale lifecycle or specialist claims before implementation;
 5. do not inspect or expose `.env*`, credentials, keys, browser sessions, private identity data, customer data, or production secrets.
 
-Minimum local verification:
+Minimum live verification:
 
 ```bash
 git status --short --branch
 git rev-parse HEAD
 git rev-parse origin/main
-git log --oneline --decorate -5
+gh issue view 9 --repo BurinSn/NitipCuy
+gh pr list --repo BurinSn/NitipCuy --state open
 ```
 
-## 3. Product compass
+## 3. Product compass and current evidence boundary
 
-NitipCuy is a standalone BurinSN marketplace connecting customers with independent jastippers. It supports Shop for me and Carry my item. Jastippers set their own prices and terms; NitipCuy earns an approved transaction-protection fee direction rather than subscriptions. Public trip discussion is reusable and contains no private address, identity, order, evidence, or payment data.
+NitipCuy is a standalone BurinSN marketplace connecting customers with independent jastippers through Shop for me and Carry my item. Jastippers set their own rates and terms; NitipCuy earns an approved transaction-protection fee direction rather than subscriptions.
 
-The current Stage 1 product slice stops before orders, addresses, private chat, real evidence, payments, logistics, disputes, real provider activation, or production deployment. Issue #7 changes review governance only and does not alter that product boundary.
+The current Stage 1 slice stops before orders, addresses, private chat, real evidence, payments, logistics, disputes, provider activation, preview deployment, or production. The persisted account-to-public-Q&A path is source/build/disposable-PostgreSQL tested. It is not real-Google-, browser-, provider-, managed-database-, load-, incident-, visual-, or production-verified.
 
-## 4. Completed persisted foundation
+## 4. Completed repository checkpoints
 
-Issue [#5](https://github.com/BurinSn/NitipCuy/issues/5) and pull request [#6](https://github.com/BurinSn/NitipCuy/pull/6) delivered:
+### Persisted account foundation
 
-```text
-verified Google OIDC proof
-  -> internal account
-  -> revocable base-assurance session
-  -> owned jastipper profile
-  -> owned trip draft
-  -> privileged moderation decision
-  -> published safe projection
-  -> anonymous bounded search/detail
-  -> authenticated public question
-  -> trip-owner answer
-```
+Issue [#5](https://github.com/BurinSn/NitipCuy/issues/5) and pull request [#6](https://github.com/BurinSn/NitipCuy/pull/6) delivered Google OIDC proof, internal accounts, revocable base-assurance sessions, owned profiles and trips, privileged moderation gates, published projections, bounded discovery, and authenticated public Q&A. Pull request #6 squash-merged as `f38cdaf144ff3c22c39e7a28544363fdb0fd0a19` after exact-head application and lifecycle workflows passed with zero annotations.
 
-Verified merge evidence:
+### Review-evidence governance
 
-- approved PR head `18213db14f373a7a17c5496ed6bc6b04034e08a2`;
-- application-quality run `31153847007` passed with zero annotations;
-- lifecycle run `31153847009` passed with zero annotations;
-- pull request #6 squash-merged as `f38cdaf144ff3c22c39e7a28544363fdb0fd0a19` at 2026-08-07 13:27 WIB;
-- issue #5 closed and the remote feature branch was deleted;
-- no independent GitHub review object existed; BurinSN approval was explicit and bounded to that reviewed merge.
+Issue [#7](https://github.com/BurinSn/NitipCuy/issues/7) and pull request [#8](https://github.com/BurinSn/NitipCuy/pull/8) added the versioned DRY and guarded-Strix issue/PR contract, adversarial validator, and read-only hosted workflow. BurinSN approved the exact reviewed scope. Pull request #8 squash-merged as `d09747b1a8072eaafe23f7bc604b82bb7eae5bf3` on 2026-08-07 14:29 WIB; issue #7 closed and both feature branches were removed. The authoritative final review-governance run `31156985538` passed at PR head `1039486232fd361933a03338be3e4ec3f8e70174` with zero annotations. CodeRabbit supplied a walkthrough only, not an independent review object.
 
-Evidence remains source-tested, production-build-tested, missing-configuration-runtime-tested, and local disposable-database-runtime-tested. It is not real-Google-, browser-, managed-database-, load-, guarded-Strix-, provider-, incident-, visual-, or production-verified.
+## 5. Active issue #9
 
-## 5. Active issue #7 direction
+Issue [#9](https://github.com/BurinSn/NitipCuy/issues/9) is the first bounded protected-preview security slice.
 
-Issue [#7](https://github.com/BurinSn/NitipCuy/issues/7) governs visible DRY and guarded-Strix progress for every future material issue and pull request.
+Included:
 
-Accepted behavior:
+- one canonical request-perimeter authority for exact application origin, proxy mode, forwarding metadata, edge proof, downstream canonical context, CSP, and browser headers;
+- explicit loopback-only `LOCAL_DIRECT` mode;
+- HTTPS-only `TRUSTED_PROXY` mode with exact forwarded host/protocol/port, bounded timing-safe edge proof, and removal of forwarding/proof metadata before routes execute;
+- Google callback reconstruction from server-owned canonical context;
+- fresh nonce CSP, dynamic rendering, anti-framing, content-type, permissions, referrer, cross-origin, HSTS, and private auth/API cache headers;
+- unit, hostile, build, and automated built-runtime tests in local-direct and simulated trusted-proxy modes.
 
-- one versioned material-change issue form declares DRY scope/status and Strix applicability/status/target class;
-- one pull-request contract records an exact-head DRY verdict and the guarded Strix authorization, plan, execution, findings, and evidence state or a concrete non-applicability record;
-- the linked issue and pull request must agree on review progress;
-- only `CLEAN` or `CLEAN WITH NOTES` DRY verdicts are merge-eligible;
-- required Strix work must reach `TRIAGED` or `REMEDIATION VERIFIED`;
-- the read-only hosted workflow validates declarations and emits a progress summary but contains no Strix execution path;
-- a new PR commit invalidates a stale DRY reviewed revision;
-- passing automation does not prove review quality, security, or owner approval.
+Excluded:
 
-Issue #7 classifies Strix as `NOT REQUIRED` / `NOT APPLICABLE` with target class `NO TARGET`. The change governs documentation, templates, a validator, tests, and read-only CI; it adds no runnable application target. A complete hostile source review is still required.
+- real edge/provider configuration, deployment, domain, Google provider activation, production secrets or data;
+- shared rate limits, WAF/bot controls, observability backend, KMS, privileged step-up/recovery, browser automation, load, payment, order, upload, and public-cache implementation;
+- Strix authorization, plan, execution, or transfer of source/runtime context to a Strix LLM provider; issue #9 now uses a documented non-applicability path.
 
-## 6. Verified repository and GitHub state
+## 6. Verified live repository state
 
-Verified 2026-08-07 before the current uncommitted documentation reconciliation:
+Verified 2026-08-09 before the current documentation reconciliation:
 
 | Field | State |
 |---|---|
 | Local project | `/Users/miclawrencee/Workspace/NitipCuy` |
 | Canonical remote | `https://github.com/BurinSn/NitipCuy` |
 | Visibility / default branch | Private / `main` |
-| `main` and `origin/main` | `f38cdaf144ff3c22c39e7a28544363fdb0fd0a19` |
-| Persisted foundation | Pull request #6 merged; issue #5 closed |
-| Active issue | #7, open |
-| Active branch | `chore/7-review-governance`, based on `f38cdaf144ff3c22c39e7a28544363fdb0fd0a19` |
-| Pull request | #8, open, not draft, GitHub-mergeable at implementation head `fcf9628241dd12a2e0a04dc88225a6a776243a19` before this lifecycle edit |
-| Current worktree | Clean at pushed implementation head before this PR-state lifecycle edit |
+| `main` and `origin/main` base | `d09747b1a8072eaafe23f7bc604b82bb7eae5bf3` |
+| Active issue | #9, open |
+| Active branch | `sec/9-browser-session-perimeter` |
+| Pull request | [#10](https://github.com/BurinSn/NitipCuy/pull/10), open, not draft, mergeable at reviewed checkpoint `aa053ea6c4667c67a6a1370d59835c42ab485966` |
+| Worktree | Expected owner-approval lifecycle record only; no unrelated dirty files observed |
 | Deployment / providers | None deployed; no provider configured or activated |
-| Strix authority | None; no authorization, plan, or execution requested for a target |
-| Merge authority | None; a future pull request requires exact-head evidence and fresh BurinSN approval |
+| Strix issue state | `NOT REQUIRED` / `NOT APPLICABLE`, target class `NO TARGET` |
+| Strix authority | None; no target, authorization record, plan, budget, execution, report, or hosted Strix LLM provider approval exists |
+| Other external AI | The pre-existing CodeRabbit GitHub integration processed the PR diff for a walkthrough and release notes; it produced no review object, line finding, or Strix assessment |
+| Merge authority | BurinSN approved squash merge on 2026-08-09 after final review, conditional on the lifecycle-only approval successor matching both DRY pins, passing all required checks with zero annotations, remaining mergeable, and introducing no finding or non-documentation change |
 
-## 7. Implemented working-tree scope
+## 7. Working-tree implementation state
 
-- `.github/ISSUE_TEMPLATE/material-change.yml` and `config.yml` establish the required issue record and disable blank issues.
-- `.github/PULL_REQUEST_TEMPLATE.md` exposes exact-head DRY and guarded-Strix evidence.
-- `scripts/check-review-governance.mjs` validates the PR, retrieves one linked open issue, compares governed states, and writes only a concise step summary.
-- `scripts/review-governance.test.mjs` contains 17 adversarial fixtures covering final and unfinished DRY states, vocabulary drift, fenced Markdown, duplicate headings and closing lines, exact-head drift, required and non-required Strix paths, target/environment mismatch, budget ceiling, missing authorization evidence, state mismatch, and schema failure.
-- `.github/workflows/review-governance.yml` uses read-only contents/issues/PR permissions, pinned actions, exact Node, and no scanner invocation.
-- `docs/development/review-governance.md` owns the status vocabulary, evidence contract, applicability decision, guarded lifecycle, and automation limits.
-- `AGENTS.md`, `README.md`, Git, quality, security, architecture, resilience, and lifecycle documentation are being reconciled with the new authority and the completed PR #6 state.
+- `apps/web/src/server/request-perimeter-core.ts` owns configuration, canonical request decisions, timing-safe proof validation, canonical downstream headers, callback URL reconstruction, CSP, response headers, and generic failure headers.
+- `apps/web/src/proxy.ts` applies the perimeter to every relevant page, auth, and API request without request-header matcher bypasses. It retains the shared-ID early rewrite needed for a real unknown-trip `404` after nonce CSP forced dynamic rendering.
+- Hostile authority responses are generic, non-redirecting `421` responses and force `no-store` even when the requested path would otherwise be public.
+- `apps/web/src/server/runtime.ts` no longer owns a second origin parser.
+- The Google callback supplies `openid-client` a URL reconstructed from the canonical downstream origin rather than request-controlled authority.
+- Root layout is forced dynamic because Next.js can attach a request nonce only during dynamic rendering.
+- `scripts/check-request-perimeter-runtime.mjs` starts isolated built servers with deterministic non-secret configuration and no live database or Google dependency.
+- `package.json` includes the runtime probe in `pnpm check` after the production build.
+- `pnpm-workspace.yaml` now resolves transitive Nano ID to exact patched `3.3.17` after the current production audit found `3.3.16` through Next.js -> PostCSS.
 
 ## 8. Verification state
 
-Passed on exact Node.js `24.18.0` and pnpm `11.17.0`:
+Rejected and excluded from evidence:
 
-- dependency-free review-governance tests: 17 passed;
-- `pnpm check`: formatting, lint, 61-source/193-reference dependency scan, strict types, 21 boundary tests, 104 package/web tests including disposable PostgreSQL, governance tests, and production build;
-- frozen install and peer validation;
-- production audit: zero findings at every severity;
-- lifecycle participation, YAML parsing, 35 local links across 22 Markdown files, and diff hygiene;
-- candidate complete-diff DRY review: `CLEAN WITH NOTES` after fixing status-vocabulary drift risk, duplicate-heading/closing-line bypasses, target/environment mismatch, and missing tested-revision/mode/scope/budget binding;
-- hostile security review: no unresolved actionable finding; workflow remains read-only and has no scanner-execution path.
-- manual live-state verification of `main`, pull request #6, issue #5, and issue #7 before editing.
-- hosted `Review governance` run `31156499668` passed at implementation head `fcf9628241dd12a2e0a04dc88225a6a776243a19` with zero annotations, exercising the real PR body and linked issue #7.
+- the ambient Node.js `26.0.0` / pnpm `9.15.0` attempt stopped at the engine gate before tests;
+- the first ad-hoc runtime script contained a Node module-format mistake and did not exercise the application;
+- early runtime probes exposed and then helped correct the prefetch matcher bypass, nonce/static-render mismatch, proxy rewrite re-entry, and soft-404 behavior.
 
-Still required before pull-request creation:
+Passed using exact Node.js `24.18.0` and pnpm `11.17.0`:
 
-- commit and push this PR-state lifecycle checkpoint;
-- final exact committed-head DRY review and PR-body pin;
-- all three hosted workflows and annotations on that final head;
-- live PR/review/mergeability reconciliation before fresh owner review.
+- focused web tests: 30 passed across proxy, request-perimeter, and existing mutation-boundary suites;
+- web strict typecheck;
+- production build with every application route reported dynamic;
+- automated `pnpm check:perimeter-runtime` in loopback-direct and simulated trusted-proxy modes:
+  - canonical root `200`, unauthenticated session API `401`, unknown trip `404`;
+  - hostile host, forwarding, prefetch-bypass, missing proof, and wrong forwarded host returned `421` without redirect;
+  - CSP nonce matched rendered HTML and changed per request;
+  - production CSP contained neither `unsafe-inline` nor `unsafe-eval`;
+  - private and hostile-denial responses were `no-store`;
+  - HTTPS policy emitted HSTS and did not disclose the edge proof.
+- `pnpm why nanoid --prod --recursive` reported one production Nano ID version, `3.3.17`, through PostCSS and Next.js;
+- peer-dependency validation passed and the fresh production audit reported no known vulnerabilities after the narrow lockfile override.
+
+Still required before a pull request can become merge-ready:
+
+- final issue/PR evidence reconciliation, hosted exact-head checks, and fresh BurinSN merge approval.
+
+Complete local candidate review:
+
+- the exact-toolchain frozen install, peer validation, `pnpm check`, production audit, lifecycle participation, local-link, workflow-YAML, diff-hygiene, and high-confidence credential gates passed;
+- complete base-to-candidate DRY verdict: `CLEAN WITH NOTES`; origin parsing and runtime trusted-proxy fixtures have one owner, while boundary validation, generic configuration-failure headers, framework-status handling, unit/runtime assertions, and canonical documentation remain intentionally repeated at distinct trust or evidence boundaries;
+- hostile source/runtime review corrected attacker-controlled prefetch bypass, static nonce mismatch, rewrite re-entry/soft `200`, downstream proxy-metadata leakage, cacheable public-path `421`, and whitespace-normalized proxy mode; no unresolved actionable source finding remains.
+
+Hosted checkpoint `4b5b44dd3ed3486768a38dcc4e76e70af0c015de`:
+
+- application-quality run `31318186764` passed in 1m34s with zero annotations;
+- lifecycle run `31318186792` passed in 6s with zero annotations;
+- review-governance runs `31318186785` and `31318218749` passed after the issue-form heading correction; the successful current run had zero annotations;
+- the live issue/PR pair also passed the local governance validator with DRY `CLEAN WITH NOTES` and Strix `NOT REQUIRED` / `NOT APPLICABLE` / `NO TARGET`;
+- CodeRabbit supplied a Free-plan walkthrough over 21 selected files, excluded `pnpm-lock.yaml`, created no review object or line finding, and is not independent approval.
+
+Hosted checkpoint `b9c1a2f833c02c0998596c6ed939cdb9d14a07d6`:
+
+- application-quality run `31318415910` passed in 1m33s with zero annotations;
+- lifecycle run `31318415935` passed in 6s with zero annotations;
+- review-governance run `31318415920` passed in 11s with zero annotations and the live pair passed the local validator;
+- the PR remained open, not draft, and mergeable with no review decision or review objects;
+- CodeRabbit was rate-limited on the four-file lifecycle delta and supplied no new review. Its successful status is not line-review coverage or approval.
+
+Hosted checkpoint `aabeb930040d0ade9e9a21f7a4c5ca00426ad034`:
+
+- application-quality run `31318593577` passed in 1m36s with zero annotations;
+- lifecycle run `31318593575` passed in 5s with zero annotations;
+- review-governance runs `31318593578` and `31318693990` passed in 7s and 9s respectively with zero annotations;
+- the PR remained open, not draft, and mergeable with no review decision or review object;
+- CodeRabbit was rate-limited and supplied no security finding or independent review.
+
+Hosted checkpoint `aa053ea6c4667c67a6a1370d59835c42ab485966`:
+
+- application-quality run `31319066141` passed in 1m29s with zero annotations;
+- lifecycle run `31319066150` passed in 5s with zero annotations;
+- review-governance runs `31319066146` and `31319162769` passed in 10s and 9s respectively with zero annotations;
+- the live issue/PR validator passed, the PR remained open, not draft, and mergeable, and GitHub contained no review object, review decision, or line finding;
+- the exact source implementation remained unchanged after `f6d63e25426f705fd38ed01d0ca5242ea12014b2`; all later commits through this checkpoint changed lifecycle or specialist documentation only;
+- final hostile review retained DRY `CLEAN WITH NOTES`, Strix `NOT REQUIRED` / `NOT APPLICABLE` / `NO TARGET`, and no unresolved actionable finding;
+- CodeRabbit's only live comment was a rate-limited walkthrough, not an independent review or approval.
 
 ## 9. Authority and non-claims
 
-- BurinSN authorized implementation of the DRY and Strix progress rule.
-- This authority permits the governed issue, branch, repository changes, verification, and pull-request creation required by the normal workflow.
-- It does not authorize a Strix target, guard authorization, dry-run plan, scan execution, production test, provider configuration, deployment, public launch, or merge.
-- The validator checks declared evidence only. It cannot prove a reviewer inspected the diff, that a guard artifact is genuine, that findings were correctly triaged, or that NitipCuy is secure.
+- BurinSN authorized implementation of the bounded inbound browser/session perimeter issue.
+- This permits the governed issue, branch, code, tests, documentation, local deterministic runtime probes, verification, push, and pull-request workflow normally required for the change.
+- BurinSN selected the zero-external-Strix-AI security-review path for issue #9. Strix is `NOT REQUIRED` / `NOT APPLICABLE` for this pull request because no hosted Strix model is approved to receive project context and no verified local Strix model is configured; the bounded perimeter instead retains complete hostile source review and deterministic local runtime evidence.
+- After the exact `aa053ea6c4667c67a6a1370d59835c42ab485966` evidence and final review were visible, BurinSN authorized squash merge if the approval-state successor changes only the four required lifecycle documents, both DRY pins move to that exact SHA, all required checks pass with zero annotations, mergeability remains clean, and no unresolved finding appears.
+- Any source, dependency, configuration, product, provider, security-control, or scope change invalidates that approval and requires fresh BurinSN review.
+- This does not authorize a Strix target, hosted Strix LLM provider, guard authorization, dry-run plan, scan execution, external preview, provider configuration, real Google, production testing, deployment, public launch, or payment movement.
+- The trusted-proxy runtime is simulated. It does not prove an actual edge strips attacker headers, injects edge proof, restricts origin ingress, supplies TLS, or blocks alternate domains.
+- A nonce CSP and successful local probes do not make NitipCuy generally secure or production-ready.
+- No AI-driven penetration test, real browser, Google account, hosting edge, WAF/rate limit, private data, load, incident, staging, or production environment was tested. Strix sent no NitipCuy source, tests, or runtime context to an external LLM provider. The pre-existing CodeRabbit integration did process the pull-request diff for summaries and release notes; that is external AI processing, not a Strix assessment or independent security review.
 
 ## 10. Exact next action
 
-Commit and push this PR-state lifecycle checkpoint, then re-review the exact new head, update pull request #8's reviewed revision, and inspect all hosted runs and annotations before requesting fresh BurinSN review.
+Commit and push this lifecycle-only approval record, repin issue #9 and pull request #10 to its exact SHA, and repeat the exact-head DRY, governance, check, annotation, mergeability, and review-state verification. If and only if the new head changes only the four lifecycle documents, matches both pins, passes every required check with zero annotations, remains mergeable, and introduces no unresolved finding, squash-merge pull request #10 under BurinSN's conditional approval. Then verify `main`, automatic issue #9 closure, and remote/local feature-branch cleanup. If live state fails any condition, do not merge and obtain fresh direction after correction.

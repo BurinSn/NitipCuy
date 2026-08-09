@@ -9,15 +9,25 @@ import {
   runtimeCookieOptions,
   runtimeSessionCookie,
 } from "@/server/runtime";
+import {
+  canonicalExternalUrl,
+  canonicalOriginHeader,
+} from "@/server/request-perimeter-core";
 
 export async function GET(request: NextRequest) {
   const state = request.nextUrl.searchParams.get("state") ?? "";
 
   try {
     const runtime = getRuntime();
+    const canonicalCallbackUrl = canonicalExternalUrl(
+      runtime.appOrigin,
+      request.headers.get(canonicalOriginHeader),
+      request.nextUrl.pathname,
+      request.nextUrl.search,
+    );
     if (
-      request.nextUrl.origin !== runtime.appOrigin ||
-      request.nextUrl.pathname !== "/auth/google/callback"
+      request.nextUrl.pathname !== "/auth/google/callback" ||
+      !canonicalCallbackUrl
     ) {
       await recordFailure("OIDC_CALLBACK_URL_REJECTED", "DENIED");
       return clearOAuthAttemptCookie(authenticationFailure());
@@ -32,7 +42,7 @@ export async function GET(request: NextRequest) {
 
     const identity = await (
       await getGoogleOidcClient()
-    ).complete(request.url, state, attempt, new Date().toISOString());
+    ).complete(canonicalCallbackUrl, state, attempt, new Date().toISOString());
     const resolved = await runtime.resolveGoogleAccount.execute(identity, {
       correlationId: crypto.randomUUID(),
     });

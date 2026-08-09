@@ -11,9 +11,9 @@ The product replaces fragmented promotion and repetitive private questions with 
 
 ## Current status
 
-Stage 1 platform foundation is in progress under [issue #3](https://github.com/BurinSn/NitipCuy/issues/3).
+Stage 1 platform foundation is in progress. The current bounded work is [issue #9](https://github.com/BurinSn/NitipCuy/issues/9), which hardens the inbound browser and session perimeter after the account foundation and review-governance slices merged.
 
-The repository now contains a modular-monolith architecture, mechanically enforced inward package dependencies, provider-independent ports, deterministic mock adapters, unit tests, quality gates, a defense-in-depth security and scale baseline, and a working local read-only trip-discovery shell. The shell uses simulated public data. The security and scale controls are accepted design requirements, not proof that production controls are implemented or that the shell has production, provider, payment, legal, security, capacity, or visual approval.
+The repository now contains a modular-monolith architecture, mechanically enforced inward package dependencies, a PostgreSQL-backed Google-account-to-public-Q&A slice, provider-independent ports, deterministic fixtures, unit and disposable-database tests, quality gates, a defense-in-depth security and scale baseline, and a working local trip-discovery shell. The shell uses simulated public data. Implemented controls remain source- or local-runtime-tested unless a narrower record says otherwise; they are not proof of production, provider, payment, legal, complete security, capacity, or visual approval.
 
 DOKU remains the preferred payment candidate, conditional on written Partner/Aggregator approval and resolution of the gates in the [DOKU evaluation](docs/payments/doku-evaluation.md). No provider, deployment, database, or production account is active.
 
@@ -39,6 +39,8 @@ Required:
 
 ```bash
 pnpm install --frozen-lockfile
+NITIPCUY_APP_ORIGIN=http://localhost:3000 \
+NITIPCUY_PROXY_MODE=LOCAL_DIRECT \
 pnpm dev
 ```
 
@@ -49,9 +51,12 @@ Run the complete local application gate:
 ```bash
 pnpm check:boundaries
 pnpm check
+pnpm check:perimeter-runtime
 pnpm audit:prod
 ./scripts/check-lifecycle-docs.sh origin/main
 ```
+
+The request perimeter is fail-closed. `LOCAL_DIRECT` is valid only for an exact loopback origin. Any non-local environment must use `TRUSTED_PROXY`, an exact HTTPS `NITIPCUY_APP_ORIGIN`, and a cryptographically random, separately managed `NITIPCUY_EDGE_REQUEST_SECRET` injected by an approved edge that strips client-supplied forwarding and proof headers. Never commit that secret. Source implementation does not prove provider configuration or direct-origin denial.
 
 See [development and quality gates](docs/development/quality-gates.md) for the evidence contract and supported commands. Material issues and pull requests also follow the [DRY and guarded Strix review governance](docs/development/review-governance.md).
 
@@ -81,6 +86,7 @@ The [system architecture](docs/architecture/system-architecture.md), [ADR 0003](
 | [DOKU preference ADR](docs/decisions/0002-doku-conditional-preference.md) | Conditional payment-provider direction and activation gates |
 | [Architecture ADR](docs/decisions/0003-web-architecture-and-application-foundation.md) | Stack, deployment posture, alternatives, and extraction triggers |
 | [Security and scale ADR](docs/decisions/0004-security-resilience-and-scale-baseline.md) | Accepted security target, layered controls, scalable runtime, and evidence levels |
+| [Google account and session ADR](docs/decisions/0005-google-oidc-account-and-session-foundation.md) | Google OIDC, internal accounts, revocable sessions, and request-perimeter boundary |
 | [Quality gates](docs/development/quality-gates.md) | Supported toolchain and validation requirements |
 | [Review governance](docs/development/review-governance.md) | DRY and guarded Strix issue/PR evidence contract |
 | [Moderation model](docs/trust-safety/moderation-model.md) | Scanning, enforcement, evidence, and appeals |

@@ -1059,3 +1059,153 @@ Do not present inference, provider marketing, provisional pricing, or a future i
 ### No product-model change
 
 - Pull-request creation and hosted governance verification change no NitipCuy product, architecture, identity, transaction, provider, or stage decision.
+
+## 2026-08-08 11:50 WIB - Request authority must survive framework behavior, not only pure tests
+
+### Accepted
+
+- Canonical origin is security authority, not formatting configuration.
+  - Evidence: the proxy, protected mutation checks, Google client redirect URI, callback completion URL, and safe redirects all need the same exact origin for different enforcement boundaries.
+  - Impact: one request-perimeter module parses the value and supplies server-owned downstream context; delivery code may repeat enforcement but may not invent another parser or trust request host/forwarding values directly.
+- A trusted-proxy claim needs both application and provider halves.
+  - Evidence: the application can require an HTTPS canonical origin, exact overwritten forwarding values, and timing-safe edge proof, but only the real edge can prove it strips attacker headers, injects proof, restricts ingress, and blocks alternate origins.
+  - Impact: issue #9 may claim source-tested and simulated local-runtime behavior only. Provider-verified direct-origin denial remains a later activation gate.
+- Nonce CSP changes rendering and caching architecture.
+  - Evidence: Next.js attaches proxy-generated nonces only during dynamic rendering; the first production build still classified trip pages as static.
+  - Impact: the root layout now forces dynamic rendering, and the runtime gate verifies that CSP and rendered HTML use the same fresh nonce. Public HTML caching must be redesigned rather than silently re-enabled.
+- Runtime probes belong in the normal quality path when framework integration is the subject of the change.
+  - Evidence: unit tests passed before live `next start` revealed rewrite re-entry and soft-404 behavior.
+  - Impact: `pnpm check` now runs a deterministic post-build perimeter probe in direct and simulated trusted-proxy modes.
+- A security audit is current evidence, not a property inherited from an unchanged direct manifest.
+  - Evidence: the issue #9 production audit found Nano ID `3.3.16` through Next.js -> PostCSS even though this slice added no direct runtime package; `GHSA-2v37-7h3g-55p8` identifies `3.3.17` as patched.
+  - Impact: one exact workspace override now resolves `3.3.17`, the lockfile records the only production path, and dependency overrides remain subject to fresh audit plus peer/build/runtime validation on every pull request.
+
+### Corrected
+
+- Do not copy a CSP-only prefetch matcher exclusion into a security perimeter.
+  - Supersedes: the initial matcher followed Next.js CSP guidance and skipped requests carrying prefetch headers.
+  - Evidence: an attacker controls those headers and could have bypassed host/proxy validation for matching application routes.
+  - Impact: relevant page, auth, and API requests always traverse the decision regardless of prefetch markers.
+- Do not forward validated proxy metadata deeper into the application.
+  - Supersedes: the initial successful path removed only the edge-proof header.
+  - Impact: edge proof, standard forwarding fields, and equivalent original-host/original-URL headers are stripped; downstream routes receive only server-owned canonical-origin and nonce metadata.
+- Do not remove the early unknown-trip rewrite merely because the page calls `notFound()`.
+  - Supersedes: the first DRY cleanup removed the proxy check after centralizing demo-trip IDs.
+  - Evidence: forced dynamic rendering returned a streamed soft `200`; restoring the rewrite without excluding the internal target re-entered the proxy and returned `421`.
+  - Impact: the proxy derives its check from the existing shared trip-ID source, returns a real `404`, and excludes only the framework's internal `/_not-found` path. This is intentional enforcement duplication at a framework boundary, not a second data authority.
+- Local-direct request validation cannot assume Next.js preserves the external host inside `request.url`.
+  - Evidence: the built server may normalize its internal URL host while retaining the exact direct `Host` header.
+  - Impact: local-direct mode validates the request scheme plus exact canonical `Host`; non-local operation remains forbidden outside trusted-proxy mode.
+- A hostile request decision must also be a cache decision.
+  - Supersedes: the first implementation applied `no-store` according to auth/API path only, so a rejected public-path request returned `421` without an explicit cache prohibition.
+  - Impact: every authority denial now forces the same centralized private no-store policy, preventing a future shared edge from retaining an attacker-shaped denial for an otherwise public URL.
+- Security-critical deployment modes are exact values, not user-facing input.
+  - Supersedes: the first parser trimmed proxy-mode whitespace before validation.
+  - Impact: missing, unknown, or whitespace-padded modes all fail configuration closed; operational configuration must match the documented enum exactly.
+
+### DRY review disposition
+
+- Exact origin parsing, mode selection, callback reconstruction, CSP/header construction, and runtime trusted-proxy fixture values each have one code authority in the candidate.
+- Static configuration-failure headers remain separately literal because the normal policy cannot be constructed on that path; sharing a configurable builder would weaken the fallback boundary.
+- The proxy's shared-ID unknown-trip check remains alongside page-level `notFound()` because it owns the actual HTTP status after dynamic streaming, while the shared trip-ID source prevents a second data authority.
+- Unit tests, built-runtime probes, ADR/security requirements, and lifecycle evidence intentionally restate critical outcomes for different audiences and evidence levels; they do not make policy decisions independently.
+
+### Failed or rejected evidence
+
+- The ambient Node.js `26.0.0` / pnpm `9.15.0` command was rejected by engine policy before tests and is not verification.
+- The first inline runtime-probe program mixed CommonJS `require` with top-level `await`; Node rejected it before application requests and it is not verification.
+- Intermediate `421`/soft-`200` results were useful defect evidence but do not count as passed runtime behavior.
+
+### Deferred
+
+- Issue #9 still has no authorized Strix URL, guard record, reviewed plan, budget, or execution. `REQUIRED` / `AUTHORIZATION REQUIRED` is progress visibility, not scanner authority.
+- Real edge ingress restriction and header overwrite, real TLS/domain/HSTS readiness, browser automation, Google browser flow, shared rate limits, WAF/bot controls, observability/redaction, managed keys, privileged step-up/recovery, load, and incident evidence remain separate gates.
+- Nonce-driven dynamic rendering intentionally defers public HTML cache optimization. A future cache design must preserve public/private classification and CSP integrity.
+
+### No product-model change
+
+- The perimeter changes no product role, service mode, seller-rate right, fee direction, order/evidence rule, provider choice, or roadmap stage order.
+
+## 2026-08-09 21:15 WIB - Open-source security tooling and model privacy are separate decisions
+
+### Accepted
+
+- The local Strix CLI is Apache-2.0 open-source, while its AI-driven workflow still requires an LLM provider and local policy requires a nominal budget ceiling.
+  - Evidence: the [official Strix repository](https://github.com/usestrix/strix), checked 2026-08-09, identifies the CLI as open source, lists Docker plus an LLM provider as prerequisites, and documents a local-model API base as an option.
+- BurinSN does not approve sending NitipCuy source or test context to an external AI model for issue #9.
+- No verified local Strix model is configured, so issue #9 uses the governed `NOT REQUIRED` / `NOT APPLICABLE` path rather than inventing scanner evidence.
+
+### Reusable learning
+
+- Tool availability is not the same as approved compute, privacy, or data-processing authority. Separate the open-source engine, the model provider, the target authorization, the execution decision, and the evidence claim.
+- A non-required scanner classification needs positive evidence and explicit gaps. For issue #9 those are complete hostile source review, deterministic unit/integration/runtime checks, dependency audit, and an exact list of untested browser/provider/production factors.
+- Never relabel source review or scripted HTTP probes as penetration testing merely because an offensive-capable tool was considered.
+
+### Deferred
+
+- A future guarded assessment may use a verified approved local model or separately approved hosted provider, but it must begin with a new exact target, privacy decision, authorization, plan, and execution approval.
+- Real browser, Google, hosting edge, direct-origin restriction, TLS/domain, WAF/rate-limit, observability, managed-key, private-data, load, incident, staging, and production evidence remain open.
+
+### No product-model change
+
+- The review-method decision changes no NitipCuy role, service mode, seller pricing right, transaction fee direction, order/evidence rule, provider selection, or stage order.
+
+## 2026-08-09 21:23 WIB - A manually created governed issue must match issue-form heading structure
+
+### Corrected
+
+- Issue #9 used level-two headings for its governed DRY and Strix fields even though the accepted issue form and validator require level-three headings.
+  - Evidence: the first hosted review-governance runs could not find the issue fields; the live local issue/PR validator reproduced the failure before the headings were corrected.
+  - Impact: the six governed headings now match the issue-form output, both failed runs passed on rerun, and the live pair validates with no error.
+
+### Reusable learning
+
+- Manually composing an issue from a visual template is not schema equivalence. Run the validator against the real issue body before opening or re-saving its PR.
+- Editing a linked issue does not by itself attach a new check to the PR. Re-save the PR body or rerun the failed workflow after correcting the issue, then inspect the exact run and annotations.
+- A successful CodeRabbit status with only a Free-plan walkthrough and no GitHub review object is summary coverage, not independent approval.
+
+### No product-model change
+
+- The heading correction and hosted checkpoint change no product, architecture, security control, provider, evidence requirement, or roadmap order.
+
+## 2026-08-09 21:28 WIB - Final tracked evidence needs a live conditional transition
+
+### Reusable learning
+
+- A tracked lifecycle commit cannot contain the hosted result of its own future SHA without creating another commit and invalidating that SHA.
+- The durable record therefore preserves the last verified checkpoint and defines the exact live condition for transition: matching issue/PR DRY pins, required checks green with zero annotations, clean mergeability, and no unresolved review finding.
+- The editable PR description owns final exact-head evidence; the handoff owns how a future session must verify and interpret it. Neither grants merge authority.
+
+### No new product or security-control learning
+
+- This lifecycle-only checkpoint changes no implementation, control, provider decision, external-AI boundary, product model, or roadmap order.
+
+## 2026-08-09 21:35 WIB - External-AI claims must account for automatic repository integrations
+
+### Corrected
+
+- The earlier `zero-external-AI` wording was overbroad. Issue #9's approved decision is specifically `zero-external-Strix-AI`: no Strix assessment, hosted Strix LLM provider, or Strix transfer of source/test/runtime context is authorized or used.
+- The pre-existing CodeRabbit GitHub integration automatically processed the pull-request diff for a walkthrough and release notes. That is external AI processing even though it produced no GitHub review object, security finding, or independent approval.
+
+### Reusable learning
+
+- A privacy statement must name the tool and data path it actually governs. Open-source scanner choice, model-provider choice, and unrelated repository-review integrations are separate facts.
+- Before claiming that no external AI processed a change, inspect installed GitHub integrations, status contexts, bot-authored PR body changes, comments, and review objects. Opening a pull request can trigger an existing integration without a new scan command.
+- Disclose automated summary processing separately from security evidence. A bot walkthrough or release-note edit is neither a Strix assessment nor an independent security review.
+
+### No product or security-control change
+
+- This correction changes disclosure precision only. It changes no application behavior, security control, Strix applicability, product model, provider direction, or roadmap order.
+
+## 2026-08-09 23:25 WIB - Conditional merge approval must bound its lifecycle successor
+
+### Reusable learning
+
+- Fresh owner approval can be conditional on a final review outcome, but the repository must still record that approval before merge because the handoff is the authority boundary.
+- Recording approval creates a new immutable head and therefore invalidates the previous DRY SHA. The safe transition is to restrict the successor to the four lifecycle documents, repin both governed records, repeat exact-head review and hosted checks, and merge only if every original condition remains true.
+- Conditional approval does not survive any source, dependency, configuration, product, provider, security-control, scope, review, or check change. Such a change requires fresh owner review rather than interpreting the earlier approval broadly.
+- A successful squash merge must be followed by live verification of the merge commit, default branch, automatic issue closure, and feature-branch cleanup. Merge-button success alone is not the durable result.
+
+### No new product or security-control learning
+
+- This approval record changes no implementation, security control, Strix applicability, provider decision, product model, roadmap stage, or delivery order.

@@ -1,10 +1,10 @@
 # NitipCuy Canonical Roadmap
 
-Last reviewed: 2026-08-07 14:08 WIB
+Last reviewed: 2026-08-09 23:25 WIB
 
 Current stage: Stage 1 - Platform foundation
 
-Current work item: Issue #7 and pull request #8 implement versioned DRY and guarded-Strix progress governance on `chore/7-review-governance` from merged pull request #6 base `f38cdaf144ff3c22c39e7a28544363fdb0fd0a19`. Implementation head `fcf9628241dd12a2e0a04dc88225a6a776243a19` passed the new hosted review-governance run `31156499668` with zero annotations, proving real issue lookup and PR/head validation. This PR-state lifecycle checkpoint creates one newer head; final exact-head DRY re-review, PR-body pinning, and all hosted workflow checks remain required before owner review.
+Current work item: Issue #9 and pull request #10 implement the first bounded protected-preview security slice on `sec/9-browser-session-perimeter` from review-governance merge `d09747b1a8072eaafe23f7bc604b82bb7eae5bf3`. Candidate `f6d63e25426f705fd38ed01d0ca5242ea12014b2` centralizes canonical request authority, hardens local-direct and future trusted-proxy interpretation, adds nonce CSP and browser/cache headers, reconstructs the Google callback from server-owned context, adds a built local runtime gate, and moves the Next.js -> PostCSS Nano ID resolution to patched `3.3.17`. BurinSN selected a zero-external-Strix-AI review path: Strix is `NOT REQUIRED` / `NOT APPLICABLE`, backed by a concrete rationale, complete hostile source review, and local built-runtime evidence rather than a scanner claim. The pre-existing CodeRabbit integration separately processed the PR diff for summaries; it supplied no independent security review. Application, lifecycle, and review-governance checks passed with zero annotations through exact reviewed checkpoint `aa053ea6c4667c67a6a1370d59835c42ab485966`, the live validator passed, and no unresolved finding exists. BurinSN granted conditional squash-merge approval after that final review; the lifecycle-only approval successor, repeated exact-head verification, merge, and post-merge reconciliation remain. Stage and delivery order are unchanged.
 
 ## 1. Role, authority, and freshness contract
 
@@ -205,6 +205,7 @@ account
 - [x] Add integration tests using a container created and destroyed by the suite, with no configurable fallback to development or production databases.
 - [ ] Make new-order eligibility server-authoritative across exact time, offer state, seller eligibility, moderation, and capacity; reserve the final capacity atomically.
 - [ ] Complete the remaining protected-preview controls. Implemented and source/integration-tested now: opaque digest-only sessions, rotation/revocation, exact transactional session/assurance/ownership checks, generic errors, exact-origin and Fetch-Metadata checks, parameterized Prisma queries, database ownership constraints, and bounded inputs. Still required: shared multi-axis rate limits, trusted-proxy/direct-origin configuration, browser headers/CSP, managed key custody, logging-redaction and observability, complete safe-query static/security scans, browser automation, and privileged step-up/recovery.
+- [ ] Complete issue #9's inbound browser/session perimeter. Candidate `f6d63e2` has source and local built-runtime evidence for canonical request interpretation, simulated edge proof, nonce CSP, defensive headers, private no-store, callback reconstruction, and hostile request denial. Strix is explicitly not applicable to this bounded pull request under the approved zero-external-Strix-AI path; final governance reconciliation, PR review, and merge remain open.
 - [x] Establish bounded cursor pagination plus connection, query, statement, transaction, and request budgets for the persisted slice. Minimal production observability remains open with the prior item.
 - [ ] Record preliminary pilot capacity, provider-quota, cost, RPO, and RTO questions without inventing targets before the pilot is bounded.
 
@@ -217,8 +218,8 @@ account
 - [x] Classify issue #7 Strix applicability as `NOT REQUIRED` because this policy/tooling slice introduces no runnable application target; hostile source review remains required.
 - [x] Run exact-toolchain quality, audit, lifecycle, link, diff, candidate-diff DRY, and hostile security review gates; final exact-head review pinning remains part of pull-request reconciliation.
 - [x] Commit and push implementation head `fcf9628241dd12a2e0a04dc88225a6a776243a19`, open pull request #8, and verify the new review-governance workflow once with zero annotations.
-- [ ] Commit/push the PR-state lifecycle checkpoint, re-review and pin the final exact head, then verify all three hosted workflows on that immutable head.
-- [ ] Obtain fresh BurinSN review after the exact review states, evidence, limitations, and checks are visible; do not merge from automation alone.
+- [x] Commit/push the PR-state lifecycle checkpoint, re-review and pin the final exact head, then verify all three hosted workflows on that immutable head.
+- [x] Obtain fresh BurinSN review after the exact review states, evidence, limitations, and checks are visible; pull request #8 was squash-merged as `d09747b1a8072eaafe23f7bc604b82bb7eae5bf3`, issue #7 closed, and branches were removed.
 
 ### Experience slice
 
@@ -318,11 +319,11 @@ The unresolved DOKU, logistics, policy, legal, and pilot items listed in Stage 3
 
 ### Now
 
-Commit and push this pull-request-state lifecycle checkpoint, re-review the resulting immutable head, update the linked issue and PR evidence, and verify review-governance, lifecycle, and application-quality workflows on that exact head.
+Commit and push the lifecycle-only approval successor, repin issue #9 and pull request #10 to its exact SHA, and repeat the live exact-head checks, annotations, mergeability, DRY, and review-state verification.
 
 ### Next
 
-Present pull request #8's final exact-head scope, review verdict, Strix non-applicability, hosted evidence, and limitations for fresh BurinSN review without merging. After this governance slice, continue the remaining Stage 1 protected-preview controls and server-authoritative new-order eligibility through separately governed issues.
+If the approval successor changes only the four lifecycle documents, matches both DRY pins, and remains clean, mergeable, and fully green with no unresolved finding, squash-merge pull request #10 under the recorded BurinSN approval; verify `main`, issue closure, and branch cleanup. Then continue shared abuse/observability controls and server-authoritative new-order eligibility through separate governed issues. Reconsider guarded Strix only when an approved local model exists or a later materially expanded target receives explicit provider/privacy authority.
 
 ### Later
 
