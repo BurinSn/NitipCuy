@@ -1,6 +1,6 @@
 # NitipCuy Cross-Session Handoff
 
-Last updated: 2026-08-10 12:36 WIB
+Last updated: 2026-08-10 12:41 WIB
 
 Handoff owner: Codex
 
@@ -63,7 +63,7 @@ Excluded:
 
 ## 6. Verified live repository state
 
-Verified 2026-08-10 12:36 WIB:
+Verified 2026-08-10 12:41 WIB:
 
 | Field | State |
 |---|---|
@@ -73,8 +73,8 @@ Verified 2026-08-10 12:36 WIB:
 | `main`, `origin/main`, branch base | `23a6015781228cb04e167b83f6a28b3d3cc0b62d` |
 | Active issue | #11, open |
 | Active branch | `sec/11-shared-abuse-observability` |
-| Pull request | None yet |
-| Worktree | Expected issue #11 implementation and lifecycle changes only; no unrelated dirty files observed |
+| Pull request | #12, open, not draft, GitHub-mergeable; initial hosted checks running on implementation head `47a235e9e05856af515f09ac0a703747908a6b17` |
+| Worktree | Documentation-only pull-request-state reconciliation after the clean implementation commit; no unrelated dirty files observed |
 | Deployment / providers | None deployed or activated |
 | Strix issue state | `NOT REQUIRED` / `NOT APPLICABLE`, target class `NO TARGET` under the approved zero-external-Strix-AI path |
 | Merge authority | None; fresh BurinSN approval is required after exact-head evidence is visible |
@@ -109,7 +109,7 @@ Passed with exact Node.js `24.18.0` and pnpm `11.17.0`:
 
 Still pending:
 
-- immutable implementation commit and push, exact-head DRY repinning, issue evidence update, pull request, hosted exact-head checks, and fresh BurinSN merge approval.
+- documentation-only pull-request-state checkpoint, successor-head DRY repinning, hosted exact-head checks, and fresh BurinSN merge approval.
 
 ## 9. Authority and non-claims
 
@@ -122,4 +122,4 @@ Still pending:
 
 ## 10. Exact next action
 
-Commit and push the locally clean candidate, repeat the DRY and hostile review against that immutable SHA, and update issue #11 with the final reviewed revision. Then open the focused pull request and verify all hosted checks and integrations. Do not merge without fresh BurinSN approval after those exact results are visible.
+Commit and push this documentation-only pull-request-state checkpoint, repeat the complete DRY and hostile review against its successor SHA, and repin issue #11 and pull request #12. Then verify all hosted checks, annotations, integrations, review objects, and mergeability on that exact head. Do not merge without fresh BurinSN approval after those results are visible.
