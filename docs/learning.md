@@ -1285,3 +1285,15 @@ Do not present inference, provider marketing, provisional pricing, or a future i
 - The limiter deletes at most 100 expired rows per decision. That bounds one transaction but not aggregate write amplification under sustained traffic; load evidence or a dedicated cleanup schedule remains required before a production-capacity claim.
 - The maintained alternate-header set must be reconciled with the selected edge provider before activation. A legitimate provider-added alternate header will fail closed until the edge is configured to remove it and supply only the approved canonical metadata.
 - No new product, commercial, provider, Strix, stage, or delivery-order decision resulted.
+
+## 2026-08-10 20:00 WIB - Corrected exact-head verification produced no new control learning
+
+### Reusable learning
+
+- Coordinated issue/PR repinning can create short-lived review-governance failures when an event captures the PR before both governed records carry the successor SHA. Treat those events as transition evidence only after inspecting their exact error and obtaining a passing replacement run on the current immutable head.
+- A successful third-party status must be decomposed into actual coverage. CodeRabbit processed the corrected 38-file diff and produced a walkthrough, but no GitHub review object, line finding, or security assessment; the local hostile review remains the actionable security review.
+- The narrow final lifecycle successor is safe only when its diff from the reviewed implementation head contains exactly the four mandatory lifecycle documents. Any other changed file invalidates the conditional transition.
+
+### No new product or security-control learning
+
+- Hosted verification and the final evidence record change no implementation, security control, Strix applicability, provider decision, product model, roadmap stage, or delivery order.

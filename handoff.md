@@ -1,6 +1,6 @@
 # NitipCuy Cross-Session Handoff
 
-Last updated: 2026-08-10 19:55 WIB
+Last updated: 2026-08-10 20:00 WIB
 
 Handoff owner: Codex
 
@@ -63,7 +63,7 @@ Excluded:
 
 ## 6. Verified live repository state
 
-Verified 2026-08-10 19:51 WIB:
+Verified 2026-08-10 20:00 WIB:
 
 | Field | State |
 |---|---|
@@ -73,8 +73,8 @@ Verified 2026-08-10 19:51 WIB:
 | `main`, `origin/main`, branch base | `23a6015781228cb04e167b83f6a28b3d3cc0b62d` |
 | Active issue | #11, open |
 | Active branch | `sec/11-shared-abuse-observability` |
-| Pull request | #12, open, not draft, GitHub `CLEAN` / `MERGEABLE` at live head `64ba91501d06ac06d47e1bdb9a81ffcea8da45be`; hostile policy verdict is `CHANGES REQUIRED` until the local corrections are committed and re-reviewed |
-| Worktree | Intended caller-target, alternate-client-network, adversarial-test, and lifecycle/specialist-document corrections only; no unrelated dirty files observed |
+| Pull request | #12, open, not draft, GitHub `CLEAN` / `MERGEABLE` at corrected implementation head `5195c265fce5193dfbfaa33148499ca5acca233f`; complete DRY and hostile review is `CLEAN WITH NOTES` |
+| Worktree | Final four-lifecycle-file hosted-evidence checkpoint only; no unrelated dirty files observed before this update |
 | Deployment / providers | None deployed or activated |
 | Strix issue state | `NOT REQUIRED` / `NOT APPLICABLE`, target class `NO TARGET` under the approved zero-external-Strix-AI path |
 | Merge authority | None; fresh BurinSN approval is required after exact-head evidence is visible |
@@ -113,7 +113,15 @@ Superseded review conclusion and current correction evidence:
 - the local correction now derives caller-target identities, rejects/strips nine maintained alternate client-network headers, and passes 49 focused policy/perimeter tests with exact Node.js `24.18.0` and pnpm `11.17.0`;
 - complete exact-toolchain `pnpm check` passed formatting, lint, 4-project boundaries across 69 source files / 228 references, strict types, 205 tests, production build, and the corrected two-mode runtime probe; `pnpm audit:prod` found no known vulnerability and lifecycle participation passed;
 - 36 local Markdown links across 22 tracked Markdown files, 7 tracked YAML parses, diff hygiene, and high-confidence credential, unsafe-execution/query, and sensitive-logging scans passed;
-- the prior hosted runs remain evidence only for the superseded head. Hosted, DRY, and hostile re-verification of the correction head is still required before merge approval.
+- the prior hosted runs remain evidence only for the superseded head; the corrected checkpoint results below replace them.
+
+Corrected immutable checkpoint `5195c265fce5193dfbfaa33148499ca5acca233f`:
+
+- local, remote, and pull-request heads matched against base `23a6015781228cb04e167b83f6a28b3d3cc0b62d`; the worktree was clean before this final lifecycle update;
+- application-quality run `31390421544`, lifecycle run `31390421536`, and final review-governance run `31390637588` passed with zero annotations;
+- complete 38-file DRY and hostile security review was `CLEAN WITH NOTES`; both prior blockers were resolved and no new actionable finding appeared;
+- GitHub reported `CLEAN` / `MERGEABLE`, no review object or review decision, and CodeRabbit processed all 38 files but produced only a Free-plan walkthrough with no line finding or independent approval;
+- review-governance runs `31390421557` and `31390493774` failed only because their event payloads carried the superseded SHA during the coordinated issue/PR repin. Replacement runs `31390541826` and `31390637588` passed the exact current head.
 
 Hosted checkpoint `33e67b5b7139327fbf67f3c701441ecb779e2ff8`:
 
@@ -125,7 +133,7 @@ Hosted checkpoint `33e67b5b7139327fbf67f3c701441ecb779e2ff8`:
 
 Still pending:
 
-- commit/push of the synchronized correction, successor-head DRY repinning, repeated hosted exact-head checks, fresh complete-diff hostile review, and fresh BurinSN merge approval.
+- commit/push of this final four-lifecycle-file evidence record, successor-head DRY repinning, repeated hosted exact-head checks, and fresh BurinSN merge approval.
 
 ## 9. Authority and non-claims
 
@@ -138,4 +146,4 @@ Still pending:
 
 ## 10. Exact next action
 
-Commit and push the locally verified synchronized correction, pin issue #11 and pull request #12 to that immutable SHA, inspect all hosted checks and annotations, and repeat the complete-base-diff DRY and hostile security review. Request fresh BurinSN merge approval only if the exact corrected head is fully green, cleanly mergeable, and finding-free. Otherwise correct and repeat. Do not merge without that approval.
+Commit and push this final four-lifecycle-file checkpoint. Verify that its successor changes only `handoff.md`, `docs/changes.md`, `docs/roadmap.md`, and `docs/learning.md` from corrected implementation head `5195c265fce5193dfbfaa33148499ca5acca233f`; repin issue #11 and pull request #12; repeat hosted exact-head checks and the narrow lifecycle-delta hostile review. If every check passes with zero annotations, mergeability remains clean, and no finding appears, request fresh BurinSN merge approval. Otherwise correct and repeat. Do not merge without that approval.

@@ -1,10 +1,10 @@
 # NitipCuy Canonical Roadmap
 
-Last reviewed: 2026-08-10 19:55 WIB
+Last reviewed: 2026-08-10 20:00 WIB
 
 Current stage: Stage 1 - Platform foundation
 
-Current work item: Issue #11 and pull request #12 implement the next bounded protected-preview security slice on `sec/11-shared-abuse-observability` from merged issue #9 / pull request #10 base `23a6015781228cb04e167b83f6a28b3d3cc0b62d`. A hostile review of head `64ba91501d06ac06d47e1bdb9a81ffcea8da45be` superseded its earlier clean verdict after finding globally exhaustible target buckets and alternate raw client-IP headers surviving downstream. The correction candidate makes target subjects network-target for anonymous detail and account-target for authenticated actions, rejects and strips a maintained alternate client-network header set, and adds adversarial source/runtime coverage. Exact Node.js `24.18.0` / pnpm `11.17.0` quality passed formatting, lint, 4-project boundaries, strict types, 205 tests, production build, the corrected two-mode runtime probe, production audit, and lifecycle participation. The prior shared PostgreSQL counter, privacy-safe denial audit, bounded cleanup, and fail-closed design remain; aggregate cleanup load is still untested. Immutable push, repeated complete-diff hostile/DRY review, hosted checks, and fresh BurinSN approval remain. Strix stays `NOT REQUIRED` / `NOT APPLICABLE` / `NO TARGET`; stage and delivery order are unchanged.
+Current work item: Issue #11 and pull request #12 implement the next bounded protected-preview security slice on `sec/11-shared-abuse-observability` from merged issue #9 / pull request #10 base `23a6015781228cb04e167b83f6a28b3d3cc0b62d`. Hostile review of head `64ba91501d06ac06d47e1bdb9a81ffcea8da45be` found globally exhaustible target buckets and alternate raw client-IP headers surviving downstream. Corrected head `5195c265fce5193dfbfaa33148499ca5acca233f` now uses network-target identity for anonymous detail and account-target identity for authenticated actions, rejects/strips a maintained alternate client-network header set, and adds adversarial source/runtime coverage. Exact Node.js `24.18.0` / pnpm `11.17.0` quality passed formatting, lint, 4-project boundaries, strict types, 205 tests, production build, the corrected two-mode runtime probe, production audit, lifecycle, local content/diff gates, and hosted application/lifecycle/review-governance checks with zero annotations. Complete DRY and hostile review is `CLEAN WITH NOTES`; GitHub is `CLEAN` / `MERGEABLE`. Aggregate cleanup load remains untested. A final four-lifecycle-file successor, its exact-head repin/checks, and fresh BurinSN approval remain. Strix stays `NOT REQUIRED` / `NOT APPLICABLE` / `NO TARGET`; stage and delivery order are unchanged.
 
 ## 1. Role, authority, and freshness contract
 
@@ -206,7 +206,7 @@ account
 - [ ] Make new-order eligibility server-authoritative across exact time, offer state, seller eligibility, moderation, and capacity; reserve the final capacity atomically.
 - [ ] Complete the remaining protected-preview controls. Implemented and source/integration-tested now: opaque digest-only sessions, rotation/revocation, exact transactional session/assurance/ownership checks, generic errors, exact-origin and Fetch-Metadata checks, parameterized Prisma queries, database ownership constraints, bounded inputs, and the issue #11 shared limiter candidate. Still required: provider-verified trusted proxy/direct-origin behavior, WAF/bot controls, managed key custody and rotation, complete logging-redaction/static/safe-query scans, operational metrics/alerts, browser automation, privileged step-up/recovery, and load/provider/incident evidence.
 - [x] Complete issue #9's inbound browser/session perimeter. Pull request #10 squash-merged as `23a6015781228cb04e167b83f6a28b3d3cc0b62d` with source and local built-runtime evidence for canonical request interpretation, simulated edge proof, nonce CSP, defensive headers, private no-store, callback reconstruction, and hostile request denial.
-- [ ] Complete issue #11's shared abuse-control and denial-telemetry slice. The correction candidate derives one HMAC network subject at the perimeter, rejects/strips alternate client-IP authority, enforces versioned multi-axis PostgreSQL fixed-window policies with caller-target isolation, records bounded privacy-safe denial audits, and fails closed on authority/audit outage. Complete local exact-toolchain gates pass; immutable commit/push, exact-head review pinning, hosted checks, and owner approval remain open. Provider WAF/bot behavior, operational dashboards/alerts, threshold calibration, aggregate cleanup load, broader load, and incident evidence remain separate.
+- [ ] Complete issue #11's shared abuse-control and denial-telemetry slice. Corrected head `5195c265fce5193dfbfaa33148499ca5acca233f` derives one HMAC network subject at the perimeter, rejects/strips alternate client-IP authority, enforces versioned multi-axis PostgreSQL fixed-window policies with caller-target isolation, records bounded privacy-safe denial audits, and fails closed on authority/audit outage. Complete local, hosted, DRY, and hostile gates pass. The final four-lifecycle-file successor and owner approval remain open. Provider WAF/bot behavior, operational dashboards/alerts, threshold calibration, aggregate cleanup load, broader load, and incident evidence remain separate.
 - [x] Establish bounded cursor pagination plus connection, query, statement, transaction, and request budgets for the persisted slice. Minimal production observability remains open with the prior item.
 - [ ] Record preliminary pilot capacity, provider-quota, cost, RPO, and RTO questions without inventing targets before the pilot is bounded.
 
@@ -320,11 +320,11 @@ The unresolved DOKU, logistics, policy, legal, and pilot items listed in Stage 3
 
 ### Now
 
-Commit and push pull request #12's fully locally verified caller-target and alternate-client-IP correction, then repin the issue and pull request to that immutable head.
+Commit and push pull request #12's final four-lifecycle-file evidence checkpoint, then repin the issue and pull request to that immutable successor.
 
 ### Next
 
-Repeat the complete-base-diff DRY and hostile security review and inspect all hosted checks, annotations, review objects, and mergeability. Obtain fresh BurinSN approval only if the corrected exact head is fully green and finding-free. After this slice is merged, continue server-authoritative new-order eligibility and atomic final-capacity reservation through a separate governed issue.
+Verify the successor changes only the four lifecycle documents from corrected head `5195c265fce5193dfbfaa33148499ca5acca233f`, repeat hosted checks and the lifecycle-delta hostile review, and obtain fresh BurinSN approval only if the exact head remains fully green and finding-free. After this slice is merged, continue server-authoritative new-order eligibility and atomic final-capacity reservation through a separate governed issue.
 
 ### Later
 
