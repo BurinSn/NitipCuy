@@ -67,7 +67,7 @@ Every public or protected endpoint receives explicit limits appropriate to the a
 
 - request body, upload, field, array, and pagination limits;
 - execution, database statement, provider, and outbound-request timeouts;
-- per-network, per-account, per-session or device, and per-action rate limits;
+- per-network, per-account, per-session or device, and caller-target rate limits that never make one target a globally exhaustible bucket;
 - separate budgets for login, OTP, recovery, registration, search, publication, discussion, checkout, payment, upload, reports, and administrative actions;
 - provider-spend alerts, circuit breakers, and operator kill switches;
 - cursor pagination and indexed bounded queries;
@@ -150,7 +150,7 @@ Only the highest completed level may be claimed for a control.
 
 ### 11. Use versioned shared abuse authority for persisted routes
 
-The first application limiter uses PostgreSQL rather than web-process memory. The canonical request perimeter derives one HMAC-only network subject; route policy combines that action scope with account, session/device, and target axes where relevant. Policy storage keys carry an explicit revision. PostgreSQL supplies the production decision timestamp so instance clock skew cannot split a window. Fixed-window counters and the first-denial audit claim commit in one transaction, expired-row cleanup is bounded, and missing counter or required audit authority fails closed with a generic response.
+The first application limiter uses PostgreSQL rather than web-process memory. The canonical request perimeter rejects alternate client-network authority and derives one HMAC-only network subject; route policy combines that action scope with account and session/device axes plus compound network-target or account-target isolation where relevant. A target is never a globally exhaustible bucket. Policy storage keys carry an explicit revision. PostgreSQL supplies the production decision timestamp so instance clock skew cannot split a window. Fixed-window counters and the first-denial audit claim commit in one transaction, expired-row cleanup is bounded, and missing counter or required audit authority fails closed with a generic response.
 
 The v1 ceilings are pre-preview safety defaults, not traffic or capacity approval. Fixed-window boundary behavior, HMAC rotation, mixed-version policy revision, provider client-address compatibility, WAF/bot coordination, metrics, alerts, load, and incident response require later evidence. A policy-number change without a revision and rollout analysis is not permitted.
 

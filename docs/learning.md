@@ -1265,3 +1265,23 @@ Do not present inference, provider marketing, provisional pricing, or a future i
 ### No new product or security-control learning
 
 - Exact-head hosted verification changed no implementation, security control, Strix applicability, provider decision, product model, stage, or delivery order.
+
+## 2026-08-10 19:55 WIB - Target limits must include caller identity and alternate IP authority must fail closed
+
+### Reusable learning
+
+- A target axis keyed only by target identifier is a shared denial lever, even when separate network/account axes also exist.
+  - Evidence: `public.trip-detail` allowed 120 requests per network but only 60 per raw target, while discussion allowed 12 per account/session but only 6 per raw target. One caller could therefore exhaust the target bucket for everyone else.
+  - Correction: anonymous targets use network-target identity and authenticated targets use account-target identity. Adversarial tests prove different callers receive different target subjects while the same caller-target pair remains stable.
+- Compound security identities need unambiguous construction and bounded inputs.
+  - Correction: validate each component, length-frame it, domain-separate the construction, and hash it before the persistence adapter's independent keyed HMAC. Simple delimiter concatenation would permit collisions when future identifier alphabets evolve.
+- Removing only `Forwarded` and `X-Forwarded-*` does not remove client-network authority.
+  - Evidence: a generic `Headers` clone preserved `X-Real-IP`, `CF-Connecting-IP`, `True-Client-IP`, and other provider conventions for downstream route code.
+  - Correction: one maintained header-name authority drives both fail-closed ingress rejection and defense-in-depth downstream removal, with local and trusted-proxy tests for every entry.
+- A technically mergeable GitHub state is not a security-review pass. The earlier exact-head verdict was explicitly superseded when complete-diff hostile review found these issues.
+
+### Deferred
+
+- The limiter deletes at most 100 expired rows per decision. That bounds one transaction but not aggregate write amplification under sustained traffic; load evidence or a dedicated cleanup schedule remains required before a production-capacity claim.
+- The maintained alternate-header set must be reconciled with the selected edge provider before activation. A legitimate provider-added alternate header will fail closed until the edge is configured to remove it and supply only the approved canonical metadata.
+- No new product, commercial, provider, Strix, stage, or delivery-order decision resulted.

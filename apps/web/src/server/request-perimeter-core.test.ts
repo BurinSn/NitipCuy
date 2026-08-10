@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   RequestPerimeterConfigurationError,
+  alternateClientNetworkHeaders,
   buildBrowserSecurityHeaders,
   buildContentSecurityPolicy,
   canonicalClientNetworkHeader,
@@ -175,6 +176,24 @@ describe("request perimeter decisions", () => {
     },
   );
 
+  it.each(alternateClientNetworkHeaders)(
+    "rejects the alternate local client-network header %s",
+    (header) => {
+      expect(
+        evaluateRequestPerimeter(localPolicy, {
+          headers: new Headers({
+            [header]: "203.0.113.10",
+            host: "localhost:3000",
+          }),
+          requestUrl: "http://localhost:3000/",
+        }),
+      ).toEqual({
+        allowed: false,
+        reasonCode: "FORWARDED_METADATA_REJECTED",
+      });
+    },
+  );
+
   it("accepts only exact trusted proxy evidence and canonical forwarding values", () => {
     const headers = new Headers({
       [edgeProofHeader]: edgeProof,
@@ -226,6 +245,29 @@ describe("request perimeter decisions", () => {
     ).toBe(false);
   });
 
+  it.each(alternateClientNetworkHeaders)(
+    "rejects the alternate trusted-proxy client-network header %s",
+    (header) => {
+      expect(
+        evaluateRequestPerimeter(proxyPolicy, {
+          headers: new Headers({
+            [edgeProofHeader]: edgeProof,
+            [header]: "203.0.113.10",
+            host: "internal-origin.example",
+            "x-forwarded-for": "203.0.113.10",
+            "x-forwarded-host": "preview.nitipcuy.example",
+            "x-forwarded-port": "443",
+            "x-forwarded-proto": "https",
+          }),
+          requestUrl: "http://internal-origin.example/",
+        }),
+      ).toEqual({
+        allowed: false,
+        reasonCode: "FORWARDED_METADATA_REJECTED",
+      });
+    },
+  );
+
   it.each([
     null,
     "203.0.113.10, 198.51.100.2",
@@ -263,16 +305,20 @@ describe("canonical downstream context and browser headers", () => {
     NITIPCUY_PROXY_MODE: "TRUSTED_PROXY",
   });
 
-  it("overwrites client-controlled internal headers and removes edge proof", () => {
+  it("overwrites internal headers and removes forwarding authority", () => {
+    const incoming = new Headers({
+      [canonicalOriginHeader]: "https://evil.example",
+      [edgeProofHeader]: edgeProof,
+      [requestNonceHeader]: "attacker-nonce",
+      "x-forwarded-for": "203.0.113.10",
+      "x-forwarded-host": "preview.nitipcuy.example",
+      "x-forwarded-proto": "https",
+    });
+    for (const header of alternateClientNetworkHeaders) {
+      incoming.set(header, "203.0.113.10");
+    }
     const headers = createCanonicalRequestHeaders(
-      new Headers({
-        [canonicalOriginHeader]: "https://evil.example",
-        [edgeProofHeader]: edgeProof,
-        [requestNonceHeader]: "attacker-nonce",
-        "x-forwarded-for": "203.0.113.10",
-        "x-forwarded-host": "preview.nitipcuy.example",
-        "x-forwarded-proto": "https",
-      }),
+      incoming,
       policy.appOrigin,
       "trusted-nonce",
       "default-src 'self';",
@@ -287,6 +333,9 @@ describe("canonical downstream context and browser headers", () => {
     expect(headers.get("x-forwarded-for")).toBeNull();
     expect(headers.get("x-forwarded-host")).toBeNull();
     expect(headers.get("x-forwarded-proto")).toBeNull();
+    for (const header of alternateClientNetworkHeaders) {
+      expect(headers.get(header)).toBeNull();
+    }
     expect(headers.get("host")).toBe("preview.nitipcuy.example");
     expect(headers.get("content-security-policy")).toBe("default-src 'self';");
   });

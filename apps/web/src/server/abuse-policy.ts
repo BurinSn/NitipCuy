@@ -1,3 +1,5 @@
+import { createHash } from "node:crypto";
+
 import type { AbuseBucketLimit, AbuseRateLimitAxis } from "@nitipcuy/adapters";
 import type { AuthenticatedActor } from "@nitipcuy/domain";
 
@@ -22,7 +24,13 @@ interface AxisDefinition {
   readonly axis: AbuseRateLimitAxis;
   readonly maximumAttempts: number;
   readonly required: boolean;
-  readonly source: "account" | "device" | "network" | "session" | "target";
+  readonly source:
+    | "account"
+    | "account-target"
+    | "device"
+    | "network"
+    | "network-target"
+    | "session";
   readonly windowMs: number;
 }
 
@@ -38,19 +46,19 @@ export const abusePolicyDefinitions = Object.freeze({
     axis("NETWORK", "network", 30, minute),
     axis("ACCOUNT", "account", 12, 10 * minute),
     axis("SESSION", "session", 12, 10 * minute),
-    axis("TARGET", "target", 6, 10 * minute),
+    axis("TARGET", "account-target", 6, 10 * minute),
   ),
   "discussion.question": axes(
     axis("NETWORK", "network", 30, minute),
     axis("ACCOUNT", "account", 12, 10 * minute),
     axis("SESSION", "session", 12, 10 * minute),
-    axis("TARGET", "target", 6, 10 * minute),
+    axis("TARGET", "account-target", 6, 10 * minute),
   ),
   "moderation.trip": axes(
     axis("NETWORK", "network", 20, minute),
     axis("ACCOUNT", "account", 10, 10 * minute),
     axis("SESSION", "session", 10, 10 * minute),
-    axis("TARGET", "target", 4, 10 * minute),
+    axis("TARGET", "account-target", 4, 10 * minute),
   ),
   "profile.create": axes(
     axis("NETWORK", "network", 30, minute),
@@ -59,7 +67,7 @@ export const abusePolicyDefinitions = Object.freeze({
   ),
   "public.trip-detail": axes(
     axis("NETWORK", "network", 120, minute),
-    axis("TARGET", "target", 60, minute),
+    axis("TARGET", "network-target", 60, minute),
   ),
   "public.trip-list": axes(axis("NETWORK", "network", 120, minute)),
   "session.logout": axes(
@@ -79,7 +87,7 @@ export const abusePolicyDefinitions = Object.freeze({
     axis("NETWORK", "network", 30, minute),
     axis("ACCOUNT", "account", 10, 10 * minute),
     axis("SESSION", "session", 10, 10 * minute),
-    axis("TARGET", "target", 5, 10 * minute),
+    axis("TARGET", "account-target", 5, 10 * minute),
   ),
 });
 
@@ -136,16 +144,43 @@ function subjectFor(
   let subject: string | undefined;
   if (source === "account") {
     subject = context.actor?.accountId;
+  } else if (source === "account-target") {
+    return compoundSubject(context.actor?.accountId, context.targetSubject);
   } else if (source === "session") {
     subject = context.actor?.sessionId ?? context.sessionSubject;
   } else if (source === "device") {
     subject = context.deviceSubject;
-  } else if (source === "target") {
-    subject = context.targetSubject;
+  } else if (source === "network-target") {
+    return compoundSubject(context.networkSubject, context.targetSubject);
   } else {
     subject = context.networkSubject;
   }
 
+  validateSubject(subject);
+  return subject;
+}
+
+function compoundSubject(
+  first: string | undefined,
+  second: string | undefined,
+): string | undefined {
+  validateSubject(first);
+  validateSubject(second);
+  if (first === undefined || second === undefined) {
+    return undefined;
+  }
+  return createHash("sha256")
+    .update("nitipcuy-abuse-compound-subject-v1\0")
+    .update(String(first.length))
+    .update(":")
+    .update(first)
+    .update(String(second.length))
+    .update(":")
+    .update(second)
+    .digest("hex");
+}
+
+function validateSubject(subject: string | undefined): void {
   if (
     subject !== undefined &&
     (subject.length < 1 ||
@@ -155,5 +190,4 @@ function subjectFor(
   ) {
     throw new AbusePolicyContextError("INVALID");
   }
-  return subject;
 }

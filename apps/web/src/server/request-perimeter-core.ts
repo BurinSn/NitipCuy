@@ -36,7 +36,20 @@ export type BrowserSecurityHeaders = Readonly<
   Record<string, string> & { readonly "Content-Security-Policy": string }
 >;
 
+export const alternateClientNetworkHeaders = Object.freeze([
+  "cf-connecting-ip",
+  "fastly-client-ip",
+  "fly-client-ip",
+  "true-client-ip",
+  "x-client-ip",
+  "x-cluster-client-ip",
+  "x-envoy-external-address",
+  "x-real-ip",
+  "x-vercel-forwarded-for",
+] as const);
+
 const ambiguousForwardingHeaders = [
+  ...alternateClientNetworkHeaders,
   "forwarded",
   "x-forwarded-prefix",
   "x-original-host",
@@ -45,6 +58,7 @@ const ambiguousForwardingHeaders = [
 ] as const;
 
 const downstreamRemovedHeaders = [
+  ...alternateClientNetworkHeaders,
   edgeProofHeader,
   "forwarded",
   "x-forwarded-for",

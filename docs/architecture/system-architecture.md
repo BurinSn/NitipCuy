@@ -413,7 +413,7 @@ Integration tests now exercise the issue #5 account/profile/trip/public-discussi
 - repository mapping and the serializable transaction-scoped unit of work;
 - rollback after a duplicate authoritative write, bounded concurrent issuer-subject resolution, stale-version conflict, and state-to-audit and state-to-outbox atomicity;
 - exact profile-owner foreign keys, session revocation, rotation-family reuse, account-version invalidation, OAuth browser-binding, attempt replay and expiry, bounded cursor reads, and private-field projection exclusion;
-- issue #11's additive abuse-bucket migration, cross-instance concurrent admission, network/account/session/target axes, HMAC redaction, first-denial audit atomicity and rollback, fixed-window rollover, and bounded expiry cleanup;
+- issue #11's additive abuse-bucket migration, cross-instance concurrent admission, network/account/session axes plus network-target or account-target isolation, HMAC redaction, first-denial audit atomicity and rollback, fixed-window rollover, and bounded expiry cleanup;
 
 Later persisted-order slices must still exercise:
 
@@ -479,9 +479,9 @@ Implemented by issue #9, merged through pull request #10 as `23a6015781228cb04e1
 
 Implemented in the issue #11 local candidate and source/disposable-database tested:
 
-- one canonical client-network decision with exact trusted single-address parsing, loopback-only local behavior, HMAC-only downstream context, and raw forwarding removal;
+- one canonical client-network decision with exact trusted single-address parsing, loopback-only local behavior, fail-closed rejection of maintained alternate client-network headers, HMAC-only downstream context, and raw forwarding/equivalent-header removal;
 - one versioned policy authority for the existing identity, session, public-read, publication, discussion, and moderation routes;
-- additive PostgreSQL fixed-window bucket authority shared across web instances with network, account, session/device, and target axes, deterministic lock order, bounded cleanup, generic `429`/`503`, and atomic bounded denial audits;
+- additive PostgreSQL fixed-window bucket authority shared across web instances with network, account, session/device, and compound network-target or account-target axes, deterministic lock order, bounded cleanup, generic `429`/`503`, and atomic bounded denial audits; target buckets isolate callers rather than creating a global target-denial lever;
 - no process-local limiter authority, raw stored subject, WAF/bot provider integration, operational metrics backend, dashboard, alert route, load claim, or production claim.
 
 Issue #3 removed its callback-only transaction interface rather than misrepresent it as atomic infrastructure. Issue #5 now implements and disposable-database-tests a connection-bound serializable unit of work for the persisted marketplace slice; this does not yet cover order capacity, ledger, payment, provider callback, worker, or outbox-delivery transactions.

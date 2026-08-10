@@ -76,11 +76,11 @@ Authentication cannot become business authorization. A Google email, profile cla
 
 ### 8. Identity and session routes use the shared abuse authority
 
-- The perimeter accepts exactly one trusted client address in proxy mode, removes raw forwarding values, and passes only a server-owned HMAC network subject.
+- The perimeter accepts exactly one trusted client address in proxy mode, rejects maintained alternate client-network headers, removes raw forwarding/equivalent values, and passes only a server-owned HMAC network subject.
 - Google start uses a network policy; callback adds the browser-binding device axis when present; session validation combines the network and presented opaque-session axes before the session database lookup; logout uses network plus the presented session when available.
 - All stored limiter subjects are HMAC digests. Denial audit uses bounded policy and axis categories rather than raw addresses, tokens, cookies, state, callback data, or account-discovery details.
 - Counter or required audit failure denies with generic unavailability. A crossed limit returns generic `429` plus bounded `Retry-After`.
-- These are checked-in v1 pre-preview ceilings. Real Google behavior, provider client-IP compatibility, distributed low-and-slow detection, challenges, user notification, operational alerts, key rotation, and load calibration remain unverified.
+- Target ceilings use account-target compound identity for authenticated routes, so one account cannot deny other accounts access to a shared trip or discussion target. These are checked-in v1 pre-preview ceilings. Real Google behavior, provider client-IP compatibility, distributed low-and-slow detection, challenges, user notification, operational alerts, key rotation, aggregate cleanup load, and load calibration remain unverified.
 
 ## Consequences
 

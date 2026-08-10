@@ -1274,3 +1274,33 @@ A session with no material change does not invent an entry. A session that makes
   - no implementation, product model, dependency, provider, Strix target, deployment, stage, or delivery-order change results from this evidence record.
 - Next:
   - commit and push this final four-file checkpoint, repeat and pin exact-head review, verify the successor hosted state, and request fresh BurinSN approval only if every condition remains satisfied.
+
+## 2026-08-10 19:55 WIB - Pull request #12 hostile findings corrected locally
+
+- Issue / PR: Issue #11; pull request #12
+- Product: NitipCuy Stage 1 platform foundation
+- Type: Hostile-review correction, caller isolation, request-perimeter privacy, and lifecycle reconciliation
+- Status: Complete local correction candidate; immutable push, exact-head repinning, hosted verification, repeated hostile review, and owner approval pending
+- Superseded conclusion:
+  - the earlier DRY/security `CLEAN WITH NOTES` verdict on head `64ba91501d06ac06d47e1bdb9a81ffcea8da45be` is superseded for security review purposes;
+  - complete-diff hostile review found that target-only buckets were global to a target, so one network or account could consume the bucket and deny unrelated users;
+  - it also found that common alternate client-IP headers survived the generic downstream header clone even though canonical forwarding headers were removed;
+  - bounded opportunistic cleanup remains an informational load risk because its aggregate write amplification has not been load-tested.
+- Corrected:
+  - public trip-detail target identity is now a validated, length-framed, domain-separated network-target digest;
+  - authenticated publication, discussion, and moderation target identity is now an equivalent account-target digest;
+  - target subjects remain opaque before the adapter applies its separately keyed persistence HMAC, and cross-network/cross-account adversarial tests prove isolation and stability;
+  - the request perimeter maintains nine common alternate client-network header names, rejects any presented value in both local-direct and trusted-proxy modes, and defensively strips the same set before route execution;
+  - the built-runtime probe now exercises `X-Real-IP` locally and `CF-Connecting-IP` in simulated trusted-proxy mode.
+- Local evidence:
+  - exact Node.js `24.18.0` and pnpm `11.17.0` focused policy/perimeter run passed 49 tests;
+  - complete `pnpm check` passed formatting, lint, 4-project dependency boundaries across 69 source files / 228 references, strict types, 205 tests, production build, and the corrected two-mode runtime probe;
+  - the runtime probe returned `421` for `X-Real-IP` in local-direct mode and `CF-Connecting-IP` in simulated trusted-proxy mode while retaining valid `200`, private `401`, and hostile-authority `421` behavior;
+  - `pnpm audit:prod` found no known vulnerability and lifecycle participation passed;
+  - 36 local links across 22 tracked Markdown files, 7 tracked YAML parses, complete-diff hygiene, and high-confidence credential, unsafe-execution/query, and sensitive-logging scans passed;
+  - immutable GitHub and hosted evidence remain pending and are not claimed by this checkpoint.
+- Scope and roadmap:
+  - no product model, dependency, migration, provider, Strix target, deployment, stage, or delivery-order change;
+  - Strix remains `NOT REQUIRED` / `NOT APPLICABLE` / `NO TARGET`; no authorization, plan, budget, execution, report, or external Strix model action exists.
+- Next:
+  - commit and push the lifecycle-synchronized correction, repin issue #11 and pull request #12, inspect hosted exact-head evidence, and repeat complete-base-diff DRY and hostile security review before requesting fresh BurinSN approval.

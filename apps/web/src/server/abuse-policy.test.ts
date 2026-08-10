@@ -18,18 +18,49 @@ const actor = {
 
 describe("abuse policy authority", () => {
   it("builds action-scoped network, account, session, and target axes", () => {
-    expect(
-      buildAbuseLimits("discussion.question", {
-        actor,
-        networkSubject: "network-subject",
-        targetSubject: "trip-001",
-      }).map(({ axis, subject }) => ({ axis, subject })),
-    ).toEqual([
+    const limits = buildAbuseLimits("discussion.question", {
+      actor,
+      networkSubject: "network-subject",
+      targetSubject: "trip-001",
+    }).map(({ axis, subject }) => ({ axis, subject }));
+    expect(limits).toEqual([
       { axis: "NETWORK", subject: "network-subject" },
       { axis: "ACCOUNT", subject: actor.accountId },
       { axis: "SESSION", subject: actor.sessionId },
-      { axis: "TARGET", subject: "trip-001" },
+      { axis: "TARGET", subject: expect.stringMatching(/^[0-9a-f]{64}$/) },
     ]);
+    expect(limits[3]?.subject).not.toContain(actor.accountId);
+    expect(limits[3]?.subject).not.toContain("trip-001");
+  });
+
+  it("isolates public target buckets by network without changing stable identity", () => {
+    const targetFor = (networkSubject: string, targetSubject: string) =>
+      buildAbuseLimits("public.trip-detail", {
+        networkSubject,
+        targetSubject,
+      }).find(({ axis }) => axis === "TARGET")?.subject;
+
+    const first = targetFor("network-a", "trip-001");
+    expect(first).toMatch(/^[0-9a-f]{64}$/);
+    expect(targetFor("network-a", "trip-001")).toBe(first);
+    expect(targetFor("network-b", "trip-001")).not.toBe(first);
+    expect(targetFor("network-a", "trip-002")).not.toBe(first);
+    expect(first).not.toContain("network-a");
+    expect(first).not.toContain("trip-001");
+  });
+
+  it("isolates authenticated target buckets by account", () => {
+    const targetFor = (accountSubject: string) =>
+      buildAbuseLimits("discussion.question", {
+        actor: { ...actor, accountId: accountId(accountSubject) },
+        networkSubject: "network-subject",
+        targetSubject: "trip-001",
+      }).find(({ axis }) => axis === "TARGET")?.subject;
+
+    const first = targetFor("00000000-0000-4000-8000-000000000001");
+    expect(first).toMatch(/^[0-9a-f]{64}$/);
+    expect(targetFor("00000000-0000-4000-8000-000000000001")).toBe(first);
+    expect(targetFor("00000000-0000-4000-8000-000000000003")).not.toBe(first);
   });
 
   it("uses a presented opaque session subject before authentication", () => {
@@ -57,6 +88,12 @@ describe("abuse policy authority", () => {
       buildAbuseLimits("public.trip-detail", {
         networkSubject: "network-subject",
         targetSubject: "x".repeat(513),
+      }),
+    ).toThrow(AbusePolicyContextError);
+    expect(() =>
+      buildAbuseLimits("discussion.question", {
+        networkSubject: "network-subject",
+        targetSubject: "trip-001",
       }),
     ).toThrow(AbusePolicyContextError);
   });
