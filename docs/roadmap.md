@@ -1,10 +1,10 @@
 # NitipCuy Canonical Roadmap
 
-Last reviewed: 2026-08-10 12:41 WIB
+Last reviewed: 2026-08-10 12:46 WIB
 
 Current stage: Stage 1 - Platform foundation
 
-Current work item: Issue #11 and pull request #12 implement the next bounded protected-preview security slice on `sec/11-shared-abuse-observability` from merged issue #9 / pull request #10 base `23a6015781228cb04e167b83f6a28b3d3cc0b62d`. Implementation head `47a235e9e05856af515f09ac0a703747908a6b17` adds canonical HMAC network subjects, one versioned typed route-policy authority, shared multi-axis PostgreSQL fixed-window counters, privacy-safe atomic denial audits, bounded cleanup and retry, and generic fail-closed behavior across the existing persisted routes. Exact-toolchain quality, 185 tests, disposable PostgreSQL integration, production dependency audit, lifecycle, link/YAML/diff scans, built two-mode perimeter runtime, complete-diff DRY, and hostile source-security gates pass locally. Strix remains `NOT REQUIRED` / `NOT APPLICABLE` / `NO TARGET` under the approved zero-external-Strix-AI path; no target, authorization, plan, budget, run, report, or penetration-test claim exists. The pull request is open; the documentation-only lifecycle successor, final exact-head repinning, hosted checks, and fresh BurinSN merge approval remain. Stage and delivery order are unchanged.
+Current work item: Issue #11 and pull request #12 implement the next bounded protected-preview security slice on `sec/11-shared-abuse-observability` from merged issue #9 / pull request #10 base `23a6015781228cb04e167b83f6a28b3d3cc0b62d`. Implementation head `47a235e9e05856af515f09ac0a703747908a6b17` adds canonical HMAC network subjects, one versioned typed route-policy authority, shared multi-axis PostgreSQL fixed-window counters, privacy-safe atomic denial audits, bounded cleanup and retry, and generic fail-closed behavior across the existing persisted routes. Exact-toolchain quality, 185 tests, disposable PostgreSQL integration, production dependency audit, lifecycle, link/YAML/diff scans, built two-mode perimeter runtime, complete-diff DRY, and hostile source-security gates pass locally. Reviewed pull-request checkpoint `33e67b5b7139327fbf67f3c701441ecb779e2ff8` passed all three hosted workflows with zero annotations and remained clean/mergeable with no review finding; CodeRabbit was rate-limited and supplied no review. Strix remains `NOT REQUIRED` / `NOT APPLICABLE` / `NO TARGET`. The final four-lifecycle-file successor, repeated exact-head pins/checks, and fresh BurinSN merge approval remain. Stage and delivery order are unchanged.
 
 ## 1. Role, authority, and freshness contract
 
@@ -320,11 +320,11 @@ The unresolved DOKU, logistics, policy, legal, and pilot items listed in Stage 3
 
 ### Now
 
-Commit and push pull request #12's documentation-only lifecycle checkpoint, repeat the DRY and hostile review against its successor SHA, and repin the issue and pull request to that exact evidence.
+Commit and push pull request #12's final four-lifecycle-file checkpoint, repeat the DRY and hostile review against its successor SHA, and repin the issue and pull request to that exact evidence.
 
 ### Next
 
-Inspect all hosted checks, annotations, integrations, review objects, and mergeability on the immutable successor head, then obtain fresh BurinSN approval before any merge. After this slice is merged, continue server-authoritative new-order eligibility and atomic final-capacity reservation through a separate governed issue.
+If the immutable successor changes only the four lifecycle documents, all hosted checks pass with zero annotations, mergeability remains clean, and no finding appears, obtain fresh BurinSN approval before any merge. After this slice is merged, continue server-authoritative new-order eligibility and atomic final-capacity reservation through a separate governed issue.
 
 ### Later
 

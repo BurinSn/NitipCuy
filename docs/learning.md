@@ -1254,3 +1254,14 @@ Do not present inference, provider marketing, provisional pricing, or a future i
 
 - Opening pull request #12 changed only the live review surface. It changed no implementation, security control, Strix applicability, provider decision, product model, stage, or delivery order.
 - The required lifecycle reconciliation creates one documentation-only successor SHA; its review pins and hosted checks must replace, not be combined with, the implementation head's volatile status.
+
+## 2026-08-10 12:46 WIB - Final hosted verification produced no new control learning
+
+### Reusable learning
+
+- A cancelled review-governance event is not a failed gate when the workflow's concurrency rule cancels an in-flight body version and the final replacement event passes on the same immutable head. Preserve both facts so notification history is not mistaken for an application failure.
+- A successful CodeRabbit status can coexist with a rate-limit notice and no review output. Inspect review objects, line comments, and the actual bot comment before assigning review coverage.
+
+### No new product or security-control learning
+
+- Exact-head hosted verification changed no implementation, security control, Strix applicability, provider decision, product model, stage, or delivery order.
