@@ -32,6 +32,10 @@ import {
 
 import type { PrismaClient } from "./generated/prisma/client";
 import { PostgresOAuthAttemptAuthority } from "./postgres-oauth-attempts";
+import {
+  AbuseProtectionUnavailableError,
+  PostgresAbuseProtection,
+} from "./postgres-abuse-protection";
 import { PostgresSessionAuthority } from "./postgres-session-authority";
 import { createPrismaClient } from "./prisma-client";
 import {
@@ -40,11 +44,18 @@ import {
   PrismaTripDiscoveryRepository,
 } from "./prisma-marketplace";
 
-const migrationUrl = new URL(
-  "../prisma/migrations/20260807050000_account_marketplace_foundation/migration.sql",
-  import.meta.url,
-);
+const migrationUrls = [
+  new URL(
+    "../prisma/migrations/20260807050000_account_marketplace_foundation/migration.sql",
+    import.meta.url,
+  ),
+  new URL(
+    "../prisma/migrations/20260810090000_shared_abuse_controls/migration.sql",
+    import.meta.url,
+  ),
+];
 const tables = [
+  "abuse_rate_limit_bucket",
   "public_answer",
   "public_question",
   "moderation_decision",
@@ -80,7 +91,9 @@ beforeAll(async () => {
 
   connectionString = `postgresql://nitipcuy_test:nitipcuy_test_password@${container.getHost()}:${container.getMappedPort(5432)}/nitipcuy_test`;
   pool = new Pool({ connectionString, max: 2 });
-  await pool.query(await readFile(migrationUrl, "utf8"));
+  for (const migrationUrl of migrationUrls) {
+    await pool.query(await readFile(migrationUrl, "utf8"));
+  }
   prisma = createPrismaClient({ connectionLimit: 3, connectionString });
 }, 120_000);
 
@@ -598,6 +611,251 @@ describe("persisted Google account to public marketplace slice", () => {
     expect(
       identityColumns.rows.map(({ column_name }) => column_name),
     ).not.toContain("email");
+  });
+});
+
+describe("shared PostgreSQL abuse protection", () => {
+  const subjectHmacKey = Uint8Array.from({ length: 32 }, (_, index) => index);
+
+  it("uses PostgreSQL time unless a disposable test clock is explicitly acknowledged", async () => {
+    expect(
+      () =>
+        new PostgresAbuseProtection(prisma, {
+          identifiers: new UuidSequence(),
+          subjectHmacKey,
+          testClock: new MutableClock("2026-08-10T08:00:00.000Z"),
+        }),
+    ).toThrow(/acknowledgement/);
+
+    const before = Date.now();
+    const protection = new PostgresAbuseProtection(prisma, {
+      identifiers: new UuidSequence(),
+      subjectHmacKey,
+    });
+    await expect(
+      protection.evaluate({
+        correlationId: "database-time",
+        limits: [
+          {
+            axis: "NETWORK",
+            maximumAttempts: 2,
+            subject: "database-time-network",
+            windowMs: 60_000,
+          },
+        ],
+        policy: "database.time.v1",
+      }),
+    ).resolves.toEqual({ allowed: true });
+    const bucket = await prisma.abuseRateLimitBucket.findFirstOrThrow({
+      where: { policy: "database.time.v1" },
+    });
+    expect(bucket.windowStartedAt.getTime()).toBeGreaterThanOrEqual(
+      before - 60_000,
+    );
+    expect(bucket.windowStartedAt.getTime()).toBeLessThanOrEqual(Date.now());
+  });
+
+  it("shares multi-axis counters across instances and bounds concurrent admission", async () => {
+    const clock = new MutableClock("2026-08-10T09:00:00.000Z");
+    const identifiers = new UuidSequence();
+    const first = new PostgresAbuseProtection(prisma, {
+      identifiers,
+      subjectHmacKey,
+      testClock: clock,
+      testTargetAcknowledgement: "DISPOSABLE_TEST_DATABASE",
+    });
+    const second = new PostgresAbuseProtection(prisma, {
+      identifiers,
+      subjectHmacKey,
+      testClock: clock,
+      testTargetAcknowledgement: "DISPOSABLE_TEST_DATABASE",
+    });
+    const rawSubjects = {
+      account: "00000000-0000-4000-8000-000000000901",
+      network: "network-hmac-from-perimeter",
+      session: "opaque-session-token-never-store",
+      target: "trip-sensitive-target",
+    };
+    const limits = [
+      {
+        axis: "NETWORK" as const,
+        maximumAttempts: 5,
+        subject: rawSubjects.network,
+        windowMs: 60_000,
+      },
+      {
+        axis: "ACCOUNT" as const,
+        maximumAttempts: 5,
+        subject: rawSubjects.account,
+        windowMs: 60_000,
+      },
+      {
+        axis: "SESSION" as const,
+        maximumAttempts: 5,
+        subject: rawSubjects.session,
+        windowMs: 60_000,
+      },
+      {
+        axis: "TARGET" as const,
+        maximumAttempts: 5,
+        subject: rawSubjects.target,
+        windowMs: 60_000,
+      },
+    ];
+
+    const decisions = await Promise.all(
+      Array.from({ length: 12 }, (_, index) =>
+        (index % 2 === 0 ? first : second).evaluate({
+          correlationId: `concurrent-${index}`,
+          limits,
+          policy: "discussion.question.v1",
+        }),
+      ),
+    );
+
+    expect(decisions.filter(({ allowed }) => allowed)).toHaveLength(5);
+    expect(decisions.filter(({ allowed }) => !allowed)).toHaveLength(7);
+    expect(
+      decisions
+        .filter((decision) => !decision.allowed)
+        .every(
+          (decision) =>
+            decision.retryAfterSeconds === 60 &&
+            decision.deniedAxes.length === 4,
+        ),
+    ).toBe(true);
+
+    const buckets = await prisma.abuseRateLimitBucket.findMany();
+    expect(buckets).toHaveLength(4);
+    expect(buckets.every(({ attemptCount }) => attemptCount === 12)).toBe(true);
+    expect(buckets.every(({ denialAudited }) => denialAudited)).toBe(true);
+    const audits = await prisma.auditEvent.findMany({
+      where: { action: "security.rate-limit.discussion.question.v1" },
+    });
+    expect(audits).toHaveLength(4);
+    expect(new Set(audits.map(({ reasonCode }) => reasonCode))).toEqual(
+      new Set([
+        "RATE_LIMIT_ACCOUNT",
+        "RATE_LIMIT_NETWORK",
+        "RATE_LIMIT_SESSION",
+        "RATE_LIMIT_TARGET",
+      ]),
+    );
+
+    const persisted = JSON.stringify({ audits, buckets });
+    for (const rawSubject of Object.values(rawSubjects)) {
+      expect(persisted).not.toContain(rawSubject);
+    }
+  });
+
+  it("rolls fixed windows and reports a bounded retry interval", async () => {
+    const clock = new MutableClock("2026-08-10T09:00:59.000Z");
+    const protection = new PostgresAbuseProtection(prisma, {
+      identifiers: new UuidSequence(),
+      subjectHmacKey,
+      testClock: clock,
+      testTargetAcknowledgement: "DISPOSABLE_TEST_DATABASE",
+    });
+    const request = {
+      correlationId: "window-boundary",
+      limits: [
+        {
+          axis: "NETWORK" as const,
+          maximumAttempts: 1,
+          subject: "network-subject",
+          windowMs: 60_000,
+        },
+      ],
+      policy: "public.trip-list",
+    };
+
+    await expect(protection.evaluate(request)).resolves.toEqual({
+      allowed: true,
+    });
+    await expect(protection.evaluate(request)).resolves.toEqual({
+      allowed: false,
+      deniedAxes: ["NETWORK"],
+      retryAfterSeconds: 1,
+    });
+    clock.set("2026-08-10T09:01:00.000Z");
+    await expect(protection.evaluate(request)).resolves.toEqual({
+      allowed: true,
+    });
+  });
+
+  it("cleans only a bounded batch of expired buckets per decision", async () => {
+    const now = new Date("2026-08-10T10:00:00.000Z");
+    await prisma.abuseRateLimitBucket.createMany({
+      data: Array.from({ length: 5 }, (_, index) => ({
+        axis: "NETWORK" as const,
+        expiresAt: new Date(now.getTime() - 60_000),
+        policy: `expired.bucket-${index}`,
+        subjectDigest: createHash("sha256")
+          .update(`expired-${index}`)
+          .digest("hex"),
+        updatedAt: new Date(now.getTime() - 120_000),
+        windowStartedAt: new Date(now.getTime() - 120_000),
+      })),
+    });
+    const protection = new PostgresAbuseProtection(prisma, {
+      cleanupBatchSize: 2,
+      identifiers: new UuidSequence(),
+      subjectHmacKey,
+      testClock: new MutableClock(now.toISOString()),
+      testTargetAcknowledgement: "DISPOSABLE_TEST_DATABASE",
+    });
+
+    await protection.evaluate({
+      correlationId: "bounded-cleanup",
+      limits: [
+        {
+          axis: "NETWORK",
+          maximumAttempts: 2,
+          subject: "current-network",
+          windowMs: 60_000,
+        },
+      ],
+      policy: "auth.start",
+    });
+
+    expect(
+      await prisma.abuseRateLimitBucket.count({
+        where: { expiresAt: { lte: now } },
+      }),
+    ).toBe(3);
+  });
+
+  it("rolls back the counter and denies when its denial audit cannot persist", async () => {
+    const protection = new PostgresAbuseProtection(prisma, {
+      identifiers: { next: () => "not-a-uuid" },
+      subjectHmacKey,
+      testClock: new MutableClock("2026-08-10T11:00:00.000Z"),
+      testTargetAcknowledgement: "DISPOSABLE_TEST_DATABASE",
+    });
+    const request = {
+      correlationId: "audit-failure",
+      limits: [
+        {
+          axis: "NETWORK" as const,
+          maximumAttempts: 1,
+          subject: "network-subject",
+          windowMs: 60_000,
+        },
+      ],
+      policy: "auth.callback",
+    };
+
+    await expect(protection.evaluate(request)).resolves.toEqual({
+      allowed: true,
+    });
+    await expect(protection.evaluate(request)).rejects.toBeInstanceOf(
+      AbuseProtectionUnavailableError,
+    );
+    await expect(
+      prisma.abuseRateLimitBucket.findFirstOrThrow({
+        where: { policy: request.policy },
+      }),
+    ).resolves.toMatchObject({ attemptCount: 1, denialAudited: false });
   });
 });
 

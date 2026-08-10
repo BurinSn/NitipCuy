@@ -2,7 +2,7 @@
 
 Status: Accepted foundation
 
-Last reviewed: 2026-08-07
+Last reviewed: 2026-08-10
 
 ## 1. Supported toolchain
 
@@ -151,7 +151,7 @@ Integration tests:
 - cleanup verified;
 - no fallback to a development or production database.
 
-The issue #5 integration suite starts a disposable `postgres:18-alpine` container, applies the committed migration from a clean database, and stops the container after the suite. It covers repeated and concurrent issuer-subject mapping, email non-persistence, sessions, browser-bound OAuth attempts, ownership constraints, authoritative trip lifecycle, moderation assurance and capability, moderation-safe public Q&A, rollback, optimistic concurrency, cursor reads, and public projection privacy. This is local disposable-database runtime evidence, not managed-provider or production evidence.
+The integration suite starts a disposable `postgres:18-alpine` container, applies every committed migration from a clean database, and stops the container after the suite. Issue #5 coverage includes repeated and concurrent issuer-subject mapping, email non-persistence, sessions, browser-bound OAuth attempts, ownership constraints, authoritative trip lifecycle, moderation assurance and capability, moderation-safe public Q&A, rollback, optimistic concurrency, cursor reads, and public projection privacy. Issue #11 adds two-instance concurrent limiter admission, network/account/session/target buckets, HMAC redaction, fixed-window rollover, bounded expiry cleanup, and counter rollback when denial audit cannot persist. This is local disposable-database runtime evidence, not managed-provider, load, edge-provider, or production evidence.
 
 Browser tests:
 
@@ -205,7 +205,7 @@ GitHub branch protection is unavailable for the current private repository plan.
 - Published-trip runtime validation rejects unsupported service modes, impossible calendar and clock values, invalid offsets and IANA timezones, inverted source-service and ordering windows, ordering after source availability, service after departure, and duplicate question IDs; it supports advance PO and sorts cross-offset public questions by instant.
 - Package dependency direction is implemented and source-tested through the manifest plus TypeScript-AST boundary gate. It does not replace complete-diff review, runtime authorization, or provider and data-flow security verification.
 - OWASP ASVS 5.0 Level 2 is the accepted production verification target, but no traceability matrix or complete ASVS verification exists.
-- The merged issue #5 slice has source-tested OIDC, session, authorization, CSRF-origin, bounded-input, Prisma, and disposable-PostgreSQL controls. DDoS, WAF, bot, trusted-proxy, canonical-host, shared rate-limit, privileged-MFA minting and recovery, managed encryption/key custody, cache safety, XSS/SSRF coverage, private upload, monitoring, incident, backup, deployment compatibility, and recovery remain unimplemented or unverified.
+- The merged issue #5 slice has source-tested OIDC, session, authorization, CSRF-origin, bounded-input, Prisma, and disposable-PostgreSQL controls. Merged issue #9 adds source/local-runtime perimeter evidence. Issue #11's local candidate adds a source/disposable-database-tested shared limiter and privacy-safe denial audit for existing routes. DDoS, provider WAF/bot/client-address behavior, privileged-MFA minting and recovery, managed encryption/key custody/rotation, cache safety, complete XSS/SSRF coverage, private upload, operational monitoring/alerts, calibrated load, incident, backup, deployment compatibility, and recovery remain unimplemented or unverified.
 - No capacity contract, service-level objective, provider quota review, load or abuse test, backup restore, or incident exercise exists.
 - The issue #5 marketplace unit of work uses a Prisma serializable transaction and one transaction client for state, success audit, and required outbox records. This does not implement order, ledger, inbox, worker, payment, or provider transaction boundaries.
 - The payment submission and initial-protection assessment contracts are source-tested. The provider-neutral idempotency contract and payment, dispatch, and evidence-lifecycle mocks source-test scoped replay, payload conflict, concurrency denial, recovery-required ambiguous failure, expiry, malformed input, authority outage, and cross-scope isolation.

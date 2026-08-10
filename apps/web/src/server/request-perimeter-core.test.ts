@@ -4,9 +4,11 @@ import {
   RequestPerimeterConfigurationError,
   buildBrowserSecurityHeaders,
   buildContentSecurityPolicy,
+  canonicalClientNetworkHeader,
   canonicalExternalUrl,
   canonicalOriginHeader,
   createCanonicalRequestHeaders,
+  createClientNetworkSubject,
   createRequestNonce,
   edgeProofHeader,
   evaluateRequestPerimeter,
@@ -15,15 +17,19 @@ import {
 } from "./request-perimeter-core";
 
 const edgeProof = "a-secure-edge-proof-with-at-least-32-characters";
+const abuseSubjectHmacKeyBase64 = Buffer.alloc(32, 11).toString("base64");
+const abuseSubjectHmacKey = Uint8Array.from(Buffer.alloc(32, 11));
 
 describe("request perimeter configuration", () => {
   it("allows explicitly local direct development only for loopback origins", () => {
     expect(
       readRequestPerimeterPolicy({
         NITIPCUY_APP_ORIGIN: "http://localhost:3000",
+        NITIPCUY_ABUSE_SUBJECT_HMAC_KEY_BASE64: abuseSubjectHmacKeyBase64,
         NITIPCUY_PROXY_MODE: "LOCAL_DIRECT",
       }),
     ).toEqual({
+      abuseSubjectHmacKey,
       appOrigin: "http://localhost:3000",
       edgeProof: null,
       mode: "LOCAL_DIRECT",
@@ -46,10 +52,12 @@ describe("request perimeter configuration", () => {
     expect(
       readRequestPerimeterPolicy({
         NITIPCUY_APP_ORIGIN: "https://preview.nitipcuy.example",
+        NITIPCUY_ABUSE_SUBJECT_HMAC_KEY_BASE64: abuseSubjectHmacKeyBase64,
         NITIPCUY_EDGE_REQUEST_SECRET: edgeProof,
         NITIPCUY_PROXY_MODE: "TRUSTED_PROXY",
       }),
     ).toEqual({
+      abuseSubjectHmacKey,
       appOrigin: "https://preview.nitipcuy.example",
       edgeProof,
       mode: "TRUSTED_PROXY",
@@ -92,10 +100,12 @@ describe("request perimeter configuration", () => {
 describe("request perimeter decisions", () => {
   const localPolicy = readRequestPerimeterPolicy({
     NITIPCUY_APP_ORIGIN: "http://localhost:3000",
+    NITIPCUY_ABUSE_SUBJECT_HMAC_KEY_BASE64: abuseSubjectHmacKeyBase64,
     NITIPCUY_PROXY_MODE: "LOCAL_DIRECT",
   });
   const proxyPolicy = readRequestPerimeterPolicy({
     NITIPCUY_APP_ORIGIN: "https://preview.nitipcuy.example",
+    NITIPCUY_ABUSE_SUBJECT_HMAC_KEY_BASE64: abuseSubjectHmacKeyBase64,
     NITIPCUY_EDGE_REQUEST_SECRET: edgeProof,
     NITIPCUY_PROXY_MODE: "TRUSTED_PROXY",
   });
@@ -105,6 +115,7 @@ describe("request perimeter decisions", () => {
       new Headers({ host: "localhost:3000" }),
       new Headers({
         host: "localhost:3000",
+        "x-forwarded-for": "127.0.0.1",
         "x-forwarded-host": "localhost:3000",
         "x-forwarded-port": "3000",
         "x-forwarded-proto": "http",
@@ -115,7 +126,7 @@ describe("request perimeter decisions", () => {
           headers,
           requestUrl: "http://internal-next-origin/trips",
         }),
-      ).toEqual({ allowed: true });
+      ).toEqual({ allowed: true, clientNetwork: "loopback" });
     }
   });
 
@@ -135,6 +146,13 @@ describe("request perimeter decisions", () => {
       headers: {
         forwarded: "host=localhost:3000;proto=http",
         host: "localhost:3000",
+      },
+      requestUrl: "http://localhost:3000/",
+    },
+    {
+      headers: {
+        host: "localhost:3000",
+        "x-forwarded-for": "203.0.113.10",
       },
       requestUrl: "http://localhost:3000/",
     },
@@ -161,6 +179,7 @@ describe("request perimeter decisions", () => {
     const headers = new Headers({
       [edgeProofHeader]: edgeProof,
       host: "internal-origin.example",
+      "x-forwarded-for": "2001:0db8:0:0:0:0:0:1",
       "x-forwarded-host": "preview.nitipcuy.example",
       "x-forwarded-port": "443",
       "x-forwarded-proto": "https",
@@ -170,7 +189,7 @@ describe("request perimeter decisions", () => {
         headers,
         requestUrl: "http://internal-origin.example/trips",
       }),
-    ).toEqual({ allowed: true });
+    ).toEqual({ allowed: true, clientNetwork: "2001:db8::1" });
   });
 
   it.each([
@@ -178,16 +197,19 @@ describe("request perimeter decisions", () => {
     { [edgeProofHeader]: "wrong-edge-proof-with-at-least-32-characters" },
     {
       [edgeProofHeader]: edgeProof,
+      "x-forwarded-for": "203.0.113.10",
       "x-forwarded-host": "evil.example",
       "x-forwarded-proto": "https",
     },
     {
       [edgeProofHeader]: edgeProof,
+      "x-forwarded-for": "203.0.113.10",
       "x-forwarded-host": "preview.nitipcuy.example",
       "x-forwarded-proto": "http",
     },
     {
       [edgeProofHeader]: edgeProof,
+      "x-forwarded-for": "203.0.113.10",
       "x-forwarded-host": "preview.nitipcuy.example",
       "x-forwarded-proto": "https, http",
     },
@@ -203,11 +225,40 @@ describe("request perimeter decisions", () => {
       }).allowed,
     ).toBe(false);
   });
+
+  it.each([
+    null,
+    "203.0.113.10, 198.51.100.2",
+    "203.0.113.10:443",
+    "2001:db8::1%eth0",
+    "not-an-address",
+  ])("rejects an invalid or ambiguous trusted client address", (value) => {
+    const headers = new Headers({
+      [edgeProofHeader]: edgeProof,
+      host: "internal-origin.example",
+      "x-forwarded-host": "preview.nitipcuy.example",
+      "x-forwarded-port": "443",
+      "x-forwarded-proto": "https",
+    });
+    if (value !== null) {
+      headers.set("x-forwarded-for", value);
+    }
+    expect(
+      evaluateRequestPerimeter(proxyPolicy, {
+        headers,
+        requestUrl: "http://internal-origin.example/",
+      }),
+    ).toEqual({
+      allowed: false,
+      reasonCode: "FORWARDED_METADATA_REJECTED",
+    });
+  });
 });
 
 describe("canonical downstream context and browser headers", () => {
   const policy = readRequestPerimeterPolicy({
     NITIPCUY_APP_ORIGIN: "https://preview.nitipcuy.example",
+    NITIPCUY_ABUSE_SUBJECT_HMAC_KEY_BASE64: abuseSubjectHmacKeyBase64,
     NITIPCUY_EDGE_REQUEST_SECRET: edgeProof,
     NITIPCUY_PROXY_MODE: "TRUSTED_PROXY",
   });
@@ -225,15 +276,34 @@ describe("canonical downstream context and browser headers", () => {
       policy.appOrigin,
       "trusted-nonce",
       "default-src 'self';",
+      "trusted-network-subject",
     );
     expect(headers.get(canonicalOriginHeader)).toBe(policy.appOrigin);
     expect(headers.get(requestNonceHeader)).toBe("trusted-nonce");
+    expect(headers.get(canonicalClientNetworkHeader)).toBe(
+      "trusted-network-subject",
+    );
     expect(headers.get(edgeProofHeader)).toBeNull();
     expect(headers.get("x-forwarded-for")).toBeNull();
     expect(headers.get("x-forwarded-host")).toBeNull();
     expect(headers.get("x-forwarded-proto")).toBeNull();
     expect(headers.get("host")).toBe("preview.nitipcuy.example");
     expect(headers.get("content-security-policy")).toBe("default-src 'self';");
+  });
+
+  it("derives a stable opaque client-network subject without exposing the address", () => {
+    const subject = createClientNetworkSubject(
+      abuseSubjectHmacKey,
+      "203.0.113.10",
+    );
+    expect(subject).toMatch(/^[0-9a-f]{64}$/);
+    expect(subject).not.toContain("203.0.113.10");
+    expect(
+      createClientNetworkSubject(abuseSubjectHmacKey, "203.0.113.10"),
+    ).toBe(subject);
+    expect(
+      createClientNetworkSubject(abuseSubjectHmacKey, "203.0.113.11"),
+    ).not.toBe(subject);
   });
 
   it("constructs an external callback URL only from matching canonical context", () => {

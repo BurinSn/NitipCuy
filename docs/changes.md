@@ -1195,3 +1195,41 @@ A session with no material change does not invent an entry. A session that makes
   - Stage and delivery order remain unchanged. Successful merge completes issue #9's repository slice but not the remaining protected-preview security stage.
 - Next:
   - commit and push this four-lifecycle-file approval record, repin issue #9 and pull request #10, repeat exact-head review and hosted verification, then squash-merge and verify `main`, automatic issue closure, and branch cleanup only if every recorded condition remains true.
+
+## 2026-08-10 12:36 WIB - Shared abuse authority implemented locally
+
+- Issue: #11
+- Product: NitipCuy Stage 1 platform foundation
+- Type: Request identity, shared rate limits, privacy-safe security evidence, additive persistence, and lifecycle reconciliation
+- Status: Complete local candidate; immutable commit, pull request, hosted evidence, and owner approval pending
+- Prior-state reconciliation:
+  - issue #9 and pull request #10 were verified merged/closed at `23a6015781228cb04e167b83f6a28b3d3cc0b62d`; local `main` and `origin/main` matched and no prior feature branch remained;
+  - the prior workflow-failure emails were governance-transition failures that were corrected and rerun, not application or security-execution failures;
+  - issue #11 was created before code and branch `sec/11-shared-abuse-observability` was cut from that clean base.
+- Added:
+  - a separate exact 32-byte abuse-subject HMAC configuration shared by the canonical perimeter and PostgreSQL limiter without reusing the session or edge-proof secret;
+  - trusted single-address parsing, IPv6 canonicalization, HMAC-only downstream network context, and raw forwarding removal;
+  - one versioned v1 policy authority covering the 12 existing identity, session, public-read, publication, discussion, and moderation actions;
+  - additive PostgreSQL fixed-window buckets with action/axis/digest/window identity, one database-sampled production timestamp, concurrency-safe upserts, deterministic axis order, bounded connection-wait/transaction time, indexed expiry, and at most 100 expired-row deletions per decision;
+  - generic `429 RATE_LIMITED` plus bounded `Retry-After`, generic fail-closed `503`, and one atomic privacy-safe audit claim per crossed axis/bucket/window;
+  - unit, hostile perimeter, HTTP error, disposable PostgreSQL concurrency/redaction/rollback/window/cleanup, and built-runtime coverage.
+- Corrected during verification:
+  - the ambient Node.js `26.0.0` / pnpm `9.15.0` run was rejected at `engine-strict` and is not evidence;
+  - the first built runtime showed that Next.js inserts a loopback forwarding address in direct mode. Local-direct policy now accepts only absent or canonical loopback values and still denies remote, ambiguous, multi-address, port-bearing, or zone-scoped input;
+  - policy storage names include `.v1` so checked-in ceilings cannot silently change without an explicit policy-revision decision.
+- Validation with exact Node.js `24.18.0` / pnpm `11.17.0`:
+  - complete `pnpm check` passed formatting, lint, dependency boundaries across 4 projects / 69 source files / 227 module references, strict type checking, 185 tests, the production build, and the two-mode built-runtime perimeter probe;
+  - the 185 tests comprise 17 review-governance, 21 dependency-boundary, 19 domain, 20 application, 65 adapter, and 43 web tests;
+  - disposable PostgreSQL proved only five of twelve concurrent four-axis attempts were admitted across two independent limiter instances, produced one redacted denial audit per axis/window, and rolled the counter back when audit persistence failed;
+  - `pnpm audit:prod` found no known vulnerability;
+  - lifecycle participation, diff hygiene, high-confidence secret/unsafe-execution/sensitive-logging scans, 36 local links across 22 tracked Markdown files, and parsing of all 7 tracked YAML files passed;
+  - complete candidate-diff DRY and hostile source-security review found no unresolved actionable issue.
+- Security evidence and limitations:
+  - highest evidence is source-tested, local built-runtime-tested for the request perimeter, and disposable-PostgreSQL-integration-tested for shared counters/audit;
+  - no raw IP, session token, cookie, OAuth value, user content, or raw target is stored in limiter buckets or denial audit targets;
+  - fixed-window boundary bursts, HMAC rotation, mixed-version policy evolution, calibrated thresholds, provider edge behavior, WAF/bot controls, dashboards/alerts, load, browser, incident, staging, and production remain unverified;
+  - Strix remains `NOT REQUIRED` / `NOT APPLICABLE` / `NO TARGET` for this bounded slice under the approved zero-external-Strix-AI direction. No authorization, plan, budget, execution, report, or external Strix model action exists.
+- Lifecycle/specialist impact:
+  - updated handoff, changes, roadmap, learning, ADR 0004, ADR 0005, system architecture, resilience, security, and quality-gate authorities.
+- Next:
+  - commit and push the clean local candidate; repeat and pin the DRY and hostile review to that immutable head; update issue #11; open and verify the pull request; obtain fresh BurinSN approval before merge.

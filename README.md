@@ -11,7 +11,7 @@ The product replaces fragmented promotion and repetitive private questions with 
 
 ## Current status
 
-Stage 1 platform foundation is in progress. The current bounded work is [issue #9](https://github.com/BurinSn/NitipCuy/issues/9), which hardens the inbound browser and session perimeter after the account foundation and review-governance slices merged.
+Stage 1 platform foundation is in progress. The current bounded work is [issue #11](https://github.com/BurinSn/NitipCuy/issues/11), which adds shared abuse controls and privacy-safe denial telemetry after the inbound browser/session perimeter merged through pull request #10.
 
 The repository now contains a modular-monolith architecture, mechanically enforced inward package dependencies, a PostgreSQL-backed Google-account-to-public-Q&A slice, provider-independent ports, deterministic fixtures, unit and disposable-database tests, quality gates, a defense-in-depth security and scale baseline, and a working local trip-discovery shell. The shell uses simulated public data. Implemented controls remain source- or local-runtime-tested unless a narrower record says otherwise; they are not proof of production, provider, payment, legal, complete security, capacity, or visual approval.
 
@@ -39,6 +39,7 @@ Required:
 
 ```bash
 pnpm install --frozen-lockfile
+export NITIPCUY_ABUSE_SUBJECT_HMAC_KEY_BASE64="$(openssl rand -base64 32)"
 NITIPCUY_APP_ORIGIN=http://localhost:3000 \
 NITIPCUY_PROXY_MODE=LOCAL_DIRECT \
 pnpm dev
@@ -56,7 +57,7 @@ pnpm audit:prod
 ./scripts/check-lifecycle-docs.sh origin/main
 ```
 
-The request perimeter is fail-closed. `LOCAL_DIRECT` is valid only for an exact loopback origin. Any non-local environment must use `TRUSTED_PROXY`, an exact HTTPS `NITIPCUY_APP_ORIGIN`, and a cryptographically random, separately managed `NITIPCUY_EDGE_REQUEST_SECRET` injected by an approved edge that strips client-supplied forwarding and proof headers. Never commit that secret. Source implementation does not prove provider configuration or direct-origin denial.
+The request perimeter is fail-closed. `NITIPCUY_ABUSE_SUBJECT_HMAC_KEY_BASE64` must be a separately managed, exactly 32-byte base64 key and must never reuse the session or edge-proof secret. `LOCAL_DIRECT` is valid only for an exact loopback origin and accepts only absent or canonical loopback client-address metadata. Any non-local environment must use `TRUSTED_PROXY`, an exact HTTPS `NITIPCUY_APP_ORIGIN`, one canonical trusted client address, and a cryptographically random, separately managed `NITIPCUY_EDGE_REQUEST_SECRET` injected by an approved edge that strips client-supplied forwarding and proof headers. Never commit either secret. Source implementation does not prove provider configuration, direct-origin denial, key custody/rotation, or production rate-limit behavior.
 
 See [development and quality gates](docs/development/quality-gates.md) for the evidence contract and supported commands. Material issues and pull requests also follow the [DRY and guarded Strix review governance](docs/development/review-governance.md).
 

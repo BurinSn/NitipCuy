@@ -54,6 +54,14 @@ enum DiscussionStatus {
   HIDDEN
 }
 
+enum AbuseRateLimitAxis {
+  NETWORK
+  ACCOUNT
+  SESSION
+  DEVICE
+  TARGET
+}
+
 model Account {
   id             String        @id @db.Uuid
   status         AccountStatus @default(ACTIVE)
@@ -258,6 +266,21 @@ model AuditEvent {
   @@index([targetType, targetId, occurredAt], map: "audit_event_target_idx")
   @@index([actorAccountId, occurredAt], map: "audit_event_actor_idx")
   @@map("audit_event")
+}
+
+model AbuseRateLimitBucket {
+  policy          String             @db.VarChar(80)
+  axis            AbuseRateLimitAxis
+  subjectDigest   String             @map("subject_digest") @db.Char(64)
+  windowStartedAt DateTime           @map("window_started_at") @db.Timestamptz(3)
+  expiresAt       DateTime           @map("expires_at") @db.Timestamptz(3)
+  attemptCount    Int                @default(1) @map("attempt_count")
+  denialAudited   Boolean            @default(false) @map("denial_audited")
+  updatedAt       DateTime           @map("updated_at") @db.Timestamptz(3)
+
+  @@id([policy, axis, subjectDigest, windowStartedAt], map: "abuse_rate_limit_bucket_pk")
+  @@index([expiresAt], map: "abuse_rate_limit_bucket_expiry_idx")
+  @@map("abuse_rate_limit_bucket")
 }
 
 model OutboxEvent {

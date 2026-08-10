@@ -13,11 +13,21 @@ import {
   canonicalExternalUrl,
   canonicalOriginHeader,
 } from "@/server/request-perimeter-core";
+import { requireAbuseAllowance, routeFailure } from "@/server/http-security";
 
 export async function GET(request: NextRequest) {
   const state = request.nextUrl.searchParams.get("state") ?? "";
+  const browserBinding =
+    request.cookies.get(runtimeOAuthAttemptCookie.name)?.value ?? "";
+  let attemptConsumed = false;
 
   try {
+    await requireAbuseAllowance(
+      request,
+      "auth.callback",
+      browserBinding ? { deviceSubject: browserBinding } : {},
+      crypto.randomUUID(),
+    );
     const runtime = getRuntime();
     const canonicalCallbackUrl = canonicalExternalUrl(
       runtime.appOrigin,
@@ -32,13 +42,12 @@ export async function GET(request: NextRequest) {
       await recordFailure("OIDC_CALLBACK_URL_REJECTED", "DENIED");
       return clearOAuthAttemptCookie(authenticationFailure());
     }
-    const browserBinding =
-      request.cookies.get(runtimeOAuthAttemptCookie.name)?.value ?? "";
     const attempt = await runtime.oauthAttempts.consume(state, browserBinding);
     if (!attempt) {
       await recordFailure("OAUTH_STATE_REJECTED", "DENIED");
       return clearOAuthAttemptCookie(authenticationFailure());
     }
+    attemptConsumed = true;
 
     const identity = await (
       await getGoogleOidcClient()
@@ -64,7 +73,16 @@ export async function GET(request: NextRequest) {
       ),
     );
     return clearOAuthAttemptCookie(response);
-  } catch {
+  } catch (error) {
+    const boundaryResponse = routeFailure(error);
+    if (boundaryResponse.status === 429 || boundaryResponse.status === 503) {
+      if (boundaryResponse.status === 503) {
+        await recordFailure("AUTHENTICATION_DEPENDENCY_UNAVAILABLE", "FAILED");
+      }
+      return attemptConsumed
+        ? clearOAuthAttemptCookie(boundaryResponse)
+        : boundaryResponse;
+    }
     await recordFailure("OIDC_CALLBACK_FAILED", "FAILED");
     return clearOAuthAttemptCookie(authenticationFailure());
   }

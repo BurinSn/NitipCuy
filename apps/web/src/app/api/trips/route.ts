@@ -7,6 +7,7 @@ import { tripId, type ServiceMode } from "@nitipcuy/domain";
 import {
   readBoundedJson,
   rejectInvalidRequest,
+  requireAbuseAllowance,
   requireAuthenticatedActor,
   requiredNumber,
   requiredString,
@@ -18,6 +19,7 @@ import { getRuntime } from "@/server/runtime";
 
 export async function GET(request: NextRequest) {
   try {
+    await requireAbuseAllowance(request, "public.trip-list", {}, randomUUID());
     const cursor = request.nextUrl.searchParams.get("cursor");
     const limitValue = request.nextUrl.searchParams.get("limit");
     const limit = limitValue ? Number(limitValue) : undefined;
@@ -46,8 +48,15 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
+    const correlationId = randomUUID();
     requireSameOriginMutation(request);
     const actor = await requireAuthenticatedActor(request);
+    await requireAbuseAllowance(
+      request,
+      "trip.create",
+      { actor },
+      correlationId,
+    );
     const input = await readBoundedJson(request);
     const serviceModes = requiredStringArray(input, "serviceModes");
     if (
@@ -77,7 +86,7 @@ export async function POST(request: NextRequest) {
         serviceWindowEndAt: requiredString(input, "serviceWindowEndAt"),
         serviceWindowStartAt: requiredString(input, "serviceWindowStartAt"),
       },
-      { correlationId: randomUUID() },
+      { correlationId },
     );
     return NextResponse.json(
       { id: offer.id, status: offer.status },

@@ -9,6 +9,7 @@ const safeKey = Buffer.alloc(32, 7).toString("base64");
 const edgeProof = "runtime-probe-edge-proof-with-at-least-32-characters";
 const trustedProxyOrigin = "https://preview.nitipcuy.invalid";
 const trustedProxyHeaders = Object.freeze({
+  "X-Forwarded-For": "203.0.113.10",
   "X-Forwarded-Host": new URL(trustedProxyOrigin).host,
   "X-Forwarded-Port": "443",
   "X-Forwarded-Proto": "https",
@@ -134,6 +135,7 @@ async function withApplication(options, verify) {
     GOOGLE_CLIENT_ID: "runtime-probe-client",
     GOOGLE_CLIENT_SECRET: "runtime-probe-client-secret",
     NITIPCUY_APP_ORIGIN: appOrigin,
+    NITIPCUY_ABUSE_SUBJECT_HMAC_KEY_BASE64: safeKey,
     NITIPCUY_EDGE_REQUEST_SECRET: trustedProxy ? edgeProof : "",
     NITIPCUY_PROXY_MODE: options.mode,
     NODE_ENV: "production",

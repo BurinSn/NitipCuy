@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import {
+  requireAbuseAllowance,
   requireSameOriginMutation,
   routeFailure,
 } from "@/server/http-security";
@@ -14,6 +15,12 @@ export async function POST(request: NextRequest) {
   try {
     requireSameOriginMutation(request);
     const token = request.cookies.get(runtimeSessionCookie.name)?.value;
+    await requireAbuseAllowance(
+      request,
+      "session.logout",
+      token ? { sessionSubject: token } : {},
+      crypto.randomUUID(),
+    );
     if (token) {
       await getRuntime().sessions.revoke(token);
     }

@@ -6,6 +6,7 @@ import { tripId } from "@nitipcuy/domain";
 
 import {
   readBoundedJson,
+  requireAbuseAllowance,
   requireAuthenticatedActor,
   requiredString,
   requireSameOriginMutation,
@@ -19,17 +20,25 @@ interface RouteContext {
 
 export async function POST(request: NextRequest, context: RouteContext) {
   try {
+    const correlationId = randomUUID();
     requireSameOriginMutation(request);
     const actor = await requireAuthenticatedActor(request);
-    const input = await readBoundedJson(request);
     const params = await context.params;
+    const targetTripId = tripId(params.tripId);
+    await requireAbuseAllowance(
+      request,
+      "discussion.question",
+      { actor, targetSubject: targetTripId },
+      correlationId,
+    );
+    const input = await readBoundedJson(request);
     const question = await getRuntime().askPublicQuestion.execute(
       actor,
       {
         message: requiredString(input, "message"),
-        tripId: tripId(params.tripId),
+        tripId: targetTripId,
       },
-      { correlationId: randomUUID() },
+      { correlationId },
     );
     return NextResponse.json({ id: question.id }, { status: 201 });
   } catch (error) {

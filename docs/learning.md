@@ -1209,3 +1209,41 @@ Do not present inference, provider marketing, provisional pricing, or a future i
 ### No new product or security-control learning
 
 - This approval record changes no implementation, security control, Strix applicability, provider decision, product model, roadmap stage, or delivery order.
+
+## 2026-08-10 12:36 WIB - Shared limiter correctness needs canonical identity, atomic audit, and runtime evidence
+
+### Verified
+
+- A shared database counter can enforce one ceiling across independent web instances only when every instance derives the same canonical subject and updates the same bucket atomically.
+  - Evidence: two separate PostgreSQL limiter objects admitted exactly five of twelve concurrent requests against identical network, account, session, and target axes; every bucket ended at count twelve.
+  - Impact: process-local maps and per-instance locks remain prohibited for production-shape abuse authority.
+- Privacy-safe limiter storage requires keyed, domain-separated subjects rather than raw addresses or predictable plain hashes.
+  - Evidence: the perimeter emits an HMAC network subject, the adapter HMACs every axis with domain separation, and disposable-database inspection found none of the raw network/account/session/target inputs in bucket or denial-audit rows.
+  - Impact: telemetry uses bounded policy/axis categories while raw identifiers and user content remain outside rate-limit evidence.
+- A denial audit is part of the protected decision boundary when policy requires it.
+  - Evidence: forcing an invalid audit identifier made the denial transaction fail closed and rolled the counter increment and audit-claim flag back.
+  - Impact: do not catch and ignore audit failure around a protected allow/deny decision; return generic unavailability.
+- Versioning the storage policy key prevents a limit/window edit from silently reinterpreting existing rows.
+  - Impact: any v2 policy still needs a mixed-version rollout analysis because old and new instances can enforce independent buckets during transition.
+- Shared storage is not enough if each web instance chooses its own window clock.
+  - Evidence: hostile review found the first adapter derived fixed windows from the injected application clock even though counters were shared.
+  - Correction: production samples PostgreSQL time inside the bounded transaction; clock injection now requires an explicit disposable-test-database acknowledgement.
+- A local runtime probe can expose framework-added forwarding metadata that source-only review misses.
+  - Evidence: the corrected two-mode production build passed only after the local-direct policy accounted for Next.js's canonical loopback value while retaining hostile remote and ambiguous denials.
+  - Impact: provider-edge interpretation still requires provider verification; the local probe proves only the built local boundary.
+
+### Corrected assumption
+
+- Explicit local-direct mode cannot require `X-Forwarded-For` to be absent in the built Next.js runtime.
+  - Evidence: the first built-runtime probe returned `421` for valid loopback requests because Next.js inserted a loopback forwarding value.
+  - Correction: local-direct mode accepts absent or one canonical loopback address only; trusted-proxy mode still requires one canonical IP and exact edge proof, and every raw forwarding value is stripped downstream.
+
+### Failed approach
+
+- The ambient Node.js `26.0.0` / pnpm `9.15.0` command failed the engine gate and produced no admissible test evidence.
+  - Recovery: invoke the complete task graph through the exact Node.js `24.18.0` and pnpm `11.17.0` compatibility wrapper so child commands inherit the supported path.
+
+### Deferred
+
+- Fixed-window boundaries can admit bursts on both sides of a reset. Threshold calibration, a possible token-bucket replacement, HMAC rotation without uncontrolled resets, mixed-version policy rollout, provider client-IP compatibility, WAF/bot coordination, metrics export, dashboards, alerts, load profiles, and incident response remain separate evidence gates.
+- No new product or commercial decision resulted; Stage 1 order and the next server-authoritative order-eligibility slice remain unchanged.

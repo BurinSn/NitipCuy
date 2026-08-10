@@ -8,6 +8,7 @@ import {
   buildBrowserSecurityHeaders,
   buildConfigurationFailureHeaders,
   createCanonicalRequestHeaders,
+  createClientNetworkSubject,
   createRequestNonce,
   evaluateRequestPerimeter,
   readRequestPerimeterPolicy,
@@ -59,6 +60,10 @@ export function proxy(request: NextRequest) {
     policy.appOrigin,
     nonce,
     contentSecurityPolicy,
+    createClientNetworkSubject(
+      policy.abuseSubjectHmacKey,
+      decision.clientNetwork,
+    ),
   );
   const tripId = tripIdForDemoRoute(request.nextUrl.pathname);
 

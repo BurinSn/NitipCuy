@@ -1,12 +1,17 @@
-import { randomBytes, timingSafeEqual } from "node:crypto";
+import { createHmac, randomBytes, timingSafeEqual } from "node:crypto";
+import { isIP } from "node:net";
+
+import { decodeExactBase64Key } from "./security-key-core";
 
 export const canonicalOriginHeader = "x-nitipcuy-canonical-origin";
+export const canonicalClientNetworkHeader = "x-nitipcuy-client-network-subject";
 export const requestNonceHeader = "x-nitipcuy-request-nonce";
 export const edgeProofHeader = "x-nitipcuy-edge-proof";
 
 export type RequestPerimeterMode = "LOCAL_DIRECT" | "TRUSTED_PROXY";
 
 export interface RequestPerimeterPolicy {
+  readonly abuseSubjectHmacKey: Uint8Array;
   readonly appOrigin: string;
   readonly edgeProof: string | null;
   readonly mode: RequestPerimeterMode;
@@ -18,7 +23,7 @@ export interface RequestPerimeterInput {
 }
 
 export type RequestPerimeterDecision =
-  | Readonly<{ allowed: true }>
+  | Readonly<{ allowed: true; clientNetwork: string }>
   | Readonly<{
       allowed: false;
       reasonCode:
@@ -36,6 +41,7 @@ const ambiguousForwardingHeaders = [
   "x-forwarded-prefix",
   "x-original-host",
   "x-original-url",
+  canonicalClientNetworkHeader,
 ] as const;
 
 const downstreamRemovedHeaders = [
@@ -63,13 +69,24 @@ export function readRequestPerimeterPolicy(
   const appOrigin = parseCanonicalOrigin(
     requiredValue(environment.NITIPCUY_APP_ORIGIN),
   );
+  const abuseSubjectHmacKey = decodeExactBase64Key(
+    environment.NITIPCUY_ABUSE_SUBJECT_HMAC_KEY_BASE64,
+  );
+  if (!abuseSubjectHmacKey) {
+    throw new RequestPerimeterConfigurationError();
+  }
   const mode = requiredValue(environment.NITIPCUY_PROXY_MODE);
 
   if (mode === "LOCAL_DIRECT") {
     if (!isLocalOrigin(appOrigin)) {
       throw new RequestPerimeterConfigurationError();
     }
-    return Object.freeze({ appOrigin, edgeProof: null, mode });
+    return Object.freeze({
+      abuseSubjectHmacKey,
+      appOrigin,
+      edgeProof: null,
+      mode,
+    });
   }
 
   if (mode === "TRUSTED_PROXY") {
@@ -84,7 +101,7 @@ export function readRequestPerimeterPolicy(
     ) {
       throw new RequestPerimeterConfigurationError();
     }
-    return Object.freeze({ appOrigin, edgeProof, mode });
+    return Object.freeze({ abuseSubjectHmacKey, appOrigin, edgeProof, mode });
   }
 
   throw new RequestPerimeterConfigurationError();
@@ -122,11 +139,12 @@ export function evaluateRequestPerimeter(
       !optionalHeaderEquals(
         input.headers.get("x-forwarded-port"),
         canonicalPort(canonicalUrl),
-      )
+      ) ||
+      !isOptionalLoopbackAddress(input.headers.get("x-forwarded-for"))
     ) {
       return denied("CANONICAL_REQUEST_MISMATCH");
     }
-    return Object.freeze({ allowed: true });
+    return Object.freeze({ allowed: true, clientNetwork: "loopback" });
   }
 
   const presentedProof = input.headers.get(edgeProofHeader);
@@ -150,7 +168,14 @@ export function evaluateRequestPerimeter(
     return denied("CANONICAL_REQUEST_MISMATCH");
   }
 
-  return Object.freeze({ allowed: true });
+  const clientNetwork = canonicalClientAddress(
+    input.headers.get("x-forwarded-for"),
+  );
+  if (!clientNetwork) {
+    return denied("FORWARDED_METADATA_REJECTED");
+  }
+
+  return Object.freeze({ allowed: true, clientNetwork });
 }
 
 export function createRequestNonce(): string {
@@ -162,6 +187,7 @@ export function createCanonicalRequestHeaders(
   appOrigin: string,
   nonce: string,
   contentSecurityPolicy: string,
+  clientNetworkSubject: string,
 ): Headers {
   const headers = new Headers(incoming);
   for (const name of downstreamRemovedHeaders) {
@@ -169,9 +195,23 @@ export function createCanonicalRequestHeaders(
   }
   headers.set("host", new URL(appOrigin).host);
   headers.set(canonicalOriginHeader, appOrigin);
+  headers.set(canonicalClientNetworkHeader, clientNetworkSubject);
   headers.set(requestNonceHeader, nonce);
   headers.set("content-security-policy", contentSecurityPolicy);
   return headers;
+}
+
+export function createClientNetworkSubject(
+  hmacKey: Uint8Array,
+  canonicalClientNetwork: string,
+): string {
+  if (hmacKey.byteLength !== 32 || !canonicalClientNetwork) {
+    throw new RequestPerimeterConfigurationError();
+  }
+  return createHmac("sha256", hmacKey)
+    .update("nitipcuy-client-network-v1\0")
+    .update(canonicalClientNetwork)
+    .digest("hex");
 }
 
 export function canonicalExternalUrl(
@@ -362,6 +402,31 @@ function safeUrl(value: string): URL | null {
   } catch {
     return null;
   }
+}
+
+function canonicalClientAddress(value: string | null): string | null {
+  if (!value || value.trim() !== value || value.includes(",")) {
+    return null;
+  }
+  const version = isIP(value);
+  if (version === 4) {
+    return value;
+  }
+  if (version === 6 && !value.includes("%")) {
+    const hostname = new URL(`http://[${value}]/`).hostname;
+    return hostname.slice(1, -1).toLowerCase();
+  }
+  return null;
+}
+
+function isOptionalLoopbackAddress(value: string | null): boolean {
+  if (value === null) {
+    return true;
+  }
+  const address = canonicalClientAddress(value);
+  return (
+    address === "127.0.0.1" || address === "::1" || address === "::ffff:7f00:1"
+  );
 }
 
 function denied(

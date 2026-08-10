@@ -148,12 +148,19 @@ Security and scale statements use these evidence levels:
 
 Only the highest completed level may be claimed for a control.
 
+### 11. Use versioned shared abuse authority for persisted routes
+
+The first application limiter uses PostgreSQL rather than web-process memory. The canonical request perimeter derives one HMAC-only network subject; route policy combines that action scope with account, session/device, and target axes where relevant. Policy storage keys carry an explicit revision. PostgreSQL supplies the production decision timestamp so instance clock skew cannot split a window. Fixed-window counters and the first-denial audit claim commit in one transaction, expired-row cleanup is bounded, and missing counter or required audit authority fails closed with a generic response.
+
+The v1 ceilings are pre-preview safety defaults, not traffic or capacity approval. Fixed-window boundary behavior, HMAC rotation, mixed-version policy revision, provider client-address compatibility, WAF/bot coordination, metrics, alerts, load, and incident response require later evidence. A policy-number change without a revision and rollout analysis is not permitted.
+
 ## Consequences
 
 - The current shell becomes governed by an explicit security and scale contract without being mislabeled production-safe.
 - Some protected features cannot launch immediately after functional implementation; they also require negative, abuse, runtime, and operational evidence.
 - Shared rate-limit state, durable asynchronous work, private quarantine storage, and monitoring add cost only when the corresponding functionality is introduced.
 - Managed key custody, field-encryption decisions, privileged assurance, trusted-proxy configuration, cache safety, and deployment-version compatibility become explicit activation work rather than implicit provider assumptions.
+- Existing persisted routes now have a production-shape shared limiter contract and disposable-database evidence, but provider, load, operations, and production verification remain separate gates.
 - Public read-heavy traffic can scale independently through cache and horizontal web instances while protected writes remain transactionally authoritative.
 - Service extraction remains evidence-driven. Security and scale requirements do not justify microservices by themselves.
 
