@@ -1,6 +1,6 @@
 # NitipCuy Handoff
 
-Updated: 2026-08-11 14:06 WIB
+Updated: 2026-08-11 14:11 WIB
 
 ## 1. Resume order
 
@@ -27,10 +27,10 @@ gh pr list --repo BurinSn/NitipCuy --state open
 | Default branch | `main` |
 | Current merged base | `ea4b629466df1e1e1381f62ae5ca26722edbe4bf` |
 | Local branch | `feat/13-order-submission-capacity` |
-| Local `HEAD` | still the merged base; issue #13 candidate is uncommitted |
-| Worktree | intentionally dirty with issue #13 source, migration, tests, and documentation |
+| Local `HEAD` | a four-lifecycle-file successor of reviewed implementation head `9c145515367f81571e7583495f88eca53b8d9abe`; live-verify its exact SHA to avoid a self-referential document hash |
+| Worktree | expected clean after the lifecycle successor commit; live-verify before acting |
 | Active issue | #13, open |
-| Open pull requests | none at last verification |
+| Open pull requests | #14, open and not draft at implementation head `9c145515367f81571e7583495f88eca53b8d9abe` |
 | Issue #11 / PR #12 | merged/closed as `ea4b629466df1e1e1381f62ae5ca26722edbe4bf`; feature branches removed |
 | Strix | issue #13 is `NOT REQUIRED` / `NOT APPLICABLE` / `NO TARGET`; no authorization, plan, budget, execution, report, or external Strix model action exists |
 
@@ -70,9 +70,9 @@ Excluded:
 
 The reservation lifecycle must not serve real users until safe seller response, expiry/cancellation, and capacity release exist.
 
-## 4. Local implementation state
+## 4. Implementation state
 
-Implemented in the dirty worktree:
+Committed, pushed, and opened in pull request #14 at `9c145515367f81571e7583495f88eca53b8d9abe`:
 
 - `packages/domain/src/order-request.ts`: bounded mode-specific declarations, request identity/status, immutable submitted shape, and exact capacity-unit rules;
 - `packages/application/src/marketplace-foundation.ts`: database-authoritative submission use case, eligibility, self-order and mode denial, canonical fingerprinting, atomic orchestration, and generic error codes;
@@ -131,8 +131,15 @@ Also passed on the corrected candidate:
 
 Still pending:
 
-- complete `origin/main...HEAD` DRY and hostile security review pinned to an immutable commit;
-- GitHub issue progress update, push, pull request, hosted application/lifecycle/review-governance checks, CodeRabbit disclosure inspection, mergeability, and fresh owner approval.
+- push the narrowly reviewed four-lifecycle-file successor and repin issue #13 plus pull request #14 to its exact SHA;
+- hosted application/lifecycle/review-governance checks on the final exact head, CodeRabbit disclosure inspection, final mergeability, and fresh owner approval.
+
+Initial hosted state on `9c145515367f81571e7583495f88eca53b8d9abe`:
+
+- review-governance run `31467896354` passed;
+- application run `31467896319` and lifecycle run `31467896386` were in progress;
+- CodeRabbit was pending;
+- GitHub reported pull request #14 `MERGEABLE` with no review decision.
 
 Highest evidence is source-tested, disposable-PostgreSQL-integration-tested, production-build-tested, and local request-perimeter-runtime-tested. No browser, provider, load, staging, production, or penetration-test evidence exists.
 
@@ -150,15 +157,15 @@ Highest evidence is source-tested, disposable-PostgreSQL-integration-tested, pro
 
 BurinSN approved proceeding with the issue #13 scope and explicitly deferred payment and delivery. This authorizes the bounded local implementation and governed pull-request workflow. It does not authorize merge, deployment, provider onboarding/configuration, payment movement, real-user testing, production data, external target testing, Strix execution, public launch, or visual production deployment.
 
-Issue #13 currently records:
+Issue #13 and pull request #14 currently record:
 
-- DRY: `NOT STARTED`;
+- DRY: `CLEAN WITH NOTES` at implementation head `9c145515367f81571e7583495f88eca53b8d9abe`;
 - Strix applicability: `NOT REQUIRED`;
 - Strix status: `NOT APPLICABLE`;
 - target class: `NO TARGET`.
 
-The DRY status can become `CLEAN` or `CLEAN WITH NOTES` only after the complete immutable diff is reviewed and the exact 40-character head is recorded in both issue and pull request. Merge still needs fresh BurinSN approval after every check, finding, limitation, and integration result is visible.
+The implementation head's complete diff passed DRY and hostile review after correcting stale transaction-start time, missing composite ownership invariants, raw-query serialization retry classification, and duplicated key grammar. The lifecycle-only successor invalidates that exact pin until it is narrowly reviewed and both governed records carry its full 40-character SHA. Merge still needs fresh BurinSN approval after every final check, finding, limitation, and integration result is visible.
 
 ## 8. Exact next action
 
-Commit the corrected coherent issue #13 candidate. Review the immutable complete diff for duplicated authority, migration correctness, authorization, privacy, idempotency, timing, locks, contention, rollback, and false claims. If clean, push it, pin the governed issue to that exact head, open the focused pull request, and repeat exact-head local and hosted verification. Stop for fresh BurinSN merge approval after reporting the final evidence and hostile-review rating.
+Live-resolve the lifecycle successor SHA and confirm its delta from `9c145515367f81571e7583495f88eca53b8d9abe` contains exactly `handoff.md`, `docs/changes.md`, `docs/roadmap.md`, and `docs/learning.md`. Repin issue #13 and pull request #14 to that full SHA, push, and inspect hosted checks, CodeRabbit output, mergeability, and review objects on the exact remote head. Stop for fresh BurinSN merge approval after reporting the final evidence and hostile-review rating.

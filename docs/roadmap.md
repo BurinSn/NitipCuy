@@ -1,10 +1,10 @@
 # NitipCuy Canonical Roadmap
 
-Last reviewed: 2026-08-11 14:06 WIB
+Last reviewed: 2026-08-11 14:11 WIB
 
 Current stage: Stage 1 - Platform foundation
 
-Current work item: Issue #11 / pull request #12 were squash-merged as `ea4b629466df1e1e1381f62ae5ca26722edbe4bf`, the issue closed, and branches were removed. Governed issue #13 is open and branch `feat/13-order-submission-capacity` starts from that verified base. Its corrected local candidate implements the first protected `SUBMITTED` request command for both service modes with locked live-database-time eligibility, active seller/profile locks, exact 10-gram capacity units, conditional offer revision, composite ownership constraints, serializable final-slot reservation, account-bound durable replay, atomic audit/outbox, and a bounded `order.submit.v1` route policy. Exact Node.js `24.18.0` / pnpm `11.17.0` `pnpm check` passes 244 tests, build, and the two-mode runtime probe; production audit, lifecycle, YAML/link, unsafe-query/execution, logging, high-confidence secret, and diff-hygiene gates pass. Immutable commit review, push, pull request, hosted evidence, and owner approval remain pending. Payment, delivery, seller response, reservation release, browser, provider, deployment, load, and production remain excluded.
+Current work item: Issue #13 and pull request #14 are open from verified base `ea4b629466df1e1e1381f62ae5ca26722edbe4bf`. Reviewed implementation head `9c145515367f81571e7583495f88eca53b8d9abe` implements the first protected `SUBMITTED` request command for both service modes with locked live-database-time eligibility, active seller/profile locks, exact 10-gram capacity units, conditional offer revision, composite ownership constraints, serializable final-slot reservation, account-bound durable replay, atomic audit/outbox, and a bounded `order.submit.v1` route policy. Exact Node.js `24.18.0` / pnpm `11.17.0` `pnpm check` passes 244 tests, build, and the two-mode runtime probe; production audit, lifecycle, YAML/link, unsafe-query/execution, logging, high-confidence secret, and diff-hygiene gates pass. The implementation-head DRY/hostile review is `CLEAN WITH NOTES`, the initial hosted review-governance run passed, and GitHub reported pull request #14 mergeable. The required four-lifecycle-file successor is narrowly reviewed locally; final exact-SHA repin/push, repeated hosted evidence, CodeRabbit disclosure review, and owner approval remain pending. Payment, delivery, seller response, reservation release, browser, provider, deployment, load, and production remain excluded.
 
 ## 1. Role, authority, and freshness contract
 
@@ -320,11 +320,11 @@ The unresolved DOKU, logistics, policy, legal, and pilot items listed in Stage 3
 
 ### Now
 
-Commit issue #13's corrected local candidate and run complete-diff DRY plus hostile security review against the immutable head.
+Repin issue #13 and pull request #14 to the narrowly reviewed four-lifecycle-file successor, push it, then obtain final hosted exact-head evidence.
 
 ### Next
 
-Commit and push the coherent issue #13 candidate, pin its immutable head in the governed issue, open a focused pull request, repeat local and hosted exact-head gates, and obtain fresh BurinSN review before any merge.
+Inspect final hosted application, lifecycle, and review-governance checks, CodeRabbit output, mergeability, and review objects on the repinned pull request #14 head, then obtain fresh BurinSN review before any merge.
 
 ### Later
 

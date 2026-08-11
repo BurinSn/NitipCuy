@@ -1344,3 +1344,14 @@ Do not present inference, provider marketing, provisional pricing, or a future i
 
 - Completed replay cleanup, operational metrics, load behavior, managed-PostgreSQL lock behavior, reservation release, accepted commercial terms, private request encryption, browser coverage, payment, and delivery remain unimplemented or unverified.
 - No provider, commercial, fee, legal, visual, pilot, or production decision resulted from this slice.
+
+## 2026-08-11 14:11 WIB - Pull-request publication produced no new product or control learning
+
+### Reused governance learning
+
+- Opening pull request #14 changes the live review surface but not the reviewed implementation. The required lifecycle reconciliation creates a documentation-only successor that must be checked as exactly four files and repinned before its hosted evidence can replace the implementation head's evidence.
+- A passing initial review-governance run proves only that issue #13 and pull request #14 matched at the implementation head when that event ran. It does not pre-approve the lifecycle successor, other hosted checks, CodeRabbit output, mergeability, or owner approval.
+
+### No new product or security-control learning
+
+- Pull-request publication and lifecycle-state recording change no implementation, security control, Strix applicability, provider decision, product model, roadmap stage, or delivery order.
