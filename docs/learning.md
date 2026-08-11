@@ -1297,3 +1297,15 @@ Do not present inference, provider marketing, provisional pricing, or a future i
 ### No new product or security-control learning
 
 - Hosted verification and the final evidence record change no implementation, security control, Strix applicability, provider decision, product model, roadmap stage, or delivery order.
+
+## 2026-08-11 12:41 WIB - Owner approval is bound to the immutable reviewed state
+
+### Reusable learning
+
+- A conversational instruction to finalize and proceed is merge authority only after it is reconciled with the exact reviewed SHA, checks, limitations, and repository policy. Here it followed the explicit merge-ready result for pull request #12 and therefore authorizes the governed squash-merge path.
+- Recording approval creates one more immutable head. Preserve the approval by limiting that successor to the four lifecycle documents, repinning both governance records, and repeating exact-head checks and narrow hostile review before merge.
+- Approval does not survive a source, dependency, configuration, product, provider, security-control, scope, or finding change and never silently expands into deployment or production authority.
+
+### No new product or security-control learning
+
+- The approval record changes no implementation, security control, Strix applicability, provider decision, product model, roadmap stage, or delivery order.
