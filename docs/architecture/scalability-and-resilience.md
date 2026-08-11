@@ -51,6 +51,8 @@ Production correctness must not depend on:
 
 Per-request context is immutable and request-scoped. Cross-request state belongs in PostgreSQL or an approved shared system. Large file bytes go directly to private object storage through signed, bounded requests rather than through application memory.
 
+Issue #11's first shared limiter candidate follows that rule: every existing persisted route uses one versioned policy authority and PostgreSQL buckets keyed by policy, axis, HMAC subject, and fixed-window start. Target ceilings are compound caller-target identities: network-target for anonymous public detail and account-target for authenticated publication, discussion, and moderation. They therefore distribute by caller instead of letting one caller consume a global target bucket. PostgreSQL supplies one timestamp per production decision so instance clock skew cannot split windows. Concurrent adapter instances share the same count; deterministic axis order reduces deadlock risk; the decision deletes at most 100 expired rows; denial audit and counter state commit together. This is production-shape shared state but only disposable-PostgreSQL integration evidence. Per-request cleanup is bounded but its aggregate write load is not load-tested. The fixed-window reset boundary, HMAC rotation, v1-to-v2 mixed deployment, thresholds, database capacity, provider edge identity, WAF/bot coordination, metrics, alerts, load, and incident behavior remain unapproved and unverified.
+
 ## 4. Public reads and caching
 
 Public discovery is the primary cacheable workload.
@@ -282,7 +284,7 @@ Designed:
 - direct private evidence storage direction;
 - observability, capacity, load, and recovery gates.
 
-Implemented and source-tested for the architecture probe, merged issue #5 slice, and issue #9 working tree:
+Implemented and source-tested for the architecture probe, merged issues #5/#9, and the issue #11 local candidate:
 
 - deterministic in-memory public discovery;
 - bounded simulated dataset;
@@ -296,11 +298,13 @@ Implemented and source-tested for the architecture probe, merged issue #5 slice,
 - stateless per-request canonical-origin and CSP-nonce derivation; no session, limiter, lock, cache, or durable authority is added to web-process memory;
 - dynamic rendering for nonce integrity and explicit private or denied-response `no-store` policy, with a later public-cache design still required before reintroducing cacheable public HTML;
 - a two-mode built-runtime probe that starts and stops isolated local processes with deterministic non-secret configuration;
+- an additive shared PostgreSQL fixed-window limiter with HMAC-only subjects, action-scoped multi-axis policies, deterministic concurrency, bounded expiry cleanup, and atomic first-denial audit evidence;
+- disposable PostgreSQL cross-instance concurrency, redaction, audit-failure rollback, rollover, and cleanup tests;
 - no production provider calls or asynchronous work.
 
 Not implemented or verified:
 
-- production cache or cache-safety controls, shared rate-limit/idempotency system, live edge/direct-origin configuration, managed PostgreSQL, object storage, scanner, cleanup worker, provider, observability, backup, or restore;
+- production cache or cache-safety controls, shared idempotency system, live edge/client-network/direct-origin configuration, managed PostgreSQL, object storage, scanner, durable cleanup worker, provider, operational observability, alert routing, backup, or restore;
 - expand-and-contract migration, mixed-version rollout, or dependency-outage runtime evidence;
 - capacity targets, load tests, provider quotas, SLOs, RPO, RTO, or production cost budgets;
 - runtime horizontal-scaling or failure-recovery evidence.

@@ -8,9 +8,11 @@ import {
   runtimeOAuthAttemptCookie,
   safeAuthenticationReturnPath,
 } from "@/server/runtime";
+import { requireAbuseAllowance, routeFailure } from "@/server/http-security";
 
 export async function GET(request: NextRequest) {
   try {
+    await requireAbuseAllowance(request, "auth.start", {}, crypto.randomUUID());
     const returnTo = safeAuthenticationReturnPath(
       request.nextUrl.searchParams.get("returnTo") ?? "/",
     );
@@ -28,10 +30,14 @@ export async function GET(request: NextRequest) {
       ),
     );
     return response;
-  } catch {
-    return NextResponse.json(
-      { error: "AUTHENTICATION_UNAVAILABLE" },
-      { status: 503 },
-    );
+  } catch (error) {
+    const response = routeFailure(error);
+    if (response.status === 500) {
+      return NextResponse.json(
+        { error: "AUTHENTICATION_UNAVAILABLE" },
+        { status: 503 },
+      );
+    }
+    return response;
   }
 }

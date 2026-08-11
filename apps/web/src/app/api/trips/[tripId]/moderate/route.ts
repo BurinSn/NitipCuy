@@ -7,6 +7,7 @@ import { tripId } from "@nitipcuy/domain";
 import {
   readBoundedJson,
   rejectInvalidRequest,
+  requireAbuseAllowance,
   requireAuthenticatedActor,
   requiredString,
   requireSameOriginMutation,
@@ -20,22 +21,30 @@ interface RouteContext {
 
 export async function POST(request: NextRequest, context: RouteContext) {
   try {
+    const correlationId = randomUUID();
     requireSameOriginMutation(request);
     const actor = await requireAuthenticatedActor(request);
+    const params = await context.params;
+    const targetTripId = tripId(params.tripId);
+    await requireAbuseAllowance(
+      request,
+      "moderation.trip",
+      { actor, targetSubject: targetTripId },
+      correlationId,
+    );
     const input = await readBoundedJson(request);
     const decision = requiredString(input, "decision");
     if (decision !== "APPROVED" && decision !== "REJECTED") {
       rejectInvalidRequest();
     }
-    const params = await context.params;
     const offer = await getRuntime().moderateTrip.execute(
       actor,
       {
         decision,
         reasonCode: requiredString(input, "reasonCode"),
-        tripId: tripId(params.tripId),
+        tripId: targetTripId,
       },
-      { correlationId: randomUUID() },
+      { correlationId },
     );
     return NextResponse.json({ id: offer.id, status: offer.status });
   } catch (error) {

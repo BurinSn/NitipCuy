@@ -4,6 +4,7 @@ import { randomUUID } from "node:crypto";
 
 import {
   GoogleOidcClient,
+  PostgresAbuseProtection,
   PostgresOAuthAttemptAuthority,
   PostgresSessionAuthority,
   PrismaMarketplaceUnitOfWork,
@@ -31,8 +32,10 @@ import {
   RequestPerimeterConfigurationError,
   readRequestPerimeterPolicy,
 } from "./request-perimeter-core";
+import { decodeExactBase64Key } from "./security-key-core";
 
 interface RuntimeConfiguration {
+  readonly abuseSubjectHmacKey: Uint8Array;
   readonly appOrigin: string;
   readonly databaseUrl: string;
   readonly oauthEncryptionKey: Uint8Array;
@@ -129,6 +132,10 @@ function createRuntime(configuration: RuntimeConfiguration) {
   const discovery = new PrismaTripDiscoveryRepository(prisma);
 
   return Object.freeze({
+    abuseProtection: new PostgresAbuseProtection(prisma, {
+      identifiers,
+      subjectHmacKey: configuration.abuseSubjectHmacKey,
+    }),
     answerPublicQuestion: new AnswerPublicQuestion(dependencies),
     appOrigin: configuration.appOrigin,
     askPublicQuestion: new AskPublicQuestion(dependencies),
@@ -154,16 +161,15 @@ function createRuntime(configuration: RuntimeConfiguration) {
 function readRuntimeConfiguration(): RuntimeConfiguration {
   try {
     return Object.freeze({
+      abuseSubjectHmacKey: requiredBase64Key(
+        "NITIPCUY_ABUSE_SUBJECT_HMAC_KEY_BASE64",
+      ),
       appOrigin: readRequestPerimeterPolicy().appOrigin,
       databaseUrl: requiredEnvironment("DATABASE_URL"),
-      oauthEncryptionKey: base64Key(
-        requiredEnvironment("OAUTH_ATTEMPT_ENCRYPTION_KEY_BASE64"),
-        "OAuth attempt encryption key",
+      oauthEncryptionKey: requiredBase64Key(
+        "OAUTH_ATTEMPT_ENCRYPTION_KEY_BASE64",
       ),
-      sessionHmacKey: base64Key(
-        requiredEnvironment("SESSION_TOKEN_HMAC_KEY_BASE64"),
-        "Session HMAC key",
-      ),
+      sessionHmacKey: requiredBase64Key("SESSION_TOKEN_HMAC_KEY_BASE64"),
     });
   } catch (error) {
     if (
@@ -177,20 +183,17 @@ function readRuntimeConfiguration(): RuntimeConfiguration {
 }
 
 function requiredEnvironment(name: string): string {
-  const value = process.env[name]?.trim();
-  if (!value) {
+  const value = process.env[name];
+  if (!value || value.trim() !== value) {
     throw new RuntimeConfigurationError();
   }
   return value;
 }
 
-function base64Key(value: string, field: string): Uint8Array {
-  if (!/^[A-Za-z0-9+/]+={0,2}$/.test(value)) {
-    throw new Error(`${field} must be base64 encoded.`);
+function requiredBase64Key(name: string): Uint8Array {
+  const key = decodeExactBase64Key(requiredEnvironment(name));
+  if (!key) {
+    throw new RuntimeConfigurationError();
   }
-  const key = Buffer.from(value, "base64");
-  if (key.byteLength !== 32) {
-    throw new Error(`${field} must decode to exactly 32 bytes.`);
-  }
-  return Uint8Array.from(key);
+  return key;
 }

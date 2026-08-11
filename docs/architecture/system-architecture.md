@@ -413,6 +413,7 @@ Integration tests now exercise the issue #5 account/profile/trip/public-discussi
 - repository mapping and the serializable transaction-scoped unit of work;
 - rollback after a duplicate authoritative write, bounded concurrent issuer-subject resolution, stale-version conflict, and state-to-audit and state-to-outbox atomicity;
 - exact profile-owner foreign keys, session revocation, rotation-family reuse, account-version invalidation, OAuth browser-binding, attempt replay and expiry, bounded cursor reads, and private-field projection exclusion;
+- issue #11's additive abuse-bucket migration, cross-instance concurrent admission, network/account/session axes plus network-target or account-target isolation, HMAC redaction, first-denial audit atomicity and rollback, fixed-window rollover, and bounded expiry cleanup;
 
 Later persisted-order slices must still exercise:
 
@@ -468,7 +469,7 @@ Implemented by issue #5, merged through pull request #6, and locally verified be
 - protected JSON routes with exact-origin and Fetch-Metadata checks plus bounded request bodies; anonymous persisted search/detail routes use bounded cursor reads;
 - disposable PostgreSQL integration and deterministic Google protocol fixtures.
 
-Implemented in the issue #9 working tree and source/local-runtime-tested before pull-request creation:
+Implemented by issue #9, merged through pull request #10 as `23a6015781228cb04e167b83f6a28b3d3cc0b62d`:
 
 - one canonical request-perimeter authority shared by the proxy, runtime origin, mutation checks, and Google callback reconstruction;
 - explicit loopback-only direct mode and HTTPS trusted-proxy mode with bounded edge proof, exact forwarded host/protocol/port checks, timing-safe comparison, and downstream metadata stripping;
@@ -476,13 +477,20 @@ Implemented in the issue #9 working tree and source/local-runtime-tested before 
 - generic non-cacheable `503` for missing configuration and non-cacheable, non-redirecting `421` for hostile request authority;
 - an automated post-build local runtime gate for nonce propagation/freshness, unsafe CSP keywords, no-store, hostile host/forwarding/prefetch denial, exact unknown-trip `404`, trusted-edge proof, proof non-disclosure, and HSTS.
 
+Implemented in the issue #11 local candidate and source/disposable-database tested:
+
+- one canonical client-network decision with exact trusted single-address parsing, loopback-only local behavior, fail-closed rejection of maintained alternate client-network headers, HMAC-only downstream context, and raw forwarding/equivalent-header removal;
+- one versioned policy authority for the existing identity, session, public-read, publication, discussion, and moderation routes;
+- additive PostgreSQL fixed-window bucket authority shared across web instances with network, account, session/device, and compound network-target or account-target axes, deterministic lock order, bounded cleanup, generic `429`/`503`, and atomic bounded denial audits; target buckets isolate callers rather than creating a global target-denial lever;
+- no process-local limiter authority, raw stored subject, WAF/bot provider integration, operational metrics backend, dashboard, alert route, load claim, or production claim.
+
 Issue #3 removed its callback-only transaction interface rather than misrepresent it as atomic infrastructure. Issue #5 now implements and disposable-database-tests a connection-bound serializable unit of work for the persisted marketplace slice; this does not yet cover order capacity, ledger, payment, provider callback, worker, or outbox-delivery transactions.
 
 The payment port now separates initiation, release, and refund submission receipts from provider observations. It models collection, hold, release, refund, settlement, and chargeback independently; provider signals request inspection instead of declaring success. The configured mock never invents a successful outcome, and the pure initial-protection assessment fails closed for unknown, contradictory, mismatched, or post-hold evidence.
 
 Payment initiation, release, refund, logistics dispatch registration, and evidence lifecycle mutations use a framework-independent idempotency port plus deterministic adapter. The scope is the order aggregate for payment and logistics and the owner account for evidence. SHA-256 fingerprints cover each operation's semantic application command; exact completed duplicates replay, changed payloads conflict, concurrent duplicates fail closed, unavailable authority blocks execution, and unclassified execution errors require reconciliation instead of releasing the key. Payment results retain 90-day mock replay records and logistics/evidence lifecycle results retain 30-day mock replay records.
 
-This is source-tested contract behavior only. The default store is process-local and test-only. No shared persistent idempotency authority, authenticated use case, rate-limit integration, database constraint, provider-native verification, callback authentication, durable inbox, worker, ledger, order mutation, real money movement, or full release/refund/settlement reconciliation exists.
+This is source-tested contract behavior only. The default idempotency store is process-local and test-only. No shared persistent idempotency authority, authenticated idempotency use case, database constraint, provider-native verification, callback authentication, durable inbox, worker, ledger, order mutation, real money movement, or full release/refund/settlement reconciliation exists.
 
 The evidence application port no longer accepts raw bytes, file names, client MIME, caller byte length, caller digest, object path, or scan status. It creates a short-lived opaque upload intent, inspects server-observed quarantine metadata and scanner state, promotes only a clean scan whose digest matches the observed bytes, returns a server-generated private reference, and deletes accepted fixture content only after retention expiry. The test-only in-memory adapter source-tests wrong client claims, immutable upload, file bounds and type detection, expiry, scan pending/outage/rejection/digest mismatch, cross-owner and object-reference denial, exact replay, terminal upload denial, retention, and deletion.
 
@@ -492,12 +500,12 @@ Not implemented:
 
 - real Google configuration or provider-verified authentication;
 - privileged step-up or recovery, so production moderation remains fail-closed;
-- provider-verified edge header overwrite and direct-origin restriction, shared rate-limit, risk, idempotency, browser automation, or real-browser completion for protected preview;
+- provider-verified edge header overwrite/client-address compatibility and direct-origin restriction, risk, shared idempotency, browser automation, or real-browser completion for protected preview;
 - private data;
 - real providers;
 - order, payment, evidence, logistics, item moderation, dispute, or review workflows;
 - new-order eligibility, capacity reservation, archival history, or private seller and customer order dashboards;
-- shared WAF, rate-limit, bot, session, idempotency, cache, worker, observability, backup, or recovery infrastructure;
+- shared WAF, bot, idempotency, cache, worker, operational observability, alert, backup, or recovery infrastructure;
 - trusted-proxy/canonical-host configuration, privileged MFA, managed-key encryption lifecycle, cache-safety controls, or mixed-version deployment evidence;
 - runtime security configuration, load and abuse tests, provider configuration review, incident exercises, or penetration testing;
 - production deployment;

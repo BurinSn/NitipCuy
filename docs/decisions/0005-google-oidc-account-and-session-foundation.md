@@ -74,13 +74,21 @@ Authentication cannot become business authorization. A Google email, profile cla
 - Relevant responses receive a fresh nonce CSP, anti-framing and content-type protections, restrictive browser permissions, referrer and cross-origin policies, and HSTS for the HTTPS policy. Authentication/API paths and all hostile-authority denials are explicitly private and `no-store`.
 - Nonce-based CSP requires dynamic rendering in the current Next.js runtime. Public cache reintroduction needs a separately reviewed policy that preserves per-response nonce integrity or uses another approved CSP mechanism.
 
+### 8. Identity and session routes use the shared abuse authority
+
+- The perimeter accepts exactly one trusted client address in proxy mode, rejects maintained alternate client-network headers, removes raw forwarding/equivalent values, and passes only a server-owned HMAC network subject.
+- Google start uses a network policy; callback adds the browser-binding device axis when present; session validation combines the network and presented opaque-session axes before the session database lookup; logout uses network plus the presented session when available.
+- All stored limiter subjects are HMAC digests. Denial audit uses bounded policy and axis categories rather than raw addresses, tokens, cookies, state, callback data, or account-discovery details.
+- Counter or required audit failure denies with generic unavailability. A crossed limit returns generic `429` plus bounded `Retry-After`.
+- Target ceilings use account-target compound identity for authenticated routes, so one account cannot deny other accounts access to a shared trip or discussion target. These are checked-in v1 pre-preview ceilings. Real Google behavior, provider client-IP compatibility, distributed low-and-slow detection, challenges, user notification, operational alerts, key rotation, aggregate cleanup load, and load calibration remain unverified.
+
 ## Consequences
 
 - NitipCuy has one internal account and session authority without becoming a password operator.
 - Email minimization prevents an unnecessary private contact copy and removes email-based account takeover or merging logic from this slice.
 - A database or session-authority outage blocks protected writes; anonymous published-trip reads remain a distinct bounded query.
 - Privileged moderation is source- and database-integration-testable with a synthetic persisted step-up session, but no live user can obtain that assurance through Google login alone.
-- Real Google client creation, provider-console configuration, provider verification, production keys, deployment, shared abuse controls, managed key custody, browser automation, and production security remain separate approvals and evidence gates.
+- Real Google client creation, provider-console configuration, provider verification, production keys, deployment, managed key custody/rotation, browser automation, provider WAF/bot/challenge controls, operational abuse alerts, load calibration, and production security remain separate approvals and evidence gates.
 - Incorrect or absent perimeter configuration returns a generic unavailable response; hostile host, proxy, and forwarding requests return a non-redirecting denial. This favors safe unavailability over guessed request authority.
 
 ## Alternatives not selected
@@ -92,4 +100,4 @@ Authentication cannot become business authorization. A Google email, profile cla
 
 ## Evidence and non-claims
 
-The account/session evidence remains source-tested and disposable-PostgreSQL-integration-tested. Issue #9 additionally source-tests request-perimeter decisions and locally runtime-tests the built application in direct-loopback and simulated trusted-proxy modes. The runtime gate verifies nonce matching and freshness, production CSP without unsafe inline/eval, private- and denied-response `no-store`, hostile host/forwarding denial, exact `404`, trusted edge proof, and HSTS output. No Strix or other AI-driven dynamic assessment ran, and Strix sent no project code or runtime context to an external LLM provider. The pre-existing CodeRabbit GitHub integration separately processed the pull-request diff for summaries and release notes; it created no independent review object or security finding. No real Google account, provider console, preview deployment, production cookie, live edge, managed key, external target, real browser flow, load profile, incident exercise, or provider compatibility has been verified.
+The account/session evidence remains source-tested and disposable-PostgreSQL-integration-tested. Merged issue #9 additionally source-tests request-perimeter decisions and locally runtime-tests the built application in direct-loopback and simulated trusted-proxy modes. Issue #11 source-tests the versioned identity/session abuse policies and disposable-database-tests shared counter concurrency, HMAC redaction, denial-audit rollback, rollover, and bounded cleanup. No Strix or other AI-driven dynamic assessment ran, and Strix sent no project code or runtime context to an external LLM provider. The pre-existing CodeRabbit GitHub integration separately processed pull request #10; it created no independent review object or security finding. No real Google account, provider console, preview deployment, production cookie, live edge/client-address behavior, managed key/rotation, external target, real browser flow, load profile, operational alert, incident exercise, or provider compatibility has been verified.

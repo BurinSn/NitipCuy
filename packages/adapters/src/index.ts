@@ -23,6 +23,15 @@ export {
 export { createPrismaClient } from "./prisma-client";
 export type { PrismaClientOptions } from "./prisma-client";
 export {
+  AbuseProtectionUnavailableError,
+  PostgresAbuseProtection,
+  type AbuseBucketLimit,
+  type AbuseProtectionDecision,
+  type AbuseProtectionRequest,
+  type AbuseRateLimitAxis,
+  type PostgresAbuseProtectionOptions,
+} from "./postgres-abuse-protection";
+export {
   OptimisticConcurrencyError,
   PrismaMarketplaceUnitOfWork,
   PrismaTripDiscoveryRepository,

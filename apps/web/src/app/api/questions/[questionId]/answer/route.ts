@@ -4,6 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 import {
   readBoundedJson,
+  requireAbuseAllowance,
   requireAuthenticatedActor,
   requiredString,
   requireSameOriginMutation,
@@ -17,17 +18,24 @@ interface RouteContext {
 
 export async function POST(request: NextRequest, context: RouteContext) {
   try {
+    const correlationId = randomUUID();
     requireSameOriginMutation(request);
     const actor = await requireAuthenticatedActor(request);
-    const input = await readBoundedJson(request);
     const params = await context.params;
+    await requireAbuseAllowance(
+      request,
+      "discussion.answer",
+      { actor, targetSubject: params.questionId },
+      correlationId,
+    );
+    const input = await readBoundedJson(request);
     const answer = await getRuntime().answerPublicQuestion.execute(
       actor,
       {
         message: requiredString(input, "message"),
         questionId: params.questionId,
       },
-      { correlationId: randomUUID() },
+      { correlationId },
     );
     return NextResponse.json({ id: answer.id }, { status: 201 });
   } catch (error) {

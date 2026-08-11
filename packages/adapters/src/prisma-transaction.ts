@@ -5,3 +5,9 @@ export const serializableTransactionOptions = Object.freeze({
   maxWait: 2_000,
   timeout: 5_000,
 });
+
+export const sharedCounterTransactionOptions = Object.freeze({
+  isolationLevel: Prisma.TransactionIsolationLevel.ReadCommitted,
+  maxWait: serializableTransactionOptions.maxWait,
+  timeout: serializableTransactionOptions.timeout,
+});

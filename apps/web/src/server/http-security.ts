@@ -4,6 +4,12 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
 import type { AuthenticatedActor } from "@nitipcuy/domain";
+import { randomUUID } from "node:crypto";
+import {
+  AbuseProtectionUnavailableError,
+  type AbuseBucketLimit,
+  type AbuseProtectionDecision,
+} from "@nitipcuy/adapters";
 import {
   DomainValidationError,
   MarketplaceStateConflictError,
@@ -11,6 +17,14 @@ import {
 import { MarketplaceUseCaseError } from "@nitipcuy/application";
 
 import { isSameOriginJsonMutation } from "./http-security-core";
+import {
+  AbusePolicyContextError,
+  abusePolicyStorageKey,
+  buildAbuseLimits,
+  type AbusePolicyContext,
+  type AbusePolicyName,
+} from "./abuse-policy";
+import { canonicalClientNetworkHeader } from "./request-perimeter-core";
 import {
   getRuntime,
   RuntimeConfigurationError,
@@ -44,11 +58,57 @@ export async function requireAuthenticatedActor(
   if (!token) {
     throw new HttpBoundaryError(401, "AUTHENTICATION_REQUIRED");
   }
+  await requireAbuseAllowance(
+    request,
+    "session.validate",
+    { sessionSubject: token },
+    randomUUID(),
+  );
   const actor = await getRuntime().sessions.validate(token);
   if (!actor) {
     throw new HttpBoundaryError(401, "AUTHENTICATION_REQUIRED");
   }
   return actor;
+}
+
+export async function requireAbuseAllowance(
+  request: NextRequest,
+  policy: AbusePolicyName,
+  context: Omit<AbusePolicyContext, "networkSubject">,
+  correlationId: string,
+): Promise<void> {
+  const networkSubject = request.headers.get(canonicalClientNetworkHeader);
+  if (!networkSubject || !/^[0-9a-f]{64}$/.test(networkSubject)) {
+    throw new HttpBoundaryError(503, "SERVICE_UNAVAILABLE");
+  }
+
+  let limits: readonly AbuseBucketLimit[];
+  try {
+    limits = buildAbuseLimits(policy, { ...context, networkSubject });
+  } catch (error) {
+    if (error instanceof AbusePolicyContextError) {
+      throw new HttpBoundaryError(
+        error.kind === "INVALID" ? 400 : 503,
+        error.kind === "INVALID" ? "REQUEST_INVALID" : "SERVICE_UNAVAILABLE",
+      );
+    }
+    throw error;
+  }
+
+  const decision: AbuseProtectionDecision =
+    await getRuntime().abuseProtection.evaluate({
+      ...(context.actor ? { actorAccountId: context.actor.accountId } : {}),
+      correlationId,
+      limits,
+      policy: abusePolicyStorageKey(policy),
+    });
+  if (!decision.allowed) {
+    throw new HttpBoundaryError(
+      429,
+      "RATE_LIMITED",
+      decision.retryAfterSeconds,
+    );
+  }
 }
 
 export async function readBoundedJson(
@@ -126,7 +186,19 @@ export function routeFailure(error: unknown): NextResponse {
   }
 
   if (error instanceof HttpBoundaryError) {
-    return NextResponse.json({ error: error.code }, { status: error.status });
+    return NextResponse.json(
+      { error: error.code },
+      {
+        ...(error.retryAfterSeconds
+          ? { headers: { "Retry-After": String(error.retryAfterSeconds) } }
+          : {}),
+        status: error.status,
+      },
+    );
+  }
+
+  if (error instanceof AbuseProtectionUnavailableError) {
+    return NextResponse.json({ error: "SERVICE_UNAVAILABLE" }, { status: 503 });
   }
 
   if (error instanceof MarketplaceUseCaseError) {
@@ -179,10 +251,11 @@ export function routeFailure(error: unknown): NextResponse {
   return NextResponse.json({ error: "INTERNAL_ERROR" }, { status: 500 });
 }
 
-class HttpBoundaryError extends Error {
+export class HttpBoundaryError extends Error {
   constructor(
     readonly status: number,
     readonly code: string,
+    readonly retryAfterSeconds?: number,
   ) {
     super(code);
     this.name = "HttpBoundaryError";

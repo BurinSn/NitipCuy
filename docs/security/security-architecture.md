@@ -95,7 +95,7 @@ The initial Vercel direction may use the provider's network DDoS protection, fir
 Required layers:
 
 1. Put every public origin behind the approved edge; do not expose an alternate unprotected application origin.
-2. Restrict origin ingress to the approved edge path. Trust forwarding information only from an explicit proxy chain that strips and overwrites client-supplied `Forwarded`, `X-Forwarded-*`, and equivalent platform headers.
+2. Restrict origin ingress to the approved edge path. Trust forwarding information only from an explicit proxy chain that strips and overwrites client-supplied `Forwarded`, `X-Forwarded-*`, and equivalent platform headers. Requests reaching the application with alternate client-network authorities such as `CF-Connecting-IP`, `True-Client-IP`, `X-Real-IP`, or the maintained equivalent-header set fail closed, and all such values are defensively removed before route execution.
 3. Derive client IP, scheme, host, origin, redirect targets, callback URLs, and absolute URLs from one canonical server-owned policy. Reject unknown hosts, conflicting proxy metadata, and direct-origin traffic; never let a user-supplied host select a security boundary or generated URL.
 4. Apply managed WAF rules and narrowly reviewed custom rules.
 5. Use separate rate-limit policies for:
@@ -124,6 +124,8 @@ Security-dependency outages use this minimum failure policy:
 | Administrator, support, or moderation action | Fail closed when assurance, authorization, reason, audit, or dual-control requirements cannot be recorded |
 
 Every dependency receives an owner, timeout, circuit breaker, alert, safe external error, recovery path, and explicit decision whether read-only degradation is permitted. “Allow on error” is forbidden unless this document names the exact public read case.
+
+Issue #11 implements the first shared application limiter candidate for the routes that currently exist. The canonical perimeter accepts only one trusted client address in proxy mode, rejects maintained alternate client-network headers, emits an HMAC-only network subject, and strips raw forwarding and equivalent client-network metadata. One versioned policy authority combines action-scoped network, account, and session/device axes with compound target isolation: anonymous public detail uses network plus target, while authenticated discussion, publication, and moderation use account plus target. A single client or account therefore cannot exhaust a target bucket globally for unrelated users. Compound subjects are validated, length-framed, domain-separated SHA-256 values before the persistence adapter applies its separately keyed HMAC. PostgreSQL supplies one production timestamp per decision so web-instance clock skew cannot split a window; injected time requires explicit disposable-test-database acknowledgement. Fixed-window buckets update in bounded read-committed transactions across instances, delete at most 100 expired rows per decision, return generic `429` plus bounded `Retry-After`, and record at most one denial audit per crossed axis/bucket/window. Limiter or required audit failure returns generic `503`; no protected action silently allows. The checked-in v1 ceilings are conservative pre-preview safety defaults, not capacity or SLO claims. Per-request opportunistic cleanup is bounded but not load-tested; fixed-window boundary bursts, key rotation, mixed-version policy revision, provider edge compatibility, WAF/bot controls, metrics export, dashboards, alerts, load, and incident behavior remain unverified.
 
 The baseline follows the multi-layer availability approach in the [OWASP denial-of-service guidance](https://cheatsheetseries.owasp.org/cheatsheets/Denial_of_Service_Cheat_Sheet.html) and the resource-budget controls in [OWASP API4:2023](https://owasp.org/API-Security/editions/2023/en/0xa4-unrestricted-resource-consumption/).
 
@@ -355,7 +357,7 @@ Designed:
 - dependency and workflow supply-chain controls;
 - pooled PostgreSQL and modular-monolith direction.
 
-Implemented and source-tested for issue #3, merged issue #5, and the issue #9 working tree:
+Implemented and source-tested for issue #3, merged issues #5/#7/#9, and the issue #11 local candidate:
 
 - strict public-trip runtime invariants;
 - Google OIDC protocol fixtures covering exact scopes, issuer, audience, signature, expiry, state, nonce, and PKCE denial without real provider credentials;
@@ -372,15 +374,17 @@ Implemented and source-tested for issue #3, merged issue #5, and the issue #9 wo
 - one canonical request-perimeter authority with explicit loopback-only direct mode and HTTPS trusted-proxy mode, exact forwarded metadata, timing-safe bounded edge proof, generic fail-closed errors, and downstream stripping of proof and forwarding headers;
 - server-owned Google callback reconstruction, fresh per-request nonce CSP without production `unsafe-inline` or `unsafe-eval`, forced dynamic rendering, defensive browser headers, HSTS output for HTTPS policy, and private auth/API plus hostile-denial `no-store`;
 - source-tested hostile host, forwarding, ambiguity, proof, callback, internal-header, CSP, cache, and matcher cases plus a built local runtime gate in direct and simulated trusted-proxy modes.
+- one HMAC-only canonical network subject, versioned route-policy authority, additive PostgreSQL shared fixed-window buckets, deterministic multi-axis lock order, bounded expiry cleanup, generic `429`/`503`, and atomic bounded-cardinality denial audits;
+- disposable PostgreSQL concurrency, four-axis admission, raw-subject redaction, audit-rollback, rollover, and cleanup tests plus source-tested wiring across the existing persisted routes.
 
 Not implemented or verified:
 
 - real Google configuration, provider compatibility, production identity, production cookies, or managed runtime keys;
 - privileged MFA, privileged-session minting, factor enrollment, or recovery controls;
-- provider-verified trusted-proxy header overwrite, ingress restriction, alternate-origin denial, shared rate-limiting, WAF, bot, public-cache safety, or DDoS configuration;
+- provider-verified trusted-proxy header overwrite/client-address compatibility, ingress restriction, alternate-origin denial, rate-limit configuration, WAF, bot, public-cache safety, or DDoS configuration;
 - production database identity, least-privilege grants, migration runner, backup, or independent safe-query static scan;
 - application-level encryption, managed keys, key rotation, encrypted-backup restore, or verified deletion;
 - private upload quarantine or scanner;
 - complete protected-command authorization matrix beyond profile, trip publication, and public discussion;
 - provider callbacks, payment, logistics, ledger, reconciliation, or worker;
-- security monitoring, incident response, backup restore, load tests, browser automation, real-browser testing, AI-driven dynamic assessment, or penetration testing. Issue #9 is explicitly Strix `NOT REQUIRED` / `NOT APPLICABLE` under BurinSN's zero-external-Strix-AI decision: no hosted Strix model is approved to receive project context, no verified local Strix model is configured, no Strix target or run exists, and Strix sent no code or runtime context to an external LLM provider. The pre-existing CodeRabbit GitHub integration separately processed the PR diff for summaries and release notes; it produced no independent review object or security finding. The issue's highest evidence remains hostile source review plus local built-runtime testing; real preview, provider edge, Google browser flow, private-data, payment, upload, or materially expanded attack-surface work must classify Strix afresh.
+- metrics export, dashboards, actionable alert routes, operational security monitoring, incident response, backup restore, load tests, browser automation, real-browser testing, AI-driven dynamic assessment, or penetration testing. Issues #9 and #11 are explicitly Strix `NOT REQUIRED` / `NOT APPLICABLE` under BurinSN's zero-external-Strix-AI decision: no hosted Strix model is approved to receive project context, no verified local Strix model is configured, no Strix target or run exists, and Strix sent no code or runtime context to an external LLM provider. The pre-existing CodeRabbit GitHub integration processed pull request #10; any future pull-request processing must be disclosed separately and is not independent security evidence. Real preview, provider edge, Google browser flow, private data, payment, upload, or materially expanded attack-surface work must classify Strix afresh.

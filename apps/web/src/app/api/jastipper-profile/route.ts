@@ -4,6 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 import {
   readBoundedJson,
+  requireAbuseAllowance,
   requireAuthenticatedActor,
   requiredString,
   requireSameOriginMutation,
@@ -13,8 +14,15 @@ import { getRuntime } from "@/server/runtime";
 
 export async function POST(request: NextRequest) {
   try {
+    const correlationId = randomUUID();
     requireSameOriginMutation(request);
     const actor = await requireAuthenticatedActor(request);
+    await requireAbuseAllowance(
+      request,
+      "profile.create",
+      { actor },
+      correlationId,
+    );
     const input = await readBoundedJson(request);
     const profile = await getRuntime().createJastipperProfile.execute(
       actor,
@@ -24,7 +32,7 @@ export async function POST(request: NextRequest) {
         rateSummary: requiredString(input, "rateSummary"),
         sellerLocationLabel: requiredString(input, "sellerLocationLabel"),
       },
-      { correlationId: randomUUID() },
+      { correlationId },
     );
     return NextResponse.json({ id: profile.id }, { status: 201 });
   } catch (error) {

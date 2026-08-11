@@ -1209,3 +1209,103 @@ Do not present inference, provider marketing, provisional pricing, or a future i
 ### No new product or security-control learning
 
 - This approval record changes no implementation, security control, Strix applicability, provider decision, product model, roadmap stage, or delivery order.
+
+## 2026-08-10 12:36 WIB - Shared limiter correctness needs canonical identity, atomic audit, and runtime evidence
+
+### Verified
+
+- A shared database counter can enforce one ceiling across independent web instances only when every instance derives the same canonical subject and updates the same bucket atomically.
+  - Evidence: two separate PostgreSQL limiter objects admitted exactly five of twelve concurrent requests against identical network, account, session, and target axes; every bucket ended at count twelve.
+  - Impact: process-local maps and per-instance locks remain prohibited for production-shape abuse authority.
+- Privacy-safe limiter storage requires keyed, domain-separated subjects rather than raw addresses or predictable plain hashes.
+  - Evidence: the perimeter emits an HMAC network subject, the adapter HMACs every axis with domain separation, and disposable-database inspection found none of the raw network/account/session/target inputs in bucket or denial-audit rows.
+  - Impact: telemetry uses bounded policy/axis categories while raw identifiers and user content remain outside rate-limit evidence.
+- A denial audit is part of the protected decision boundary when policy requires it.
+  - Evidence: forcing an invalid audit identifier made the denial transaction fail closed and rolled the counter increment and audit-claim flag back.
+  - Impact: do not catch and ignore audit failure around a protected allow/deny decision; return generic unavailability.
+- Versioning the storage policy key prevents a limit/window edit from silently reinterpreting existing rows.
+  - Impact: any v2 policy still needs a mixed-version rollout analysis because old and new instances can enforce independent buckets during transition.
+- Shared storage is not enough if each web instance chooses its own window clock.
+  - Evidence: hostile review found the first adapter derived fixed windows from the injected application clock even though counters were shared.
+  - Correction: production samples PostgreSQL time inside the bounded transaction; clock injection now requires an explicit disposable-test-database acknowledgement.
+- A local runtime probe can expose framework-added forwarding metadata that source-only review misses.
+  - Evidence: the corrected two-mode production build passed only after the local-direct policy accounted for Next.js's canonical loopback value while retaining hostile remote and ambiguous denials.
+  - Impact: provider-edge interpretation still requires provider verification; the local probe proves only the built local boundary.
+
+### Corrected assumption
+
+- Explicit local-direct mode cannot require `X-Forwarded-For` to be absent in the built Next.js runtime.
+  - Evidence: the first built-runtime probe returned `421` for valid loopback requests because Next.js inserted a loopback forwarding value.
+  - Correction: local-direct mode accepts absent or one canonical loopback address only; trusted-proxy mode still requires one canonical IP and exact edge proof, and every raw forwarding value is stripped downstream.
+
+### Failed approach
+
+- The ambient Node.js `26.0.0` / pnpm `9.15.0` command failed the engine gate and produced no admissible test evidence.
+  - Recovery: invoke the complete task graph through the exact Node.js `24.18.0` and pnpm `11.17.0` compatibility wrapper so child commands inherit the supported path.
+
+### Deferred
+
+- Fixed-window boundaries can admit bursts on both sides of a reset. Threshold calibration, a possible token-bucket replacement, HMAC rotation without uncontrolled resets, mixed-version policy rollout, provider client-IP compatibility, WAF/bot coordination, metrics export, dashboards, alerts, load profiles, and incident response remain separate evidence gates.
+- No new product or commercial decision resulted; Stage 1 order and the next server-authoritative order-eligibility slice remain unchanged.
+
+## 2026-08-10 12:41 WIB - Pull-request creation produced no new product or control learning
+
+### No new product or security-control learning
+
+- Opening pull request #12 changed only the live review surface. It changed no implementation, security control, Strix applicability, provider decision, product model, stage, or delivery order.
+- The required lifecycle reconciliation creates one documentation-only successor SHA; its review pins and hosted checks must replace, not be combined with, the implementation head's volatile status.
+
+## 2026-08-10 12:46 WIB - Final hosted verification produced no new control learning
+
+### Reusable learning
+
+- A cancelled review-governance event is not a failed gate when the workflow's concurrency rule cancels an in-flight body version and the final replacement event passes on the same immutable head. Preserve both facts so notification history is not mistaken for an application failure.
+- A successful CodeRabbit status can coexist with a rate-limit notice and no review output. Inspect review objects, line comments, and the actual bot comment before assigning review coverage.
+
+### No new product or security-control learning
+
+- Exact-head hosted verification changed no implementation, security control, Strix applicability, provider decision, product model, stage, or delivery order.
+
+## 2026-08-10 19:55 WIB - Target limits must include caller identity and alternate IP authority must fail closed
+
+### Reusable learning
+
+- A target axis keyed only by target identifier is a shared denial lever, even when separate network/account axes also exist.
+  - Evidence: `public.trip-detail` allowed 120 requests per network but only 60 per raw target, while discussion allowed 12 per account/session but only 6 per raw target. One caller could therefore exhaust the target bucket for everyone else.
+  - Correction: anonymous targets use network-target identity and authenticated targets use account-target identity. Adversarial tests prove different callers receive different target subjects while the same caller-target pair remains stable.
+- Compound security identities need unambiguous construction and bounded inputs.
+  - Correction: validate each component, length-frame it, domain-separate the construction, and hash it before the persistence adapter's independent keyed HMAC. Simple delimiter concatenation would permit collisions when future identifier alphabets evolve.
+- Removing only `Forwarded` and `X-Forwarded-*` does not remove client-network authority.
+  - Evidence: a generic `Headers` clone preserved `X-Real-IP`, `CF-Connecting-IP`, `True-Client-IP`, and other provider conventions for downstream route code.
+  - Correction: one maintained header-name authority drives both fail-closed ingress rejection and defense-in-depth downstream removal, with local and trusted-proxy tests for every entry.
+- A technically mergeable GitHub state is not a security-review pass. The earlier exact-head verdict was explicitly superseded when complete-diff hostile review found these issues.
+
+### Deferred
+
+- The limiter deletes at most 100 expired rows per decision. That bounds one transaction but not aggregate write amplification under sustained traffic; load evidence or a dedicated cleanup schedule remains required before a production-capacity claim.
+- The maintained alternate-header set must be reconciled with the selected edge provider before activation. A legitimate provider-added alternate header will fail closed until the edge is configured to remove it and supply only the approved canonical metadata.
+- No new product, commercial, provider, Strix, stage, or delivery-order decision resulted.
+
+## 2026-08-10 20:00 WIB - Corrected exact-head verification produced no new control learning
+
+### Reusable learning
+
+- Coordinated issue/PR repinning can create short-lived review-governance failures when an event captures the PR before both governed records carry the successor SHA. Treat those events as transition evidence only after inspecting their exact error and obtaining a passing replacement run on the current immutable head.
+- A successful third-party status must be decomposed into actual coverage. CodeRabbit processed the corrected 38-file diff and produced a walkthrough, but no GitHub review object, line finding, or security assessment; the local hostile review remains the actionable security review.
+- The narrow final lifecycle successor is safe only when its diff from the reviewed implementation head contains exactly the four mandatory lifecycle documents. Any other changed file invalidates the conditional transition.
+
+### No new product or security-control learning
+
+- Hosted verification and the final evidence record change no implementation, security control, Strix applicability, provider decision, product model, roadmap stage, or delivery order.
+
+## 2026-08-11 12:41 WIB - Owner approval is bound to the immutable reviewed state
+
+### Reusable learning
+
+- A conversational instruction to finalize and proceed is merge authority only after it is reconciled with the exact reviewed SHA, checks, limitations, and repository policy. Here it followed the explicit merge-ready result for pull request #12 and therefore authorizes the governed squash-merge path.
+- Recording approval creates one more immutable head. Preserve the approval by limiting that successor to the four lifecycle documents, repinning both governance records, and repeating exact-head checks and narrow hostile review before merge.
+- Approval does not survive a source, dependency, configuration, product, provider, security-control, scope, or finding change and never silently expands into deployment or production authority.
+
+### No new product or security-control learning
+
+- The approval record changes no implementation, security control, Strix applicability, provider decision, product model, roadmap stage, or delivery order.

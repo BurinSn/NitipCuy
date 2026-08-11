@@ -6,6 +6,7 @@ import { edgeProofHeader } from "./server/request-perimeter-core";
 import { config, proxy } from "./proxy";
 
 const originalEnvironment = {
+  abuseSubjectHmacKey: process.env.NITIPCUY_ABUSE_SUBJECT_HMAC_KEY_BASE64,
   appOrigin: process.env.NITIPCUY_APP_ORIGIN,
   edgeProof: process.env.NITIPCUY_EDGE_REQUEST_SECRET,
   nodeEnvironment: process.env.NODE_ENV,
@@ -14,12 +15,20 @@ const originalEnvironment = {
 
 describe.sequential("Next.js request perimeter proxy", () => {
   beforeEach(() => {
+    process.env.NITIPCUY_ABUSE_SUBJECT_HMAC_KEY_BASE64 = Buffer.alloc(
+      32,
+      11,
+    ).toString("base64");
     process.env.NITIPCUY_APP_ORIGIN = "http://localhost:3000";
     delete process.env.NITIPCUY_EDGE_REQUEST_SECRET;
     process.env.NITIPCUY_PROXY_MODE = "LOCAL_DIRECT";
   });
 
   afterEach(() => {
+    restoreEnvironment(
+      "NITIPCUY_ABUSE_SUBJECT_HMAC_KEY_BASE64",
+      originalEnvironment.abuseSubjectHmacKey,
+    );
     restoreEnvironment("NITIPCUY_APP_ORIGIN", originalEnvironment.appOrigin);
     restoreEnvironment(
       "NITIPCUY_EDGE_REQUEST_SECRET",
@@ -108,6 +117,7 @@ describe.sequential("Next.js request perimeter proxy", () => {
         headers: {
           [edgeProofHeader]: edgeProof,
           host: "internal-origin.example",
+          "x-forwarded-for": "203.0.113.10",
           "x-forwarded-host": "preview.nitipcuy.example",
           "x-forwarded-port": "443",
           "x-forwarded-proto": "https",
