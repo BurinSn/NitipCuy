@@ -1,10 +1,10 @@
 # NitipCuy Canonical Roadmap
 
-Last reviewed: 2026-08-11 14:11 WIB
+Last reviewed: 2026-08-11 14:17 WIB
 
 Current stage: Stage 1 - Platform foundation
 
-Current work item: Issue #13 and pull request #14 are open from verified base `ea4b629466df1e1e1381f62ae5ca26722edbe4bf`. Reviewed implementation head `9c145515367f81571e7583495f88eca53b8d9abe` implements the first protected `SUBMITTED` request command for both service modes with locked live-database-time eligibility, active seller/profile locks, exact 10-gram capacity units, conditional offer revision, composite ownership constraints, serializable final-slot reservation, account-bound durable replay, atomic audit/outbox, and a bounded `order.submit.v1` route policy. Exact Node.js `24.18.0` / pnpm `11.17.0` `pnpm check` passes 244 tests, build, and the two-mode runtime probe; production audit, lifecycle, YAML/link, unsafe-query/execution, logging, high-confidence secret, and diff-hygiene gates pass. The implementation-head DRY/hostile review is `CLEAN WITH NOTES`, the initial hosted review-governance run passed, and GitHub reported pull request #14 mergeable. The required four-lifecycle-file successor is narrowly reviewed locally; final exact-SHA repin/push, repeated hosted evidence, CodeRabbit disclosure review, and owner approval remain pending. Payment, delivery, seller response, reservation release, browser, provider, deployment, load, and production remain excluded.
+Current work item: Issue #13 and pull request #14 are open from verified base `ea4b629466df1e1e1381f62ae5ca26722edbe4bf`. Reviewed implementation head `9c145515367f81571e7583495f88eca53b8d9abe` implements the first protected `SUBMITTED` request command for both service modes with locked live-database-time eligibility, active seller/profile locks, exact 10-gram capacity units, conditional offer revision, composite ownership constraints, serializable final-slot reservation, account-bound durable replay, atomic audit/outbox, and a bounded `order.submit.v1` route policy. Exact Node.js `24.18.0` / pnpm `11.17.0` `pnpm check` passes 244 tests, build, and the two-mode runtime probe; production audit, lifecycle, YAML/link, unsafe-query/execution, logging, high-confidence secret, and diff-hygiene gates pass. Lifecycle head `b4bb4aee87f6bdcf190504699f91bce7f5122050` passed hosted application, lifecycle, and repeated review-governance checks with zero annotations; CodeRabbit was rate limited and supplied no review finding; GitHub reported `CLEAN` / `MERGEABLE` with no review object. A final four-lifecycle-file evidence successor, exact-SHA repin, repeated hosted checks, and owner approval remain pending. Payment, delivery, seller response, reservation release, browser, provider, deployment, load, and production remain excluded.
 
 ## 1. Role, authority, and freshness contract
 
@@ -320,11 +320,11 @@ The unresolved DOKU, logistics, policy, legal, and pilot items listed in Stage 3
 
 ### Now
 
-Repin issue #13 and pull request #14 to the narrowly reviewed four-lifecycle-file successor, push it, then obtain final hosted exact-head evidence.
+Commit, narrowly review, and repin the final four-lifecycle-file evidence successor, then repeat hosted exact-head gates.
 
 ### Next
 
-Inspect final hosted application, lifecycle, and review-governance checks, CodeRabbit output, mergeability, and review objects on the repinned pull request #14 head, then obtain fresh BurinSN review before any merge.
+Report the repeated final exact-head checks, hostile-review rating, CodeRabbit limitation, mergeability, and exclusions, then obtain fresh BurinSN review before any merge.
 
 ### Later
 

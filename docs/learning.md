@@ -1355,3 +1355,14 @@ Do not present inference, provider marketing, provisional pricing, or a future i
 ### No new product or security-control learning
 
 - Pull-request publication and lifecycle-state recording change no implementation, security control, Strix applicability, provider decision, product model, roadmap stage, or delivery order.
+
+## 2026-08-11 14:17 WIB - Final hosted verification produced no new control learning
+
+### Reused governance learning
+
+- A cancelled workflow event is transition evidence, not a failed gate, when its sole annotation says the concurrency rule selected a higher-priority waiting replacement and that replacement passes on the same exact head.
+- A successful third-party status can still mean no review occurred. CodeRabbit's `Review rate limited` status produced a walkthrough but no review object or finding, so it contributes no independent correctness or security coverage.
+
+### No new product or security-control learning
+
+- Hosted verification and its lifecycle checkpoint change no implementation, security control, Strix applicability, provider decision, product model, roadmap stage, or delivery order.
