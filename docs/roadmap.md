@@ -1,10 +1,10 @@
 # NitipCuy Canonical Roadmap
 
-Last reviewed: 2026-08-11 12:41 WIB
+Last reviewed: 2026-08-11 14:06 WIB
 
 Current stage: Stage 1 - Platform foundation
 
-Current work item: Issue #11 and pull request #12 implement the next bounded protected-preview security slice on `sec/11-shared-abuse-observability` from merged issue #9 / pull request #10 base `23a6015781228cb04e167b83f6a28b3d3cc0b62d`. Hostile review of head `64ba91501d06ac06d47e1bdb9a81ffcea8da45be` found globally exhaustible target buckets and alternate raw client-IP headers surviving downstream. Corrected implementation head `5195c265fce5193dfbfaa33148499ca5acca233f` resolved both blockers, and final reviewed lifecycle successor `c3cca2c67fe3561bbf2ae0536ebc7bffccd612ee` changed exactly the four mandatory lifecycle documents. Exact Node.js `24.18.0` / pnpm `11.17.0` quality passed formatting, lint, 4-project boundaries, strict types, 205 tests, production build, corrected two-mode runtime, production audit, lifecycle, local content/diff gates, and hosted application/lifecycle/review-governance checks with zero annotations. Complete DRY and hostile review is `CLEAN WITH NOTES`; GitHub is `CLEAN` / `MERGEABLE`. BurinSN approved finalization and merge on 2026-08-11 subject to one four-lifecycle-file approval successor retaining clean exact-head evidence. Aggregate cleanup load remains untested. Strix stays `NOT REQUIRED` / `NOT APPLICABLE` / `NO TARGET`; stage and delivery order are unchanged.
+Current work item: Issue #11 / pull request #12 were squash-merged as `ea4b629466df1e1e1381f62ae5ca26722edbe4bf`, the issue closed, and branches were removed. Governed issue #13 is open and branch `feat/13-order-submission-capacity` starts from that verified base. Its corrected local candidate implements the first protected `SUBMITTED` request command for both service modes with locked live-database-time eligibility, active seller/profile locks, exact 10-gram capacity units, conditional offer revision, composite ownership constraints, serializable final-slot reservation, account-bound durable replay, atomic audit/outbox, and a bounded `order.submit.v1` route policy. Exact Node.js `24.18.0` / pnpm `11.17.0` `pnpm check` passes 244 tests, build, and the two-mode runtime probe; production audit, lifecycle, YAML/link, unsafe-query/execution, logging, high-confidence secret, and diff-hygiene gates pass. Immutable commit review, push, pull request, hosted evidence, and owner approval remain pending. Payment, delivery, seller response, reservation release, browser, provider, deployment, load, and production remain excluded.
 
 ## 1. Role, authority, and freshness contract
 
@@ -203,10 +203,10 @@ account
 - [x] Add the first additive PostgreSQL schema and SQL-reviewed migration through the isolated Prisma adapter, with disposable clean-apply evidence. Mixed-version and destructive contraction evidence is not applicable to this initial un-deployed schema and remains mandatory when evolution begins.
 - [x] Add Google OIDC identity proof and protected server-authoritative mutations without passwords or email linking. Google creates base assurance only; moderation requires a separately persisted phishing-resistant session, and no real privileged step-up/recovery path exists yet.
 - [x] Add integration tests using a container created and destroyed by the suite, with no configurable fallback to development or production databases.
-- [ ] Make new-order eligibility server-authoritative across exact time, offer state, seller eligibility, moderation, and capacity; reserve the final capacity atomically.
+- [ ] Complete issue #13's server-authoritative new-order slice. The local candidate rechecks database time, published/current offer, active seller/profile, supported mode, self-order, and exact capacity; one serializable transaction reserves the final capacity and commits the `SUBMITTED` request, account-bound idempotency result, audit, and outbox. Local source/disposable-database/build/runtime evidence passes; immutable review and merge remain pending.
 - [ ] Complete the remaining protected-preview controls. Implemented and source/integration-tested now: opaque digest-only sessions, rotation/revocation, exact transactional session/assurance/ownership checks, generic errors, exact-origin and Fetch-Metadata checks, parameterized Prisma queries, database ownership constraints, bounded inputs, and the issue #11 shared limiter candidate. Still required: provider-verified trusted proxy/direct-origin behavior, WAF/bot controls, managed key custody and rotation, complete logging-redaction/static/safe-query scans, operational metrics/alerts, browser automation, privileged step-up/recovery, and load/provider/incident evidence.
 - [x] Complete issue #9's inbound browser/session perimeter. Pull request #10 squash-merged as `23a6015781228cb04e167b83f6a28b3d3cc0b62d` with source and local built-runtime evidence for canonical request interpretation, simulated edge proof, nonce CSP, defensive headers, private no-store, callback reconstruction, and hostile request denial.
-- [ ] Complete issue #11's shared abuse-control and denial-telemetry slice. Corrected head `5195c265fce5193dfbfaa33148499ca5acca233f` derives one HMAC network subject at the perimeter, rejects/strips alternate client-IP authority, enforces versioned multi-axis PostgreSQL fixed-window policies with caller-target isolation, records bounded privacy-safe denial audits, and fails closed on authority/audit outage. Final reviewed head `c3cca2c67fe3561bbf2ae0536ebc7bffccd612ee` passed local, hosted, DRY, and hostile gates; owner approval is received. The approval-record successor, squash merge, and post-merge verification remain. Provider WAF/bot behavior, operational dashboards/alerts, threshold calibration, aggregate cleanup load, broader load, and incident evidence remain separate.
+- [x] Complete issue #11's shared abuse-control and denial-telemetry repository slice. Pull request #12 squash-merged as `ea4b629466df1e1e1381f62ae5ca26722edbe4bf`; issue closure, local/remote `main`, and branch cleanup were verified. Provider WAF/bot behavior, operational dashboards/alerts, threshold calibration, aggregate cleanup load, broader load, and incident evidence remain separate.
 - [x] Establish bounded cursor pagination plus connection, query, statement, transaction, and request budgets for the persisted slice. Minimal production observability remains open with the prior item.
 - [ ] Record preliminary pilot capacity, provider-quota, cost, RPO, and RTO questions without inventing targets before the pilot is bounded.
 
@@ -320,12 +320,12 @@ The unresolved DOKU, logistics, policy, legal, and pilot items listed in Stage 3
 
 ### Now
 
-Commit and push pull request #12's four-lifecycle-file owner-approval checkpoint, then repin the issue and pull request to that immutable successor.
+Commit issue #13's corrected local candidate and run complete-diff DRY plus hostile security review against the immutable head.
 
 ### Next
 
-Verify the successor changes only the four lifecycle documents from reviewed head `c3cca2c67fe3561bbf2ae0536ebc7bffccd612ee`, repeat hosted checks and the lifecycle-delta hostile review, then squash-merge under the recorded approval if the exact head remains fully green and finding-free. Verify `main`, issue closure, and branch cleanup. After this slice is merged, continue server-authoritative new-order eligibility and atomic final-capacity reservation through a separate governed issue.
+Commit and push the coherent issue #13 candidate, pin its immutable head in the governed issue, open a focused pull request, repeat local and hosted exact-head gates, and obtain fresh BurinSN review before any merge.
 
 ### Later
 
-Complete the core marketplace with mock providers, integrate approved real providers, run a closed pilot, then use Threads for acquisition and continuous feedback.
+Add seller acceptance/rejection, request expiry/cancellation, and capacity release before activating the reservation lifecycle. Then add accepted commercial terms and mock payment; delivery remains later. Complete the core marketplace with mock providers, integrate approved real providers, run a closed pilot, then use Threads for acquisition and continuous feedback.

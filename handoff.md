@@ -1,158 +1,164 @@
-# NitipCuy Cross-Session Handoff
+# NitipCuy Handoff
 
-Last updated: 2026-08-11 12:41 WIB
+Updated: 2026-08-11 14:06 WIB
 
-Handoff owner: Codex
+## 1. Resume order
 
-Product owner: BurinSN
+1. Read `AGENTS.md`, `docs/roadmap.md`, this handoff, the latest `docs/changes.md` entry, and the latest `docs/learning.md` entry.
+2. Read issue [#13](https://github.com/BurinSn/NitipCuy/issues/13), the order lifecycle, master specification, system architecture, resilience, security, quality, review-governance, and Git workflow authorities.
+3. Verify branch, worktree, local head, `origin/main`, issue #13, open pull requests, and hosted checks. Volatile live state outranks this file.
+4. Preserve unexpected work. Never inspect `.env*`, credentials, keys, browser sessions, private identity data, customer data, or production secrets.
 
-## 1. Role, authority, and freshness contract
-
-This file is the operational resume point. Live Git, GitHub, and verified runtime state override this record. It never grants merge, deployment, provider configuration, real-user testing, external security testing, payment movement, production action, or public-launch authority.
-
-## 2. Mandatory resume protocol
-
-1. Read `AGENTS.md`, `docs/roadmap.md`, this handoff, the latest `docs/changes.md`, and relevant `docs/learning.md`.
-2. Read ADR 0004, ADR 0005, system architecture, security, resilience, quality, Git, and review-governance authorities for issue #11.
-3. Verify branch, status, local head, `origin/main`, issue #11, open pull requests, and hosted checks.
-4. Preserve unexpected work and never inspect `.env*`, credentials, keys, browser sessions, private identity data, customer data, or production secrets.
-
-Minimum live verification:
+Useful read-only commands:
 
 ```bash
 git status --short --branch
 git rev-parse HEAD
 git rev-parse origin/main
-gh issue view 11 --repo BurinSn/NitipCuy
+gh issue view 13 --repo BurinSn/NitipCuy
 gh pr list --repo BurinSn/NitipCuy --state open
 ```
 
-## 3. Product compass and evidence boundary
+## 2. Verified repository and GitHub state
 
-NitipCuy is a standalone BurinSN marketplace connecting customers with independent jastippers through Shop for me and Carry my item. Jastippers set their own rates and terms; transaction fees are the approved revenue direction. The current Stage 1 work stops before orders, addresses, private chat, real evidence, money, logistics, disputes, provider activation, preview deployment, or production.
+| Item | Verified state |
+|---|---|
+| Canonical repository | `https://github.com/BurinSn/NitipCuy` |
+| Default branch | `main` |
+| Current merged base | `ea4b629466df1e1e1381f62ae5ca26722edbe4bf` |
+| Local branch | `feat/13-order-submission-capacity` |
+| Local `HEAD` | still the merged base; issue #13 candidate is uncommitted |
+| Worktree | intentionally dirty with issue #13 source, migration, tests, and documentation |
+| Active issue | #13, open |
+| Open pull requests | none at last verification |
+| Issue #11 / PR #12 | merged/closed as `ea4b629466df1e1e1381f62ae5ca26722edbe4bf`; feature branches removed |
+| Strix | issue #13 is `NOT REQUIRED` / `NOT APPLICABLE` / `NO TARGET`; no authorization, plan, budget, execution, report, or external Strix model action exists |
 
-Claims must distinguish designed, implemented, source-tested, local-runtime-tested, disposable-database-integration-tested, load-tested, provider-verified, and incident-tested evidence.
+Do not commit on `main`, force-push, reset, clean, deploy, activate a provider, or merge without the governed workflow and fresh BurinSN approval.
 
-## 4. Completed repository checkpoints
+## 3. Current objective and approved boundary
 
-- Issue #5 / pull request #6 delivered the persisted Google-OIDC account, session, profile, trip, moderation, discovery, and public-Q&A foundation; it squash-merged as `f38cdaf144ff3c22c39e7a28544363fdb0fd0a19`.
-- Issue #7 / pull request #8 delivered visible DRY and guarded-Strix governance; it squash-merged as `d09747b1a8072eaafe23f7bc604b82bb7eae5bf3`.
-- Issue #9 / pull request #10 delivered the inbound browser/session perimeter and deterministic two-mode runtime probe. After BurinSN approval and repeated exact-head verification, it squash-merged on 2026-08-09 as `23a6015781228cb04e167b83f6a28b3d3cc0b62d`; issue #9 closed and feature branches were removed.
-- The historical failed workflow emails for pull request #10 were governance-transition failures: two issue-heading failures corrected by rerun, two brief DRY-pin mismatches while the successor head was being pushed, and one post-merge closed-issue lookup corrected by a controlled rerun. No application or security-execution check failed, and the final required runs passed.
+Issue #13 adds the first authoritative order-entry command:
 
-## 5. Active issue #11
-
-Issue [#11](https://github.com/BurinSn/NitipCuy/issues/11) governs shared abuse controls and privacy-safe denial telemetry for the existing persisted routes.
+```text
+authenticated non-owner customer
+  -> exact Shop for me or Carry my item declaration
+  -> database-time offer and seller eligibility
+  -> exact capacity reservation
+  -> private SUBMITTED request
+  -> atomic audit, outbox, and completed replay result
+```
 
 Included:
 
-- one canonical client-network decision: explicit loopback identity in local-direct mode and exactly one canonical IP address supplied through the trusted-proxy path;
-- fail-closed rejection and downstream removal of raw forwarding plus maintained alternate client-network metadata before route execution, and a server-owned HMAC network subject using `NITIPCUY_ABUSE_SUBJECT_HMAC_KEY_BASE64`;
-- one versioned typed policy authority for identity start/callback, session validation/logout, public trip list/detail, profile/trip writes, discussion, and moderation;
-- additive PostgreSQL fixed-window buckets for action-scoped network, account, session/device, and caller-target axes; public detail uses network-target while authenticated actions use account-target so no target bucket is globally exhaustible;
-- concurrency-safe shared decisions, bounded opportunistic expiry cleanup, generic `429` plus bounded `Retry-After`, and generic fail-closed `503` on authority or audit failure;
-- one atomic denial audit per crossed axis/bucket/window without raw IPs, tokens, cookies, OAuth values, user content, or raw target identifiers;
-- hostile source/unit tests, disposable PostgreSQL 18 concurrency/redaction/rollback/cleanup tests, and the existing built two-mode perimeter probe.
+- both service modes;
+- integer-IDR request values;
+- integer grams at domain/HTTP boundaries and exact two-decimal kilograms in PostgreSQL;
+- published/current offer, supported mode, ordering window, self-order, active seller-account/profile, and capacity checks;
+- account-bound key-digest-only durable replay with canonical payload fingerprint;
+- one serializable transaction across capacity, request, success audit, outbox, and completed idempotency result;
+- a protected bounded JSON route and `order.submit.v1` shared abuse policy;
+- source and disposable-PostgreSQL denial, concurrency, and rollback tests.
 
 Excluded:
 
-- provider WAF/bot/challenge/IP-reputation controls, dashboards, alerts, SIEM, production logging backend, deployment, real Google, real data, load/soak testing, provider verification, and incident exercise;
-- capacity or production-readiness claims; the checked-in v1 ceilings are conservative pre-preview safety defaults and require later pilot calibration;
-- privileged recovery, new-order eligibility/capacity, payment, upload, KMS/private-data work, or cache implementation;
-- Strix authorization, plan, execution, report, or external model transfer.
+- seller acceptance/rejection, expiry/cancellation, and capacity release;
+- accepted commercial price, payment, DOKU, ledger, refund, settlement, or payout;
+- private address/chat, evidence upload, fulfilment, Biteship, tracking, pickup, dispatch, or delivery;
+- checkout UI, visual approval, browser automation, real Google, managed database, provider, deployment, staging, production, real user data, load, incident, or launch;
+- Strix execution or penetration-test claims.
 
-## 6. Verified live repository state
+The reservation lifecycle must not serve real users until safe seller response, expiry/cancellation, and capacity release exist.
 
-Verified 2026-08-11 12:41 WIB:
+## 4. Local implementation state
 
-| Field | State |
-|---|---|
-| Local project | `/Users/miclawrencee/Workspace/NitipCuy` |
-| Canonical remote | `https://github.com/BurinSn/NitipCuy` |
-| Visibility / default branch | Private / `main` |
-| `main`, `origin/main`, branch base | `23a6015781228cb04e167b83f6a28b3d3cc0b62d` |
-| Active issue | #11, open |
-| Active branch | `sec/11-shared-abuse-observability` |
-| Pull request | #12, open, not draft, GitHub `CLEAN` / `MERGEABLE` at final reviewed head `c3cca2c67fe3561bbf2ae0536ebc7bffccd612ee`; complete DRY and hostile review is `CLEAN WITH NOTES` |
-| Worktree | Clean before this owner-approval lifecycle update; local and remote feature heads matched |
-| Deployment / providers | None deployed or activated |
-| Strix issue state | `NOT REQUIRED` / `NOT APPLICABLE`, target class `NO TARGET` under the approved zero-external-Strix-AI path |
-| Merge authority | BurinSN approved finalization and merge on 2026-08-11 after exact-head evidence was explained; approval is conditional on the approval-record successor changing only the four lifecycle documents and repeating clean hosted/review evidence |
+Implemented in the dirty worktree:
 
-## 7. Current implementation state
+- `packages/domain/src/order-request.ts`: bounded mode-specific declarations, request identity/status, immutable submitted shape, and exact capacity-unit rules;
+- `packages/application/src/marketplace-foundation.ts`: database-authoritative submission use case, eligibility, self-order and mode denial, canonical fingerprinting, atomic orchestration, and generic error codes;
+- `packages/adapters/prisma/schema.prisma` plus migration `20260811070000_order_submission_capacity`: additive request/idempotency tables, constraints, indexes, and foreign keys;
+- `packages/adapters/src/prisma-marketplace.ts`: live database wall time, transaction advisory-lock replay, active seller/profile locks, locked-trip deadline/capacity/version update, request mapping, and completion persistence;
+- `apps/web/src/app/api/trips/[tripId]/requests/route.ts`: protected `POST` endpoint and safe response;
+- `apps/web/src/server/order-submission-input.ts`: exact per-mode JSON shapes and private-field exclusion;
+- `apps/web/src/server/abuse-policy.ts`: `order.submit.v1` network/account/session/account-target policy;
+- domain, application, web, and disposable-PostgreSQL tests for bounds, denials, both mode mappings, database time, replay/conflict/in-progress, final-slot contention, and rollback;
+- lifecycle and affected product/architecture/security/quality documentation reconciliation.
 
-- `packages/adapters/src/postgres-abuse-protection.ts` owns validated policy input, subject HMAC, one PostgreSQL-sampled production timestamp, deterministic axis lock order, shared read-committed transactional increments with bounded connection-wait/transaction time, bounded cleanup, first-denial audit claims, and generic authority failure. Injected time requires an explicit disposable-test-database acknowledgement.
-- Migration `20260810090000_shared_abuse_controls` adds only the enum and `abuse_rate_limit_bucket` table with composite authority key, digest/window/count constraints, and expiry index.
-- `apps/web/src/server/abuse-policy.ts` is the sole v1 route-policy authority. Policy revisions are explicit storage keys so a safety ceiling cannot silently change in place. The correction candidate makes anonymous target identity network-target and authenticated target identity account-target using a validated, length-framed, domain-separated digest before the storage HMAC.
-- The request perimeter requires a separate exact 32-byte HMAC key. Trusted proxy mode requires one canonical `X-Forwarded-For` address; local-direct mode accepts absent or framework-inserted loopback only. A maintained set of alternate client-network authorities fails closed, and raw forwarding, alternate client-network, and proof headers do not reach routes.
-- Existing persisted routes call the common guard. Session validation uses both network and presented opaque-session axes before database validation; protected route policies add authenticated account/session and relevant target axes.
-- Denial events use bounded action/reason/target categories. Bucket subjects are HMAC digests and audit rows contain no raw limiter subject.
-- Fixed windows intentionally remain simple and source/integration tested. Their boundary-burst characteristic, HMAC-rotation reset risk, policy calibration, mixed-version policy evolution, aggregate per-request cleanup load, and external monitoring remain activation work.
+Important implementation facts:
 
-## 8. Verification state
+- authorization and route-level shared abuse admission occur before idempotency lookup;
+- the raw idempotency key is not persisted; account, operation, key digest, and payload fingerprint scope the completed result;
+- a transaction advisory-lock collision can only falsely deny as in-progress, not duplicate an order;
+- the submitted snapshot is not the future seller-accepted commercial snapshot;
+- no provider or object-storage call occurs inside the transaction;
+- request item content is synthetic test data only. Managed encryption/key custody and real private-data activation remain unimplemented.
 
-Rejected as evidence:
-
-- the ambient Node.js `26.0.0` / pnpm `9.15.0` invocation stopped at `engine-strict` before generation or tests;
-- the first built-runtime attempt after adding client-network validation returned local `421` because Next.js inserts a loopback forwarding value. The policy was corrected to accept only absent or canonical loopback in explicit local-direct mode; that failed run is correction evidence, not a pass.
+## 5. Verification obtained
 
 Passed with exact Node.js `24.18.0` and pnpm `11.17.0`:
 
-- complete `pnpm check`: formatting, lint, dependency boundaries across 4 projects / 69 source files / 227 module references, strict type checking, 185 tests, production build, and the two-mode built-runtime perimeter probe;
-- 17 review-governance tests, 21 dependency-boundary tests, 19 domain tests, and 20 application tests;
-- 43 web tests covering policy construction, generic `429`/`503`, key/perimeter behavior, hostile client addresses, proxy behavior, and existing HTTP boundaries;
-- 65 adapter tests, including disposable PostgreSQL clean migration, database-time authority, cross-instance concurrent admission, four-axis denial, HMAC redaction, atomic audit rollback, fixed-window rollover, and bounded cleanup;
-- production dependency audit with no known vulnerability;
-- lifecycle participation, diff hygiene, high-confidence secret/unsafe-execution/sensitive-logging scans, 36 local Markdown links across 22 tracked Markdown files, and parsing of all 7 tracked YAML files;
-- built runtime probe in direct and simulated trusted-proxy modes: root `200`, unauthenticated session `401`, unknown trip `404`, hostile host/forwarding/prefetch `421`, fresh matching nonce CSP, private/denied `no-store`, HSTS, and edge-proof non-disclosure;
-- complete candidate-diff DRY and hostile source-security review found no unresolved actionable issue.
+- `pnpm check`;
+- formatting and lint with no reported warning;
+- dependency boundaries: 4 projects, 75 source files, 251 module references;
+- strict type checking across all four packages;
+- 244 tests:
+  - 17 review-governance;
+  - 21 dependency-boundary;
+  - 27 domain;
+  - 34 application;
+  - 71 adapter;
+  - 74 web;
+- clean application build; Next.js route manifest includes `/api/trips/[tripId]/requests`;
+- local built request-perimeter probe in direct and simulated trusted-proxy modes.
 
-Superseded review conclusion and current correction evidence:
+Disposable PostgreSQL 18 proved:
 
-- the complete hostile review of live head `64ba91501d06ac06d47e1bdb9a81ffcea8da45be` superseded the earlier clean verdict after finding that raw target-only buckets let one caller deny unrelated users and that common alternate client-IP headers survived the downstream clone;
-- the local correction now derives caller-target identities, rejects/strips nine maintained alternate client-network headers, and passes 49 focused policy/perimeter tests with exact Node.js `24.18.0` and pnpm `11.17.0`;
-- complete exact-toolchain `pnpm check` passed formatting, lint, 4-project boundaries across 69 source files / 228 references, strict types, 205 tests, production build, and the corrected two-mode runtime probe; `pnpm audit:prod` found no known vulnerability and lifecycle participation passed;
-- 36 local Markdown links across 22 tracked Markdown files, 7 tracked YAML parses, diff hygiene, and high-confidence credential, unsafe-execution/query, and sensitive-logging scans passed;
-- the prior hosted runs remain evidence only for the superseded head; the corrected checkpoint results below replace them.
+- clean application of all migrations;
+- database time overrides a hostile injected application clock;
+- a delayed in-transaction reservation crossing the deadline is denied using live database wall time;
+- Shop for me and Carry my item storage constraints and exact mappings;
+- composite foreign keys bind replay ownership to the request customer and request seller/profile ownership to the exact trip;
+- active seller/profile row locks and current offer revision;
+- exact same-key replay, changed-payload conflict, and active-duplicate denial;
+- one winner for two independent final-capacity attempts;
+- rollback of capacity/version, request, audit, outbox, and idempotency on late failure.
 
-Corrected immutable checkpoint `5195c265fce5193dfbfaa33148499ca5acca233f`:
+Also passed on the corrected candidate:
 
-- local, remote, and pull-request heads matched against base `23a6015781228cb04e167b83f6a28b3d3cc0b62d`; the worktree was clean before this final lifecycle update;
-- application-quality run `31390421544`, lifecycle run `31390421536`, and final review-governance run `31390637588` passed with zero annotations;
-- complete 38-file DRY and hostile security review was `CLEAN WITH NOTES`; both prior blockers were resolved and no new actionable finding appeared;
-- GitHub reported `CLEAN` / `MERGEABLE`, no review object or review decision, and CodeRabbit processed all 38 files but produced only a Free-plan walkthrough with no line finding or independent approval;
-- review-governance runs `31390421557` and `31390493774` failed only because their event payloads carried the superseded SHA during the coordinated issue/PR repin. Replacement runs `31390541826` and `31390637588` passed the exact current head.
-
-Final reviewed lifecycle successor `c3cca2c67fe3561bbf2ae0536ebc7bffccd612ee`:
-
-- its diff from corrected implementation head `5195c265fce5193dfbfaa33148499ca5acca233f` contained exactly `handoff.md`, `docs/changes.md`, `docs/roadmap.md`, and `docs/learning.md`;
-- application-quality run `31390826637`, lifecycle run `31390826315`, and final review-governance run `31391033326` passed with zero annotations;
-- the issue and PR both pinned the exact head as DRY `CLEAN WITH NOTES`, and Strix remained `NOT REQUIRED` / `NOT APPLICABLE` / `NO TARGET`;
-- GitHub reported `CLEAN` / `MERGEABLE` with no review object or review decision;
-- CodeRabbit was rate-limited on the exact four-file successor and supplied no new review or finding;
-- BurinSN then explicitly instructed finalization and proceeding. This is fresh merge approval for the reviewed state, not deployment, provider, production, Strix, or public-launch authority.
-
-Hosted checkpoint `33e67b5b7139327fbf67f3c701441ecb779e2ff8`:
-
-- application-quality run `31359479398`, lifecycle run `31359479386`, and final review-governance run `31359650901` passed with zero annotations;
-- the live issue/PR governed fields and exact DRY pins matched;
-- GitHub reported the pull request open, not draft, clean, and mergeable with no review object or review decision;
-- CodeRabbit selected the 38-file exact-head diff but reported its Free-plan review limit and supplied no review object, line comment, or finding. Its status is external-AI processing disclosure, not security evidence or approval;
-- one earlier review-governance event on the same SHA was automatically cancelled when the PR-body edit replaced it; the final replacement run passed and no failed check exists.
+- `pnpm audit:prod` with no known production vulnerability;
+- lifecycle participation and diff hygiene;
+- all 7 YAML files, 20 local Markdown documents, parameterized-query inventory, and high-confidence secret/log/unsafe-execution scans.
 
 Still pending:
 
-- commit/push of this four-lifecycle-file approval record, exact-head repinning, repeated hosted checks and narrow lifecycle-delta review, then squash merge and post-merge verification if every approval condition remains true.
+- complete `origin/main...HEAD` DRY and hostile security review pinned to an immutable commit;
+- GitHub issue progress update, push, pull request, hosted application/lifecycle/review-governance checks, CodeRabbit disclosure inspection, mergeability, and fresh owner approval.
 
-## 9. Authority and non-claims
+Highest evidence is source-tested, disposable-PostgreSQL-integration-tested, production-build-tested, and local request-perimeter-runtime-tested. No browser, provider, load, staging, production, or penetration-test evidence exists.
 
-- BurinSN authorized proceeding with the bounded Stage 1 workflow and, on 2026-08-11 after the final reviewed evidence was visible, explicitly approved finalization and merge of pull request #12 subject to the lifecycle-only successor conditions recorded here.
-- Merge approval does not authorize deployment, provider or production configuration, real-user testing, external target testing, payment movement, public launch, or Strix execution.
-- Issue #11 selects no Strix target under the approved zero-external-Strix-AI direction. The compensating evidence is complete hostile source review, deterministic negative tests, disposable-database concurrency/outage tests, dependency audit, and the built local runtime probe. This is not a penetration test.
-- The existing CodeRabbit GitHub integration may process a future PR diff; if it does, disclose that separately. It is not Strix evidence or owner approval.
-- No live edge has verified header overwrite, proof injection, IP format, ingress restriction, alternate-origin denial, WAF, bot controls, or rate-limit compatibility.
-- No load, browser, real Google, monitoring backend, alert route, managed key, backup, incident, staging, or production environment has been tested.
+## 6. Current risks and review focus
 
-## 10. Exact next action
+- Reservation release does not exist; real-user activation would strand capacity after rejection, expiry, or cancellation.
+- Submitted item content is private transactional data but managed encryption and production key custody do not exist.
+- The 10-gram precision and storage ceilings are technical bounds, not approved pilot, trust-tier, legal, insurance, or load limits.
+- Seven-day completed replay retention has no cleanup worker, metrics, alert, recovery command, or load evidence.
+- Seller-account/profile locks and serializable capacity behavior are proven only on disposable PostgreSQL, not managed PostgreSQL under load.
+- Shared limiter thresholds are pre-preview defaults. Edge/WAF/bot compatibility and aggregate cleanup load remain unverified.
+- A passed build or database test does not authorize deployment, payment, delivery, real data, or launch.
 
-Commit and push this owner-approval record. Verify that its successor changes only `handoff.md`, `docs/changes.md`, `docs/roadmap.md`, and `docs/learning.md` from reviewed head `c3cca2c67fe3561bbf2ae0536ebc7bffccd612ee`; repin issue #11 and pull request #12; repeat hosted exact-head checks and the narrow lifecycle-delta hostile review. If every check passes with zero annotations, mergeability remains clean, and no finding appears, squash-merge pull request #12. Then verify the merge commit on `main`, issue #11 closure, and local/remote feature-branch cleanup. Any non-lifecycle change invalidates approval and requires fresh BurinSN review.
+## 7. Authority
+
+BurinSN approved proceeding with the issue #13 scope and explicitly deferred payment and delivery. This authorizes the bounded local implementation and governed pull-request workflow. It does not authorize merge, deployment, provider onboarding/configuration, payment movement, real-user testing, production data, external target testing, Strix execution, public launch, or visual production deployment.
+
+Issue #13 currently records:
+
+- DRY: `NOT STARTED`;
+- Strix applicability: `NOT REQUIRED`;
+- Strix status: `NOT APPLICABLE`;
+- target class: `NO TARGET`.
+
+The DRY status can become `CLEAN` or `CLEAN WITH NOTES` only after the complete immutable diff is reviewed and the exact 40-character head is recorded in both issue and pull request. Merge still needs fresh BurinSN approval after every check, finding, limitation, and integration result is visible.
+
+## 8. Exact next action
+
+Commit the corrected coherent issue #13 candidate. Review the immutable complete diff for duplicated authority, migration correctness, authorization, privacy, idempotency, timing, locks, contention, rollback, and false claims. If clean, push it, pin the governed issue to that exact head, open the focused pull request, and repeat exact-head local and hosted verification. Stop for fresh BurinSN merge approval after reporting the final evidence and hostile-review rating.

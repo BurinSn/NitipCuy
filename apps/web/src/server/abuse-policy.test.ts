@@ -99,7 +99,7 @@ describe("abuse policy authority", () => {
   });
 
   it("keeps every policy bounded and independently named", () => {
-    expect(Object.keys(abusePolicyDefinitions)).toHaveLength(12);
+    expect(Object.keys(abusePolicyDefinitions)).toHaveLength(13);
     for (const [name, definitions] of Object.entries(abusePolicyDefinitions)) {
       expect(name).toMatch(/^[a-z][a-z0-9.-]+$/);
       expect(definitions.length).toBeGreaterThan(0);

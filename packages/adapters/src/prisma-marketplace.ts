@@ -7,6 +7,7 @@ import type {
   JastipperProfileRepository,
   MarketplaceTransactionContext,
   MarketplaceUnitOfWork,
+  OrderSubmissionRepository,
   PublicDiscussionRepository,
   ResolveGoogleIdentityInput,
   ResolveGoogleIdentityResult,
@@ -20,12 +21,14 @@ import {
   accountId,
   createPublishedTrip,
   jastipperProfileId,
+  orderRequestId,
   tripId,
   type AccountId,
   type Capability,
   type JastipperProfileId,
   type PublishedTrip,
   type PublicQuestion,
+  type SubmittedOrderRequest,
   type ServiceMode,
   type TripId,
   type TripOffer,
@@ -127,9 +130,200 @@ function createTransactionContext(
     outbox: {
       enqueue: (message: OutboxMessage) => enqueueOutbox(transaction, message),
     },
+    orderSubmissions: new PrismaOrderSubmissionRepository(transaction),
     profiles: new PrismaJastipperProfileRepository(transaction),
     trips: new PrismaTripOfferRepository(transaction),
   });
+}
+
+class PrismaOrderSubmissionRepository implements OrderSubmissionRepository {
+  constructor(private readonly transaction: TransactionClient) {}
+
+  async authoritativeNow(): Promise<string> {
+    const rows = await this.transaction.$queryRaw<
+      readonly { readonly observedAt: Date }[]
+    >`SELECT clock_timestamp() AS "observedAt"`;
+    const observedAt = rows[0]?.observedAt;
+    if (!(observedAt instanceof Date) || Number.isNaN(observedAt.getTime())) {
+      throw new Error("Authoritative database time is unavailable.");
+    }
+    return observedAt.toISOString();
+  }
+
+  async claim(
+    input: Parameters<OrderSubmissionRepository["claim"]>[0],
+  ): ReturnType<OrderSubmissionRepository["claim"]> {
+    const lockIdentity = [
+      input.customerAccountId,
+      input.operation,
+      input.keyDigest,
+    ].join(":");
+    const locks = await this.transaction.$queryRaw<
+      readonly { readonly acquired: boolean }[]
+    >`SELECT pg_try_advisory_xact_lock(hashtextextended(${lockIdentity}, 0)) AS "acquired"`;
+    if (locks[0]?.acquired !== true) {
+      return Object.freeze({ status: "IN_PROGRESS" });
+    }
+
+    const existing =
+      await this.transaction.orderSubmissionIdempotency.findUnique({
+        include: { request: true },
+        where: {
+          customerAccountId_operation_keyDigest: {
+            customerAccountId: input.customerAccountId,
+            keyDigest: input.keyDigest,
+            operation: input.operation,
+          },
+        },
+      });
+    if (!existing) {
+      return Object.freeze({ status: "CLAIMED" });
+    }
+
+    const observedAt = new Date(input.observedAt);
+    if (existing.expiresAt <= observedAt) {
+      await this.transaction.orderSubmissionIdempotency.delete({
+        where: {
+          customerAccountId_operation_keyDigest: {
+            customerAccountId: input.customerAccountId,
+            keyDigest: input.keyDigest,
+            operation: input.operation,
+          },
+        },
+      });
+      return Object.freeze({ status: "CLAIMED" });
+    }
+    if (existing.fingerprint !== input.fingerprint) {
+      return Object.freeze({ status: "CONFLICT" });
+    }
+    return Object.freeze({
+      request: mapSubmittedOrderRequest(existing.request),
+      status: "REPLAY",
+    });
+  }
+
+  async reserveCapacity(
+    input: Parameters<OrderSubmissionRepository["reserveCapacity"]>[0],
+  ): Promise<string | null> {
+    const capacityKg = gramsToDecimalKilograms(input.requestedCapacityGrams);
+    const candidates = await this.transaction.$queryRaw<
+      readonly {
+        readonly orderCloseAt: Date;
+        readonly orderOpenAt: Date;
+        readonly reservedAt: Date;
+      }[]
+    >`
+      SELECT
+        trip."request_open_at" AS "orderOpenAt",
+        trip."request_deadline" AS "orderCloseAt",
+        clock_timestamp() AS "reservedAt"
+      FROM "trip_offer" AS trip
+      WHERE trip."id" = ${input.tripId}
+        AND trip."status" = 'PUBLISHED'::"TripOfferStatus"
+        AND trip."version" = ${input.expectedVersion}
+        AND trip."remaining_capacity_kg" >= ${capacityKg}
+      FOR UPDATE OF trip
+    `;
+    const candidate = candidates[0];
+    if (
+      !candidate ||
+      candidate.reservedAt < candidate.orderOpenAt ||
+      candidate.reservedAt >= candidate.orderCloseAt
+    ) {
+      return null;
+    }
+
+    const result = await this.transaction.tripOffer.updateMany({
+      data: {
+        remainingCapacityKg: { decrement: capacityKg },
+        version: { increment: 1 },
+      },
+      where: {
+        id: input.tripId,
+        remainingCapacityKg: { gte: capacityKg },
+        status: "PUBLISHED",
+        version: input.expectedVersion,
+      },
+    });
+    return result.count === 1 ? candidate.reservedAt.toISOString() : null;
+  }
+
+  async lockEligibleSeller(
+    input: Parameters<OrderSubmissionRepository["lockEligibleSeller"]>[0],
+  ): Promise<boolean> {
+    const rows = await this.transaction.$queryRaw<
+      readonly { eligible: boolean }[]
+    >`
+      SELECT TRUE AS "eligible"
+      FROM "account" AS account
+      INNER JOIN "jastipper_profile" AS profile
+        ON profile."account_id" = account."id"
+      WHERE account."id" = ${input.sellerAccountId}::uuid
+        AND account."status" = 'ACTIVE'::"AccountStatus"
+        AND profile."id" = ${input.jastipperProfileId}::uuid
+        AND profile."status" = 'ACTIVE'::"JastipperProfileStatus"
+      FOR SHARE OF account, profile
+    `;
+    return rows[0]?.eligible === true;
+  }
+
+  async create(request: SubmittedOrderRequest): Promise<void> {
+    const capacityKg = gramsToDecimalKilograms(request.reservedCapacityGrams);
+    await this.transaction.orderRequest.create({
+      data: {
+        customerAccountId: request.customerAccountId,
+        destinationLabel: request.destinationLabel,
+        estimatedArrivalAt: new Date(request.estimatedArrivalAt),
+        id: request.id,
+        itemDescription: request.terms.itemDescription,
+        jastipperProfileId: request.jastipperProfileId,
+        orderCloseAt: new Date(request.orderCloseAt),
+        orderOpenAt: new Date(request.orderOpenAt),
+        originLabel: request.originLabel,
+        reservedCapacityKg: capacityKg,
+        sellerAccountId: request.sellerAccountId,
+        serviceMode: request.serviceMode,
+        sourceOfferVersion: request.sourceOfferVersion,
+        status: request.status,
+        submittedAt: new Date(request.submittedAt),
+        transportDepartureAt: new Date(request.transportDepartureAt),
+        tripId: request.tripId,
+        ...(request.terms.serviceMode === "SHOP_FOR_ME"
+          ? {
+              allowSubstitution: request.terms.allowSubstitution,
+              maximumBudgetIdr: request.terms.maximumBudgetIdr,
+              quantity: request.terms.quantity,
+              variation: request.terms.variation ?? null,
+            }
+          : {
+              declaredValueIdr: request.terms.declaredValueIdr,
+              declaredWeightKg: gramsToDecimalKilograms(
+                request.terms.declaredWeightGrams,
+              ),
+              handlingInstructions: request.terms.handlingInstructions ?? null,
+              heightMillimeters: request.terms.heightMillimeters,
+              lengthMillimeters: request.terms.lengthMillimeters,
+              widthMillimeters: request.terms.widthMillimeters,
+            }),
+      },
+    });
+  }
+
+  async complete(
+    input: Parameters<OrderSubmissionRepository["complete"]>[0],
+  ): Promise<void> {
+    await this.transaction.orderSubmissionIdempotency.create({
+      data: {
+        completedAt: new Date(input.completedAt),
+        customerAccountId: input.customerAccountId,
+        expiresAt: new Date(input.expiresAt),
+        fingerprint: input.fingerprint,
+        keyDigest: input.keyDigest,
+        operation: input.operation,
+        requestId: input.requestId,
+      },
+    });
+  }
 }
 
 class PrismaAccountRepository implements AccountRepository {
@@ -561,6 +755,114 @@ function mapPublishedTrip(
   });
 }
 
+function mapSubmittedOrderRequest(row: {
+  readonly id: string;
+  readonly tripId: string;
+  readonly customerAccountId: string;
+  readonly sellerAccountId: string;
+  readonly jastipperProfileId: string;
+  readonly status: "SUBMITTED";
+  readonly serviceMode: "SHOP_FOR_ME" | "CARRY_MY_ITEM";
+  readonly sourceOfferVersion: number;
+  readonly reservedCapacityKg: { times(value: number): { toNumber(): number } };
+  readonly itemDescription: string;
+  readonly quantity: number | null;
+  readonly maximumBudgetIdr: number | null;
+  readonly allowSubstitution: boolean | null;
+  readonly variation: string | null;
+  readonly declaredValueIdr: number | null;
+  readonly declaredWeightKg: {
+    times(value: number): { toNumber(): number };
+  } | null;
+  readonly lengthMillimeters: number | null;
+  readonly widthMillimeters: number | null;
+  readonly heightMillimeters: number | null;
+  readonly handlingInstructions: string | null;
+  readonly originLabel: string;
+  readonly destinationLabel: string;
+  readonly orderOpenAt: Date;
+  readonly orderCloseAt: Date;
+  readonly transportDepartureAt: Date;
+  readonly estimatedArrivalAt: Date;
+  readonly submittedAt: Date;
+}): SubmittedOrderRequest {
+  const reservedCapacityGrams = decimalKilogramsToGrams(row.reservedCapacityKg);
+  const terms =
+    row.serviceMode === "SHOP_FOR_ME"
+      ? {
+          allowSubstitution: requirePersisted(row.allowSubstitution),
+          itemDescription: row.itemDescription,
+          maximumBudgetIdr: requirePersisted(row.maximumBudgetIdr),
+          quantity: requirePersisted(row.quantity),
+          requestedCapacityGrams: reservedCapacityGrams,
+          serviceMode: "SHOP_FOR_ME" as const,
+          ...(row.variation ? { variation: row.variation } : {}),
+        }
+      : {
+          declaredValueIdr: requirePersisted(row.declaredValueIdr),
+          declaredWeightGrams: decimalKilogramsToGrams(
+            requirePersisted(row.declaredWeightKg),
+          ),
+          heightMillimeters: requirePersisted(row.heightMillimeters),
+          itemDescription: row.itemDescription,
+          lengthMillimeters: requirePersisted(row.lengthMillimeters),
+          serviceMode: "CARRY_MY_ITEM" as const,
+          widthMillimeters: requirePersisted(row.widthMillimeters),
+          ...(row.handlingInstructions
+            ? { handlingInstructions: row.handlingInstructions }
+            : {}),
+        };
+
+  return Object.freeze({
+    customerAccountId: accountId(row.customerAccountId),
+    destinationLabel: row.destinationLabel,
+    estimatedArrivalAt: row.estimatedArrivalAt.toISOString(),
+    id: orderRequestId(row.id),
+    jastipperProfileId: jastipperProfileId(row.jastipperProfileId),
+    orderCloseAt: row.orderCloseAt.toISOString(),
+    orderOpenAt: row.orderOpenAt.toISOString(),
+    originLabel: row.originLabel,
+    reservedCapacityGrams,
+    sellerAccountId: accountId(row.sellerAccountId),
+    serviceMode: row.serviceMode,
+    sourceOfferVersion: row.sourceOfferVersion,
+    status: row.status,
+    submittedAt: row.submittedAt.toISOString(),
+    terms: Object.freeze(terms),
+    transportDepartureAt: row.transportDepartureAt.toISOString(),
+    tripId: tripId(row.tripId),
+  });
+}
+
+function gramsToDecimalKilograms(grams: number): Prisma.Decimal {
+  if (
+    !Number.isSafeInteger(grams) ||
+    grams < 10 ||
+    grams > 100_000_000 ||
+    grams % 10 !== 0
+  ) {
+    throw new Error("Capacity grams are outside the persisted contract.");
+  }
+  return new Prisma.Decimal(grams).dividedBy(1_000);
+}
+
+function decimalKilogramsToGrams(value: {
+  times(multiplier: number): { toNumber(): number };
+}): number {
+  const grams = value.times(1_000).toNumber();
+  if (!Number.isSafeInteger(grams)) {
+    throw new Error("Persisted capacity is not an exact gram value.");
+  }
+  return grams;
+}
+
+function requirePersisted<T>(value: T | null): T {
+  if (value === null) {
+    throw new Error("Persisted order request violates its mode contract.");
+  }
+  return value;
+}
+
 function serviceMode(value: string): ServiceMode {
   if (value === "SHOP_FOR_ME" || value === "CARRY_MY_ITEM") {
     return value;
@@ -582,5 +884,26 @@ function isRetryableTransactionConflict(error: unknown): boolean {
     return false;
   }
 
-  return error.code === "P2002" || error.code === "P2034";
+  return (
+    error.code === "P2002" ||
+    error.code === "P2034" ||
+    (error.code === "P2010" && isRawTransactionWriteConflict(error.meta))
+  );
+}
+
+function isRawTransactionWriteConflict(meta: unknown): boolean {
+  if (!meta || typeof meta !== "object") {
+    return false;
+  }
+  const driverAdapterError = Reflect.get(meta, "driverAdapterError");
+  if (!driverAdapterError || typeof driverAdapterError !== "object") {
+    return false;
+  }
+  const cause = Reflect.get(driverAdapterError, "cause");
+  return (
+    !!cause &&
+    typeof cause === "object" &&
+    Reflect.get(cause, "kind") === "TransactionWriteConflict" &&
+    Reflect.get(cause, "originalCode") === "40001"
+  );
 }

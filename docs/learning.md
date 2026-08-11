@@ -1309,3 +1309,38 @@ Do not present inference, provider marketing, provisional pricing, or a future i
 ### No new product or security-control learning
 
 - The approval record changes no implementation, security control, Strix applicability, provider decision, product model, roadmap stage, or delivery order.
+
+## 2026-08-11 13:43 WIB - Exact capacity and pure-database replay belong to one transaction
+
+### Verified
+
+- Capacity must cross the HTTP and domain boundaries as an integer unit instead of a JavaScript decimal.
+  - Evidence: issue #13 accepts 10-gram increments, maps them to PostgreSQL `DECIMAL(8,2)` kilograms, conditionally decrements that exact value, and rejects non-integer or non-representable inputs.
+  - Impact: the unit is a technical precision contract, not an approved seller trust-tier, route, pilot, insurance, or load ceiling.
+- A pure database command can make completion idempotent without a separately committed in-progress row.
+  - Evidence: authorization and rate limiting precede lookup; a transaction advisory lock denies an active same-account/key attempt; the request, capacity, audit, outbox, and completed replay row then commit together. A failure leaves no ambiguous provider outcome or partially completed idempotency record.
+  - Impact: the generic recovery-required contract still applies to provider calls and other ambiguous external effects. It must not be copied unnecessarily into a short database-only transaction, and this narrow implementation must not be presented as generalized platform idempotency.
+- Database time and row eligibility must be part of the same decision boundary as capacity.
+  - Evidence: an injected application clock set to 1900 did not affect successful disposable-database submission; seller account and profile rows were share-locked while the conditional trip update required published state, the read revision, and enough exact capacity.
+  - Impact: a UI timer, web-instance clock, public projection, or earlier eligibility read cannot authorize the mutation.
+- A submitted declaration is not an accepted commercial snapshot.
+  - Evidence: issue #13 preserves mode terms, route, schedule, revision, and reserved capacity at `SUBMITTED` but intentionally implements no seller acceptance or final seller charge.
+  - Impact: later seller acceptance must create the accepted commercial snapshot, while rejection, expiry, and cancellation must release reservation safely before the flow can serve real users.
+
+### Failed or corrected approaches
+
+- Comparing Prisma decimal objects directly with string expectations produced misleading test failures even though serialized values matched.
+  - Correction: assert exact decimal `.toString()` values and the separate trip revision.
+- Relying only on application-level seller/profile reads would leave their eligibility vulnerable to a concurrent state change during submission.
+  - Correction: the order repository now takes transaction-scoped share locks on the exact active seller account and jastipper profile before reserving capacity.
+- `CURRENT_TIMESTAMP` is fixed at PostgreSQL transaction start and can become stale while a transaction waits on locks.
+  - Correction: final capacity admission locks the exact trip row, reads `clock_timestamp()`, rechecks the ordering window, and uses that same value for the request, audit, outbox, and idempotency completion. A delayed disposable-database test proves a request that crosses the deadline is denied.
+- Independent foreign keys do not prove that related identities belong to the same aggregate.
+  - Correction: composite database constraints now bind request seller/profile to the exact trip and idempotency request/customer to each other. Direct cross-party mutation tests fail with PostgreSQL foreign-key violations.
+- Review a new idempotency implementation against existing grammar authority even when its state machine must remain separate.
+  - Correction: issue #13 reuses the shared key grammar; its pure-database transaction state remains intentionally distinct from the process-local provider-oriented recovery contract.
+
+### Deferred
+
+- Completed replay cleanup, operational metrics, load behavior, managed-PostgreSQL lock behavior, reservation release, accepted commercial terms, private request encryption, browser coverage, payment, and delivery remain unimplemented or unverified.
+- No provider, commercial, fee, legal, visual, pilot, or production decision resulted from this slice.

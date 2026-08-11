@@ -115,6 +115,8 @@ A concurrent exact duplicate fails closed while the first execution is active. A
 
 The issue #3 in-memory idempotency store exists only to source-test these semantics. It is process-local, unbounded, non-persistent, and not production infrastructure. Production requires a shared durable implementation with atomic claim, completion, and recovery transitions; authorization and rate limiting before lookup; bounded key, scope, and fingerprint inputs; encrypted and access-controlled stored results where sensitive; retention and cleanup jobs; metrics and alerts; and an audited operator recovery command.
 
+Issue #13 implements a narrower durable form for the database-only `order.submit.v1` command. Authorization and shared abuse admission run before lookup. The application hashes the bounded client key and canonical normalized payload separately. A transaction-scoped PostgreSQL advisory lock fails an active duplicate closed; a completed same-account/same-payload retry replays the stored request; a changed payload conflicts. Capacity, request, audit, outbox, and completed idempotency result commit together, so this command has no ambiguous external provider outcome and needs no persisted recovery-required state. A 64-bit advisory-lock collision can only cause a false in-progress denial, not duplicate admission. Seven-day completed-result retention is source-tested, but cleanup scheduling, metrics, operational recovery, load, managed database behavior, and idempotency for payment, logistics, evidence, callbacks, and workers remain unimplemented.
+
 ## 7. Durable asynchronous work
 
 When notifications, evidence scanning, provider retries, reconciliation, or other work can outlive one request:
@@ -284,7 +286,7 @@ Designed:
 - direct private evidence storage direction;
 - observability, capacity, load, and recovery gates.
 
-Implemented and source-tested for the architecture probe, merged issues #5/#9, and the issue #11 local candidate:
+Implemented and source-tested for the architecture probe, merged issues #5/#9/#11, and the issue #13 local candidate:
 
 - deterministic in-memory public discovery;
 - bounded simulated dataset;
@@ -299,12 +301,13 @@ Implemented and source-tested for the architecture probe, merged issues #5/#9, a
 - dynamic rendering for nonce integrity and explicit private or denied-response `no-store` policy, with a later public-cache design still required before reintroducing cacheable public HTML;
 - a two-mode built-runtime probe that starts and stops isolated local processes with deterministic non-secret configuration;
 - an additive shared PostgreSQL fixed-window limiter with HMAC-only subjects, action-scoped multi-axis policies, deterministic concurrency, bounded expiry cleanup, and atomic first-denial audit evidence;
+- an additive submitted-request schema and serializable capacity/idempotency boundary with locked-row live database time, exact fixed-precision reservation, seller/profile eligibility locks, composite ownership constraints, conditional offer-revision update, final-slot and delayed-deadline proof, atomic audit/outbox, and fail-closed active duplicate handling;
 - disposable PostgreSQL cross-instance concurrency, redaction, audit-failure rollback, rollover, and cleanup tests;
 - no production provider calls or asynchronous work.
 
 Not implemented or verified:
 
-- production cache or cache-safety controls, shared idempotency system, live edge/client-network/direct-origin configuration, managed PostgreSQL, object storage, scanner, durable cleanup worker, provider, operational observability, alert routing, backup, or restore;
+- production cache or cache-safety controls, generalized shared idempotency beyond order submission, live edge/client-network/direct-origin configuration, managed PostgreSQL, object storage, scanner, durable cleanup worker, provider, operational observability, alert routing, backup, or restore;
 - expand-and-contract migration, mixed-version rollout, or dependency-outage runtime evidence;
 - capacity targets, load tests, provider quotas, SLOs, RPO, RTO, or production cost budgets;
 - runtime horizontal-scaling or failure-recovery evidence.

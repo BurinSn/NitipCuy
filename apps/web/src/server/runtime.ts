@@ -9,6 +9,7 @@ import {
   PostgresSessionAuthority,
   PrismaMarketplaceUnitOfWork,
   PrismaTripDiscoveryRepository,
+  Sha256Fingerprint,
   SystemClock,
   UuidIdentifier,
   createPrismaClient,
@@ -25,6 +26,7 @@ import {
   ListPublishedTrips,
   ModerateTrip,
   ResolveGoogleAccount,
+  SubmitOrderRequest,
   SubmitTripForModeration,
 } from "@nitipcuy/application";
 
@@ -44,6 +46,7 @@ interface RuntimeConfiguration {
 
 const clock = new SystemClock();
 const identifiers = new UuidIdentifier();
+const fingerprints = new Sha256Fingerprint();
 let runtimeSingleton: ReturnType<typeof createRuntime> | undefined;
 let oidcSingleton: Promise<GoogleOidcClient> | undefined;
 
@@ -153,6 +156,10 @@ function createRuntime(configuration: RuntimeConfiguration) {
     sessions: new PostgresSessionAuthority(prisma, {
       clock,
       tokenHmacKey: configuration.sessionHmacKey,
+    }),
+    submitOrderRequest: new SubmitOrderRequest({
+      ...dependencies,
+      fingerprints,
     }),
     submitTripForModeration: new SubmitTripForModeration(dependencies),
   });

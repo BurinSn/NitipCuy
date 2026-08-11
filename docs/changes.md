@@ -1355,3 +1355,38 @@ A session with no material change does not invent an entry. A session that makes
   - no implementation, security control, product model, dependency, migration, provider, stage, or delivery-order change results from this approval record.
 - Next:
   - commit and push this four-lifecycle-file approval record, repin issue #11 and pull request #12, repeat hosted exact-head checks and the lifecycle-only hostile review, then squash-merge and verify `main`, automatic issue closure, and branch cleanup only if every approval condition remains true.
+
+## 2026-08-11 13:43 WIB - Governed order submission and atomic capacity candidate implemented locally
+
+- Issue: #13
+- Product: NitipCuy Stage 1 platform foundation
+- Type: Submitted-request model, exact capacity reservation, durable replay, protected route, additive persistence, and lifecycle reconciliation
+- Status: Corrected local candidate passes complete application quality and content/security gates; immutable review, push, pull request, hosted evidence, and owner approval pending
+- Prior-state reconciliation:
+  - issue #11 / pull request #12 were squash-merged as `ea4b629466df1e1e1381f62ae5ca26722edbe4bf`; issue closure, matching local/remote `main`, and feature-branch cleanup were verified;
+  - no open issue or pull request remained before issue #13 was created;
+  - issue #13 now governs the bounded `SUBMITTED` request and final-capacity slice, and branch `feat/13-order-submission-capacity` starts from that merge commit.
+- Added:
+  - one framework-free submitted-request model for both service modes with bounded item declarations, integer-IDR values, exact integer-gram reservation terms, route/schedule snapshots, source offer revision, and safe response projection;
+  - one additive PostgreSQL order-request and account-bound idempotency schema with service-mode constraints, distinct-party enforcement, exact decimal capacity, immutable submission fields, indexes, and foreign keys;
+  - live database-wall-time ordering-window evaluation on the locked trip row, published/current offer checks, supported-mode and self-order denial, active seller-account/profile row locks, and exact conditional capacity decrement;
+  - composite database foreign keys binding the request seller/profile to the exact trip and the completed replay result to the request customer;
+  - one serializable unit-of-work boundary for request, trip capacity/version, success audit, outbox, and completed idempotency result;
+  - key-digest-only account-scoped replay with canonical payload fingerprint, transaction advisory-lock active-duplicate denial, exact replay, changed-payload conflict, and seven-day completed-result retention;
+  - protected `POST /api/trips/[tripId]/requests` delivery with canonical perimeter, same-origin and Fetch-Metadata JSON checks, active session, bounded exact fields, `order.submit.v1` shared network/account/session/account-target limits, generic failure mapping, and no private request or party details in the response.
+- Validation so far with exact Node.js `24.18.0` / pnpm `11.17.0`:
+  - `pnpm check` passed formatting, lint, dependency boundaries across 4 projects / 75 source files / 251 module references, strict type checking, 244 tests, production build, and the direct plus simulated trusted-proxy runtime probe;
+  - 244 tests comprise 17 review-governance, 21 dependency-boundary, 27 domain, 34 application, 71 adapter, and 74 web tests;
+  - disposable PostgreSQL 18 clean-applied every migration and proved both mode mappings, live database-time authority after an in-transaction delay, account/request/trip-party ownership constraints, same-key replay/conflict, active duplicate denial, seller/profile eligibility locks, one winner for concurrent final capacity, and complete rollback after outbox or idempotency-completion failure;
+  - the built Next.js route manifest includes `/api/trips/[tripId]/requests`;
+  - the production dependency audit found no known vulnerability; lifecycle participation, diff hygiene, 7-file YAML parsing, 20-document local-link validation, parameterized-query inventory, and high-confidence secret/log/unsafe-execution scans passed;
+  - complete-diff DRY and hostile review still require an immutable commit and are not claimed yet.
+- Evidence and limitations:
+  - highest current evidence is source-tested, disposable-PostgreSQL-integration-tested, production-build-tested, and local request-perimeter-runtime-tested;
+  - no browser submitted an order and no real Google, managed database, edge, provider, payment, logistics, private-data encryption, monitoring, load, staging, or production environment was used;
+  - seller acceptance/rejection, expiry/cancellation, capacity release, accepted commercial snapshot, address, payment, delivery, evidence, dashboard, and visual work remain explicitly outside this slice;
+  - issue #13 remains Strix `NOT REQUIRED` / `NOT APPLICABLE` / `NO TARGET` under the approved zero-external-Strix-AI path. This is not penetration-test evidence.
+- Roadmap:
+  - Stage 1 and provider order are unchanged. Payment and delivery remain later work; the next dependency after this slice is seller response plus safe capacity release before real-user activation.
+- Next:
+  - commit the corrected candidate, run full DRY plus hostile security review on that immutable head, then push only if clean, pin issue #13, open the focused pull request, and verify hosted gates before requesting fresh BurinSN approval.
