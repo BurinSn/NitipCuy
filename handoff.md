@@ -1,6 +1,6 @@
 # NitipCuy Handoff
 
-Updated: 2026-08-17 11:07 WIB
+Updated: 2026-08-17 11:13 WIB
 
 ## 1. Resume order
 
@@ -27,10 +27,10 @@ gh pr list --repo BurinSn/NitipCuy --state open
 | Default branch | `main` |
 | Current merged base | `ea4b629466df1e1e1381f62ae5ca26722edbe4bf` |
 | Local branch | `feat/13-order-submission-capacity` |
-| Local `HEAD` | approval-record head `0ef764f70e439fb45e963dd17172e803794815ba`; live dependency-audit repair and lifecycle reconciliation are currently uncommitted |
-| Worktree | intentionally modified only for the `nanoid` `3.3.18` override/lockfile repair and the four mandatory lifecycle documents; live-verify before acting |
+| Local `HEAD` | hosted-verified dependency-repair head `b76d701520def6a07824e5138d4cc6b5c2a392c5`; the commit containing this final hosted-evidence record will be its four-lifecycle-file successor and must be live-resolved |
+| Worktree | clean before this final hosted-evidence record; live-verify before acting |
 | Active issue | #13, open |
-| Open pull requests | #14, open and not draft at `0ef764f70e439fb45e963dd17172e803794815ba`; lifecycle and review-governance passed or were replacing transition runs, but application run `31993037634` failed only because the registry newly classified transitive `nanoid` `3.3.17` as high severity |
+| Open pull requests | #14, open and not draft at `b76d701520def6a07824e5138d4cc6b5c2a392c5`; application run `31993491119`, lifecycle run `31993491134`, and stable review-governance replacement `31993632434` passed; GitHub reports `CLEAN` / `MERGEABLE` |
 | Issue #11 / PR #12 | merged/closed as `ea4b629466df1e1e1381f62ae5ca26722edbe4bf`; feature branches removed |
 | Strix | issue #13 is `NOT REQUIRED` / `NOT APPLICABLE` / `NO TARGET`; no authorization, plan, budget, execution, report, or external Strix model action exists |
 
@@ -133,12 +133,13 @@ Current dependency-gate repair:
 
 - exact Node.js `24.18.0` and pnpm `11.17.0` changed only the centralized `nanoid` override and lockfile resolution from `3.3.17` to patched `3.3.18`;
 - frozen install, the complete `pnpm check` suite with 244 tests/build/runtime probe, and `pnpm audit:prod` now pass locally on the repaired tree; the production audit reports no known vulnerabilities;
+- hosted application run `31993491119` and lifecycle run `31993491134` passed on exact repair head `b76d701520def6a07824e5138d4cc6b5c2a392c5`; stable review-governance replacement `31993632434` also passed after transition run `31993491123` captured the pre-repin PR event payload and failed only its expected revision-equality check;
 - the repair changes dependency state, so the prior conditional merge approval is no longer sufficient even though the application quality suite itself passed before its audit step failed.
 
 Still pending:
 
-- commit and review the dependency/lifecycle repair, repin issue #13 and pull request #14, and obtain passing hosted exact-head gates;
-- request fresh BurinSN review of that immutable dependency-repaired head before any merge.
+- commit and narrowly review this four-lifecycle-file hosted-evidence successor, repin issue #13 and pull request #14, and repeat hosted exact-head gates;
+- request fresh BurinSN review of that final immutable evidence head before any merge.
 
 Initial hosted state on `9c145515367f81571e7583495f88eca53b8d9abe`:
 
@@ -173,21 +174,21 @@ Highest evidence is source-tested, disposable-PostgreSQL-integration-tested, pro
 - Seller-account/profile locks and serializable capacity behavior are proven only on disposable PostgreSQL, not managed PostgreSQL under load.
 - Shared limiter thresholds are pre-preview defaults. Edge/WAF/bot compatibility and aggregate cleanup load remain unverified.
 - A passed build or database test does not authorize deployment, payment, delivery, real data, or launch.
-- Registry advisory state is volatile. The patched `nanoid` `3.3.18` override is locally audit-clean but is not accepted evidence until committed, reviewed, and hosted-verified on the exact pull-request head.
+- Registry advisory state is volatile. The patched `nanoid` `3.3.18` override is locally and hosted audit-clean at `b76d701520def6a07824e5138d4cc6b5c2a392c5`; later audit claims still require dated exact-head evidence.
 
 ## 7. Authority
 
-BurinSN approved proceeding with the issue #13 scope and explicitly deferred payment and delivery. After receiving the live exact-head result, evidence levels, remaining exclusions, and the proposed sequence, BurinSN instructed Codex to "proceed next" on 2026-08-17. That approval was correctly bound to reviewed head `c5fe836b27b1756b290ee32d88572e5c7458d516` and approval-record successor `0ef764f70e439fb45e963dd17172e803794815ba`. Hosted application run `31993037634` then discovered a new high-severity registry advisory against the unchanged transitive dependency tree. The required `nanoid` `3.3.17` to `3.3.18` repair is a dependency change and therefore invalidates that merge approval under its own stated condition. Fresh BurinSN review is required after the dependency-repaired immutable head is fully verified. No approval authorizes deployment, provider onboarding/configuration, payment movement, real-user testing, production data, external target testing, Strix execution, public launch, or visual production deployment.
+BurinSN approved proceeding with the issue #13 scope and explicitly deferred payment and delivery. After receiving the live exact-head result, evidence levels, remaining exclusions, and the proposed sequence, BurinSN instructed Codex to "proceed next" on 2026-08-17. That approval was correctly bound to reviewed head `c5fe836b27b1756b290ee32d88572e5c7458d516` and approval-record successor `0ef764f70e439fb45e963dd17172e803794815ba`. Hosted application run `31993037634` then discovered a new high-severity registry advisory against the unchanged transitive dependency tree. The required `nanoid` `3.3.17` to `3.3.18` repair is a dependency change and therefore invalidates that merge approval under its own stated condition. Repair head `b76d701520def6a07824e5138d4cc6b5c2a392c5` is now locally and hosted verified, but fresh BurinSN review remains required after this final evidence successor is also verified. No approval authorizes deployment, provider onboarding/configuration, payment movement, real-user testing, production data, external target testing, Strix execution, public launch, or visual production deployment.
 
-Issue #13 and pull request #14 currently record the pre-repair approval head and must be repinned after the repair is committed:
+Issue #13 and pull request #14 currently record the hosted-verified dependency-repair head and must be repinned after this evidence successor is committed:
 
-- DRY: `CLEAN WITH NOTES` through approval-record head `0ef764f70e439fb45e963dd17172e803794815ba`;
+- DRY: `CLEAN WITH NOTES` through dependency-repair head `b76d701520def6a07824e5138d4cc6b5c2a392c5`;
 - Strix applicability: `NOT REQUIRED`;
 - Strix status: `NOT APPLICABLE`;
 - target class: `NO TARGET`.
 
-The implementation head's complete diff passed DRY and hostile review after correcting stale transaction-start time, missing composite ownership invariants, raw-query serialization retry classification, and duplicated key grammar. The lifecycle-only successors through `0ef764f70e439fb45e963dd17172e803794815ba` were narrowly reviewed and repinned. The dependency-repair successor must review the exact two-file supply-chain delta plus all lifecycle updates, and both governed records must carry its full 40-character SHA. Any further source, dependency, configuration, product, provider, security-control, scope, or finding change invalidates approval and requires fresh owner review.
+The implementation head's complete diff passed DRY and hostile review after correcting stale transaction-start time, missing composite ownership invariants, raw-query serialization retry classification, and duplicated key grammar. The lifecycle-only successors through `0ef764f70e439fb45e963dd17172e803794815ba` were narrowly reviewed and repinned. The dependency-repair successor contains the exact two-file supply-chain delta plus all lifecycle updates, passed local and hosted gates, and both governed records carry its full 40-character SHA. Any further source, dependency, configuration, product, provider, security-control, scope, or finding change invalidates approval and requires fresh owner review.
 
 ## 8. Exact next action
 
-Commit the locally clean `nanoid` `3.3.18` override, lockfile refresh, and all four lifecycle documents; review the exact `0ef764f70e439fb45e963dd17172e803794815ba...HEAD` delta; repin issue #13 and pull request #14; push; and require passing hosted application, lifecycle, and review-governance checks on that exact head. Then present the new immutable head, advisory repair, evidence, and unchanged exclusions to BurinSN for fresh merge approval. Do not merge, deploy, or provision a provider before that approval.
+Commit this final hosted-evidence checkpoint and confirm its delta from `b76d701520def6a07824e5138d4cc6b5c2a392c5` contains exactly `handoff.md`, `docs/changes.md`, `docs/roadmap.md`, and `docs/learning.md`. Narrowly review, repin, push, and repeat hosted checks on the exact successor. Then present that immutable head, the advisory repair, evidence, and unchanged exclusions to BurinSN for fresh merge approval. Do not merge, deploy, or provision a provider before that approval.

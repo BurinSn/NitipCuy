@@ -1396,3 +1396,14 @@ Do not present inference, provider marketing, provisional pricing, or a future i
 ### No product or security-control change
 
 - The repair changes resolved dependency state but not NitipCuy product behavior, provider choice, Strix applicability, roadmap stage, delivery order, or the existing supply-chain control contract.
+
+## 2026-08-17 11:13 WIB - Hosted verification of the advisory repair produced no new control learning
+
+### Reused governance learning
+
+- A governance run that captures the pull-request event before coordinated issue/PR repinning can fail exact revision equality even when the committed repair is correct. Inspect the exact message and require a stable replacement on the same immutable head; do not relabel the transition failure as success or ignore it without replacement evidence.
+- The hosted application gate must execute the production audit after the full quality suite. Head `b76d701520def6a07824e5138d4cc6b5c2a392c5` proves both passed together after the transitive repair, instead of relying only on the earlier local audit.
+
+### No new product or security-control learning
+
+- Hosted verification and this evidence record change no implementation, security-control contract, product model, provider decision, Strix applicability, stage, or delivery order. Fresh owner approval remains required because dependency state changed after the prior approval.

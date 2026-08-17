@@ -1,10 +1,10 @@
 # NitipCuy Canonical Roadmap
 
-Last reviewed: 2026-08-17 11:07 WIB
+Last reviewed: 2026-08-17 11:13 WIB
 
 Current stage: Stage 1 - Platform foundation
 
-Current work item: Issue #13 and pull request #14 remain open from verified base `ea4b629466df1e1e1381f62ae5ca26722edbe4bf`. The conditional approval record reached exact head `0ef764f70e439fb45e963dd17172e803794815ba`, but hosted application run `31993037634` then failed only at `pnpm audit:prod` because the registry newly classified transitive `nanoid` `3.3.17` under high-severity `GHSA-2v37-7h3g-55p8`; its full application quality suite had passed. The bounded repair updates the centralized override and lockfile to patched `3.3.18`; exact-toolchain frozen install, `pnpm check` with 244 tests/build/runtime probe, and `pnpm audit:prod` now pass locally with no known vulnerability. Because this is a dependency change, the earlier merge approval is invalid under its stated boundary. Commit/review, exact-SHA governance repin, hosted checks, and fresh BurinSN approval remain pending before squash merge. Product scope, Stage 1 ordering, payment/delivery deferrals, and the planned post-merge UX/visual-foundation slice are unchanged.
+Current work item: Issue #13 and pull request #14 remain open from verified base `ea4b629466df1e1e1381f62ae5ca26722edbe4bf`. Hosted application run `31993037634` invalidated the prior approval when its production audit newly reported high-severity `GHSA-2v37-7h3g-55p8` for transitive `nanoid` `3.3.17`. Dependency-repair head `b76d701520def6a07824e5138d4cc6b5c2a392c5` moves the centralized override and lockfile to patched `3.3.18`; exact-toolchain local gates plus hosted application `31993491119`, lifecycle `31993491134`, and stable governance replacement `31993632434` pass. GitHub reports `CLEAN` / `MERGEABLE`, with no review objects or review decision. A final four-lifecycle-file evidence successor, exact-SHA repin, repeated hosted checks, and fresh BurinSN approval remain pending before squash merge. Product scope, Stage 1 ordering, payment/delivery deferrals, and the planned post-merge UX/visual-foundation slice are unchanged.
 
 ## 1. Role, authority, and freshness contract
 
