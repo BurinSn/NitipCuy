@@ -1438,4 +1438,21 @@ Do not present inference, provider marketing, provisional pricing, or a future i
 
 ### Remaining evidence
 
-- Desktop/mobile browser inspection, request interaction, obvious accessibility review, immutable-head DRY and hostile review, hosted checks, and BurinSN visual approval remain pending.
+- Desktop/mobile browser inspection, request interaction, obvious accessibility review, hosted checks, and BurinSN visual approval remain pending.
+
+## 2026-08-17 12:03 WIB - DRY review should separate shared presentation knowledge from contextual copy
+
+### Reusable learning
+
+- Identifiers, labels, units, window mapping, and validated loading behavior are presentation knowledge that should have one owner when multiple routes express the same fact.
+- Explanatory copy is not automatically a clone. Customer request guidance, customer progress language, and jastipper assessment language answer different questions; forcing them into one universal copy table can erase useful context.
+- A local form can remain safely reviewable before its mutation exists when it has no action or fetch path, imports no server authority, stores nothing, uses framework escaping, and visibly states that it cannot create a transaction.
+
+### Verified instance
+
+- Issue #15 implementation head `091bcc7bc93d407a080199f76b04fe9ce236a815` centralizes trip-code formatting and validated public-trip loading after the first DRY pass found those clones.
+- Complete-diff DRY and hostile source review is `CLEAN WITH NOTES`; exact quality with 249 tests, build, audit, lifecycle, request-perimeter, dependency-delta, and unsafe-rendering scans passes.
+
+### Limitation
+
+- The note is the unavailable browser-visible evidence. No connected in-app browser window existed, so source review cannot claim desktop/mobile rendering, interaction, screenshots, or visible accessibility.
