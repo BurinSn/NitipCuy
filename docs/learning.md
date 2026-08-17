@@ -1366,3 +1366,16 @@ Do not present inference, provider marketing, provisional pricing, or a future i
 ### No new product or security-control learning
 
 - Hosted verification and its lifecycle checkpoint change no implementation, security control, Strix applicability, provider decision, product model, roadmap stage, or delivery order.
+
+## 2026-08-17 10:58 WIB - Proceeding after an exact-state briefing can be bounded merge approval
+
+### Reusable learning
+
+- A short owner instruction such as "proceed next" is actionable when it directly follows a concrete sequence whose first step is the governed merge, and the owner has already received the exact reviewed head, hosted evidence, exclusions, and remaining risks.
+- Preserve that authority by binding it to the immutable reviewed head and one approval-record-only successor containing exactly the mandatory lifecycle authorities. The instruction does not survive source, dependency, configuration, product, provider, security-control, scope, or finding changes.
+- Approval to complete a merge sequence is not deployment, provider, real-data, payment, public-launch, or visual-production approval. Those remain separate decisions even when the next product slice has also been named.
+- When visual progress has lagged infrastructure work, make the UX/visual-foundation slice the next governed work item without misrepresenting the current simulated shell as an approved design or bypassing the functional safety dependencies required before real users.
+
+### No new product or security-control learning
+
+- This approval record changes no implementation, product model, security control, provider decision, Strix applicability, stage, or delivery order. It makes the already discussed next visible slice explicit while reservation release remains the next activation dependency.
