@@ -1,10 +1,10 @@
 # NitipCuy Canonical Roadmap
 
-Last reviewed: 2026-08-17 12:03 WIB
+Last reviewed: 2026-08-17 12:06 WIB
 
 Current stage: Stage 1 - Platform foundation
 
-Current work item: Issue #13 and pull request #14 are closed and squash-merged as `df0426cafedbb61d9582527c1669f3bb077125bb` after fresh BurinSN approval and passing exact-head hosted application, lifecycle, and governance gates. Issue #15 is open from that verified base on `feat/15-ux-visual-foundation`. Its implementation head `091bcc7bc93d407a080199f76b04fe9ce236a815` establishes the first owner-reviewable visual system, responsive discovery and trip detail, non-persisting request preview, fictional customer timeline, and fictional jastipper work queue. Complete exact-toolchain quality with 249 tests, production audit, lifecycle participation, production build, request-perimeter runtime, and local HTTP route smoke checks pass. Complete-diff DRY and hostile source review is `CLEAN WITH NOTES` after centralizing repeated trip-code and trip-loading knowledge; its four-lifecycle-file review record and narrow successor review are pending. The in-app browser has no connected window, so desktop/mobile rendering, interaction, screenshot, and visible accessibility evidence remain pending alongside hosted checks and owner visual approval. Stage, provider order, payment/delivery deferrals, and production-approval boundaries are unchanged.
+Current work item: Issue #13 and pull request #14 are closed and squash-merged as `df0426cafedbb61d9582527c1669f3bb077125bb`. Issue #15 and draft pull request #16 govern the first owner-reviewable visual system, responsive discovery and trip detail, non-persisting request preview, fictional customer timeline, and fictional jastipper work queue. Local/remote/PR head `236e900f77d6ecae28f9126d4e9a7d8ad7039bcd` is DRY/hostile-source `CLEAN WITH NOTES`, passes complete exact-toolchain quality with 249 tests, production audit/build, lifecycle, request-perimeter runtime, and HTTP smoke checks, and is `MERGEABLE`; initial hosted application `31996725414`, lifecycle `31996725407`, and governance `31996725451` runs are in progress. This PR-publication lifecycle checkpoint needs its own narrow successor review and exact repin. The in-app browser has no connected window, so desktop/mobile rendering, interaction, screenshot, and visible accessibility evidence remain pending alongside final hosted checks and owner visual approval. Stage, provider order, payment/delivery deferrals, and production-approval boundaries are unchanged.
 
 ## 1. Role, authority, and freshness contract
 
@@ -228,7 +228,7 @@ account
 - [x] Record the first customer and jastipper decision journeys in `docs/product/experience-design.md`.
 - [x] Define the first information architecture and responsive behavior for discovery, trip detail, request composition, customer progress, and jastipper work assessment.
 - [x] Implement the first local visual-direction candidate with a functional route-ribbon signature and explicit simulation boundaries.
-- [ ] Complete issue #15 evidence. Workspace quality with 249 tests, production audit/build, lifecycle, request-perimeter runtime, local HTTP route smoke checks, and implementation-head DRY/hostile source review pass. The four-lifecycle review-record successor, desktop/mobile browser, interaction, visible accessibility, and hosted evidence remain pending.
+- [ ] Complete issue #15 / draft pull request #16 evidence. Workspace quality with 249 tests, production audit/build, lifecycle, request-perimeter runtime, local HTTP route smoke checks, implementation-head DRY/hostile review, and the review-record successor pass. The PR-publication successor, replacement hosted checks, desktop/mobile browser, interaction, and visible accessibility evidence remain pending.
 - [ ] Obtain BurinSN visual sign-off before production use or merge approval.
 
 Exit gate:

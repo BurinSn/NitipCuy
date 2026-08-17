@@ -1456,3 +1456,15 @@ Do not present inference, provider marketing, provisional pricing, or a future i
 ### Limitation
 
 - The note is the unavailable browser-visible evidence. No connected in-app browser window existed, so source review cannot claim desktop/mobile rendering, interaction, screenshots, or visible accessibility.
+
+## 2026-08-17 12:06 WIB - Draft publication produced no new product or control learning
+
+### Reused governance learning
+
+- Opening a draft pull request makes hosted review available without claiming visual completion or owner approval.
+- The PR-publication lifecycle checkpoint changes the exact head even when no source changes. Review both governed records at the successor and rerun hosted exact-head gates.
+- An `UNSTABLE` merge-state while required checks are in progress is transition state, not a failed or passed final gate.
+
+### No new product or security-control learning
+
+- Publication changes no implementation, dependency, product model, provider decision, security control, Strix applicability, roadmap stage, delivery order, deployment authority, or visual approval.

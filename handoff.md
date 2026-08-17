@@ -1,6 +1,6 @@
 # NitipCuy Handoff
 
-Updated: 2026-08-17 12:03 WIB
+Updated: 2026-08-17 12:06 WIB
 
 ## 1. Resume order
 
@@ -16,11 +16,11 @@ Updated: 2026-08-17 12:03 WIB
 | Repository | `BurinSn/NitipCuy`, private |
 | Current branch | `feat/15-ux-visual-foundation` |
 | Base | `df0426cafedbb61d9582527c1669f3bb077125bb` |
-| Local implementation head | `091bcc7bc93d407a080199f76b04fe9ce236a815` |
+| Local / remote / pull-request head | `236e900f77d6ecae28f9126d4e9a7d8ad7039bcd` |
 | `origin/main` | `df0426cafedbb61d9582527c1669f3bb077125bb` |
 | Active issue | #15, open |
-| Open pull requests | none at the start of implementation |
-| Worktree | intentionally dirty with the four-lifecycle-file review record described below |
+| Open pull requests | #16, open draft, `MERGEABLE` / `UNSTABLE` while initial checks run |
+| Worktree | intentionally dirty with this PR-publication lifecycle checkpoint |
 | Toolchain | Node.js `24.18.0`, pnpm `11.17.0` |
 | Strix | issue #15 is `NOT REQUIRED` / `NOT APPLICABLE` / `NO TARGET`; no execution authority exists |
 
@@ -81,7 +81,15 @@ Final complete-diff review at that head is `CLEAN WITH NOTES`:
 - public pages use only the safe projection, trip lookup reuses domain validation, all links are internal, and no private data, credential, external asset, dependency, provider, or security-policy change exists;
 - exact-head quality, production audit, lifecycle, request-perimeter, diff, and focused unsafe-rendering/secret/static scans pass.
 
-This is hostile source review, not browser, accessibility, penetration-test, deployment, or production evidence. The current dirty delta records this result in exactly the four lifecycle authorities and still needs a narrow immutable-successor review.
+This is hostile source review, not browser, accessibility, penetration-test, deployment, or production evidence. Commit `236e900f77d6ecae28f9126d4e9a7d8ad7039bcd` records the result through an exact four-lifecycle-file successor. Its narrow review found no source or claim drift, and issue #15 records `CLEAN WITH NOTES` at that exact revision.
+
+Draft pull request [#16](https://github.com/BurinSn/NitipCuy/pull/16) is open at the same head. Initial hosted runs are in progress:
+
+- application quality `31996725414`;
+- lifecycle documentation `31996725407`;
+- review governance `31996725451`.
+
+GitHub reports the draft pull request `MERGEABLE` with no review objects or review decision. `UNSTABLE` reflects the in-progress checks, not a passed or failed final state.
 
 ## 6. Boundaries and risks
 
@@ -102,4 +110,4 @@ This does not constitute visual sign-off, pull-request merge approval for issue 
 
 ## 8. Exact next action
 
-Commit this four-lifecycle-file review record, confirm its delta from `091bcc7bc93d407a080199f76b04fe9ce236a815` contains exactly `handoff.md`, `docs/changes.md`, `docs/roadmap.md`, and `docs/learning.md`, and narrowly review the successor. Update issue #15 to the exact successor, push, and open a focused draft pull request so hosted gates can run. Once an in-app browser window is connected, inspect every new route at desktop and mobile widths, including request-preview interaction and obvious accessibility failures; correct and re-verify any finding. Stop for BurinSN visual and merge review; do not deploy.
+Commit this PR-publication checkpoint, confirm its delta from `236e900f77d6ecae28f9126d4e9a7d8ad7039bcd` contains exactly the four lifecycle documents, narrowly review it, then repin issue #15 and pull request #16 before pushing so replacement hosted gates run on one exact successor. Inspect those checks and third-party review output. Once an in-app browser window is connected, inspect every new route at desktop and mobile widths, including request-preview interaction and obvious accessibility failures; correct and re-verify any finding. Keep the pull request draft and stop for BurinSN visual and merge review; do not deploy.
