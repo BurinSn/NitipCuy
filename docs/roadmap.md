@@ -1,10 +1,10 @@
 # NitipCuy Canonical Roadmap
 
-Last reviewed: 2026-08-17 10:58 WIB
+Last reviewed: 2026-08-17 11:07 WIB
 
 Current stage: Stage 1 - Platform foundation
 
-Current work item: Issue #13 and pull request #14 remain open from verified base `ea4b629466df1e1e1381f62ae5ca26722edbe4bf`. Final reviewed evidence head `c5fe836b27b1756b290ee32d88572e5c7458d516` matches local, remote branch, and pull request; application run `31468516199`, lifecycle run `31468516235`, and final review-governance run `31468677458` passed on that exact head. GitHub reports `CLEAN` / `MERGEABLE` with no review object or intervening source change. After this evidence, limitations, and sequence were presented, BurinSN instructed Codex to "proceed next" on 2026-08-17, granting fresh conditional approval for the governed pull request #14 merge sequence. The approval-record-only four-lifecycle-file successor, exact-SHA repin, repeated hosted checks, squash merge, and post-merge verification remain pending. Payment, delivery, seller response, reservation release, browser, provider, deployment, load, and production remain excluded. After merge, the next governed work is the UX and visual-foundation slice; seller response and safe reservation release remain the next functional activation dependency.
+Current work item: Issue #13 and pull request #14 remain open from verified base `ea4b629466df1e1e1381f62ae5ca26722edbe4bf`. The conditional approval record reached exact head `0ef764f70e439fb45e963dd17172e803794815ba`, but hosted application run `31993037634` then failed only at `pnpm audit:prod` because the registry newly classified transitive `nanoid` `3.3.17` under high-severity `GHSA-2v37-7h3g-55p8`; its full application quality suite had passed. The bounded repair updates the centralized override and lockfile to patched `3.3.18`; exact-toolchain frozen install, `pnpm check` with 244 tests/build/runtime probe, and `pnpm audit:prod` now pass locally with no known vulnerability. Because this is a dependency change, the earlier merge approval is invalid under its stated boundary. Commit/review, exact-SHA governance repin, hosted checks, and fresh BurinSN approval remain pending before squash merge. Product scope, Stage 1 ordering, payment/delivery deferrals, and the planned post-merge UX/visual-foundation slice are unchanged.
 
 ## 1. Role, authority, and freshness contract
 

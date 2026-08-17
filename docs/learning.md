@@ -1379,3 +1379,20 @@ Do not present inference, provider marketing, provisional pricing, or a future i
 ### No new product or security-control learning
 
 - This approval record changes no implementation, product model, security control, provider decision, Strix applicability, stage, or delivery order. It makes the already discussed next visible slice explicit while reservation release remains the next activation dependency.
+
+## 2026-08-17 11:05 WIB - A clean dependency audit is time-bound evidence
+
+### Reusable learning
+
+- A production dependency audit that passed on an earlier immutable head can fail later without a lockfile change when the registry publishes or reclassifies an advisory. Record the run and date; do not treat an earlier clean result as permanent supply-chain truth.
+- When the repository already owns a centralized transitive override, a one-patch-version override and lockfile refresh is the narrowest repair. Review the exact resolution and integrity delta, then rerun the full quality and audit gates rather than weakening the audit threshold or dismissing the transitive path.
+- A gate-driven dependency repair still changes the approved artifact. If owner approval explicitly excludes dependency drift, the correct response is to repair and fully verify the new head, then request fresh approval before merge.
+
+### Verified instance
+
+- Hosted application run `31993037634` passed `pnpm check` but failed `pnpm audit:prod` because `GHSA-2v37-7h3g-55p8` covers transitive `nanoid` below `3.3.18` through `next > postcss > nanoid`.
+- Exact Node.js `24.18.0` and pnpm `11.17.0` moved the existing override and lockfile from `3.3.17` to `3.3.18`; frozen install, the complete 244-test/build/runtime-probe quality suite, and the production audit pass, with the audit reporting no known vulnerabilities.
+
+### No product or security-control change
+
+- The repair changes resolved dependency state but not NitipCuy product behavior, provider choice, Strix applicability, roadmap stage, delivery order, or the existing supply-chain control contract.

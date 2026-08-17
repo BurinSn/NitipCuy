@@ -1453,3 +1453,25 @@ A session with no material change does not invent an entry. A session that makes
   - after pull request #14 merges, the next governed slice is UX and visual foundation so BurinSN can inspect the product experience; seller response plus safe reservation release remains the next functional activation dependency.
 - Next:
   - commit this four-file approval record, narrowly review and repin it, repeat exact-head hosted gates, squash-merge only if every condition remains true, verify post-merge state, then create the separate UX/visual-foundation issue.
+
+## 2026-08-17 11:05 WIB - New nanoid advisory blocked the approved merge and received a bounded repair
+
+- Issue / PR: Issue #13; pull request #14
+- Product: NitipCuy Stage 1 platform foundation
+- Type: Supply-chain gate failure, dependency repair, and required lifecycle reconciliation
+- Status: Full local exact-toolchain repair gates clean; immutable review, governance repin, hosted gates, and fresh owner approval pending
+- Trigger and evidence:
+  - approval-record head `0ef764f70e439fb45e963dd17172e803794815ba` was pushed and pinned in issue #13 and pull request #14;
+  - hosted application run `31993037634` passed the complete application quality suite but failed `pnpm audit:prod` when the registry reported high-severity `GHSA-2v37-7h3g-55p8` for transitive `nanoid` versions below `3.3.18`;
+  - the failure is a newly observed supply-chain advisory on the previously unchanged dependency tree, not an application test or build regression.
+- Repair:
+  - update the existing workspace override from `nanoid` `3.3.17` to patched `3.3.18`;
+  - refresh only the corresponding override, package resolution, integrity, snapshot, and `postcss` dependency entries in `pnpm-lock.yaml` using exact Node.js `24.18.0` and pnpm `11.17.0`;
+  - exact-toolchain frozen install and `pnpm check` pass formatting, lint, dependency boundaries, strict types, all 244 tests, production build, and the direct plus simulated trusted-proxy runtime probe;
+  - exact-toolchain local `pnpm audit:prod` now reports no known vulnerabilities.
+- Authority and scope:
+  - this is a dependency change, so it invalidates the prior conditional merge approval exactly as that approval record required;
+  - product behavior, transaction contracts, provider choices, Strix applicability, roadmap stage, delivery order, and exclusions are unchanged;
+  - the existing quality and security authorities already require frozen resolution plus production audit, so no specialist-policy wording changes.
+- Next:
+  - commit and review the six-file dependency/lifecycle repair; repin issue #13 and pull request #14 to the resulting immutable head; obtain passing hosted gates; then request fresh BurinSN merge approval.
