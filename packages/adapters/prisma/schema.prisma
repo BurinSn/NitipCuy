@@ -54,6 +54,15 @@ enum DiscussionStatus {
   HIDDEN
 }
 
+enum OrderRequestStatus {
+  SUBMITTED
+}
+
+enum OrderServiceMode {
+  SHOP_FOR_ME
+  CARRY_MY_ITEM
+}
+
 enum AbuseRateLimitAxis {
   NETWORK
   ACCOUNT
@@ -70,14 +79,17 @@ model Account {
   createdAt      DateTime      @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt      DateTime      @updatedAt @map("updated_at") @db.Timestamptz(3)
 
-  identities      ExternalIdentity[]
-  capabilities    AccountCapabilityGrant[]
-  sessions        BrowserSession[]
-  profile         JastipperProfile?
-  ownedTrips      TripOffer[]              @relation("TripOwner")
-  moderatedTrips  ModerationDecision[]     @relation("TripModerator")
-  publicQuestions PublicQuestion[]         @relation("QuestionAuthor")
-  publicAnswers   PublicAnswer[]           @relation("AnswerAuthor")
+  identities                 ExternalIdentity[]
+  capabilities               AccountCapabilityGrant[]
+  sessions                   BrowserSession[]
+  profile                    JastipperProfile?
+  ownedTrips                 TripOffer[]                  @relation("TripOwner")
+  moderatedTrips             ModerationDecision[]         @relation("TripModerator")
+  publicQuestions            PublicQuestion[]             @relation("QuestionAuthor")
+  publicAnswers              PublicAnswer[]               @relation("AnswerAuthor")
+  customerRequests           OrderRequest[]               @relation("OrderCustomer")
+  sellerRequests             OrderRequest[]               @relation("OrderSeller")
+  orderSubmissionIdempotency OrderSubmissionIdempotency[]
 
   @@map("account")
 }
@@ -164,8 +176,9 @@ model JastipperProfile {
   createdAt           DateTime               @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt           DateTime               @updatedAt @map("updated_at") @db.Timestamptz(3)
 
-  account Account     @relation(fields: [accountId], references: [id], onDelete: Restrict)
-  trips   TripOffer[]
+  account  Account        @relation(fields: [accountId], references: [id], onDelete: Restrict)
+  trips    TripOffer[]
+  requests OrderRequest[]
 
   @@unique([id, accountId], map: "jastipper_profile_id_account_key")
   @@map("jastipper_profile")
@@ -199,7 +212,9 @@ model TripOffer {
   profile             JastipperProfile     @relation(fields: [jastipperProfileId, ownerAccountId], references: [id, accountId], onDelete: Restrict)
   moderationDecisions ModerationDecision[]
   questions           PublicQuestion[]
+  requests            OrderRequest[]
 
+  @@unique([id, ownerAccountId, jastipperProfileId], map: "trip_offer_id_owner_profile_key")
   @@index([ownerAccountId, status], map: "trip_offer_owner_status_idx")
   @@index([status, departureDate, id], map: "trip_offer_public_search_idx")
   @@map("trip_offer")
@@ -250,6 +265,66 @@ model PublicAnswer {
   author   Account        @relation("AnswerAuthor", fields: [authorAccountId], references: [id], onDelete: Restrict)
 
   @@map("public_answer")
+}
+
+model OrderRequest {
+  id                   String             @id @db.Uuid
+  tripId               String             @map("trip_id") @db.VarChar(64)
+  customerAccountId    String             @map("customer_account_id") @db.Uuid
+  sellerAccountId      String             @map("seller_account_id") @db.Uuid
+  jastipperProfileId   String             @map("jastipper_profile_id") @db.Uuid
+  status               OrderRequestStatus @default(SUBMITTED)
+  serviceMode          OrderServiceMode   @map("service_mode")
+  sourceOfferVersion   Int                @map("source_offer_version")
+  reservedCapacityKg   Decimal            @map("reserved_capacity_kg") @db.Decimal(8, 2)
+  itemDescription      String             @map("item_description") @db.VarChar(500)
+  quantity             Int?
+  maximumBudgetIdr     Int?               @map("maximum_budget_idr")
+  allowSubstitution    Boolean?           @map("allow_substitution")
+  variation            String?            @db.VarChar(200)
+  declaredValueIdr     Int?               @map("declared_value_idr")
+  declaredWeightKg     Decimal?           @map("declared_weight_kg") @db.Decimal(8, 2)
+  lengthMillimeters    Int?               @map("length_millimeters")
+  widthMillimeters     Int?               @map("width_millimeters")
+  heightMillimeters    Int?               @map("height_millimeters")
+  handlingInstructions String?            @map("handling_instructions") @db.VarChar(500)
+  originLabel          String             @map("origin_label") @db.VarChar(160)
+  destinationLabel     String             @map("destination_label") @db.VarChar(160)
+  orderOpenAt          DateTime           @map("order_open_at") @db.Timestamptz(3)
+  orderCloseAt         DateTime           @map("order_close_at") @db.Timestamptz(3)
+  transportDepartureAt DateTime           @map("transport_departure_at") @db.Timestamptz(3)
+  estimatedArrivalAt   DateTime           @map("estimated_arrival_at") @db.Timestamptz(3)
+  submittedAt          DateTime           @map("submitted_at") @db.Timestamptz(3)
+
+  trip        TripOffer                   @relation(fields: [tripId, sellerAccountId, jastipperProfileId], references: [id, ownerAccountId, jastipperProfileId], onDelete: Restrict)
+  customer    Account                     @relation("OrderCustomer", fields: [customerAccountId], references: [id], onDelete: Restrict)
+  seller      Account                     @relation("OrderSeller", fields: [sellerAccountId], references: [id], onDelete: Restrict)
+  profile     JastipperProfile            @relation(fields: [jastipperProfileId, sellerAccountId], references: [id, accountId], onDelete: Restrict)
+  idempotency OrderSubmissionIdempotency?
+
+  @@unique([id, customerAccountId], map: "order_request_id_customer_key")
+  @@index([tripId, status, submittedAt, id], map: "order_request_trip_status_idx")
+  @@index([customerAccountId, status, submittedAt, id], map: "order_request_customer_status_idx")
+  @@index([sellerAccountId, status, submittedAt, id], map: "order_request_seller_status_idx")
+  @@map("order_request")
+}
+
+model OrderSubmissionIdempotency {
+  customerAccountId String   @map("customer_account_id") @db.Uuid
+  operation         String   @db.VarChar(64)
+  keyDigest         String   @map("key_digest") @db.Char(64)
+  fingerprint       String   @db.Char(64)
+  requestId         String   @map("request_id") @db.Uuid
+  completedAt       DateTime @map("completed_at") @db.Timestamptz(3)
+  expiresAt         DateTime @map("expires_at") @db.Timestamptz(3)
+
+  customer Account      @relation(fields: [customerAccountId], references: [id], onDelete: Restrict)
+  request  OrderRequest @relation(fields: [requestId, customerAccountId], references: [id, customerAccountId], onDelete: Restrict)
+
+  @@id([customerAccountId, operation, keyDigest], map: "order_submission_idempotency_pk")
+  @@unique([requestId, customerAccountId], map: "order_submission_idempotency_request_key")
+  @@index([expiresAt], map: "order_submission_idempotency_expiry_idx")
+  @@map("order_submission_idempotency")
 }
 
 model AuditEvent {

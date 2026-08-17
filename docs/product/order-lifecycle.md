@@ -2,7 +2,7 @@
 
 Status: Accepted planning model
 
-Last updated: 2026-07-29
+Last updated: 2026-08-11
 
 ## 1. Principles
 
@@ -88,6 +88,12 @@ CARRY_MY_ITEM
 ```
 
 The authoritative order stores the accepted commercial, schedule, evidence, and delivery snapshot. Later changes to the trip offer or seller price never silently alter it.
+
+### Stage 1 submission checkpoint
+
+Issue #13 stops at `SUBMITTED`. An authenticated non-owner customer supplies a bounded mode-specific declaration; the server rechecks the exact database instant, published offer state, active seller account and jastipper profile, supported mode, current offer revision, and exact remaining capacity. It then decrements capacity, creates the private request, records success audit and outbox evidence, and stores the completed account-bound idempotency result in one serializable PostgreSQL transaction.
+
+The submitted record preserves the source offer revision, route and schedule fields, declaration, and reserved capacity. It is not the later accepted commercial snapshot and does not move to `SELLER_ACCEPTED`, `PAYMENT_PENDING`, or any fulfilment state. Seller rejection, expiry, cancellation, and their idempotent capacity-release commands must be implemented before this reservation can be activated for real users; until then the slice is source and disposable-database evidence only.
 
 ## 4. Shop-for-me evidence
 

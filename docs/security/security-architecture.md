@@ -125,7 +125,7 @@ Security-dependency outages use this minimum failure policy:
 
 Every dependency receives an owner, timeout, circuit breaker, alert, safe external error, recovery path, and explicit decision whether read-only degradation is permitted. “Allow on error” is forbidden unless this document names the exact public read case.
 
-Issue #11 implements the first shared application limiter candidate for the routes that currently exist. The canonical perimeter accepts only one trusted client address in proxy mode, rejects maintained alternate client-network headers, emits an HMAC-only network subject, and strips raw forwarding and equivalent client-network metadata. One versioned policy authority combines action-scoped network, account, and session/device axes with compound target isolation: anonymous public detail uses network plus target, while authenticated discussion, publication, and moderation use account plus target. A single client or account therefore cannot exhaust a target bucket globally for unrelated users. Compound subjects are validated, length-framed, domain-separated SHA-256 values before the persistence adapter applies its separately keyed HMAC. PostgreSQL supplies one production timestamp per decision so web-instance clock skew cannot split a window; injected time requires explicit disposable-test-database acknowledgement. Fixed-window buckets update in bounded read-committed transactions across instances, delete at most 100 expired rows per decision, return generic `429` plus bounded `Retry-After`, and record at most one denial audit per crossed axis/bucket/window. Limiter or required audit failure returns generic `503`; no protected action silently allows. The checked-in v1 ceilings are conservative pre-preview safety defaults, not capacity or SLO claims. Per-request opportunistic cleanup is bounded but not load-tested; fixed-window boundary bursts, key rotation, mixed-version policy revision, provider edge compatibility, WAF/bot controls, metrics export, dashboards, alerts, load, and incident behavior remain unverified.
+Issue #11, merged through pull request #12, implements the first shared application limiter for the routes that currently exist. The canonical perimeter accepts only one trusted client address in proxy mode, rejects maintained alternate client-network headers, emits an HMAC-only network subject, and strips raw forwarding and equivalent client-network metadata. One versioned policy authority combines action-scoped network, account, and session/device axes with compound target isolation: anonymous public detail uses network plus target, while authenticated discussion, publication, moderation, and issue #13 order submission use account plus target. A single client or account therefore cannot exhaust a target bucket globally for unrelated users. Compound subjects are validated, length-framed, domain-separated SHA-256 values before the persistence adapter applies its separately keyed HMAC. PostgreSQL supplies one production timestamp per decision so web-instance clock skew cannot split a window; injected time requires explicit disposable-test-database acknowledgement. Fixed-window buckets update in bounded read-committed transactions across instances, delete at most 100 expired rows per decision, return generic `429` plus bounded `Retry-After`, and record at most one denial audit per crossed axis/bucket/window. Limiter or required audit failure returns generic `503`; no protected action silently allows. The checked-in v1 ceilings are conservative pre-preview safety defaults, not capacity or SLO claims. Per-request opportunistic cleanup is bounded but not load-tested; fixed-window boundary bursts, key rotation, mixed-version policy revision, provider edge compatibility, WAF/bot controls, metrics export, dashboards, alerts, load, and incident behavior remain unverified.
 
 The baseline follows the multi-layer availability approach in the [OWASP denial-of-service guidance](https://cheatsheetseries.owasp.org/cheatsheets/Denial_of_Service_Cheat_Sheet.html) and the resource-budget controls in [OWASP API4:2023](https://owasp.org/API-Security/editions/2023/en/0xa4-unrestricted-resource-consumption/).
 
@@ -357,7 +357,7 @@ Designed:
 - dependency and workflow supply-chain controls;
 - pooled PostgreSQL and modular-monolith direction.
 
-Implemented and source-tested for issue #3, merged issues #5/#7/#9, and the issue #11 local candidate:
+Implemented and source-tested for issue #3, merged issues #5/#7/#9/#11, and the issue #13 local candidate:
 
 - strict public-trip runtime invariants;
 - Google OIDC protocol fixtures covering exact scopes, issuer, audience, signature, expiry, state, nonce, and PKCE denial without real provider credentials;
@@ -366,7 +366,7 @@ Implemented and source-tested for issue #3, merged issues #5/#7/#9, and the issu
 - opaque digest-only sessions with base-only minting, rotation, expiry, revocation, account versioning, and rotated-token family invalidation;
 - exact persisted-session, assurance, account, capability, and ownership revalidation inside protected PostgreSQL transactions;
 - exact-origin, same-origin Fetch-Metadata, JSON-content-type, and body-size checks on protected HTTP mutations;
-- parameterized Prisma persistence, database ownership constraints, bounded queries, and generic external route errors;
+- parameterized Prisma persistence, composite request-to-trip-party and replay-to-customer database ownership constraints, bounded queries, and generic external route errors;
 - disposable PostgreSQL tests for cross-account denial, forged assurance denial, revoked-session denial, rollback, concurrency, projection privacy, and OAuth/session failure paths;
 - no production secrets or real provider calls;
 - frozen dependency graph, production audit, and immutable workflow action references.
@@ -376,6 +376,9 @@ Implemented and source-tested for issue #3, merged issues #5/#7/#9, and the issu
 - source-tested hostile host, forwarding, ambiguity, proof, callback, internal-header, CSP, cache, and matcher cases plus a built local runtime gate in direct and simulated trusted-proxy modes.
 - one HMAC-only canonical network subject, versioned route-policy authority, additive PostgreSQL shared fixed-window buckets, deterministic multi-axis lock order, bounded expiry cleanup, generic `429`/`503`, and atomic bounded-cardinality denial audits;
 - disposable PostgreSQL concurrency, four-axis admission, raw-subject redaction, audit-rollback, rollover, and cleanup tests plus source-tested wiring across the existing persisted routes.
+- one protected order-submission route with exact JSON fields, same-origin and Fetch-Metadata enforcement, active browser-bound session, account-target abuse policy, generic errors, self-order denial, active seller/profile locks, published/current offer and database-time checks, and no public projection as mutation authority;
+- exact 10-gram/integer-IDR validation, database constraints, key-digest-only account-bound idempotency, active duplicate denial, exact replay, changed-payload conflict, final-slot concurrency, and transaction rollback through request, capacity, audit, outbox, and completion failures;
+- a safe response projection excluding customer/seller identities, request terms, item description, moderation state, and private data.
 
 Not implemented or verified:
 
@@ -385,6 +388,7 @@ Not implemented or verified:
 - production database identity, least-privilege grants, migration runner, backup, or independent safe-query static scan;
 - application-level encryption, managed keys, key rotation, encrypted-backup restore, or verified deletion;
 - private upload quarantine or scanner;
-- complete protected-command authorization matrix beyond profile, trip publication, and public discussion;
+- complete protected-command authorization matrix beyond profile, trip publication, public discussion, and submitted requests;
+- seller acceptance, request expiry/cancellation and capacity release, accepted commercial snapshot, private order reads, and encryption/key custody for retained request content;
 - provider callbacks, payment, logistics, ledger, reconciliation, or worker;
 - metrics export, dashboards, actionable alert routes, operational security monitoring, incident response, backup restore, load tests, browser automation, real-browser testing, AI-driven dynamic assessment, or penetration testing. Issues #9 and #11 are explicitly Strix `NOT REQUIRED` / `NOT APPLICABLE` under BurinSN's zero-external-Strix-AI decision: no hosted Strix model is approved to receive project context, no verified local Strix model is configured, no Strix target or run exists, and Strix sent no code or runtime context to an external LLM provider. The pre-existing CodeRabbit GitHub integration processed pull request #10; any future pull-request processing must be disclosed separately and is not independent security evidence. Real preview, provider edge, Google browser flow, private data, payment, upload, or materially expanded attack-surface work must classify Strix afresh.

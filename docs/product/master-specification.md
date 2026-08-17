@@ -2,7 +2,7 @@
 
 Status: Accepted product foundation
 
-Last updated: 2026-08-07
+Last updated: 2026-08-11
 
 ## 1. Objective
 
@@ -112,6 +112,17 @@ Advance PO is supported: `orderOpenAt` may occur before `serviceWindowStartAt`. 
 New-order eligibility is server-authoritative. The platform rejects a new request or checkout when the ordering window is not open, capacity is unavailable, the jastipper or offer is ineligible, or trust-and-safety action blocks it. Disabling a button is only presentation and is never the guardrail.
 
 Closing an offer does not delete it and does not cancel accepted orders. The offer remains publicly visible as read-only history on the jastipper profile. It can become archived only after the trip has completed and every related order is in an eligible terminal state, including dispute and settlement handling. Public history never exposes customer identities, addresses, private item details, private evidence, or order communication.
+
+### Stage 1 submitted-request boundary
+
+Issue #13 introduces only the first `SUBMITTED` request boundary. Both service modes use one authoritative request identity and a private mode-specific declaration:
+
+- Shop for me records a bounded item description, positive quantity, optional variation, substitution permission, maximum item budget in integer IDR, and an exact requested trip-capacity reservation;
+- Carry my item records a bounded item description, declared value in integer IDR, declared weight, bounded dimensions, optional handling instructions, and reserves the declared weight.
+
+Capacity uses integer grams at the domain and HTTP boundaries and exact two-decimal kilograms in PostgreSQL, so every accepted value is a 10-gram increment and no floating-point value decides the reservation. The checked technical input ceilings are storage and abuse bounds, not the still-open trust-tier, route, category, pilot, or insurance limits.
+
+Submission reserves capacity and preserves the request declaration plus route and schedule snapshot at the authoritative offer revision. It does not mean the seller accepted the request, the commercial price is final, payment exists, delivery is selected, or evidence is approved. Seller rejection, expiry, cancellation, and their capacity-release rules remain mandatory later work; this incomplete lifecycle is not activated for real users.
 
 ## 5. Commitment and delivery terms
 

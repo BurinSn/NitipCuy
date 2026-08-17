@@ -17,9 +17,14 @@ import {
   MarketplaceUseCaseError,
   ModerateTrip,
   ResolveGoogleAccount,
+  SubmitOrderRequest,
   SubmitTripForModeration,
   type ClockPort,
+  type FingerprintPort,
   type IdentifierPort,
+  type MarketplaceTransactionContext,
+  type MarketplaceUnitOfWork,
+  type OrderSubmissionRepository,
   type VerifiedExternalIdentity,
 } from "@nitipcuy/application";
 import {
@@ -43,6 +48,7 @@ import {
   PrismaMarketplaceUnitOfWork,
   PrismaTripDiscoveryRepository,
 } from "./prisma-marketplace";
+import { Sha256Fingerprint } from "./node-platform-services";
 
 const migrationUrls = [
   new URL(
@@ -53,9 +59,15 @@ const migrationUrls = [
     "../prisma/migrations/20260810090000_shared_abuse_controls/migration.sql",
     import.meta.url,
   ),
+  new URL(
+    "../prisma/migrations/20260811070000_order_submission_capacity/migration.sql",
+    import.meta.url,
+  ),
 ];
 const tables = [
   "abuse_rate_limit_bucket",
+  "order_submission_idempotency",
+  "order_request",
   "public_answer",
   "public_question",
   "moderation_decision",
@@ -101,6 +113,410 @@ beforeEach(async () => {
   await pool.query(
     `TRUNCATE TABLE ${tables.map((table) => `"${table}"`).join(", ")} RESTART IDENTITY CASCADE`,
   );
+});
+
+describe("server-authoritative order submission", () => {
+  it("persists both mode contracts, uses database time, and binds replay ownership", async () => {
+    const fixture = await insertOrderFixture(5);
+    const dependencies = {
+      clock: new MutableClock("1900-01-01T00:00:00.000Z"),
+      fingerprints: new Sha256Fingerprint(),
+      identifiers: new UuidSequence(),
+      unitOfWork: new PrismaMarketplaceUnitOfWork(prisma),
+    };
+    const submit = new SubmitOrderRequest(dependencies);
+
+    const shop = await submit.execute(
+      fixture.firstCustomer,
+      {
+        terms: {
+          allowSubstitution: false,
+          itemDescription: "Matcha gift set",
+          maximumBudgetIdr: 750_000,
+          quantity: 2,
+          requestedCapacityGrams: 1_250,
+          serviceMode: "SHOP_FOR_ME",
+          variation: "Green package",
+        },
+        tripId: fixture.tripId,
+      },
+      {
+        correlationId: "order-integration-shop",
+        idempotencyKey: "shop-order-key-0001",
+      },
+    );
+    const carry = await submit.execute(
+      fixture.secondCustomer,
+      {
+        terms: {
+          declaredValueIdr: 2_500_000,
+          declaredWeightGrams: 2_500,
+          handlingInstructions: "Keep upright",
+          heightMillimeters: 300,
+          itemDescription: "Camera tripod",
+          lengthMillimeters: 700,
+          serviceMode: "CARRY_MY_ITEM",
+          widthMillimeters: 200,
+        },
+        tripId: fixture.tripId,
+      },
+      {
+        correlationId: "order-integration-carry",
+        idempotencyKey: "carry-order-key-0001",
+      },
+    );
+
+    expect(shop.submittedAt).not.toContain("1900");
+    expect(carry.reservedCapacityGrams).toBe(2_500);
+    const rows = await prisma.orderRequest.findMany({ orderBy: { id: "asc" } });
+    expect(rows).toHaveLength(2);
+    expect(
+      rows.find(({ serviceMode }) => serviceMode === "SHOP_FOR_ME"),
+    ).toMatchObject({
+      allowSubstitution: false,
+      declaredWeightKg: null,
+      maximumBudgetIdr: 750_000,
+      quantity: 2,
+      variation: "Green package",
+    });
+    expect(
+      rows.find(({ serviceMode }) => serviceMode === "CARRY_MY_ITEM"),
+    ).toMatchObject({
+      declaredValueIdr: 2_500_000,
+      handlingInstructions: "Keep upright",
+      heightMillimeters: 300,
+      maximumBudgetIdr: null,
+      quantity: null,
+    });
+    const updatedTrip = await prisma.tripOffer.findUniqueOrThrow({
+      where: { id: fixture.tripId },
+    });
+    expect(updatedTrip.remainingCapacityKg.toString()).toBe("1.25");
+    expect(updatedTrip.version).toBe(3);
+    expect(await prisma.orderSubmissionIdempotency.count()).toBe(2);
+    expect(
+      await prisma.auditEvent.count({
+        where: { action: "order-request.submit" },
+      }),
+    ).toBe(2);
+    expect(
+      await prisma.outboxEvent.count({
+        where: { topic: "order-request.submitted" },
+      }),
+    ).toBe(2);
+
+    await prisma.orderSubmissionIdempotency.deleteMany({
+      where: { requestId: shop.id },
+    });
+    await expect(
+      pool.query(
+        `INSERT INTO "order_submission_idempotency" (
+          "customer_account_id", "operation", "key_digest", "fingerprint",
+          "request_id", "completed_at", "expires_at"
+        ) VALUES ($1, 'order.submit.v1', $2, $3, $4, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP + INTERVAL '1 day')`,
+        [
+          fixture.secondCustomer.accountId,
+          "b".repeat(64),
+          "c".repeat(64),
+          shop.id,
+        ],
+      ),
+    ).rejects.toMatchObject({ code: "23503" });
+
+    const unrelatedProfileId = crypto.randomUUID();
+    await prisma.jastipperProfile.create({
+      data: {
+        accountId: fixture.secondCustomer.accountId,
+        deliverySummary: "Unrelated profile",
+        displayName: "Unrelated Seller",
+        id: unrelatedProfileId,
+        rateSummary: "Unrelated terms",
+        sellerLocationLabel: "Jakarta",
+      },
+    });
+    await expect(
+      pool.query(
+        `UPDATE "order_request"
+         SET "seller_account_id" = $1, "jastipper_profile_id" = $2
+         WHERE "id" = $3`,
+        [fixture.secondCustomer.accountId, unrelatedProfileId, shop.id],
+      ),
+    ).rejects.toMatchObject({ code: "23503" });
+  });
+
+  it("allows only one independent transaction to reserve the final capacity and safely replays it", async () => {
+    const fixture = await insertOrderFixture(1);
+    const fingerprints = new Sha256Fingerprint();
+    const identifiers = new UuidSequence();
+    const createSubmitter = () =>
+      new SubmitOrderRequest({
+        clock: new MutableClock("1900-01-01T00:00:00.000Z"),
+        fingerprints,
+        identifiers,
+        unitOfWork: new PrismaMarketplaceUnitOfWork(prisma),
+      });
+    const terms = {
+      allowSubstitution: true,
+      itemDescription: "Final capacity item",
+      maximumBudgetIdr: 500_000,
+      quantity: 1,
+      requestedCapacityGrams: 1_000,
+      serviceMode: "SHOP_FOR_ME" as const,
+    };
+    const attempts = [
+      {
+        actor: fixture.firstCustomer,
+        key: "final-capacity-key-first",
+        submitter: createSubmitter(),
+      },
+      {
+        actor: fixture.secondCustomer,
+        key: "final-capacity-key-second",
+        submitter: createSubmitter(),
+      },
+    ];
+    const results = await Promise.allSettled(
+      attempts.map(({ actor: customer, key, submitter }) =>
+        submitter.execute(
+          customer,
+          { terms, tripId: fixture.tripId },
+          { correlationId: `concurrent-${key}`, idempotencyKey: key },
+        ),
+      ),
+    );
+
+    const successfulIndex = results.findIndex(
+      (result) => result.status === "fulfilled",
+    );
+    expect(results.filter(({ status }) => status === "fulfilled")).toHaveLength(
+      1,
+    );
+    expect(results.filter(({ status }) => status === "rejected")).toHaveLength(
+      1,
+    );
+    expect(results.find(({ status }) => status === "rejected")).toMatchObject({
+      reason: { code: "CAPACITY_UNAVAILABLE" },
+    });
+    expect(await prisma.orderRequest.count()).toBe(1);
+    expect(await prisma.orderSubmissionIdempotency.count()).toBe(1);
+    expect(
+      await prisma.auditEvent.count({
+        where: { action: "order-request.submit" },
+      }),
+    ).toBe(1);
+    expect(
+      await prisma.outboxEvent.count({
+        where: { topic: "order-request.submitted" },
+      }),
+    ).toBe(1);
+    const exhaustedTrip = await prisma.tripOffer.findUniqueOrThrow({
+      where: { id: fixture.tripId },
+    });
+    expect(exhaustedTrip.remainingCapacityKg.toString()).toBe("0");
+    expect(exhaustedTrip.version).toBe(2);
+
+    const winner = attempts[successfulIndex]!;
+    const firstResult = results[successfulIndex];
+    if (firstResult?.status !== "fulfilled") {
+      throw new Error("Expected one successful capacity reservation.");
+    }
+    await expect(
+      winner.submitter.execute(
+        winner.actor,
+        { terms, tripId: fixture.tripId },
+        {
+          correlationId: "exact-replay",
+          idempotencyKey: winner.key,
+        },
+      ),
+    ).resolves.toEqual(firstResult.value);
+    expect(await prisma.orderRequest.count()).toBe(1);
+    expect(
+      await prisma.auditEvent.count({
+        where: { action: "order-request.submit" },
+      }),
+    ).toBe(1);
+
+    await expect(
+      winner.submitter.execute(
+        winner.actor,
+        {
+          terms: { ...terms, maximumBudgetIdr: 500_001 },
+          tripId: fixture.tripId,
+        },
+        {
+          correlationId: "changed-replay",
+          idempotencyKey: winner.key,
+        },
+      ),
+    ).rejects.toMatchObject({ code: "IDEMPOTENCY_CONFLICT" });
+  }, 30_000);
+
+  it("rechecks live database time after work waits inside the transaction", async () => {
+    const fixture = await insertOrderFixture(2);
+    const observed = await pool.query<{ now: Date }>(
+      'SELECT clock_timestamp() AS "now"',
+    );
+    const now = observed.rows[0]?.now;
+    if (!now) {
+      throw new Error("Disposable PostgreSQL time is unavailable.");
+    }
+    await prisma.tripOffer.update({
+      data: { requestDeadline: new Date(now.getTime() + 1_000) },
+      where: { id: fixture.tripId },
+    });
+    const submit = new SubmitOrderRequest({
+      clock: new MutableClock("1900-01-01T00:00:00.000Z"),
+      fingerprints: new Sha256Fingerprint(),
+      identifiers: new UuidSequence(),
+      unitOfWork: new DelayedReservationUnitOfWork(
+        new PrismaMarketplaceUnitOfWork(prisma),
+        1_200,
+      ),
+    });
+
+    await expect(
+      submit.execute(
+        fixture.firstCustomer,
+        {
+          terms: {
+            allowSubstitution: false,
+            itemDescription: "Deadline boundary item",
+            maximumBudgetIdr: 300_000,
+            quantity: 1,
+            requestedCapacityGrams: 500,
+            serviceMode: "SHOP_FOR_ME",
+          },
+          tripId: fixture.tripId,
+        },
+        {
+          correlationId: "deadline-order-submit",
+          idempotencyKey: "deadline-order-key-0001",
+        },
+      ),
+    ).rejects.toMatchObject({ code: "OFFER_REVISION_STALE" });
+
+    await expectOrderSubmissionRolledBack(fixture.tripId, "2");
+  });
+
+  it("rolls capacity, request, audit, outbox, and idempotency back together", async () => {
+    const fixture = await insertOrderFixture(2);
+    const submit = new SubmitOrderRequest({
+      clock: new MutableClock("1900-01-01T00:00:00.000Z"),
+      fingerprints: new Sha256Fingerprint(),
+      identifiers: new InvalidOutboxIdentifier(),
+      unitOfWork: new PrismaMarketplaceUnitOfWork(prisma),
+    });
+
+    await expect(
+      submit.execute(
+        fixture.firstCustomer,
+        {
+          terms: {
+            allowSubstitution: false,
+            itemDescription: "Rollback item",
+            maximumBudgetIdr: 300_000,
+            quantity: 1,
+            requestedCapacityGrams: 500,
+            serviceMode: "SHOP_FOR_ME",
+          },
+          tripId: fixture.tripId,
+        },
+        {
+          correlationId: "rollback-order-submit",
+          idempotencyKey: "rollback-order-key-0001",
+        },
+      ),
+    ).rejects.toThrow();
+
+    await expectOrderSubmissionRolledBack(fixture.tripId, "2");
+  });
+
+  it("rolls every prior write back when the completed idempotency result is invalid", async () => {
+    const fixture = await insertOrderFixture(2);
+    const submit = new SubmitOrderRequest({
+      clock: new MutableClock("1900-01-01T00:00:00.000Z"),
+      fingerprints: new InvalidCompletionFingerprint(),
+      identifiers: new UuidSequence(),
+      unitOfWork: new PrismaMarketplaceUnitOfWork(prisma),
+    });
+
+    await expect(
+      submit.execute(
+        fixture.firstCustomer,
+        {
+          terms: {
+            allowSubstitution: false,
+            itemDescription: "Idempotency rollback item",
+            maximumBudgetIdr: 300_000,
+            quantity: 1,
+            requestedCapacityGrams: 500,
+            serviceMode: "SHOP_FOR_ME",
+          },
+          tripId: fixture.tripId,
+        },
+        {
+          correlationId: "rollback-idempotency-completion",
+          idempotencyKey: "rollback-completion-key-0001",
+        },
+      ),
+    ).rejects.toThrow();
+
+    await expectOrderSubmissionRolledBack(fixture.tripId, "2");
+  });
+
+  it("fails a concurrent duplicate closed while its transaction lock is active", async () => {
+    const fixture = await insertOrderFixture(2);
+    const fingerprints = new Sha256Fingerprint();
+    const idempotencyKey = "in-progress-order-key-0001";
+    const keyDigest = fingerprints.sha256(
+      `nitipcuy-order-idempotency-key-v1\0${idempotencyKey}`,
+    );
+    const lockIdentity = [
+      fixture.firstCustomer.accountId,
+      "order.submit.v1",
+      keyDigest,
+    ].join(":");
+    const lockConnection = await pool.connect();
+    try {
+      await lockConnection.query("BEGIN");
+      await lockConnection.query(
+        "SELECT pg_advisory_xact_lock(hashtextextended($1, 0))",
+        [lockIdentity],
+      );
+
+      await expect(
+        new SubmitOrderRequest({
+          clock: new MutableClock("1900-01-01T00:00:00.000Z"),
+          fingerprints,
+          identifiers: new UuidSequence(),
+          unitOfWork: new PrismaMarketplaceUnitOfWork(prisma),
+        }).execute(
+          fixture.firstCustomer,
+          {
+            terms: {
+              allowSubstitution: false,
+              itemDescription: "In-progress item",
+              maximumBudgetIdr: 300_000,
+              quantity: 1,
+              requestedCapacityGrams: 500,
+              serviceMode: "SHOP_FOR_ME",
+            },
+            tripId: fixture.tripId,
+          },
+          {
+            correlationId: "in-progress-order-submit",
+            idempotencyKey,
+          },
+        ),
+      ).rejects.toMatchObject({ code: "IDEMPOTENCY_IN_PROGRESS" });
+    } finally {
+      await lockConnection.query("ROLLBACK");
+      lockConnection.release();
+    }
+
+    await expectOrderSubmissionRolledBack(fixture.tripId, "2");
+  });
 });
 
 afterAll(async () => {
@@ -874,6 +1290,93 @@ async function insertAccount(displayName: string): Promise<AccountId> {
   return id;
 }
 
+async function insertOrderFixture(capacityKg: number): Promise<{
+  readonly firstCustomer: AuthenticatedActor;
+  readonly secondCustomer: AuthenticatedActor;
+  readonly tripId: ReturnType<typeof tripId>;
+}> {
+  const timeResult = await pool.query<{ observed_at: Date }>(
+    'SELECT CURRENT_TIMESTAMP AS "observed_at"',
+  );
+  const observedAt = timeResult.rows[0]?.observed_at;
+  if (!observedAt) {
+    throw new Error("Disposable PostgreSQL time is unavailable.");
+  }
+  const clock = new MutableClock(observedAt.toISOString());
+  const seller = await insertAccount("Order Seller");
+  const firstCustomerId = await insertAccount("First Order Customer");
+  const secondCustomerId = await insertAccount("Second Order Customer");
+  const firstCustomer = await insertActorSession(
+    clock,
+    firstCustomerId,
+    "BASE",
+  );
+  const secondCustomer = await insertActorSession(
+    clock,
+    secondCustomerId,
+    "BASE",
+  );
+  const profileId = crypto.randomUUID();
+  await prisma.jastipperProfile.create({
+    data: {
+      accountId: seller,
+      deliverySummary: "Pickup after arrival",
+      displayName: "Order Seller",
+      id: profileId,
+      rateSummary: "Seller-set request rate",
+      sellerLocationLabel: "Tokyo",
+    },
+  });
+
+  const openAt = new Date(observedAt.getTime() - 60 * 60_000);
+  const closeAt = new Date(observedAt.getTime() + 2 * 60 * 60_000);
+  const serviceStartAt = new Date(observedAt.getTime() - 30 * 60_000);
+  const serviceEndAt = new Date(observedAt.getTime() + 3 * 60 * 60_000);
+  const departureAt = new Date(observedAt.getTime() + 4 * 60 * 60_000);
+  const arrivalAt = new Date(observedAt.getTime() + 28 * 60 * 60_000);
+  const targetTripId = tripId(`trip-order-${crypto.randomUUID().slice(0, 20)}`);
+  await prisma.tripOffer.create({
+    data: {
+      departureAt,
+      departureDate: new Date(
+        `${departureAt.toISOString().slice(0, 10)}T00:00:00.000Z`,
+      ),
+      destinationLabel: "Bandung",
+      destinationTimeZone: "Asia/Jakarta",
+      estimatedArrivalAt: arrivalAt,
+      id: targetTripId,
+      jastipperProfileId: profileId,
+      originLabel: "Tokyo",
+      originTimeZone: "Asia/Tokyo",
+      ownerAccountId: seller,
+      publishedAt: new Date(observedAt.getTime() - 24 * 60 * 60_000),
+      remainingCapacityKg: capacityKg,
+      requestDeadline: closeAt,
+      requestOpenAt: openAt,
+      serviceModes: ["SHOP_FOR_ME", "CARRY_MY_ITEM"],
+      serviceWindowEndAt: serviceEndAt,
+      serviceWindowStartAt: serviceStartAt,
+      status: "PUBLISHED",
+    },
+  });
+  return { firstCustomer, secondCustomer, tripId: targetTripId };
+}
+
+async function expectOrderSubmissionRolledBack(
+  targetTripId: ReturnType<typeof tripId>,
+  expectedCapacityKg: string,
+): Promise<void> {
+  expect(await prisma.orderRequest.count()).toBe(0);
+  expect(await prisma.orderSubmissionIdempotency.count()).toBe(0);
+  expect(await prisma.auditEvent.count()).toBe(0);
+  expect(await prisma.outboxEvent.count()).toBe(0);
+  const unchangedTrip = await prisma.tripOffer.findUniqueOrThrow({
+    where: { id: targetTripId },
+  });
+  expect(unchangedTrip.remainingCapacityKg.toString()).toBe(expectedCapacityKg);
+  expect(unchangedTrip.version).toBe(1);
+}
+
 function googleIdentity(
   subject: string,
   email: string,
@@ -945,6 +1448,60 @@ class UuidSequence implements IdentifierPort {
   next(): string {
     this.value += 1;
     return `00000000-0000-4000-8000-${this.value.toString().padStart(12, "0")}`;
+  }
+}
+
+class InvalidOutboxIdentifier implements IdentifierPort {
+  next(namespace: string): string {
+    return namespace === "outbox" ? "not-a-uuid" : crypto.randomUUID();
+  }
+}
+
+class DelayedReservationUnitOfWork implements MarketplaceUnitOfWork {
+  constructor(
+    private readonly delegate: MarketplaceUnitOfWork,
+    private readonly delayMilliseconds: number,
+  ) {}
+
+  execute<T>(
+    work: (context: MarketplaceTransactionContext) => Promise<T>,
+  ): Promise<T> {
+    return this.delegate.execute((context) => {
+      const orderSubmissions: MarketplaceTransactionContext["orderSubmissions"] =
+        Object.freeze({
+          authoritativeNow: () => context.orderSubmissions.authoritativeNow(),
+          claim: (input: Parameters<OrderSubmissionRepository["claim"]>[0]) =>
+            context.orderSubmissions.claim(input),
+          complete: (
+            input: Parameters<OrderSubmissionRepository["complete"]>[0],
+          ) => context.orderSubmissions.complete(input),
+          create: (
+            request: Parameters<OrderSubmissionRepository["create"]>[0],
+          ) => context.orderSubmissions.create(request),
+          lockEligibleSeller: (
+            input: Parameters<
+              OrderSubmissionRepository["lockEligibleSeller"]
+            >[0],
+          ) => context.orderSubmissions.lockEligibleSeller(input),
+          reserveCapacity: async (
+            input: Parameters<OrderSubmissionRepository["reserveCapacity"]>[0],
+          ) => {
+            await new Promise((resolve) =>
+              setTimeout(resolve, this.delayMilliseconds),
+            );
+            return context.orderSubmissions.reserveCapacity(input);
+          },
+        });
+      return work(Object.freeze({ ...context, orderSubmissions }));
+    });
+  }
+}
+
+class InvalidCompletionFingerprint implements FingerprintPort {
+  sha256(value: string): string {
+    return value.startsWith("nitipcuy-order-idempotency-key-v1\0")
+      ? createHash("sha256").update(value, "utf8").digest("hex")
+      : "not-a-valid-fingerprint";
   }
 }
 

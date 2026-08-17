@@ -11,9 +11,9 @@ The product replaces fragmented promotion and repetitive private questions with 
 
 ## Current status
 
-Stage 1 platform foundation is in progress. The current bounded work is [issue #11](https://github.com/BurinSn/NitipCuy/issues/11), which adds shared abuse controls and privacy-safe denial telemetry after the inbound browser/session perimeter merged through pull request #10.
+Stage 1 platform foundation is in progress. Shared abuse controls merged through issue #11 / pull request #12. The current bounded work is [issue #13](https://github.com/BurinSn/NitipCuy/issues/13), which adds server-authoritative order submission and atomic trip-capacity reservation while deliberately stopping at `SUBMITTED`.
 
-The repository now contains a modular-monolith architecture, mechanically enforced inward package dependencies, a PostgreSQL-backed Google-account-to-public-Q&A slice, provider-independent ports, deterministic fixtures, unit and disposable-database tests, quality gates, a defense-in-depth security and scale baseline, and a working local trip-discovery shell. The shell uses simulated public data. Implemented controls remain source- or local-runtime-tested unless a narrower record says otherwise; they are not proof of production, provider, payment, legal, complete security, capacity, or visual approval.
+The repository now contains a modular-monolith architecture, mechanically enforced inward package dependencies, a PostgreSQL-backed Google-account-to-public-Q&A slice, a local order-submission candidate for both service modes, provider-independent ports, deterministic fixtures, unit and disposable-database tests, quality gates, a defense-in-depth security and scale baseline, and a working local trip-discovery shell. The shell uses simulated public data. Implemented controls remain source-, disposable-database-, or local-runtime-tested unless a narrower record says otherwise; they are not proof of production, provider, payment, legal, complete security, load capacity, or visual approval.
 
 DOKU remains the preferred payment candidate, conditional on written Partner/Aggregator approval and resolution of the gates in the [DOKU evaluation](docs/payments/doku-evaluation.md). No provider, deployment, database, or production account is active.
 

@@ -60,6 +60,12 @@ export const abusePolicyDefinitions = Object.freeze({
     axis("SESSION", "session", 10, 10 * minute),
     axis("TARGET", "account-target", 4, 10 * minute),
   ),
+  "order.submit": axes(
+    axis("NETWORK", "network", 20, minute),
+    axis("ACCOUNT", "account", 8, 10 * minute),
+    axis("SESSION", "session", 8, 10 * minute),
+    axis("TARGET", "account-target", 4, 10 * minute),
+  ),
   "profile.create": axes(
     axis("NETWORK", "network", 30, minute),
     axis("ACCOUNT", "account", 6, 10 * minute),

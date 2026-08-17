@@ -162,6 +162,51 @@ export function requiredNumber(
   return value;
 }
 
+export function requiredInteger(
+  input: Readonly<Record<string, unknown>>,
+  field: string,
+): number {
+  const value = requiredNumber(input, field);
+  if (!Number.isSafeInteger(value)) {
+    throw new HttpBoundaryError(400, "REQUEST_INVALID");
+  }
+  return value;
+}
+
+export function requiredBoolean(
+  input: Readonly<Record<string, unknown>>,
+  field: string,
+): boolean {
+  const value = input[field];
+  if (typeof value !== "boolean") {
+    throw new HttpBoundaryError(400, "REQUEST_INVALID");
+  }
+  return value;
+}
+
+export function optionalString(
+  input: Readonly<Record<string, unknown>>,
+  field: string,
+): string | undefined {
+  const value = input[field];
+  if (value === undefined) {
+    return undefined;
+  }
+  if (typeof value !== "string") {
+    throw new HttpBoundaryError(400, "REQUEST_INVALID");
+  }
+  return value;
+}
+
+export function requireExactFields(
+  input: Readonly<Record<string, unknown>>,
+  allowedFields: ReadonlySet<string>,
+): void {
+  if (Object.keys(input).some((field) => !allowedFields.has(field))) {
+    throw new HttpBoundaryError(400, "REQUEST_INVALID");
+  }
+}
+
 export function requiredStringArray(
   input: Readonly<Record<string, unknown>>,
   field: string,
@@ -217,7 +262,11 @@ export function routeFailure(error: unknown): NextResponse {
     }
     if (
       error.code === "ANSWER_ALREADY_EXISTS" ||
-      error.code === "PROFILE_ALREADY_EXISTS"
+      error.code === "PROFILE_ALREADY_EXISTS" ||
+      error.code === "CAPACITY_UNAVAILABLE" ||
+      error.code === "IDEMPOTENCY_CONFLICT" ||
+      error.code === "IDEMPOTENCY_IN_PROGRESS" ||
+      error.code === "OFFER_REVISION_STALE"
     ) {
       return NextResponse.json({ error: "REQUEST_CONFLICT" }, { status: 409 });
     }

@@ -15,6 +15,19 @@ export type {
   SessionId,
 } from "./account";
 export {
+  normalizeOrderRequestTerms,
+  orderRequestId,
+  requestedCapacityGrams,
+} from "./order-request";
+export type {
+  CarryMyItemRequestTerms,
+  OrderRequestId,
+  OrderRequestStatus,
+  OrderRequestTerms,
+  ShopForMeRequestTerms,
+  SubmittedOrderRequest,
+} from "./order-request";
+export {
   approveTripOffer,
   createTripOffer,
   MarketplaceStateConflictError,

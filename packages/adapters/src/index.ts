@@ -1,5 +1,9 @@
 export { InMemoryTripDiscoveryRepository } from "./in-memory-trip-discovery";
-export { SystemClock, UuidIdentifier } from "./node-platform-services";
+export {
+  Sha256Fingerprint,
+  SystemClock,
+  UuidIdentifier,
+} from "./node-platform-services";
 export {
   GoogleOidcClient,
   googleIdentityFromClaims,

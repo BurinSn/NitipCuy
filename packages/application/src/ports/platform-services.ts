@@ -23,6 +23,10 @@ export interface IdentifierPort {
   next(namespace: string): string;
 }
 
+export interface FingerprintPort {
+  sha256(value: string): string;
+}
+
 export interface AuditRecord {
   readonly actorId: string;
   readonly action: string;

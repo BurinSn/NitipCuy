@@ -140,6 +140,8 @@ Owns:
 
 An order preserves the accepted terms. Later trip edits do not silently rewrite committed orders.
 
+Issue #13 implements the first bounded ordering command only. `POST /api/trips/{tripId}/requests` accepts an exact mode-specific JSON shape after the canonical perimeter, same-origin and Fetch-Metadata checks, active browser-bound session validation, and shared abuse admission. It returns a safe `SUBMITTED` projection that excludes customer and seller account IDs, request details, moderation state, and private terms.
+
 ### Fulfilment and evidence
 
 Owns:
@@ -201,7 +203,7 @@ Only completed protected orders can create verified reviews.
 
 ## 5. Authoritative trip offer and public projections
 
-The future authoritative `TripOffer` aggregate owns:
+The authoritative `TripOffer` aggregate owns:
 
 - jastipper account and eligibility reference;
 - draft, review, publication, pause, closure, cancellation, moderation, and archive state;
@@ -262,7 +264,7 @@ Core rules:
 
 Issue #3 deliberately had no transaction implementation. The removed callback-only transaction port did not provide scoped repositories or append-only writers and therefore could not enforce commit, rollback, isolation, or shared connection use.
 
-Issue #5 introduces the first database-backed transaction-scoped unit of work. Its account/profile/trip/public-discussion scope supplies repositories, audit, and outbox writers bound to the same PostgreSQL transaction. Later order slices must add ledger and inbox writers without combining scoped and independently constructed write adapters. Authoritative state, balanced financial entries when applicable, success audit, and required outbox records commit together or roll back together. Provider and object-storage network calls occur outside the transaction through explicit pending and reconciliation states.
+Issue #5 introduced the first database-backed transaction-scoped unit of work. Issue #13 extends that same connection-bound serializable scope with submitted requests, exact capacity decrement, account-bound completed idempotency results, success audit, and outbox writes. The seller account and jastipper profile are locked in eligible state for the decision, while the conditional trip update requires the read revision, published state, and sufficient exact capacity. All owned writes commit or roll back together. Later accepted-order, ledger, provider-inbox, worker, payment, release, and cancellation slices must extend the scoped unit without constructing independent writers or calling a provider inside the transaction.
 
 Initial target:
 
@@ -414,12 +416,13 @@ Integration tests now exercise the issue #5 account/profile/trip/public-discussi
 - rollback after a duplicate authoritative write, bounded concurrent issuer-subject resolution, stale-version conflict, and state-to-audit and state-to-outbox atomicity;
 - exact profile-owner foreign keys, session revocation, rotation-family reuse, account-version invalidation, OAuth browser-binding, attempt replay and expiry, bounded cursor reads, and private-field projection exclusion;
 - issue #11's additive abuse-bucket migration, cross-instance concurrent admission, network/account/session axes plus network-target or account-target isolation, HMAC redaction, first-denial audit atomicity and rollback, fixed-window rollover, and bounded expiry cleanup;
+- issue #13's additive order schema, exact database-time eligibility, both service-mode mappings, account-bound replay and changed-payload conflict, active duplicate denial, seller/profile eligibility locks, final-slot contention across independent unit-of-work instances, database constraints, and rollback after outbox or idempotency-completion failure.
 
-Later persisted-order slices must still exercise:
+Later persisted-order and payment slices must still exercise:
 
 - interrupted backfills, mixed old/new application versions, rollback or forward-fix;
 - fault injection at every new consistency-critical boundary;
-- atomic last-capacity contention, balanced ledger constraints, provider inbox, and worker/outbox processing;
+- seller acceptance and capacity release, balanced ledger constraints, provider inbox, and worker/outbox processing;
 - bounded transaction and lock timeouts, with no provider network call while a database transaction is open;
 - provider signature and event inbox handling;
 - private object-storage authorization;
@@ -477,14 +480,24 @@ Implemented by issue #9, merged through pull request #10 as `23a6015781228cb04e1
 - generic non-cacheable `503` for missing configuration and non-cacheable, non-redirecting `421` for hostile request authority;
 - an automated post-build local runtime gate for nonce propagation/freshness, unsafe CSP keywords, no-store, hostile host/forwarding/prefetch denial, exact unknown-trip `404`, trusted-edge proof, proof non-disclosure, and HSTS.
 
-Implemented in the issue #11 local candidate and source/disposable-database tested:
+Implemented by issue #11, merged through pull request #12 as `ea4b629466df1e1e1381f62ae5ca26722edbe4bf`:
 
 - one canonical client-network decision with exact trusted single-address parsing, loopback-only local behavior, fail-closed rejection of maintained alternate client-network headers, HMAC-only downstream context, and raw forwarding/equivalent-header removal;
 - one versioned policy authority for the existing identity, session, public-read, publication, discussion, and moderation routes;
 - additive PostgreSQL fixed-window bucket authority shared across web instances with network, account, session/device, and compound network-target or account-target axes, deterministic lock order, bounded cleanup, generic `429`/`503`, and atomic bounded denial audits; target buckets isolate callers rather than creating a global target-denial lever;
 - no process-local limiter authority, raw stored subject, WAF/bot provider integration, operational metrics backend, dashboard, alert route, load claim, or production claim.
 
-Issue #3 removed its callback-only transaction interface rather than misrepresent it as atomic infrastructure. Issue #5 now implements and disposable-database-tests a connection-bound serializable unit of work for the persisted marketplace slice; this does not yet cover order capacity, ledger, payment, provider callback, worker, or outbox-delivery transactions.
+Implemented in the issue #13 local candidate and source/disposable-database tested:
+
+- one provider-neutral `SUBMITTED` request model for Shop for me and Carry my item with integer-IDR terms, 10-gram domain/HTTP capacity units, exact PostgreSQL decimals, immutable submission declarations, and route/schedule snapshots;
+- live database-wall-time ordering-window evaluation on the locked trip row, active seller-account and profile locks, published/current offer revision checks, supported-mode and self-order denial, and conditional exact capacity decrement;
+- one account-scoped, key-digest-only PostgreSQL idempotency result with canonical payload fingerprint, transaction advisory-lock duplicate denial, exact replay, changed-payload conflict, seven-day completed-result retention, and authorization before lookup;
+- composite database ownership constraints binding request to trip seller/profile and replay result to request customer;
+- one serializable consistency boundary for request, capacity, success audit, outbox, and completed idempotency result, with no provider or object-storage call;
+- one bounded protected JSON route and `order.submit.v1` shared multi-axis abuse policy;
+- no seller response, release/expiry/cancellation, accepted commercial snapshot, address, payment, delivery, evidence, dashboard, browser, provider, deployment, or production activation.
+
+Issue #3 removed its callback-only transaction interface rather than misrepresent it as atomic infrastructure. Issue #5 implemented the connection-bound serializable unit of work, and issue #13 extends it through submitted-request capacity reservation. It still does not cover seller acceptance/release, ledger, payment, provider callback, worker, or outbox delivery.
 
 The payment port now separates initiation, release, and refund submission receipts from provider observations. It models collection, hold, release, refund, settlement, and chargeback independently; provider signals request inspection instead of declaring success. The configured mock never invents a successful outcome, and the pure initial-protection assessment fails closed for unknown, contradictory, mismatched, or post-hold evidence.
 

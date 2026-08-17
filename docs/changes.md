@@ -1355,3 +1355,163 @@ A session with no material change does not invent an entry. A session that makes
   - no implementation, security control, product model, dependency, migration, provider, stage, or delivery-order change results from this approval record.
 - Next:
   - commit and push this four-lifecycle-file approval record, repin issue #11 and pull request #12, repeat hosted exact-head checks and the lifecycle-only hostile review, then squash-merge and verify `main`, automatic issue closure, and branch cleanup only if every approval condition remains true.
+
+## 2026-08-11 13:43 WIB - Governed order submission and atomic capacity candidate implemented locally
+
+- Issue: #13
+- Product: NitipCuy Stage 1 platform foundation
+- Type: Submitted-request model, exact capacity reservation, durable replay, protected route, additive persistence, and lifecycle reconciliation
+- Status: Corrected local candidate passes complete application quality and content/security gates; immutable review, push, pull request, hosted evidence, and owner approval pending
+- Prior-state reconciliation:
+  - issue #11 / pull request #12 were squash-merged as `ea4b629466df1e1e1381f62ae5ca26722edbe4bf`; issue closure, matching local/remote `main`, and feature-branch cleanup were verified;
+  - no open issue or pull request remained before issue #13 was created;
+  - issue #13 now governs the bounded `SUBMITTED` request and final-capacity slice, and branch `feat/13-order-submission-capacity` starts from that merge commit.
+- Added:
+  - one framework-free submitted-request model for both service modes with bounded item declarations, integer-IDR values, exact integer-gram reservation terms, route/schedule snapshots, source offer revision, and safe response projection;
+  - one additive PostgreSQL order-request and account-bound idempotency schema with service-mode constraints, distinct-party enforcement, exact decimal capacity, immutable submission fields, indexes, and foreign keys;
+  - live database-wall-time ordering-window evaluation on the locked trip row, published/current offer checks, supported-mode and self-order denial, active seller-account/profile row locks, and exact conditional capacity decrement;
+  - composite database foreign keys binding the request seller/profile to the exact trip and the completed replay result to the request customer;
+  - one serializable unit-of-work boundary for request, trip capacity/version, success audit, outbox, and completed idempotency result;
+  - key-digest-only account-scoped replay with canonical payload fingerprint, transaction advisory-lock active-duplicate denial, exact replay, changed-payload conflict, and seven-day completed-result retention;
+  - protected `POST /api/trips/[tripId]/requests` delivery with canonical perimeter, same-origin and Fetch-Metadata JSON checks, active session, bounded exact fields, `order.submit.v1` shared network/account/session/account-target limits, generic failure mapping, and no private request or party details in the response.
+- Validation so far with exact Node.js `24.18.0` / pnpm `11.17.0`:
+  - `pnpm check` passed formatting, lint, dependency boundaries across 4 projects / 75 source files / 251 module references, strict type checking, 244 tests, production build, and the direct plus simulated trusted-proxy runtime probe;
+  - 244 tests comprise 17 review-governance, 21 dependency-boundary, 27 domain, 34 application, 71 adapter, and 74 web tests;
+  - disposable PostgreSQL 18 clean-applied every migration and proved both mode mappings, live database-time authority after an in-transaction delay, account/request/trip-party ownership constraints, same-key replay/conflict, active duplicate denial, seller/profile eligibility locks, one winner for concurrent final capacity, and complete rollback after outbox or idempotency-completion failure;
+  - the built Next.js route manifest includes `/api/trips/[tripId]/requests`;
+  - the production dependency audit found no known vulnerability; lifecycle participation, diff hygiene, 7-file YAML parsing, 20-document local-link validation, parameterized-query inventory, and high-confidence secret/log/unsafe-execution scans passed;
+  - complete-diff DRY and hostile review still require an immutable commit and are not claimed yet.
+- Evidence and limitations:
+  - highest current evidence is source-tested, disposable-PostgreSQL-integration-tested, production-build-tested, and local request-perimeter-runtime-tested;
+  - no browser submitted an order and no real Google, managed database, edge, provider, payment, logistics, private-data encryption, monitoring, load, staging, or production environment was used;
+  - seller acceptance/rejection, expiry/cancellation, capacity release, accepted commercial snapshot, address, payment, delivery, evidence, dashboard, and visual work remain explicitly outside this slice;
+  - issue #13 remains Strix `NOT REQUIRED` / `NOT APPLICABLE` / `NO TARGET` under the approved zero-external-Strix-AI path. This is not penetration-test evidence.
+- Roadmap:
+  - Stage 1 and provider order are unchanged. Payment and delivery remain later work; the next dependency after this slice is seller response plus safe capacity release before real-user activation.
+- Next:
+  - commit the corrected candidate, run full DRY plus hostile security review on that immutable head, then push only if clean, pin issue #13, open the focused pull request, and verify hosted gates before requesting fresh BurinSN approval.
+
+## 2026-08-11 14:11 WIB - Pull request #14 opened from the reviewed order-submission head
+
+- Issue / PR: Issue #13; pull request #14
+- Product: NitipCuy Stage 1 platform foundation
+- Type: Governed pull-request publication and required lifecycle reconciliation
+- Status: Implementation head published and four-lifecycle-file successor narrowly reviewed locally; final repin/push, hosted verification, and owner approval pending
+- Live state:
+  - branch `feat/13-order-submission-capacity` and pull request #14 point to implementation head `9c145515367f81571e7583495f88eca53b8d9abe` against base `ea4b629466df1e1e1381f62ae5ca26722edbe4bf`;
+  - issue #13 and pull request #14 match as DRY `CLEAN WITH NOTES`; Strix remains `NOT REQUIRED` / `NOT APPLICABLE` / `NO TARGET`;
+  - initial hosted review-governance run `31467896354` passed, application run `31467896319` and lifecycle run `31467896386` were in progress, CodeRabbit was pending, and GitHub reported the pull request open, not draft, and mergeable with no review decision.
+- Review result:
+  - the complete implementation diff corrected transaction-start-time staleness, missing request/customer/trip-party composite ownership constraints, raw-query serialization retry classification, and duplicated idempotency-key grammar before the immutable review;
+  - no unresolved duplicated authority or actionable hostile finding remained at `9c145515367f81571e7583495f88eca53b8d9abe`;
+  - retained duplication is intentional defense at HTTP, domain, adapter, and PostgreSQL trust boundaries, persistence mapping, immutable migration SQL, and fixtures.
+- Scope and roadmap:
+  - opening the pull request changes no product model, implementation, security control, dependency, provider decision, stage, or delivery order;
+  - payment and delivery remain later; seller response plus safe reservation release remains the next product dependency.
+- Next:
+  - live-resolve the documentation-only successor SHA, reconfirm its delta contains exactly the four lifecycle authorities, repin issue #13 and pull request #14, push it, and verify all hosted checks and external review output on the final exact head before seeking fresh BurinSN approval.
+
+## 2026-08-11 14:17 WIB - Pull request #14 lifecycle head fully hosted-verified
+
+- Issue / PR: Issue #13; pull request #14
+- Product: NitipCuy Stage 1 platform foundation
+- Type: Final hosted evidence and lifecycle checkpoint
+- Status: Prior lifecycle head fully green and mergeable; final evidence successor and owner approval pending
+- Exact verified head: `b4bb4aee87f6bdcf190504699f91bce7f5122050` against base `ea4b629466df1e1e1381f62ae5ca26722edbe4bf`
+- Hosted evidence:
+  - application run `31468141680`, lifecycle run `31468141673`, review-governance run `31468142538`, and post-inspection review-governance run `31468335555` passed with zero annotations;
+  - transition review-governance run `31468141682` was cancelled by the workflow concurrency rule for the higher-priority waiting replacement; its only annotation states that scheduling fact and contains no code, policy, or security finding;
+  - CodeRabbit's success context says `Review rate limited`; its comment provides a walkthrough but no GitHub review object, line finding, or security assessment;
+  - GitHub reported the pull request open, not draft, `CLEAN`, and `MERGEABLE`, with no review decision or review objects.
+- Review and scope:
+  - issue #13 and pull request #14 matched as DRY `CLEAN WITH NOTES` and Strix `NOT REQUIRED` / `NOT APPLICABLE` / `NO TARGET` at the verified head;
+  - no implementation, migration, dependency, provider, product, security-control, stage, or delivery-order change results from this evidence checkpoint;
+  - payment, delivery, seller response, capacity release, private-data activation, browser/provider/load/deployment/production, and penetration testing remain excluded or unverified.
+- Next:
+  - commit and narrowly review this four-lifecycle-file evidence successor, repin both governed records, repeat hosted exact-head checks, then request fresh BurinSN merge approval only if the final head remains clean and mergeable.
+
+## 2026-08-17 10:58 WIB - Pull request #14 received fresh conditional owner approval
+
+- Issue / PR: Issue #13; pull request #14
+- Product: NitipCuy Stage 1 platform foundation
+- Type: Live exact-head reconciliation, fresh owner approval, and merge-boundary lifecycle checkpoint
+- Status: Final reviewed evidence head approved; approval-record successor, repeated exact-head gates, squash merge, and post-merge verification pending
+- Live evidence:
+  - local, remote branch, and pull-request head match `c5fe836b27b1756b290ee32d88572e5c7458d516` against base `ea4b629466df1e1e1381f62ae5ca26722edbe4bf`, with a clean worktree before this record;
+  - application run `31468516199`, lifecycle run `31468516235`, and final review-governance run `31468677458` passed on that exact head;
+  - issue #13 and pull request #14 match DRY `CLEAN WITH NOTES` and Strix `NOT REQUIRED` / `NOT APPLICABLE` / `NO TARGET`;
+  - GitHub reports the pull request open, not draft, `CLEAN`, and `MERGEABLE`, with no review object, review decision, or intervening source change;
+  - CodeRabbit remains rate limited and supplied no independent review object or finding.
+- Owner approval:
+  - after receiving the exact live state, evidence levels, exclusions, and proposed sequence, BurinSN instructed Codex to "proceed next" on 2026-08-17;
+  - this authorizes the governed pull request #14 merge sequence only if the commit containing this record changes exactly the four lifecycle authorities from `c5fe836b27b1756b290ee32d88572e5c7458d516`, both governed pins match the successor, every required hosted check passes, and the pull request remains clean and mergeable;
+  - any source, dependency, configuration, product, provider, security-control, scope, or finding change invalidates approval and requires fresh review.
+- Exclusions:
+  - approval does not authorize deployment, provider configuration, real Google, managed data, payment movement, external target testing, Strix execution, real-user activation, public launch, or visual production deployment.
+- Roadmap:
+  - Stage 1 and provider order remain unchanged;
+  - after pull request #14 merges, the next governed slice is UX and visual foundation so BurinSN can inspect the product experience; seller response plus safe reservation release remains the next functional activation dependency.
+- Next:
+  - commit this four-file approval record, narrowly review and repin it, repeat exact-head hosted gates, squash-merge only if every condition remains true, verify post-merge state, then create the separate UX/visual-foundation issue.
+
+## 2026-08-17 11:05 WIB - New nanoid advisory blocked the approved merge and received a bounded repair
+
+- Issue / PR: Issue #13; pull request #14
+- Product: NitipCuy Stage 1 platform foundation
+- Type: Supply-chain gate failure, dependency repair, and required lifecycle reconciliation
+- Status: Full local exact-toolchain repair gates clean; immutable review, governance repin, hosted gates, and fresh owner approval pending
+- Trigger and evidence:
+  - approval-record head `0ef764f70e439fb45e963dd17172e803794815ba` was pushed and pinned in issue #13 and pull request #14;
+  - hosted application run `31993037634` passed the complete application quality suite but failed `pnpm audit:prod` when the registry reported high-severity `GHSA-2v37-7h3g-55p8` for transitive `nanoid` versions below `3.3.18`;
+  - the failure is a newly observed supply-chain advisory on the previously unchanged dependency tree, not an application test or build regression.
+- Repair:
+  - update the existing workspace override from `nanoid` `3.3.17` to patched `3.3.18`;
+  - refresh only the corresponding override, package resolution, integrity, snapshot, and `postcss` dependency entries in `pnpm-lock.yaml` using exact Node.js `24.18.0` and pnpm `11.17.0`;
+  - exact-toolchain frozen install and `pnpm check` pass formatting, lint, dependency boundaries, strict types, all 244 tests, production build, and the direct plus simulated trusted-proxy runtime probe;
+  - exact-toolchain local `pnpm audit:prod` now reports no known vulnerabilities.
+- Authority and scope:
+  - this is a dependency change, so it invalidates the prior conditional merge approval exactly as that approval record required;
+  - product behavior, transaction contracts, provider choices, Strix applicability, roadmap stage, delivery order, and exclusions are unchanged;
+  - the existing quality and security authorities already require frozen resolution plus production audit, so no specialist-policy wording changes.
+- Next:
+  - commit and review the six-file dependency/lifecycle repair; repin issue #13 and pull request #14 to the resulting immutable head; obtain passing hosted gates; then request fresh BurinSN merge approval.
+
+## 2026-08-17 11:13 WIB - Dependency-repair head passed exact hosted gates
+
+- Issue / PR: Issue #13; pull request #14
+- Product: NitipCuy Stage 1 platform foundation
+- Type: Final hosted evidence and lifecycle checkpoint after the supply-chain repair
+- Status: Dependency repair fully green and mergeable; final lifecycle successor and fresh owner approval pending
+- Exact verified head: `b76d701520def6a07824e5138d4cc6b5c2a392c5` against base `ea4b629466df1e1e1381f62ae5ca26722edbe4bf`
+- Hosted evidence:
+  - application run `31993491119` passed the full application quality suite and production dependency audit;
+  - lifecycle run `31993491134` passed;
+  - stable review-governance replacement `31993632434` passed with issue #13 and pull request #14 pinned to the exact head;
+  - transition review-governance run `31993491123` captured the pre-repin PR event payload and failed only because its reviewed revision did not yet equal the synchronized immutable head; the stable replacement is the current evidence;
+  - CodeRabbit completed with `Review rate limited`, no review object, and no independent finding;
+  - GitHub reports `CLEAN` / `MERGEABLE`, with no review decision or review objects.
+- Review and scope:
+  - the repair delta from `0ef764f70e439fb45e963dd17172e803794815ba` contains exactly the centralized `nanoid` override, its lockfile resolution, and the four lifecycle documents;
+  - DRY remains `CLEAN WITH NOTES`; Strix remains `NOT REQUIRED` / `NOT APPLICABLE` / `NO TARGET`;
+  - product behavior, transaction contracts, providers, roadmap stage, delivery order, and exclusions are unchanged.
+- Next:
+  - commit and narrowly review this four-lifecycle-file evidence successor, repin both governance records, repeat hosted exact-head gates, then request fresh BurinSN merge approval.
+
+## 2026-08-17 11:29 WIB - Dependency-repaired final head received fresh owner approval
+
+- Issue / PR: Issue #13; pull request #14
+- Product: NitipCuy Stage 1 platform foundation
+- Type: Fresh owner approval and guarded merge-boundary checkpoint
+- Status: Approved conditionally; approval-record successor, exact-head gates, squash merge, and post-merge verification pending
+- Exact approved evidence head: `0dcf4f2ac21313d164dd26022f78061c0430a89c` against base `ea4b629466df1e1e1381f62ae5ca26722edbe4bf`
+- Evidence presented before approval:
+  - the dependency change was explained as an existing transitive `Next.js > PostCSS > nanoid` resolution moving from vulnerable `3.3.17` to patched `3.3.18`, with no new dependency or application behavior;
+  - hosted application run `31993817825`, lifecycle run `31993817761`, stable review-governance replacement `31993977394`, and post-inspection review-governance run `31994016258` passed on the exact head with zero annotations on passing checks;
+  - GitHub reported `CLEAN` / `MERGEABLE`, no review decision, and no review objects; CodeRabbit was rate limited and supplied no independent finding.
+- Owner approval:
+  - after receiving that explanation and evidence, BurinSN replied "okay approved" on 2026-08-17;
+  - approval is limited to the governed squash merge of pull request #14 from the approved head and one four-lifecycle-file approval-record successor, provided both governance pins match, required hosted gates pass, and no new finding or drift appears.
+- Exclusions:
+  - no deployment, provider provisioning/configuration, real Google, managed data, payment movement, external target testing, Strix execution, real-user activation, public launch, or visual production deployment.
+- Next:
+  - commit and narrowly review the four-lifecycle-file approval successor, repin issue #13 and pull request #14, repeat hosted exact-head gates, squash-merge if every condition remains true, then verify the merged repository and create the separate UX/visual-foundation issue.

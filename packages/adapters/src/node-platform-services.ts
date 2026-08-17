@@ -1,6 +1,10 @@
-import { randomUUID } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 
-import type { ClockPort, IdentifierPort } from "@nitipcuy/application";
+import type {
+  ClockPort,
+  FingerprintPort,
+  IdentifierPort,
+} from "@nitipcuy/application";
 
 export class SystemClock implements ClockPort {
   now(): string {
@@ -15,5 +19,11 @@ export class UuidIdentifier implements IdentifierPort {
     }
 
     return randomUUID();
+  }
+}
+
+export class Sha256Fingerprint implements FingerprintPort {
+  sha256(value: string): string {
+    return createHash("sha256").update(value, "utf8").digest("hex");
   }
 }

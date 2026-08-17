@@ -1309,3 +1309,113 @@ Do not present inference, provider marketing, provisional pricing, or a future i
 ### No new product or security-control learning
 
 - The approval record changes no implementation, security control, Strix applicability, provider decision, product model, roadmap stage, or delivery order.
+
+## 2026-08-11 13:43 WIB - Exact capacity and pure-database replay belong to one transaction
+
+### Verified
+
+- Capacity must cross the HTTP and domain boundaries as an integer unit instead of a JavaScript decimal.
+  - Evidence: issue #13 accepts 10-gram increments, maps them to PostgreSQL `DECIMAL(8,2)` kilograms, conditionally decrements that exact value, and rejects non-integer or non-representable inputs.
+  - Impact: the unit is a technical precision contract, not an approved seller trust-tier, route, pilot, insurance, or load ceiling.
+- A pure database command can make completion idempotent without a separately committed in-progress row.
+  - Evidence: authorization and rate limiting precede lookup; a transaction advisory lock denies an active same-account/key attempt; the request, capacity, audit, outbox, and completed replay row then commit together. A failure leaves no ambiguous provider outcome or partially completed idempotency record.
+  - Impact: the generic recovery-required contract still applies to provider calls and other ambiguous external effects. It must not be copied unnecessarily into a short database-only transaction, and this narrow implementation must not be presented as generalized platform idempotency.
+- Database time and row eligibility must be part of the same decision boundary as capacity.
+  - Evidence: an injected application clock set to 1900 did not affect successful disposable-database submission; seller account and profile rows were share-locked while the conditional trip update required published state, the read revision, and enough exact capacity.
+  - Impact: a UI timer, web-instance clock, public projection, or earlier eligibility read cannot authorize the mutation.
+- A submitted declaration is not an accepted commercial snapshot.
+  - Evidence: issue #13 preserves mode terms, route, schedule, revision, and reserved capacity at `SUBMITTED` but intentionally implements no seller acceptance or final seller charge.
+  - Impact: later seller acceptance must create the accepted commercial snapshot, while rejection, expiry, and cancellation must release reservation safely before the flow can serve real users.
+
+### Failed or corrected approaches
+
+- Comparing Prisma decimal objects directly with string expectations produced misleading test failures even though serialized values matched.
+  - Correction: assert exact decimal `.toString()` values and the separate trip revision.
+- Relying only on application-level seller/profile reads would leave their eligibility vulnerable to a concurrent state change during submission.
+  - Correction: the order repository now takes transaction-scoped share locks on the exact active seller account and jastipper profile before reserving capacity.
+- `CURRENT_TIMESTAMP` is fixed at PostgreSQL transaction start and can become stale while a transaction waits on locks.
+  - Correction: final capacity admission locks the exact trip row, reads `clock_timestamp()`, rechecks the ordering window, and uses that same value for the request, audit, outbox, and idempotency completion. A delayed disposable-database test proves a request that crosses the deadline is denied.
+- Independent foreign keys do not prove that related identities belong to the same aggregate.
+  - Correction: composite database constraints now bind request seller/profile to the exact trip and idempotency request/customer to each other. Direct cross-party mutation tests fail with PostgreSQL foreign-key violations.
+- Review a new idempotency implementation against existing grammar authority even when its state machine must remain separate.
+  - Correction: issue #13 reuses the shared key grammar; its pure-database transaction state remains intentionally distinct from the process-local provider-oriented recovery contract.
+
+### Deferred
+
+- Completed replay cleanup, operational metrics, load behavior, managed-PostgreSQL lock behavior, reservation release, accepted commercial terms, private request encryption, browser coverage, payment, and delivery remain unimplemented or unverified.
+- No provider, commercial, fee, legal, visual, pilot, or production decision resulted from this slice.
+
+## 2026-08-11 14:11 WIB - Pull-request publication produced no new product or control learning
+
+### Reused governance learning
+
+- Opening pull request #14 changes the live review surface but not the reviewed implementation. The required lifecycle reconciliation creates a documentation-only successor that must be checked as exactly four files and repinned before its hosted evidence can replace the implementation head's evidence.
+- A passing initial review-governance run proves only that issue #13 and pull request #14 matched at the implementation head when that event ran. It does not pre-approve the lifecycle successor, other hosted checks, CodeRabbit output, mergeability, or owner approval.
+
+### No new product or security-control learning
+
+- Pull-request publication and lifecycle-state recording change no implementation, security control, Strix applicability, provider decision, product model, roadmap stage, or delivery order.
+
+## 2026-08-11 14:17 WIB - Final hosted verification produced no new control learning
+
+### Reused governance learning
+
+- A cancelled workflow event is transition evidence, not a failed gate, when its sole annotation says the concurrency rule selected a higher-priority waiting replacement and that replacement passes on the same exact head.
+- A successful third-party status can still mean no review occurred. CodeRabbit's `Review rate limited` status produced a walkthrough but no review object or finding, so it contributes no independent correctness or security coverage.
+
+### No new product or security-control learning
+
+- Hosted verification and its lifecycle checkpoint change no implementation, security control, Strix applicability, provider decision, product model, roadmap stage, or delivery order.
+
+## 2026-08-17 10:58 WIB - Proceeding after an exact-state briefing can be bounded merge approval
+
+### Reusable learning
+
+- A short owner instruction such as "proceed next" is actionable when it directly follows a concrete sequence whose first step is the governed merge, and the owner has already received the exact reviewed head, hosted evidence, exclusions, and remaining risks.
+- Preserve that authority by binding it to the immutable reviewed head and one approval-record-only successor containing exactly the mandatory lifecycle authorities. The instruction does not survive source, dependency, configuration, product, provider, security-control, scope, or finding changes.
+- Approval to complete a merge sequence is not deployment, provider, real-data, payment, public-launch, or visual-production approval. Those remain separate decisions even when the next product slice has also been named.
+- When visual progress has lagged infrastructure work, make the UX/visual-foundation slice the next governed work item without misrepresenting the current simulated shell as an approved design or bypassing the functional safety dependencies required before real users.
+
+### No new product or security-control learning
+
+- This approval record changes no implementation, product model, security control, provider decision, Strix applicability, stage, or delivery order. It makes the already discussed next visible slice explicit while reservation release remains the next activation dependency.
+
+## 2026-08-17 11:05 WIB - A clean dependency audit is time-bound evidence
+
+### Reusable learning
+
+- A production dependency audit that passed on an earlier immutable head can fail later without a lockfile change when the registry publishes or reclassifies an advisory. Record the run and date; do not treat an earlier clean result as permanent supply-chain truth.
+- When the repository already owns a centralized transitive override, a one-patch-version override and lockfile refresh is the narrowest repair. Review the exact resolution and integrity delta, then rerun the full quality and audit gates rather than weakening the audit threshold or dismissing the transitive path.
+- A gate-driven dependency repair still changes the approved artifact. If owner approval explicitly excludes dependency drift, the correct response is to repair and fully verify the new head, then request fresh approval before merge.
+
+### Verified instance
+
+- Hosted application run `31993037634` passed `pnpm check` but failed `pnpm audit:prod` because `GHSA-2v37-7h3g-55p8` covers transitive `nanoid` below `3.3.18` through `next > postcss > nanoid`.
+- Exact Node.js `24.18.0` and pnpm `11.17.0` moved the existing override and lockfile from `3.3.17` to `3.3.18`; frozen install, the complete 244-test/build/runtime-probe quality suite, and the production audit pass, with the audit reporting no known vulnerabilities.
+
+### No product or security-control change
+
+- The repair changes resolved dependency state but not NitipCuy product behavior, provider choice, Strix applicability, roadmap stage, delivery order, or the existing supply-chain control contract.
+
+## 2026-08-17 11:13 WIB - Hosted verification of the advisory repair produced no new control learning
+
+### Reused governance learning
+
+- A governance run that captures the pull-request event before coordinated issue/PR repinning can fail exact revision equality even when the committed repair is correct. Inspect the exact message and require a stable replacement on the same immutable head; do not relabel the transition failure as success or ignore it without replacement evidence.
+- The hosted application gate must execute the production audit after the full quality suite. Head `b76d701520def6a07824e5138d4cc6b5c2a392c5` proves both passed together after the transitive repair, instead of relying only on the earlier local audit.
+
+### No new product or security-control learning
+
+- Hosted verification and this evidence record change no implementation, security-control contract, product model, provider decision, Strix applicability, stage, or delivery order. Fresh owner approval remains required because dependency state changed after the prior approval.
+
+## 2026-08-17 11:29 WIB - Plain-language dependency disclosure can restore bounded approval
+
+### Reusable learning
+
+- When a security gate forces dependency drift after approval, explain whether the change adds a dependency, changes application behavior, or only updates an existing transitive resolution. Include the old and patched versions plus the evidence that behavior still passes.
+- Fresh approval becomes actionable only after the owner understands that concrete delta and the approval is rebound to the final immutable evidence head plus a narrowly limited approval-record successor.
+- A security patch and green gates do not broaden authority. Deployment, provider activation, real data, payment movement, public launch, and visual production approval remain separate decisions.
+
+### No new product or security-control learning
+
+- This approval record changes no implementation, dependency, product model, security-control contract, provider decision, Strix applicability, stage, or delivery order.

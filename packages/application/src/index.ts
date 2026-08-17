@@ -9,6 +9,7 @@ export {
   IdempotencyInProgressError,
   IdempotencyRecoveryRequiredError,
   IdempotencyValidationError,
+  isValidIdempotencyKey,
 } from "./idempotency";
 export { assessPaymentProtection } from "./payment-reconciliation";
 export {
@@ -19,6 +20,7 @@ export {
   MarketplaceUseCaseError,
   ModerateTrip,
   ResolveGoogleAccount,
+  SubmitOrderRequest,
   SubmitTripForModeration,
 } from "./marketplace-foundation";
 export type {
@@ -29,6 +31,8 @@ export type {
   MarketplaceErrorCode,
   MarketplaceTransactionContext,
   MarketplaceUnitOfWork,
+  OrderSubmissionClaim,
+  OrderSubmissionRepository,
   PublicDiscussionRepository,
   ResolveGoogleIdentityInput,
   ResolveGoogleIdentityResult,
@@ -101,6 +105,7 @@ export type {
   AuditPort,
   AuditRecord,
   ClockPort,
+  FingerprintPort,
   IdentifierPort,
   IdentityVerificationPort,
   OutboxMessage,

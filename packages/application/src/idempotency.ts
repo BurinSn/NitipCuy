@@ -105,6 +105,10 @@ export class IdempotencyRecoveryRequiredError extends Error {
   }
 }
 
+export function isValidIdempotencyKey(value: string): boolean {
+  return /^[A-Za-z0-9][A-Za-z0-9._:-]{7,127}$/.test(value);
+}
+
 export async function executeIdempotently<Result>(
   store: IdempotencyStorePort,
   operation: IdempotentOperation,
@@ -178,7 +182,7 @@ function validateOperation(operation: IdempotentOperation): void {
     );
   }
 
-  if (!/^[A-Za-z0-9][A-Za-z0-9._:-]{7,127}$/.test(operation.key)) {
+  if (!isValidIdempotencyKey(operation.key)) {
     throw new IdempotencyValidationError(
       "Idempotency key must contain 8-128 safe visible characters.",
     );

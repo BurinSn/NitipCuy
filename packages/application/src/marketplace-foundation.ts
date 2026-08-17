@@ -6,10 +6,13 @@ import {
   googleIssuer,
   hasCapability,
   jastipperProfileId,
+  normalizeOrderRequestTerms,
   normalizeDiscussionMessage,
   normalizeDisplayName,
   normalizePublicTerms,
   rejectTripOffer,
+  requestedCapacityGrams,
+  orderRequestId,
   submitTripOffer,
   type AccountId,
   type AccountStatus,
@@ -18,14 +21,18 @@ import {
   type JastipperProfileId,
   type JastipperPublicTerms,
   type PublicDiscussionEntry,
+  type OrderRequestTerms,
+  type SubmittedOrderRequest,
   type TripOffer,
   type TripScheduleInput,
   type TripId,
 } from "@nitipcuy/domain";
 
+import { isValidIdempotencyKey } from "./idempotency";
 import type {
   AuditPort,
   ClockPort,
+  FingerprintPort,
   IdentifierPort,
   OutboxPort,
   VerifiedExternalIdentity,
@@ -38,12 +45,19 @@ export type MarketplaceErrorCode =
   | "IDENTITY_INVALID"
   | "INSUFFICIENT_ASSURANCE"
   | "MISSING_CAPABILITY"
+  | "CAPACITY_UNAVAILABLE"
+  | "IDEMPOTENCY_CONFLICT"
+  | "IDEMPOTENCY_IN_PROGRESS"
+  | "OFFER_INELIGIBLE"
+  | "OFFER_REVISION_STALE"
   | "PROFILE_INACTIVE"
   | "PROFILE_ALREADY_EXISTS"
   | "PROFILE_NOT_FOUND"
   | "RESOURCE_NOT_FOUND"
   | "RESOURCE_NOT_OWNED"
+  | "SELF_ORDER_DENIED"
   | "SESSION_INACTIVE"
+  | "SERVICE_MODE_UNAVAILABLE"
   | "TRIP_NOT_PUBLISHED";
 
 export class MarketplaceUseCaseError extends Error {
@@ -130,6 +144,42 @@ export interface PublicDiscussionRepository {
   }): Promise<void>;
 }
 
+export type OrderSubmissionClaim =
+  | { readonly status: "CLAIMED" }
+  | { readonly status: "REPLAY"; readonly request: SubmittedOrderRequest }
+  | { readonly status: "CONFLICT" }
+  | { readonly status: "IN_PROGRESS" };
+
+export interface OrderSubmissionRepository {
+  authoritativeNow(): Promise<string>;
+  claim(input: {
+    readonly customerAccountId: AccountId;
+    readonly operation: "order.submit.v1";
+    readonly keyDigest: string;
+    readonly fingerprint: string;
+    readonly observedAt: string;
+  }): Promise<OrderSubmissionClaim>;
+  reserveCapacity(input: {
+    readonly tripId: TripId;
+    readonly expectedVersion: number;
+    readonly requestedCapacityGrams: number;
+  }): Promise<string | null>;
+  lockEligibleSeller(input: {
+    readonly sellerAccountId: AccountId;
+    readonly jastipperProfileId: JastipperProfileId;
+  }): Promise<boolean>;
+  create(request: SubmittedOrderRequest): Promise<void>;
+  complete(input: {
+    readonly customerAccountId: AccountId;
+    readonly operation: "order.submit.v1";
+    readonly keyDigest: string;
+    readonly fingerprint: string;
+    readonly requestId: SubmittedOrderRequest["id"];
+    readonly completedAt: string;
+    readonly expiresAt: string;
+  }): Promise<void>;
+}
+
 export interface MarketplaceTransactionContext {
   readonly accounts: AccountRepository;
   readonly profiles: JastipperProfileRepository;
@@ -137,6 +187,7 @@ export interface MarketplaceTransactionContext {
   readonly discussions: PublicDiscussionRepository;
   readonly audit: AuditPort;
   readonly outbox: OutboxPort;
+  readonly orderSubmissions: OrderSubmissionRepository;
 }
 
 export interface MarketplaceUnitOfWork {
@@ -153,6 +204,14 @@ interface UseCaseDependencies {
 
 interface CommandMetadata {
   readonly correlationId: string;
+}
+
+interface OrderSubmissionMetadata extends CommandMetadata {
+  readonly idempotencyKey: string;
+}
+
+interface OrderSubmissionDependencies extends UseCaseDependencies {
+  readonly fingerprints: FingerprintPort;
 }
 
 export class ResolveGoogleAccount {
@@ -550,6 +609,134 @@ export class AnswerPublicQuestion {
   }
 }
 
+export class SubmitOrderRequest {
+  constructor(private readonly dependencies: OrderSubmissionDependencies) {}
+
+  execute(
+    actor: AuthenticatedActor,
+    input: { readonly tripId: TripId; readonly terms: OrderRequestTerms },
+    metadata: OrderSubmissionMetadata,
+  ): Promise<SubmittedOrderRequest> {
+    const correlationId = normalizeCorrelationId(metadata.correlationId);
+    const idempotencyKey = normalizeIdempotencyKey(metadata.idempotencyKey);
+    const terms = normalizeOrderRequestTerms(input.terms);
+    const fingerprint = this.dependencies.fingerprints.sha256(
+      canonicalSubmissionFingerprint(input.tripId, terms),
+    );
+    const keyDigest = this.dependencies.fingerprints.sha256(
+      `nitipcuy-order-idempotency-key-v1\0${idempotencyKey}`,
+    );
+
+    return this.dependencies.unitOfWork.execute(async (transaction) => {
+      const occurredAt = await transaction.orderSubmissions.authoritativeNow();
+      await requireCurrentActor(transaction, actor, occurredAt);
+
+      const claim = await transaction.orderSubmissions.claim({
+        customerAccountId: actor.accountId,
+        fingerprint,
+        keyDigest,
+        observedAt: occurredAt,
+        operation: "order.submit.v1",
+      });
+      if (claim.status === "REPLAY") {
+        return claim.request;
+      }
+      if (claim.status === "CONFLICT") {
+        throw new MarketplaceUseCaseError("IDEMPOTENCY_CONFLICT");
+      }
+      if (claim.status === "IN_PROGRESS") {
+        throw new MarketplaceUseCaseError("IDEMPOTENCY_IN_PROGRESS");
+      }
+
+      const trip = await transaction.trips.findById(input.tripId);
+      if (!trip) {
+        throw new MarketplaceUseCaseError("RESOURCE_NOT_FOUND");
+      }
+      requireOrderEligible(trip, actor.accountId, terms, occurredAt);
+
+      if (
+        !(await transaction.orderSubmissions.lockEligibleSeller({
+          jastipperProfileId: trip.jastipperProfileId,
+          sellerAccountId: trip.ownerAccountId,
+        }))
+      ) {
+        throw new MarketplaceUseCaseError("OFFER_INELIGIBLE");
+      }
+
+      const capacityGrams = requestedCapacityGrams(terms);
+      if (remainingCapacityGrams(trip.remainingCapacityKg) < capacityGrams) {
+        throw new MarketplaceUseCaseError("CAPACITY_UNAVAILABLE");
+      }
+
+      const reservedAt = await transaction.orderSubmissions.reserveCapacity({
+        expectedVersion: trip.version,
+        requestedCapacityGrams: capacityGrams,
+        tripId: trip.id,
+      });
+      if (!reservedAt) {
+        throw new MarketplaceUseCaseError("OFFER_REVISION_STALE");
+      }
+
+      const request: SubmittedOrderRequest = Object.freeze({
+        customerAccountId: actor.accountId,
+        destinationLabel: trip.destinationLabel,
+        estimatedArrivalAt: trip.estimatedArrivalAt,
+        id: orderRequestId(this.dependencies.identifiers.next("order-request")),
+        jastipperProfileId: trip.jastipperProfileId,
+        orderCloseAt: trip.requestDeadline,
+        orderOpenAt: trip.requestOpenAt,
+        originLabel: trip.originLabel,
+        reservedCapacityGrams: capacityGrams,
+        sellerAccountId: trip.ownerAccountId,
+        serviceMode: terms.serviceMode,
+        sourceOfferVersion: trip.version,
+        status: "SUBMITTED",
+        submittedAt: reservedAt,
+        terms,
+        transportDepartureAt: trip.departureAt,
+        tripId: trip.id,
+      });
+
+      await transaction.orderSubmissions.create(request);
+      await transaction.audit.append({
+        action: "order-request.submit",
+        actorId: actor.accountId,
+        correlationId,
+        occurredAt: reservedAt,
+        outcome: "SUCCEEDED",
+        reasonCode: "CUSTOMER_SUBMITTED",
+        targetId: request.id,
+        targetType: "order-request",
+      });
+      await transaction.outbox.enqueue({
+        aggregateId: request.id,
+        aggregateType: "order-request",
+        id: this.dependencies.identifiers.next("outbox"),
+        occurredAt: reservedAt,
+        payload: Object.freeze({
+          requestId: request.id,
+          serviceMode: request.serviceMode,
+          tripId: request.tripId,
+        }),
+        topic: "order-request.submitted",
+      });
+      await transaction.orderSubmissions.complete({
+        completedAt: reservedAt,
+        customerAccountId: actor.accountId,
+        expiresAt: new Date(
+          Date.parse(reservedAt) + 7 * 24 * 60 * 60 * 1_000,
+        ).toISOString(),
+        fingerprint,
+        keyDigest,
+        operation: "order.submit.v1",
+        requestId: request.id,
+      });
+
+      return request;
+    });
+  }
+}
+
 function normalizeGoogleIdentity(
   identity: VerifiedExternalIdentity,
 ): VerifiedExternalIdentity {
@@ -575,6 +762,71 @@ function normalizeGoogleIdentity(
     displayName: normalizeDisplayName(identity.displayName),
     email,
     subject,
+  });
+}
+
+function requireOrderEligible(
+  trip: TripOffer,
+  customerAccountId: AccountId,
+  terms: OrderRequestTerms,
+  occurredAt: string,
+): void {
+  if (trip.ownerAccountId === customerAccountId) {
+    throw new MarketplaceUseCaseError("SELF_ORDER_DENIED");
+  }
+  if (trip.status !== "PUBLISHED") {
+    throw new MarketplaceUseCaseError("OFFER_INELIGIBLE");
+  }
+  if (!trip.serviceModes.includes(terms.serviceMode)) {
+    throw new MarketplaceUseCaseError("SERVICE_MODE_UNAVAILABLE");
+  }
+
+  const now = Date.parse(occurredAt);
+  const opens = Date.parse(trip.requestOpenAt);
+  const closes = Date.parse(trip.requestDeadline);
+  if (
+    Number.isNaN(now) ||
+    Number.isNaN(opens) ||
+    Number.isNaN(closes) ||
+    now < opens ||
+    now >= closes
+  ) {
+    throw new MarketplaceUseCaseError("OFFER_INELIGIBLE");
+  }
+}
+
+function remainingCapacityGrams(remainingCapacityKg: number): number {
+  const grams = remainingCapacityKg * 1_000;
+  if (
+    !Number.isFinite(grams) ||
+    grams < 0 ||
+    !Number.isSafeInteger(Math.round(grams)) ||
+    Math.abs(grams - Math.round(grams)) > 0.000_001
+  ) {
+    throw new Error("Persisted trip capacity is not exactly representable.");
+  }
+  return Math.round(grams);
+}
+
+function normalizeIdempotencyKey(value: string): string {
+  const normalized = value.trim();
+  if (normalized !== value || !isValidIdempotencyKey(normalized)) {
+    throw new DomainValidationError(
+      "Idempotency key must contain 8 to 128 safe visible characters.",
+    );
+  }
+  return normalized;
+}
+
+function canonicalSubmissionFingerprint(
+  targetTripId: TripId,
+  terms: OrderRequestTerms,
+): string {
+  return JSON.stringify({
+    serviceMode: terms.serviceMode,
+    terms,
+    tripId: targetTripId,
+    version: 1,
   });
 }
 
