@@ -1407,3 +1407,15 @@ Do not present inference, provider marketing, provisional pricing, or a future i
 ### No new product or security-control learning
 
 - Hosted verification and this evidence record change no implementation, security-control contract, product model, provider decision, Strix applicability, stage, or delivery order. Fresh owner approval remains required because dependency state changed after the prior approval.
+
+## 2026-08-17 11:29 WIB - Plain-language dependency disclosure can restore bounded approval
+
+### Reusable learning
+
+- When a security gate forces dependency drift after approval, explain whether the change adds a dependency, changes application behavior, or only updates an existing transitive resolution. Include the old and patched versions plus the evidence that behavior still passes.
+- Fresh approval becomes actionable only after the owner understands that concrete delta and the approval is rebound to the final immutable evidence head plus a narrowly limited approval-record successor.
+- A security patch and green gates do not broaden authority. Deployment, provider activation, real data, payment movement, public launch, and visual production approval remain separate decisions.
+
+### No new product or security-control learning
+
+- This approval record changes no implementation, dependency, product model, security-control contract, provider decision, Strix applicability, stage, or delivery order.

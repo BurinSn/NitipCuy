@@ -1,10 +1,10 @@
 # NitipCuy Canonical Roadmap
 
-Last reviewed: 2026-08-17 11:13 WIB
+Last reviewed: 2026-08-17 11:29 WIB
 
 Current stage: Stage 1 - Platform foundation
 
-Current work item: Issue #13 and pull request #14 remain open from verified base `ea4b629466df1e1e1381f62ae5ca26722edbe4bf`. Hosted application run `31993037634` invalidated the prior approval when its production audit newly reported high-severity `GHSA-2v37-7h3g-55p8` for transitive `nanoid` `3.3.17`. Dependency-repair head `b76d701520def6a07824e5138d4cc6b5c2a392c5` moves the centralized override and lockfile to patched `3.3.18`; exact-toolchain local gates plus hosted application `31993491119`, lifecycle `31993491134`, and stable governance replacement `31993632434` pass. GitHub reports `CLEAN` / `MERGEABLE`, with no review objects or review decision. A final four-lifecycle-file evidence successor, exact-SHA repin, repeated hosted checks, and fresh BurinSN approval remain pending before squash merge. Product scope, Stage 1 ordering, payment/delivery deferrals, and the planned post-merge UX/visual-foundation slice are unchanged.
+Current work item: Issue #13 and pull request #14 remain open from verified base `ea4b629466df1e1e1381f62ae5ca26722edbe4bf`. Final hosted-evidence head `0dcf4f2ac21313d164dd26022f78061c0430a89c` contains the patched `nanoid` `3.3.18` resolution and passed exact-toolchain local gates plus hosted application `31993817825`, lifecycle `31993817761`, stable governance replacement `31993977394`, and post-inspection governance `31994016258`. GitHub reports `CLEAN` / `MERGEABLE`, with no review objects or review decision. After the dependency change and its reason were explained plainly, BurinSN replied "okay approved" on 2026-08-17, granting fresh conditional squash-merge approval for this head and one approval-record-only successor. Commit/review, exact-SHA repin, repeated hosted checks, squash merge, and post-merge verification remain pending. Product scope, Stage 1 ordering, payment/delivery deferrals, and the planned post-merge UX/visual-foundation slice are unchanged.
 
 ## 1. Role, authority, and freshness contract
 
