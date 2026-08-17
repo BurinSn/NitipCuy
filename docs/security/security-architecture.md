@@ -357,7 +357,7 @@ Designed:
 - dependency and workflow supply-chain controls;
 - pooled PostgreSQL and modular-monolith direction.
 
-Implemented and source-tested for issue #3, merged issues #5/#7/#9/#11, and the issue #13 local candidate:
+Implemented and source-tested for issue #3 and merged issues #5/#7/#9/#11/#13:
 
 - strict public-trip runtime invariants;
 - Google OIDC protocol fixtures covering exact scopes, issuer, audience, signature, expiry, state, nonce, and PKCE denial without real provider credentials;
@@ -379,6 +379,8 @@ Implemented and source-tested for issue #3, merged issues #5/#7/#9/#11, and the 
 - one protected order-submission route with exact JSON fields, same-origin and Fetch-Metadata enforcement, active browser-bound session, account-target abuse policy, generic errors, self-order denial, active seller/profile locks, published/current offer and database-time checks, and no public projection as mutation authority;
 - exact 10-gram/integer-IDR validation, database constraints, key-digest-only account-bound idempotency, active duplicate denial, exact replay, changed-payload conflict, final-slot concurrency, and transaction rollback through request, capacity, audit, outbox, and completion failures;
 - a safe response projection excluding customer/seller identities, request terms, item description, moderation state, and private data.
+
+Issue #15 adds presentation-only routes without widening the protected mutation surface: public pages continue to consume the safe discovery projection, the request preview calls no API and persists nothing, and the customer/jastipper workspaces use fixed fictional records. They must not be treated as authorization, privacy, evidence, payment, provider, or production-security proof.
 
 Not implemented or verified:
 

@@ -1419,3 +1419,64 @@ Do not present inference, provider marketing, provisional pricing, or a future i
 ### No new product or security-control learning
 
 - This approval record changes no implementation, dependency, product model, security-control contract, provider decision, Strix applicability, stage, or delivery order.
+
+## 2026-08-17 11:50 WIB - A marketplace visual signature should carry a real decision
+
+### Reusable learning
+
+- A route-first marketplace becomes easier to understand when the signature visual is also a compact decision object. Origin, destination, deadline, capacity, service mode, and next action belong together; a decorative travel motif alone would not improve comprehension.
+- Customer and jastipper journeys can be reviewed before private projections exist, but only when fictional workspaces and local form state are unmistakably labelled and technically disconnected from protected mutations. Visual resemblance to a dashboard is not dashboard implementation evidence.
+- Design work needs its own canonical authority. Recording audience jobs, route hierarchy, tokens, responsive behavior, content rules, simulation boundaries, and evidence state prevents later pages from accumulating unrelated card styles and ambiguous status language.
+- Presentation tests are most valuable at semantic edges: exact ordering-window boundaries, service-mode wording, capacity units, and timezone-aware display. Browser inspection is still required because source tests and a production build cannot prove layout, interaction, focus, or mobile readability.
+
+### Verified instance
+
+- The issue #15 local candidate reuses the safe `PublishedTrip` projection for public pages, keeps the request form browser-only, and renders fixed fictional customer/jastipper records. Complete quality with 249 tests, production build/audit, lifecycle participation, request-perimeter runtime, and local HTTP route smoke checks pass.
+- The reusable route ribbon now anchors discovery, detail, and request composition without claiming live tracking or fulfilment progress.
+- The in-app browser reported no connected window. Browser-visible rendering, interaction, screenshots, and visible accessibility were not claimed from source or HTTP evidence.
+- The first immutable DRY pass found trip-code formatting repeated in three components and trip-ID validation/loading repeated in two routes. Centralizing presentation knowledge and the server-only loader removed those clones without collapsing context-specific mode guidance or fictional workspace copy.
+
+### Remaining evidence
+
+- Desktop/mobile browser inspection, request interaction, obvious accessibility review, hosted checks, and BurinSN visual approval remain pending.
+
+## 2026-08-17 12:03 WIB - DRY review should separate shared presentation knowledge from contextual copy
+
+### Reusable learning
+
+- Identifiers, labels, units, window mapping, and validated loading behavior are presentation knowledge that should have one owner when multiple routes express the same fact.
+- Explanatory copy is not automatically a clone. Customer request guidance, customer progress language, and jastipper assessment language answer different questions; forcing them into one universal copy table can erase useful context.
+- A local form can remain safely reviewable before its mutation exists when it has no action or fetch path, imports no server authority, stores nothing, uses framework escaping, and visibly states that it cannot create a transaction.
+
+### Verified instance
+
+- Issue #15 implementation head `091bcc7bc93d407a080199f76b04fe9ce236a815` centralizes trip-code formatting and validated public-trip loading after the first DRY pass found those clones.
+- Complete-diff DRY and hostile source review is `CLEAN WITH NOTES`; exact quality with 249 tests, build, audit, lifecycle, request-perimeter, dependency-delta, and unsafe-rendering scans passes.
+
+### Limitation
+
+- The note is the unavailable browser-visible evidence. No connected in-app browser window existed, so source review cannot claim desktop/mobile rendering, interaction, screenshots, or visible accessibility.
+
+## 2026-08-17 12:06 WIB - Draft publication produced no new product or control learning
+
+### Reused governance learning
+
+- Opening a draft pull request makes hosted review available without claiming visual completion or owner approval.
+- The PR-publication lifecycle checkpoint changes the exact head even when no source changes. Review both governed records at the successor and rerun hosted exact-head gates.
+- An `UNSTABLE` merge-state while required checks are in progress is transition state, not a failed or passed final gate.
+
+### No new product or security-control learning
+
+- Publication changes no implementation, dependency, product model, provider decision, security control, Strix applicability, roadmap stage, delivery order, deployment authority, or visual approval.
+
+## 2026-08-17 12:10 WIB - Draft hosted verification produced no new product or control learning
+
+### Reused governance learning
+
+- A governance event created by the head push can observe the old PR-body reviewed revision. Keep the transition failure visible, repin issue first and PR second, and require a passing replacement on the same exact head.
+- A third-party status saying `Review skipped: draft pull request` is not an independent review and contributes no finding coverage.
+- Hosted source gates do not close a browser-visible acceptance criterion. Layout, interaction, screenshot, and visible accessibility claims remain pending when no browser window is connected.
+
+### No new product or security-control learning
+
+- Hosted verification changes no implementation, dependency, product model, provider decision, security control, Strix applicability, roadmap stage, delivery order, deployment authority, or visual approval.

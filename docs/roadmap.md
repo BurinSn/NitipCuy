@@ -1,10 +1,10 @@
 # NitipCuy Canonical Roadmap
 
-Last reviewed: 2026-08-17 11:29 WIB
+Last reviewed: 2026-08-17 12:10 WIB
 
 Current stage: Stage 1 - Platform foundation
 
-Current work item: Issue #13 and pull request #14 remain open from verified base `ea4b629466df1e1e1381f62ae5ca26722edbe4bf`. Final hosted-evidence head `0dcf4f2ac21313d164dd26022f78061c0430a89c` contains the patched `nanoid` `3.3.18` resolution and passed exact-toolchain local gates plus hosted application `31993817825`, lifecycle `31993817761`, stable governance replacement `31993977394`, and post-inspection governance `31994016258`. GitHub reports `CLEAN` / `MERGEABLE`, with no review objects or review decision. After the dependency change and its reason were explained plainly, BurinSN replied "okay approved" on 2026-08-17, granting fresh conditional squash-merge approval for this head and one approval-record-only successor. Commit/review, exact-SHA repin, repeated hosted checks, squash merge, and post-merge verification remain pending. Product scope, Stage 1 ordering, payment/delivery deferrals, and the planned post-merge UX/visual-foundation slice are unchanged.
+Current work item: Issue #13 and pull request #14 are closed and squash-merged as `df0426cafedbb61d9582527c1669f3bb077125bb`. Issue #15 and draft pull request #16 govern the first owner-reviewable visual system, responsive discovery and trip detail, non-persisting request preview, fictional customer timeline, and fictional jastipper work queue. Local/remote/PR head `83cc4dc92bb2a5ecd20794b58c83d4c304ed43de` is DRY/hostile-source `CLEAN WITH NOTES`; hosted application/audit `31996813617`, lifecycle `31996813597`, and stable governance replacement `31996830731` pass, and GitHub reports `CLEAN` / `MERGEABLE`. The transition governance failure `31996813753` is replaced and records only the expected pre-repin revision mismatch. CodeRabbit skipped the draft and supplies no independent review. This hosted-evidence lifecycle checkpoint needs its own narrow successor review and exact repin. The in-app browser has no connected window, so desktop/mobile rendering, interaction, screenshot, and visible accessibility evidence remain pending with owner visual approval. Stage, provider order, payment/delivery deferrals, and production-approval boundaries are unchanged.
 
 ## 1. Role, authority, and freshness contract
 
@@ -203,7 +203,7 @@ account
 - [x] Add the first additive PostgreSQL schema and SQL-reviewed migration through the isolated Prisma adapter, with disposable clean-apply evidence. Mixed-version and destructive contraction evidence is not applicable to this initial un-deployed schema and remains mandatory when evolution begins.
 - [x] Add Google OIDC identity proof and protected server-authoritative mutations without passwords or email linking. Google creates base assurance only; moderation requires a separately persisted phishing-resistant session, and no real privileged step-up/recovery path exists yet.
 - [x] Add integration tests using a container created and destroyed by the suite, with no configurable fallback to development or production databases.
-- [ ] Complete issue #13's server-authoritative new-order slice. The local candidate rechecks database time, published/current offer, active seller/profile, supported mode, self-order, and exact capacity; one serializable transaction reserves the final capacity and commits the `SUBMITTED` request, account-bound idempotency result, audit, and outbox. Local source/disposable-database/build/runtime evidence passes; immutable review and merge remain pending.
+- [x] Complete issue #13's server-authoritative new-order slice. Pull request #14 squash-merged as `df0426cafedbb61d9582527c1669f3bb077125bb` after exact-head local, disposable-PostgreSQL, build, request-perimeter-runtime, production-audit, lifecycle, DRY, hostile-review, hosted, and owner-approval gates. Seller response, expiry/cancellation, and capacity release remain required before real-user activation.
 - [ ] Complete the remaining protected-preview controls. Implemented and source/integration-tested now: opaque digest-only sessions, rotation/revocation, exact transactional session/assurance/ownership checks, generic errors, exact-origin and Fetch-Metadata checks, parameterized Prisma queries, database ownership constraints, bounded inputs, and the issue #11 shared limiter candidate. Still required: provider-verified trusted proxy/direct-origin behavior, WAF/bot controls, managed key custody and rotation, complete logging-redaction/static/safe-query scans, operational metrics/alerts, browser automation, privileged step-up/recovery, and load/provider/incident evidence.
 - [x] Complete issue #9's inbound browser/session perimeter. Pull request #10 squash-merged as `23a6015781228cb04e167b83f6a28b3d3cc0b62d` with source and local built-runtime evidence for canonical request interpretation, simulated edge proof, nonce CSP, defensive headers, private no-store, callback reconstruction, and hostile request denial.
 - [x] Complete issue #11's shared abuse-control and denial-telemetry repository slice. Pull request #12 squash-merged as `ea4b629466df1e1e1381f62ae5ca26722edbe4bf`; issue closure, local/remote `main`, and branch cleanup were verified. Provider WAF/bot behavior, operational dashboards/alerts, threshold calibration, aggregate cleanup load, broader load, and incident evidence remain separate.
@@ -224,10 +224,12 @@ account
 
 ### Experience slice
 
-- [ ] Produce customer and jastipper journey maps.
-- [ ] Define information architecture and responsive web behavior.
-- [ ] Create the first visual direction.
-- [ ] Obtain BurinSN visual sign-off before production use.
+- [x] Create governed issue #15 from the verified issue #13 / pull request #14 merge base.
+- [x] Record the first customer and jastipper decision journeys in `docs/product/experience-design.md`.
+- [x] Define the first information architecture and responsive behavior for discovery, trip detail, request composition, customer progress, and jastipper work assessment.
+- [x] Implement the first local visual-direction candidate with a functional route-ribbon signature and explicit simulation boundaries.
+- [ ] Complete issue #15 / draft pull request #16 evidence. Workspace quality with 249 tests, production audit/build, lifecycle, request-perimeter runtime, local HTTP route smoke checks, DRY/hostile review, publication successor, and hosted gates pass. The hosted-evidence successor plus desktop/mobile browser, interaction, and visible accessibility evidence remain pending.
+- [ ] Obtain BurinSN visual sign-off before production use or merge approval.
 
 Exit gate:
 

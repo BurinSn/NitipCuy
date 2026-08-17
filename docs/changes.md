@@ -1515,3 +1515,108 @@ A session with no material change does not invent an entry. A session that makes
   - no deployment, provider provisioning/configuration, real Google, managed data, payment movement, external target testing, Strix execution, real-user activation, public launch, or visual production deployment.
 - Next:
   - commit and narrowly review the four-lifecycle-file approval successor, repin issue #13 and pull request #14, repeat hosted exact-head gates, squash-merge if every condition remains true, then verify the merged repository and create the separate UX/visual-foundation issue.
+
+## 2026-08-17 11:50 WIB - Order-submission merge reconciled and first visual candidate implemented locally
+
+- Issues / pull request: issue #13 and pull request #14 completed; issue #15 open
+- Product: NitipCuy Stage 1 experience foundation
+- Type: Post-merge reconciliation, information architecture, visual system, responsive presentation routes, and lifecycle update
+- Status: Local quality/audit/runtime candidate clean; browser, immutable-review, hosted, owner visual, and merge evidence pending
+- Prior-state reconciliation:
+  - BurinSN's fresh approval was recorded in successor `beb23229144c5296a6671d88ce5b301e210097d6` with exactly the four lifecycle documents changed from the approved evidence head;
+  - hosted application `31994790849`, lifecycle `31994790851`, review-governance `31994790852`, and post-inspection governance `31994917695` passed on the exact successor;
+  - pull request #14 squash-merged and issue #13 closed as `df0426cafedbb61d9582527c1669f3bb077125bb`; local and remote `main` matched and the remote feature branch was removed;
+  - the old local issue #13 branch was retained because safe deletion refused after squash merge; it was not force-deleted.
+- Added for issue #15:
+  - `docs/product/experience-design.md` as the first authority for customer/jastipper decision jobs, route-level information architecture, route-ribbon signature, visual tokens, responsive/accessibility behavior, content rules, evidence, and approval boundaries;
+  - a deep-ink, route-blue, signal-orange, and evidence-mint visual system using system fonts and no new dependency;
+  - redesigned public discovery and trip detail using the safe existing `PublishedTrip` projection;
+  - a local-only request-composition preview for both service modes that calls no API and persists nothing;
+  - fictional customer timeline and jastipper capacity/work-queue screens that are explicitly not private projections;
+  - shared route, service, capacity, date/time, ordering-window, and simulation presentation components plus boundary tests;
+  - responsive collapse, visible focus, semantic status text, and reduced-motion behavior.
+- Local verification so far with exact Node.js `24.18.0` / pnpm `11.17.0`:
+  - complete `pnpm check` passed formatting, lint, dependency boundaries across 4 projects / 84 source files / 283 module references, strict types, 249 tests, production build, and direct plus simulated trusted-proxy runtime probes;
+  - 249 tests comprise 17 review-governance, 21 dependency-boundary, 27 domain, 34 application, 71 adapter, and 79 web tests;
+  - `pnpm audit:prod` reports no known production vulnerability and lifecycle participation passed;
+  - local built HTTP checks returned `200` for discovery, filtered discovery, trip detail, request preview with Carry my item selected, customer orders, and jastipper workspace, with the expected simulation/non-persistence copy;
+  - the in-app browser reported no connected window, so no desktop/mobile screenshot, request interaction, or visible accessibility evidence is claimed.
+- DRY correction before final review:
+  - implementation head `4bd2a70b15962466a3d4598bec1f12785db6b6f4` exposed repeated trip-code formatting in three views and repeated trip-ID validation/loading in the detail and request routes;
+  - the local successor centralizes the public code in one tested presentation helper and the validation/loading behavior in one server-only delivery helper;
+  - context-specific service guidance and fictional workspace records remain local intentional knowledge rather than one misleading universal copy source;
+  - complete quality, audit, lifecycle, and diff gates pass after the correction.
+- Scope and authority:
+  - roadmap stage, provider order, product model, architecture dependency direction, payment/delivery deferrals, and issue #13 server-authoritative controls are unchanged;
+  - the request preview never calls the protected submission endpoint, and the workspace examples contain no real account, address, identity, payment, evidence, or provider data;
+  - issue #15 remains Strix `NOT REQUIRED` / `NOT APPLICABLE` / `NO TARGET` because it introduces no external target or active security-test authorization;
+  - no visual approval, deployment, provider onboarding, real-user activation, or merge approval results from this local candidate.
+- Next:
+  - re-run the full gate after final corrections, commit, and perform exact-head DRY plus hostile review; once a browser is connected, inspect every new route at desktop and mobile widths including request interaction and obvious accessibility failures; correct and re-verify findings, then update issue #15, push, open the focused pull request, and request BurinSN visual and merge review.
+
+## 2026-08-17 12:03 WIB - UX implementation head passed complete-diff DRY and hostile source review
+
+- Issue: #15
+- Product: NitipCuy Stage 1 experience foundation
+- Type: Immutable complete-diff review and lifecycle checkpoint
+- Status: Implementation review `CLEAN WITH NOTES`; lifecycle-only successor and browser evidence pending
+- Exact reviewed head: `091bcc7bc93d407a080199f76b04fe9ce236a815` against base `df0426cafedbb61d9582527c1669f3bb077125bb`
+- DRY result:
+  - the first pass at `4bd2a70b15962466a3d4598bec1f12785db6b6f4` found trip-code formatting repeated across three views and trip-ID validation/loading repeated across two routes;
+  - the reviewed head centralizes those in the tested `formatTripCode` helper and server-only `findPublishedTrip` loader;
+  - route, service, capacity, date/time, ordering-window, simulation-notice, and public-trip-loading knowledge is shared;
+  - context-specific mode guidance, customer timeline records, and jastipper work records remain intentional local presentation knowledge;
+  - final verdict is `CLEAN WITH NOTES` because browser-visible layout and interaction evidence remains unavailable, not because a source duplication finding remains open.
+- Hostile source result:
+  - the request preview has no form action, fetch, browser storage, cookie access, server import, or protected endpoint call, and entered text remains React-escaped;
+  - public routes consume the safe projection, shared loading applies domain trip-ID validation, links remain internal, and there is no private data, credential, external asset/font, dependency, provider, migration, API, or security-policy change;
+  - focused unsafe-rendering, execution, network, credential, dependency-delta, lifecycle, and diff scans found no actionable issue;
+  - exact-head complete quality with 249 tests, production build/audit, lifecycle, and direct/simulated-proxy request-perimeter evidence passes.
+- Evidence limitation:
+  - the in-app browser reported zero connected windows, so desktop/mobile layout, request interaction, screenshot, and visible accessibility review were not obtained;
+  - no Strix, penetration, provider, load, deployment, staging, production, or visual-approval evidence is claimed.
+- Next:
+  - commit and narrowly review this exact four-lifecycle-file record, repin issue #15, push, open the draft pull request, and obtain hosted gates; perform browser review when a window is connected before requesting owner visual or merge approval.
+
+## 2026-08-17 12:06 WIB - UX foundation published as draft pull request
+
+- Issue / PR: issue #15; draft pull request #16
+- Product: NitipCuy Stage 1 experience foundation
+- Type: Review-state publication and lifecycle checkpoint
+- Status: Draft pull request open; initial hosted checks in progress; browser and owner visual evidence pending
+- Exact published head: `236e900f77d6ecae28f9126d4e9a7d8ad7039bcd` against base `df0426cafedbb61d9582527c1669f3bb077125bb`
+- Review state:
+  - the exact delta from implementation head `091bcc7bc93d407a080199f76b04fe9ce236a815` contains only `handoff.md`, `docs/changes.md`, `docs/roadmap.md`, and `docs/learning.md`;
+  - narrow review found no implementation, dependency, product, provider, security-control, Strix, stage, or evidence drift;
+  - issue #15 and pull request #16 both record DRY `CLEAN WITH NOTES` and Strix `NOT REQUIRED` / `NOT APPLICABLE` / `NO TARGET` at the exact head;
+  - browser-visible evidence is explicitly pending and the pull request remains draft.
+- Initial hosted state:
+  - application-quality run `31996725414`, lifecycle run `31996725407`, and review-governance run `31996725451` are in progress;
+  - GitHub reports `MERGEABLE` / `UNSTABLE`, no review objects, and no review decision;
+  - no pending result is represented as passing evidence.
+- Scope and roadmap:
+  - no code, dependency, product model, provider order, stage, payment/delivery deferral, deployment authority, or production-approval boundary changed through publication;
+  - this checkpoint itself changes the four lifecycle authorities and therefore requires one narrow successor review and exact issue/PR repin.
+- Next:
+  - commit/review the four-lifecycle PR-publication successor, repin and push it, inspect replacement hosted gates and third-party output, then complete browser-visible review when a window is connected before requesting BurinSN visual or merge approval.
+
+## 2026-08-17 12:10 WIB - Draft UX pull request passed exact-head hosted gates
+
+- Issue / PR: issue #15; draft pull request #16
+- Product: NitipCuy Stage 1 experience foundation
+- Type: Hosted evidence and lifecycle checkpoint
+- Status: Exact-head application, audit, lifecycle, and governance green; browser and owner visual evidence pending
+- Exact verified head: `83cc4dc92bb2a5ecd20794b58c83d4c304ed43de` against base `df0426cafedbb61d9582527c1669f3bb077125bb`
+- Hosted evidence:
+  - application-quality run `31996813617` passed the complete quality suite and production dependency audit;
+  - lifecycle run `31996813597` passed;
+  - stable review-governance replacement `31996830731` passed after issue #15 and pull request #16 both recorded the exact head;
+  - transition governance run `31996813753` failed only because the push event captured the pull-request body before its reviewed revision was repinned; the passing replacement is the current evidence;
+  - CodeRabbit reports `Review skipped: draft pull request`, with no independent review object or finding;
+  - GitHub reports `CLEAN` / `MERGEABLE`, no review objects, and no review decision.
+- Review and authority:
+  - DRY remains `CLEAN WITH NOTES`; Strix remains `NOT REQUIRED` / `NOT APPLICABLE` / `NO TARGET`;
+  - no source, dependency, product, provider, security-control, stage, or authority change occurred after the complete-diff review;
+  - passing hosted gates do not replace the unavailable desktop/mobile browser review or constitute BurinSN visual/merge approval.
+- Next:
+  - commit and narrowly review this four-lifecycle hosted-evidence successor, repin issue #15 and pull request #16, push, and obtain replacement exact-head hosted gates; then complete browser review when a window is connected before requesting owner approval.

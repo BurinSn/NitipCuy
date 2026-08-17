@@ -286,7 +286,7 @@ Designed:
 - direct private evidence storage direction;
 - observability, capacity, load, and recovery gates.
 
-Implemented and source-tested for the architecture probe, merged issues #5/#9/#11, and the issue #13 local candidate:
+Implemented and source-tested for the architecture probe and merged issues #5/#9/#11/#13:
 
 - deterministic in-memory public discovery;
 - bounded simulated dataset;
@@ -304,6 +304,8 @@ Implemented and source-tested for the architecture probe, merged issues #5/#9/#1
 - an additive submitted-request schema and serializable capacity/idempotency boundary with locked-row live database time, exact fixed-precision reservation, seller/profile eligibility locks, composite ownership constraints, conditional offer-revision update, final-slot and delayed-deadline proof, atomic audit/outbox, and fail-closed active duplicate handling;
 - disposable PostgreSQL cross-instance concurrency, redaction, audit-failure rollback, rollover, and cleanup tests;
 - no production provider calls or asynchronous work.
+
+Issue #15 adds only local presentation routes and fixed fictional workspace records. It adds no server-side authority, database query, background job, provider call, cache, quota, deployment, load, or horizontal-scaling evidence. The public pages continue to use the existing bounded discovery projection.
 
 Not implemented or verified:
 

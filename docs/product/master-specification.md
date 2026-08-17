@@ -124,6 +124,12 @@ Capacity uses integer grams at the domain and HTTP boundaries and exact two-deci
 
 Submission reserves capacity and preserves the request declaration plus route and schedule snapshot at the authoritative offer revision. It does not mean the seller accepted the request, the commercial price is final, payment exists, delivery is selected, or evidence is approved. Seller rejection, expiry, cancellation, and their capacity-release rules remain mandatory later work; this incomplete lifecycle is not activated for real users.
 
+### Stage 1 experience-preview boundary
+
+Issue #15 expresses the first customer and jastipper decision journeys through the presentation rules in `docs/product/experience-design.md`. Public discovery and detail continue to consume only the safe `PublishedTrip` projection. The request-composition preview is local browser state and never calls the authoritative submission route. The customer timeline and jastipper work queue use visibly fictional records and are not private database projections.
+
+This preview exists for BurinSN to judge information hierarchy, language, responsive behavior, and visual direction. It does not prove or implement authentication, private dashboards, request acceptance, evidence upload, payment, logistics, disputes, provider behavior, deployment, or production readiness. Visual approval remains a separate explicit gate.
+
 ## 5. Commitment and delivery terms
 
 Before a paid commitment:

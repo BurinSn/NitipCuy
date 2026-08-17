@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import type { ReactNode } from "react";
 
 import "./globals.css";
@@ -11,7 +12,7 @@ export const metadata: Metadata = {
     template: "%s | NitipCuy",
   },
   description:
-    "Temukan perjalanan jastip berdasarkan tujuan, jadwal, kapasitas, dan ketentuan yang jelas.",
+    "Temukan perjalanan jastip, baca ketentuannya, dan ikuti progres dengan lebih jelas.",
 };
 
 export default function RootLayout({
@@ -25,26 +26,40 @@ export default function RootLayout({
         </a>
         <header className="site-header">
           <div className="shell header-inner">
-            <a className="brand" href="/">
+            <Link className="brand" href="/" aria-label="NitipCuy, beranda">
               <span className="brand-mark" aria-hidden="true">
-                N
+                NC
               </span>
               <span>
                 <strong>NitipCuy</strong>
-                <small>Fondasi marketplace jastip</small>
+                <small>Jastip dengan jalur yang jelas</small>
               </span>
-            </a>
-            <span className="environment-badge">Data simulasi</span>
+            </Link>
+            <nav className="site-nav" aria-label="Navigasi utama">
+              <Link href="/">Cari trip</Link>
+              <Link href="/orders">Pesanan saya</Link>
+              <Link href="/jastipper">Ruang jastipper</Link>
+            </nav>
+            <div className="header-actions">
+              <span className="environment-badge">Mode simulasi</span>
+              <button disabled type="button" title="Masuk belum diaktifkan">
+                Masuk
+              </button>
+            </div>
           </div>
         </header>
         {children}
         <footer className="site-footer">
           <div className="shell footer-inner">
-            <p>
-              Fondasi lokal untuk validasi arsitektur. Belum menerima transaksi
-              atau data pribadi.
-            </p>
-            <p>NitipCuy adalah produk mandiri BurinSN.</p>
+            <div className="footer-brand">
+              <strong>NitipCuy</strong>
+              <p>Temukan trip. Sepakati dengan jelas. Ikuti setiap langkah.</p>
+            </div>
+            <div className="footer-status">
+              <span>Prototipe lokal</span>
+              <p>Belum menerima transaksi, akun, atau data pribadi.</p>
+            </div>
+            <p className="footer-owner">Produk mandiri BurinSN.</p>
           </div>
         </footer>
       </body>
