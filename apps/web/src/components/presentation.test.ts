@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   formatCapacity,
+  formatTripCode,
   orderingWindowLabel,
   orderingWindowState,
   serviceModeLabel,
@@ -15,6 +16,10 @@ describe("marketplace presentation", () => {
 
   it("formats exact capacity without inventing availability", () => {
     expect(formatCapacity(6.5)).toBe("6,5 kg");
+  });
+
+  it("formats one shared public trip code", () => {
+    expect(formatTripCode("guangzhou-jakarta-august")).toBe("NC–GUST");
   });
 
   it("maps ordering windows at their exact boundaries", () => {

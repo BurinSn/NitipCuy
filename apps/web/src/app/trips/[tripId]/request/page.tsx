@@ -2,17 +2,17 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import {
-  DomainValidationError,
-  tripId,
-  type ServiceMode,
-} from "@nitipcuy/domain";
+import type { ServiceMode } from "@nitipcuy/domain";
 
-import { formatCapacity, formatDateTime } from "@/components/presentation";
+import {
+  formatCapacity,
+  formatDateTime,
+  formatTripCode,
+} from "@/components/presentation";
 import { RequestPreview } from "@/components/request-preview";
 import { RouteRibbon } from "@/components/route-ribbon";
 import { SimulationNote } from "@/components/simulation-note";
-import { application } from "@/server/composition";
+import { findPublishedTrip } from "@/server/public-trip";
 
 interface RequestPageProps {
   readonly params: Promise<{ readonly tripId: string }>;
@@ -30,7 +30,7 @@ export default async function RequestPage({
   searchParams,
 }: RequestPageProps) {
   const rawTripId = (await params).tripId;
-  const trip = await findTrip(rawTripId);
+  const trip = await findPublishedTrip(rawTripId);
 
   if (!trip) {
     notFound();
@@ -67,7 +67,7 @@ export default async function RequestPage({
             </div>
             <div className="request-route-card">
               <span className="request-route-code">
-                NC–{trip.id.slice(-4).toUpperCase()}
+                {formatTripCode(trip.id)}
               </span>
               <RouteRibbon
                 compact
@@ -146,16 +146,4 @@ export default async function RequestPage({
 
 function firstValue(value: string | string[] | undefined): string | undefined {
   return Array.isArray(value) ? value[0] : value;
-}
-
-async function findTrip(rawTripId: string) {
-  try {
-    return await application.getPublishedTrip.execute(tripId(rawTripId));
-  } catch (error) {
-    if (error instanceof DomainValidationError) {
-      return null;
-    }
-
-    throw error;
-  }
 }

@@ -14,6 +14,10 @@ export function formatCapacity(value: number): string {
   }).format(value)} kg`;
 }
 
+export function formatTripCode(value: string): string {
+  return `NC–${value.slice(-4).toUpperCase()}`;
+}
+
 export function formatDateTime(value: string, timeZone: string): string {
   return new Intl.DateTimeFormat("id-ID", {
     day: "numeric",

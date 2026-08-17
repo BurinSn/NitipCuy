@@ -1,6 +1,6 @@
 # NitipCuy Handoff
 
-Updated: 2026-08-17 11:57 WIB
+Updated: 2026-08-17 12:01 WIB
 
 ## 1. Resume order
 
@@ -61,14 +61,16 @@ The discovery and trip detail continue to use the existing safe `PublishedTrip` 
 
 Passed with exact Node.js `24.18.0` and pnpm `11.17.0`:
 
-- complete `pnpm check`: formatting, lint, dependency boundaries across 4 projects / 83 source files / 280 module references, strict types, 248 tests, production build, and direct plus simulated trusted-proxy runtime probes;
-- 248 tests comprise 17 review-governance, 21 dependency-boundary, 27 domain, 34 application, 71 adapter, and 78 web tests;
+- complete `pnpm check`: formatting, lint, dependency boundaries across 4 projects / 84 source files / 283 module references, strict types, 249 tests, production build, and direct plus simulated trusted-proxy runtime probes;
+- 249 tests comprise 17 review-governance, 21 dependency-boundary, 27 domain, 34 application, 71 adapter, and 79 web tests;
 - production build includes the new `/orders`, `/jastipper`, and `/trips/[tripId]/request` routes;
 - `pnpm audit:prod` reports no known production vulnerability;
 - lifecycle participation passed for all four required documents;
 - local built HTTP smoke checks returned `200` for discovery, filtered discovery, a trip detail, both the request route and selected Carry my item mode, customer orders, and jastipper workspace; expected simulation and non-persistence copy was present.
 
 `git diff --check` and focused source/content scans are clean so far. The in-app browser runtime reported no connected browser windows, so desktop/mobile rendering, request interaction, screenshot, and visible accessibility inspection were not obtained and remain explicit blockers to visual sign-off. Immutable-head DRY review, hosted checks, and owner visual review also remain pending.
+
+The first immutable complete-diff DRY pass found repeated trip-code formatting and trip-ID validation/loading across the detail and request routes. The local successor centralizes those in one tested presentation helper and one server-only loader. Complete quality, audit, lifecycle, and diff checks pass again; the correction still needs its own immutable commit and final exact-head review.
 
 ## 6. Boundaries and risks
 

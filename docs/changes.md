@@ -1536,11 +1536,16 @@ A session with no material change does not invent an entry. A session that makes
   - shared route, service, capacity, date/time, ordering-window, and simulation presentation components plus boundary tests;
   - responsive collapse, visible focus, semantic status text, and reduced-motion behavior.
 - Local verification so far with exact Node.js `24.18.0` / pnpm `11.17.0`:
-  - complete `pnpm check` passed formatting, lint, dependency boundaries across 4 projects / 83 source files / 280 module references, strict types, 248 tests, production build, and direct plus simulated trusted-proxy runtime probes;
-  - 248 tests comprise 17 review-governance, 21 dependency-boundary, 27 domain, 34 application, 71 adapter, and 78 web tests;
+  - complete `pnpm check` passed formatting, lint, dependency boundaries across 4 projects / 84 source files / 283 module references, strict types, 249 tests, production build, and direct plus simulated trusted-proxy runtime probes;
+  - 249 tests comprise 17 review-governance, 21 dependency-boundary, 27 domain, 34 application, 71 adapter, and 79 web tests;
   - `pnpm audit:prod` reports no known production vulnerability and lifecycle participation passed;
   - local built HTTP checks returned `200` for discovery, filtered discovery, trip detail, request preview with Carry my item selected, customer orders, and jastipper workspace, with the expected simulation/non-persistence copy;
   - the in-app browser reported no connected window, so no desktop/mobile screenshot, request interaction, or visible accessibility evidence is claimed.
+- DRY correction before final review:
+  - implementation head `4bd2a70b15962466a3d4598bec1f12785db6b6f4` exposed repeated trip-code formatting in three views and repeated trip-ID validation/loading in the detail and request routes;
+  - the local successor centralizes the public code in one tested presentation helper and the validation/loading behavior in one server-only delivery helper;
+  - context-specific service guidance and fictional workspace records remain local intentional knowledge rather than one misleading universal copy source;
+  - complete quality, audit, lifecycle, and diff gates pass after the correction.
 - Scope and authority:
   - roadmap stage, provider order, product model, architecture dependency direction, payment/delivery deferrals, and issue #13 server-authoritative controls are unchanged;
   - the request preview never calls the protected submission endpoint, and the workspace examples contain no real account, address, identity, payment, evidence, or provider data;

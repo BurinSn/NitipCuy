@@ -1431,9 +1431,10 @@ Do not present inference, provider marketing, provisional pricing, or a future i
 
 ### Verified instance
 
-- The issue #15 local candidate reuses the safe `PublishedTrip` projection for public pages, keeps the request form browser-only, and renders fixed fictional customer/jastipper records. Complete quality with 248 tests, production build/audit, lifecycle participation, request-perimeter runtime, and local HTTP route smoke checks pass.
+- The issue #15 local candidate reuses the safe `PublishedTrip` projection for public pages, keeps the request form browser-only, and renders fixed fictional customer/jastipper records. Complete quality with 249 tests, production build/audit, lifecycle participation, request-perimeter runtime, and local HTTP route smoke checks pass.
 - The reusable route ribbon now anchors discovery, detail, and request composition without claiming live tracking or fulfilment progress.
 - The in-app browser reported no connected window. Browser-visible rendering, interaction, screenshots, and visible accessibility were not claimed from source or HTTP evidence.
+- The first immutable DRY pass found trip-code formatting repeated in three components and trip-ID validation/loading repeated in two routes. Centralizing presentation knowledge and the server-only loader removed those clones without collapsing context-specific mode guidance or fictional workspace copy.
 
 ### Remaining evidence
 

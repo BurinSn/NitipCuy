@@ -2,11 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { DomainValidationError, tripId } from "@nitipcuy/domain";
-
 import {
   formatCapacity,
   formatDateTime,
+  formatTripCode,
   orderingWindowLabel,
   orderingWindowState,
   serviceModeLabel,
@@ -14,6 +13,7 @@ import {
 import { RouteRibbon } from "@/components/route-ribbon";
 import { SimulationNote } from "@/components/simulation-note";
 import { application } from "@/server/composition";
+import { findPublishedTrip } from "@/server/public-trip";
 
 interface TripDetailPageProps {
   readonly params: Promise<{ readonly tripId: string }>;
@@ -30,7 +30,7 @@ export async function generateStaticParams() {
 export async function generateMetadata({
   params,
 }: TripDetailPageProps): Promise<Metadata> {
-  const trip = await findTrip((await params).tripId);
+  const trip = await findPublishedTrip((await params).tripId);
 
   if (!trip) {
     notFound();
@@ -43,7 +43,7 @@ export async function generateMetadata({
 }
 
 export default async function TripDetailPage({ params }: TripDetailPageProps) {
-  const trip = await findTrip((await params).tripId);
+  const trip = await findPublishedTrip((await params).tripId);
 
   if (!trip) {
     notFound();
@@ -80,7 +80,7 @@ export default async function TripDetailPage({ params }: TripDetailPageProps) {
             </div>
             <div className="trip-code" aria-label="Kode perjalanan simulasi">
               <span>Kode trip</span>
-              <strong>NC–{trip.id.slice(-4).toUpperCase()}</strong>
+              <strong>{formatTripCode(trip.id)}</strong>
             </div>
           </div>
           <RouteRibbon
@@ -353,16 +353,4 @@ export default async function TripDetailPage({ params }: TripDetailPageProps) {
       </div>
     </main>
   );
-}
-
-async function findTrip(rawTripId: string) {
-  try {
-    return await application.getPublishedTrip.execute(tripId(rawTripId));
-  } catch (error) {
-    if (error instanceof DomainValidationError) {
-      return null;
-    }
-
-    throw error;
-  }
 }

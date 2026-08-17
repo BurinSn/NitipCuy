@@ -1,10 +1,10 @@
 # NitipCuy Canonical Roadmap
 
-Last reviewed: 2026-08-17 11:57 WIB
+Last reviewed: 2026-08-17 12:01 WIB
 
 Current stage: Stage 1 - Platform foundation
 
-Current work item: Issue #13 and pull request #14 are closed and squash-merged as `df0426cafedbb61d9582527c1669f3bb077125bb` after fresh BurinSN approval and passing exact-head hosted application, lifecycle, and governance gates. Issue #15 is open from that verified base on `feat/15-ux-visual-foundation`. Its local candidate establishes the first owner-reviewable visual system, responsive discovery and trip detail, non-persisting request preview, fictional customer timeline, and fictional jastipper work queue. Complete exact-toolchain quality with 248 tests, production audit, lifecycle participation, production build, request-perimeter runtime, and local HTTP route smoke checks pass. The in-app browser has no connected window, so desktop/mobile rendering, interaction, screenshot, and visible accessibility evidence remain pending alongside immutable review, hosted checks, and owner visual approval. Stage, provider order, payment/delivery deferrals, and production-approval boundaries are unchanged.
+Current work item: Issue #13 and pull request #14 are closed and squash-merged as `df0426cafedbb61d9582527c1669f3bb077125bb` after fresh BurinSN approval and passing exact-head hosted application, lifecycle, and governance gates. Issue #15 is open from that verified base on `feat/15-ux-visual-foundation`. Its local candidate establishes the first owner-reviewable visual system, responsive discovery and trip detail, non-persisting request preview, fictional customer timeline, and fictional jastipper work queue. Complete exact-toolchain quality with 249 tests, production audit, lifecycle participation, production build, request-perimeter runtime, and local HTTP route smoke checks pass after the initial DRY pass centralized repeated trip-code and trip-loading knowledge. The in-app browser has no connected window, so desktop/mobile rendering, interaction, screenshot, and visible accessibility evidence remain pending alongside final immutable review, hosted checks, and owner visual approval. Stage, provider order, payment/delivery deferrals, and production-approval boundaries are unchanged.
 
 ## 1. Role, authority, and freshness contract
 
@@ -228,7 +228,7 @@ account
 - [x] Record the first customer and jastipper decision journeys in `docs/product/experience-design.md`.
 - [x] Define the first information architecture and responsive behavior for discovery, trip detail, request composition, customer progress, and jastipper work assessment.
 - [x] Implement the first local visual-direction candidate with a functional route-ribbon signature and explicit simulation boundaries.
-- [ ] Complete issue #15 evidence. Workspace quality with 248 tests, production audit/build, lifecycle, request-perimeter runtime, and local HTTP route smoke checks pass; desktop/mobile browser, interaction, visible accessibility, immutable-head review, and hosted evidence remain pending.
+- [ ] Complete issue #15 evidence. Workspace quality with 249 tests, production audit/build, lifecycle, request-perimeter runtime, and local HTTP route smoke checks pass; desktop/mobile browser, interaction, visible accessibility, final immutable-head review, and hosted evidence remain pending.
 - [ ] Obtain BurinSN visual sign-off before production use or merge approval.
 
 Exit gate:

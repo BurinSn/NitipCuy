@@ -4,7 +4,7 @@ import { useState, type FormEvent } from "react";
 
 import type { ServiceMode } from "@nitipcuy/domain";
 
-import { serviceModeLabel } from "./presentation";
+import { formatTripCode, serviceModeLabel } from "./presentation";
 
 interface RequestPreviewProps {
   readonly availableModes: readonly ServiceMode[];
@@ -176,7 +176,7 @@ export function RequestPreview({
           <dl>
             <div>
               <dt>Trip</dt>
-              <dd>NC–{tripId.slice(-4).toUpperCase()}</dd>
+              <dd>{formatTripCode(tripId)}</dd>
             </div>
             <div>
               <dt>Layanan</dt>
