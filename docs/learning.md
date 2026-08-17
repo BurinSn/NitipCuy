@@ -1468,3 +1468,15 @@ Do not present inference, provider marketing, provisional pricing, or a future i
 ### No new product or security-control learning
 
 - Publication changes no implementation, dependency, product model, provider decision, security control, Strix applicability, roadmap stage, delivery order, deployment authority, or visual approval.
+
+## 2026-08-17 12:10 WIB - Draft hosted verification produced no new product or control learning
+
+### Reused governance learning
+
+- A governance event created by the head push can observe the old PR-body reviewed revision. Keep the transition failure visible, repin issue first and PR second, and require a passing replacement on the same exact head.
+- A third-party status saying `Review skipped: draft pull request` is not an independent review and contributes no finding coverage.
+- Hosted source gates do not close a browser-visible acceptance criterion. Layout, interaction, screenshot, and visible accessibility claims remain pending when no browser window is connected.
+
+### No new product or security-control learning
+
+- Hosted verification changes no implementation, dependency, product model, provider decision, security control, Strix applicability, roadmap stage, delivery order, deployment authority, or visual approval.

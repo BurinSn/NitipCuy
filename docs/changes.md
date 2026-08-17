@@ -1599,3 +1599,24 @@ A session with no material change does not invent an entry. A session that makes
   - this checkpoint itself changes the four lifecycle authorities and therefore requires one narrow successor review and exact issue/PR repin.
 - Next:
   - commit/review the four-lifecycle PR-publication successor, repin and push it, inspect replacement hosted gates and third-party output, then complete browser-visible review when a window is connected before requesting BurinSN visual or merge approval.
+
+## 2026-08-17 12:10 WIB - Draft UX pull request passed exact-head hosted gates
+
+- Issue / PR: issue #15; draft pull request #16
+- Product: NitipCuy Stage 1 experience foundation
+- Type: Hosted evidence and lifecycle checkpoint
+- Status: Exact-head application, audit, lifecycle, and governance green; browser and owner visual evidence pending
+- Exact verified head: `83cc4dc92bb2a5ecd20794b58c83d4c304ed43de` against base `df0426cafedbb61d9582527c1669f3bb077125bb`
+- Hosted evidence:
+  - application-quality run `31996813617` passed the complete quality suite and production dependency audit;
+  - lifecycle run `31996813597` passed;
+  - stable review-governance replacement `31996830731` passed after issue #15 and pull request #16 both recorded the exact head;
+  - transition governance run `31996813753` failed only because the push event captured the pull-request body before its reviewed revision was repinned; the passing replacement is the current evidence;
+  - CodeRabbit reports `Review skipped: draft pull request`, with no independent review object or finding;
+  - GitHub reports `CLEAN` / `MERGEABLE`, no review objects, and no review decision.
+- Review and authority:
+  - DRY remains `CLEAN WITH NOTES`; Strix remains `NOT REQUIRED` / `NOT APPLICABLE` / `NO TARGET`;
+  - no source, dependency, product, provider, security-control, stage, or authority change occurred after the complete-diff review;
+  - passing hosted gates do not replace the unavailable desktop/mobile browser review or constitute BurinSN visual/merge approval.
+- Next:
+  - commit and narrowly review this four-lifecycle hosted-evidence successor, repin issue #15 and pull request #16, push, and obtain replacement exact-head hosted gates; then complete browser review when a window is connected before requesting owner approval.

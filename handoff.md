@@ -1,6 +1,6 @@
 # NitipCuy Handoff
 
-Updated: 2026-08-17 12:06 WIB
+Updated: 2026-08-17 12:10 WIB
 
 ## 1. Resume order
 
@@ -19,8 +19,8 @@ Updated: 2026-08-17 12:06 WIB
 | Local / remote / pull-request head | `236e900f77d6ecae28f9126d4e9a7d8ad7039bcd` |
 | `origin/main` | `df0426cafedbb61d9582527c1669f3bb077125bb` |
 | Active issue | #15, open |
-| Open pull requests | #16, open draft, `MERGEABLE` / `UNSTABLE` while initial checks run |
-| Worktree | intentionally dirty with this PR-publication lifecycle checkpoint |
+| Open pull requests | #16, open draft, `CLEAN` / `MERGEABLE` |
+| Worktree | intentionally dirty with this hosted-evidence lifecycle checkpoint |
 | Toolchain | Node.js `24.18.0`, pnpm `11.17.0` |
 | Strix | issue #15 is `NOT REQUIRED` / `NOT APPLICABLE` / `NO TARGET`; no execution authority exists |
 
@@ -83,13 +83,13 @@ Final complete-diff review at that head is `CLEAN WITH NOTES`:
 
 This is hostile source review, not browser, accessibility, penetration-test, deployment, or production evidence. Commit `236e900f77d6ecae28f9126d4e9a7d8ad7039bcd` records the result through an exact four-lifecycle-file successor. Its narrow review found no source or claim drift, and issue #15 records `CLEAN WITH NOTES` at that exact revision.
 
-Draft pull request [#16](https://github.com/BurinSn/NitipCuy/pull/16) is open at the same head. Initial hosted runs are in progress:
+Draft pull request [#16](https://github.com/BurinSn/NitipCuy/pull/16) is open at the same head. Exact-head hosted evidence passes:
 
-- application quality `31996725414`;
-- lifecycle documentation `31996725407`;
-- review governance `31996725451`.
+- application quality and production audit `31996813617`;
+- lifecycle documentation `31996813597`;
+- stable review-governance replacement `31996830731`.
 
-GitHub reports the draft pull request `MERGEABLE` with no review objects or review decision. `UNSTABLE` reflects the in-progress checks, not a passed or failed final state.
+Transition governance run `31996813753` captured the pushed head before the PR body was repinned and failed only its exact-revision equality gate; the stable replacement passed after issue #15 and pull request #16 both recorded the exact head. CodeRabbit reports `Review skipped: draft pull request` and supplies no independent review or finding. GitHub reports `CLEAN` / `MERGEABLE`, with no review objects or review decision.
 
 ## 6. Boundaries and risks
 
@@ -110,4 +110,4 @@ This does not constitute visual sign-off, pull-request merge approval for issue 
 
 ## 8. Exact next action
 
-Commit this PR-publication checkpoint, confirm its delta from `236e900f77d6ecae28f9126d4e9a7d8ad7039bcd` contains exactly the four lifecycle documents, narrowly review it, then repin issue #15 and pull request #16 before pushing so replacement hosted gates run on one exact successor. Inspect those checks and third-party review output. Once an in-app browser window is connected, inspect every new route at desktop and mobile widths, including request-preview interaction and obvious accessibility failures; correct and re-verify any finding. Keep the pull request draft and stop for BurinSN visual and merge review; do not deploy.
+Commit this hosted-evidence checkpoint, confirm its delta from `83cc4dc92bb2a5ecd20794b58c83d4c304ed43de` contains exactly the four lifecycle documents, narrowly review it, repin issue #15 and pull request #16, push, and obtain replacement exact-head hosted gates. Once an in-app browser window is connected, inspect every new route at desktop and mobile widths, including request-preview interaction and obvious accessibility failures; correct and re-verify any finding. Keep the pull request draft and stop for BurinSN visual and merge review; do not deploy.

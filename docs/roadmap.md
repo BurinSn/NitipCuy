@@ -1,10 +1,10 @@
 # NitipCuy Canonical Roadmap
 
-Last reviewed: 2026-08-17 12:06 WIB
+Last reviewed: 2026-08-17 12:10 WIB
 
 Current stage: Stage 1 - Platform foundation
 
-Current work item: Issue #13 and pull request #14 are closed and squash-merged as `df0426cafedbb61d9582527c1669f3bb077125bb`. Issue #15 and draft pull request #16 govern the first owner-reviewable visual system, responsive discovery and trip detail, non-persisting request preview, fictional customer timeline, and fictional jastipper work queue. Local/remote/PR head `236e900f77d6ecae28f9126d4e9a7d8ad7039bcd` is DRY/hostile-source `CLEAN WITH NOTES`, passes complete exact-toolchain quality with 249 tests, production audit/build, lifecycle, request-perimeter runtime, and HTTP smoke checks, and is `MERGEABLE`; initial hosted application `31996725414`, lifecycle `31996725407`, and governance `31996725451` runs are in progress. This PR-publication lifecycle checkpoint needs its own narrow successor review and exact repin. The in-app browser has no connected window, so desktop/mobile rendering, interaction, screenshot, and visible accessibility evidence remain pending alongside final hosted checks and owner visual approval. Stage, provider order, payment/delivery deferrals, and production-approval boundaries are unchanged.
+Current work item: Issue #13 and pull request #14 are closed and squash-merged as `df0426cafedbb61d9582527c1669f3bb077125bb`. Issue #15 and draft pull request #16 govern the first owner-reviewable visual system, responsive discovery and trip detail, non-persisting request preview, fictional customer timeline, and fictional jastipper work queue. Local/remote/PR head `83cc4dc92bb2a5ecd20794b58c83d4c304ed43de` is DRY/hostile-source `CLEAN WITH NOTES`; hosted application/audit `31996813617`, lifecycle `31996813597`, and stable governance replacement `31996830731` pass, and GitHub reports `CLEAN` / `MERGEABLE`. The transition governance failure `31996813753` is replaced and records only the expected pre-repin revision mismatch. CodeRabbit skipped the draft and supplies no independent review. This hosted-evidence lifecycle checkpoint needs its own narrow successor review and exact repin. The in-app browser has no connected window, so desktop/mobile rendering, interaction, screenshot, and visible accessibility evidence remain pending with owner visual approval. Stage, provider order, payment/delivery deferrals, and production-approval boundaries are unchanged.
 
 ## 1. Role, authority, and freshness contract
 
@@ -228,7 +228,7 @@ account
 - [x] Record the first customer and jastipper decision journeys in `docs/product/experience-design.md`.
 - [x] Define the first information architecture and responsive behavior for discovery, trip detail, request composition, customer progress, and jastipper work assessment.
 - [x] Implement the first local visual-direction candidate with a functional route-ribbon signature and explicit simulation boundaries.
-- [ ] Complete issue #15 / draft pull request #16 evidence. Workspace quality with 249 tests, production audit/build, lifecycle, request-perimeter runtime, local HTTP route smoke checks, implementation-head DRY/hostile review, and the review-record successor pass. The PR-publication successor, replacement hosted checks, desktop/mobile browser, interaction, and visible accessibility evidence remain pending.
+- [ ] Complete issue #15 / draft pull request #16 evidence. Workspace quality with 249 tests, production audit/build, lifecycle, request-perimeter runtime, local HTTP route smoke checks, DRY/hostile review, publication successor, and hosted gates pass. The hosted-evidence successor plus desktop/mobile browser, interaction, and visible accessibility evidence remain pending.
 - [ ] Obtain BurinSN visual sign-off before production use or merge approval.
 
 Exit gate:
