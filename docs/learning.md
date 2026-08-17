@@ -1419,3 +1419,22 @@ Do not present inference, provider marketing, provisional pricing, or a future i
 ### No new product or security-control learning
 
 - This approval record changes no implementation, dependency, product model, security-control contract, provider decision, Strix applicability, stage, or delivery order.
+
+## 2026-08-17 11:50 WIB - A marketplace visual signature should carry a real decision
+
+### Reusable learning
+
+- A route-first marketplace becomes easier to understand when the signature visual is also a compact decision object. Origin, destination, deadline, capacity, service mode, and next action belong together; a decorative travel motif alone would not improve comprehension.
+- Customer and jastipper journeys can be reviewed before private projections exist, but only when fictional workspaces and local form state are unmistakably labelled and technically disconnected from protected mutations. Visual resemblance to a dashboard is not dashboard implementation evidence.
+- Design work needs its own canonical authority. Recording audience jobs, route hierarchy, tokens, responsive behavior, content rules, simulation boundaries, and evidence state prevents later pages from accumulating unrelated card styles and ambiguous status language.
+- Presentation tests are most valuable at semantic edges: exact ordering-window boundaries, service-mode wording, capacity units, and timezone-aware display. Browser inspection is still required because source tests and a production build cannot prove layout, interaction, focus, or mobile readability.
+
+### Verified instance
+
+- The issue #15 local candidate reuses the safe `PublishedTrip` projection for public pages, keeps the request form browser-only, and renders fixed fictional customer/jastipper records. Complete quality with 248 tests, production build/audit, lifecycle participation, request-perimeter runtime, and local HTTP route smoke checks pass.
+- The reusable route ribbon now anchors discovery, detail, and request composition without claiming live tracking or fulfilment progress.
+- The in-app browser reported no connected window. Browser-visible rendering, interaction, screenshots, and visible accessibility were not claimed from source or HTTP evidence.
+
+### Remaining evidence
+
+- Desktop/mobile browser inspection, request interaction, obvious accessibility review, immutable-head DRY and hostile review, hosted checks, and BurinSN visual approval remain pending.

@@ -2,7 +2,7 @@
 
 Status: Accepted foundation
 
-Last reviewed: 2026-08-10
+Last reviewed: 2026-08-17
 
 ## 1. Supported toolchain
 
@@ -44,7 +44,7 @@ Review both `package.json` and `pnpm-lock.yaml`. Do not accept peer warnings, ig
 
 Native dependency scripts are fail-closed. `pnpm-workspace.yaml` explicitly allows only reviewed packages required by the selected Next.js and Prisma stacks. The Prisma engine and CLI scripts are allowed; optional native scripts reached through disposable test-container support remain explicitly denied.
 
-The workspace also applies exact security overrides for transitive `postcss`, `sharp`, and `nanoid` releases that the current Next.js graph resolves below patched versions. `nanoid` `3.3.17` is the first release that patches `GHSA-2v37-7h3g-55p8`; the 2026-08-08 production audit found `3.3.16` through Next.js -> PostCSS despite no direct manifest change. Treat an override as a temporary reviewed dependency decision: keep the full build and runtime evidence, audit it on every pull request, and remove it when the framework publishes a supported patched graph.
+The workspace also applies exact security overrides for transitive `postcss`, `sharp`, and `nanoid` releases that the current Next.js graph resolves below patched versions. `nanoid` `3.3.18` is the patched release required for `GHSA-2v37-7h3g-55p8`; a hosted 2026-08-17 production audit invalidated the earlier `3.3.17` resolution even though it had previously audited clean. Treat an override as a temporary reviewed dependency decision: keep the full build and runtime evidence, audit it on every pull request, and remove it when the framework publishes a supported patched graph.
 
 ## 3. Local commands
 
@@ -205,7 +205,7 @@ GitHub branch protection is unavailable for the current private repository plan.
 - Published-trip runtime validation rejects unsupported service modes, impossible calendar and clock values, invalid offsets and IANA timezones, inverted source-service and ordering windows, ordering after source availability, service after departure, and duplicate question IDs; it supports advance PO and sorts cross-offset public questions by instant.
 - Package dependency direction is implemented and source-tested through the manifest plus TypeScript-AST boundary gate. It does not replace complete-diff review, runtime authorization, or provider and data-flow security verification.
 - OWASP ASVS 5.0 Level 2 is the accepted production verification target, but no traceability matrix or complete ASVS verification exists.
-- The merged issue #5 slice has source-tested OIDC, session, authorization, CSRF-origin, bounded-input, Prisma, and disposable-PostgreSQL controls. Merged issue #9 adds source/local-runtime perimeter evidence, and merged issue #11 adds source/disposable-database shared abuse controls. The issue #13 local candidate adds source/disposable-database order-submission, exact capacity, account/request/trip-party ownership constraints, delayed-deadline denial using locked-row live database time, idempotency, concurrency, and rollback evidence. DDoS, provider WAF/bot/client-address behavior, aggregate cleanup load, privileged-MFA minting and recovery, managed encryption/key custody/rotation, cache safety, complete XSS/SSRF coverage, private upload, operational monitoring/alerts, calibrated load, incident, backup, deployment compatibility, and recovery remain unimplemented or unverified.
+- The merged issue #5 slice has source-tested OIDC, session, authorization, CSRF-origin, bounded-input, Prisma, and disposable-PostgreSQL controls. Merged issue #9 adds source/local-runtime perimeter evidence, merged issue #11 adds source/disposable-database shared abuse controls, and merged issue #13 adds source/disposable-database order-submission, exact capacity, account/request/trip-party ownership constraints, delayed-deadline denial using locked-row live database time, idempotency, concurrency, and rollback evidence. DDoS, provider WAF/bot/client-address behavior, aggregate cleanup load, privileged-MFA minting and recovery, managed encryption/key custody/rotation, cache safety, complete XSS/SSRF coverage, private upload, operational monitoring/alerts, calibrated load, incident, backup, deployment compatibility, and recovery remain unimplemented or unverified.
 - Issue #13 defines a technical 10-gram request/reservation unit and storage bounds. No approved trust-tier or pilot capacity ceiling, service-level objective, provider quota review, load or abuse test, backup restore, or incident exercise exists.
 - The issue #5 marketplace unit of work uses a Prisma serializable transaction and one transaction client for state, success audit, and required outbox records. Issue #13 extends it through submitted request, capacity decrement, and completed idempotency result. Seller acceptance/release, ledger, inbox, worker, payment, and provider transaction boundaries remain unimplemented.
 - The payment submission and initial-protection assessment contracts are source-tested. The provider-neutral idempotency contract and payment, dispatch, and evidence-lifecycle mocks source-test scoped replay, payload conflict, concurrency denial, recovery-required ambiguous failure, expiry, malformed input, authority outage, and cross-scope isolation.
@@ -213,11 +213,11 @@ GitHub branch protection is unavailable for the current private repository plan.
 - The evidence lifecycle application seam and deterministic fixture are source-tested for server-observed digest, byte length, bounded image signatures, immutable quarantine upload, expiry, scan pending/outage/rejection/digest mismatch, acceptance, cross-owner and reference denial, retention, and deletion. No authenticated upload, signed URL, production object storage, robust image decoder, scanner, durable metadata, order transition, cleanup worker, or provider/runtime evidence exists.
 - Durable success audit and outbox rows now share the issue #5 marketplace transaction; publication to a worker and asynchronous retry remain unimplemented.
 - The first PostgreSQL adapter and disposable-database integration suite exist; managed PostgreSQL, migration-role separation, backup, restore, and mixed-version deployment do not.
-- The issue #13 local candidate implements new-order guard and atomic capacity reservation through `SUBMITTED`. Seller response, expiry/cancellation and capacity release, archival history, evidence-gated order transition, and private seller/customer dashboards do not exist.
-- No browser automation exists yet.
+- Merged issue #13 implements new-order guard and atomic capacity reservation through `SUBMITTED`. Seller response, expiry/cancellation and capacity release, archival history, evidence-gated order transition, and authoritative private seller/customer dashboard projections do not exist.
+- Issue #15 adds source/build-tested presentation examples for customer and jastipper journeys, but they use fictional local data and no protected action. Desktop/mobile browser inspection, browser automation, accessibility evidence, and visual approval remain pending.
 - Google OIDC is implemented against deterministic protocol fixtures only. No real identity, payment, logistics, or storage provider is configured or verified.
 - No production or preview environment exists.
-- The current shell has not received visual approval.
+- The issue #15 visual candidate has not received BurinSN visual approval.
 
 These limitations are explicit scope, not hidden green claims.
 

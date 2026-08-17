@@ -1,194 +1,92 @@
 # NitipCuy Handoff
 
-Updated: 2026-08-17 11:29 WIB
+Updated: 2026-08-17 11:57 WIB
 
 ## 1. Resume order
 
-1. Read `AGENTS.md`, `docs/roadmap.md`, this handoff, the latest `docs/changes.md` entry, and the latest `docs/learning.md` entry.
-2. Read issue [#13](https://github.com/BurinSn/NitipCuy/issues/13), the order lifecycle, master specification, system architecture, resilience, security, quality, review-governance, and Git workflow authorities.
-3. Verify branch, worktree, local head, `origin/main`, issue #13, open pull requests, and hosted checks. Volatile live state outranks this file.
-4. Preserve unexpected work. Never inspect `.env*`, credentials, keys, browser sessions, private identity data, customer data, or production secrets.
+1. Read `AGENTS.md`, `docs/roadmap.md`, this file, the latest `docs/changes.md` and `docs/learning.md` entries.
+2. Read issue [#15](https://github.com/BurinSn/NitipCuy/issues/15), `docs/product/experience-design.md`, the master specification, order lifecycle, system architecture, security, resilience, quality, review-governance, and Git workflow authorities.
+3. Verify branch, worktree, local head, `origin/main`, issue #15, open pull requests, and hosted checks. Volatile live state overrides this file.
+4. Do not read `.env*`, credentials, keys, tokens, browser sessions, production secrets, or private user data.
 
-Useful read-only commands:
+## 2. Verified repository state
 
-```bash
-git status --short --branch
-git rev-parse HEAD
-git rev-parse origin/main
-gh issue view 13 --repo BurinSn/NitipCuy
-gh pr list --repo BurinSn/NitipCuy --state open
-```
+| Item | State |
+| --- | --- |
+| Repository | `BurinSn/NitipCuy`, private |
+| Current branch | `feat/15-ux-visual-foundation` |
+| Base / local head | `df0426cafedbb61d9582527c1669f3bb077125bb` |
+| `origin/main` | `df0426cafedbb61d9582527c1669f3bb077125bb` |
+| Active issue | #15, open |
+| Open pull requests | none at the start of implementation |
+| Worktree | intentionally dirty with uncommitted issue #15 application and documentation work |
+| Toolchain | Node.js `24.18.0`, pnpm `11.17.0` |
+| Strix | issue #15 is `NOT REQUIRED` / `NOT APPLICABLE` / `NO TARGET`; no execution authority exists |
 
-## 2. Verified repository and GitHub state
+The old local branch `feat/13-order-submission-capacity` remains because safe deletion with `git branch -d` refused after squash merge. It was not force-deleted. The remote branch is gone.
 
-| Item | Verified state |
-|---|---|
-| Canonical repository | `https://github.com/BurinSn/NitipCuy` |
-| Default branch | `main` |
-| Current merged base | `ea4b629466df1e1e1381f62ae5ca26722edbe4bf` |
-| Local branch | `feat/13-order-submission-capacity` |
-| Local `HEAD` | final hosted-evidence head `0dcf4f2ac21313d164dd26022f78061c0430a89c`; the commit containing this fresh approval record will be its four-lifecycle-file successor and must be live-resolved |
-| Worktree | clean before this fresh approval record; live-verify before acting |
-| Active issue | #13, open |
-| Open pull requests | #14, open and not draft at `0dcf4f2ac21313d164dd26022f78061c0430a89c`; application run `31993817825`, lifecycle run `31993817761`, stable review-governance replacement `31993977394`, and post-inspection review-governance run `31994016258` passed; GitHub reports `CLEAN` / `MERGEABLE` |
-| Issue #11 / PR #12 | merged/closed as `ea4b629466df1e1e1381f62ae5ca26722edbe4bf`; feature branches removed |
-| Strix | issue #13 is `NOT REQUIRED` / `NOT APPLICABLE` / `NO TARGET`; no authorization, plan, budget, execution, report, or external Strix model action exists |
+## 3. Prior merge reconciliation
 
-Do not commit on `main`, force-push, reset, clean, deploy, activate a provider, or merge without the governed workflow and fresh BurinSN approval.
+Issue #13 and pull request #14 are closed and merged. The final approval-record head was `beb23229144c5296a6671d88ce5b301e210097d6`, and the squash merge on `main` is `df0426cafedbb61d9582527c1669f3bb077125bb`.
 
-## 3. Current objective and approved boundary
+Before merge, the exact approval head passed:
 
-Issue #13 adds the first authoritative order-entry command:
+- application-quality run `31994790849`;
+- lifecycle run `31994790851`;
+- review-governance run `31994790852`;
+- post-inspection governance run `31994917695`;
+- `CLEAN` / `MERGEABLE` GitHub state with zero annotations on the passing checks.
 
-```text
-authenticated non-owner customer
-  -> exact Shop for me or Carry my item declaration
-  -> database-time offer and seller eligibility
-  -> exact capacity reservation
-  -> private SUBMITTED request
-  -> atomic audit, outbox, and completed replay result
-```
+CodeRabbit remained rate-limited and produced no review object or actionable line finding. The merge adds the source/disposable-PostgreSQL-tested `SUBMITTED` order-request and atomic capacity-reservation boundary; it does not add seller response/release, payment, delivery, private dashboards, provider configuration, deployment, or real-user activation.
 
-Included:
+## 4. Active issue #15 scope
 
-- both service modes;
-- integer-IDR request values;
-- integer grams at domain/HTTP boundaries and exact two-decimal kilograms in PostgreSQL;
-- published/current offer, supported mode, ordering window, self-order, active seller-account/profile, and capacity checks;
-- account-bound key-digest-only durable replay with canonical payload fingerprint;
-- one serializable transaction across capacity, request, success audit, outbox, and completed idempotency result;
-- a protected bounded JSON route and `order.submit.v1` shared abuse policy;
-- source and disposable-PostgreSQL denial, concurrency, and rollback tests.
+Issue #15 creates the first owner-reviewable UX and visual foundation. Its design direction is recorded in `docs/product/experience-design.md`.
 
-Excluded:
+Implemented locally so far:
 
-- seller acceptance/rejection, expiry/cancellation, and capacity release;
-- accepted commercial price, payment, DOKU, ledger, refund, settlement, or payout;
-- private address/chat, evidence upload, fulfilment, Biteship, tracking, pickup, dispatch, or delivery;
-- checkout UI, visual approval, browser automation, real Google, managed database, provider, deployment, staging, production, real user data, load, incident, or launch;
-- Strix execution or penetration-test claims.
+- a deep-ink, route-blue, signal-orange, and evidence-mint visual system using system fonts and no new dependency;
+- a functional origin-to-destination route ribbon used as the product's signature information pattern;
+- redesigned public discovery with route/date filters, opening-window state, capacity, rate, handover, and service-mode visibility;
+- redesigned trip detail with schedule, service choice, evidence explanation, public discussion, and a sticky decision summary;
+- `/trips/{tripId}/request`, a browser-only request-composition preview for both service modes that calls no API and stores no data;
+- `/orders`, a fictional customer order timeline demonstrating evidence and next-action hierarchy;
+- `/jastipper`, a fictional capacity board, request-assessment queue, and active-work view;
+- shared presentation functions and unit tests for service labels, capacity display, date/time display, and exact ordering-window boundaries;
+- responsive, semantic, focus-visible, status-text, and reduced-motion CSS foundations.
 
-The reservation lifecycle must not serve real users until safe seller response, expiry/cancellation, and capacity release exist.
+The discovery and trip detail continue to use the existing safe `PublishedTrip` projection. The request preview does not call `POST /api/trips/{tripId}/requests`. The two workspaces contain hard-coded fictional display records and are not private projections or mutation surfaces.
 
-## 4. Implementation state
-
-Committed, pushed, and opened in pull request #14 at `9c145515367f81571e7583495f88eca53b8d9abe`:
-
-- `packages/domain/src/order-request.ts`: bounded mode-specific declarations, request identity/status, immutable submitted shape, and exact capacity-unit rules;
-- `packages/application/src/marketplace-foundation.ts`: database-authoritative submission use case, eligibility, self-order and mode denial, canonical fingerprinting, atomic orchestration, and generic error codes;
-- `packages/adapters/prisma/schema.prisma` plus migration `20260811070000_order_submission_capacity`: additive request/idempotency tables, constraints, indexes, and foreign keys;
-- `packages/adapters/src/prisma-marketplace.ts`: live database wall time, transaction advisory-lock replay, active seller/profile locks, locked-trip deadline/capacity/version update, request mapping, and completion persistence;
-- `apps/web/src/app/api/trips/[tripId]/requests/route.ts`: protected `POST` endpoint and safe response;
-- `apps/web/src/server/order-submission-input.ts`: exact per-mode JSON shapes and private-field exclusion;
-- `apps/web/src/server/abuse-policy.ts`: `order.submit.v1` network/account/session/account-target policy;
-- domain, application, web, and disposable-PostgreSQL tests for bounds, denials, both mode mappings, database time, replay/conflict/in-progress, final-slot contention, and rollback;
-- lifecycle and affected product/architecture/security/quality documentation reconciliation.
-
-Important implementation facts:
-
-- authorization and route-level shared abuse admission occur before idempotency lookup;
-- the raw idempotency key is not persisted; account, operation, key digest, and payload fingerprint scope the completed result;
-- a transaction advisory-lock collision can only falsely deny as in-progress, not duplicate an order;
-- the submitted snapshot is not the future seller-accepted commercial snapshot;
-- no provider or object-storage call occurs inside the transaction;
-- request item content is synthetic test data only. Managed encryption/key custody and real private-data activation remain unimplemented.
-
-## 5. Verification obtained
+## 5. Verification obtained on the dirty local candidate
 
 Passed with exact Node.js `24.18.0` and pnpm `11.17.0`:
 
-- `pnpm check`;
-- formatting and lint with no reported warning;
-- dependency boundaries: 4 projects, 75 source files, 251 module references;
-- strict type checking across all four packages;
-- 244 tests:
-  - 17 review-governance;
-  - 21 dependency-boundary;
-  - 27 domain;
-  - 34 application;
-  - 71 adapter;
-  - 74 web;
-- clean application build; Next.js route manifest includes `/api/trips/[tripId]/requests`;
-- local built request-perimeter probe in direct and simulated trusted-proxy modes.
+- complete `pnpm check`: formatting, lint, dependency boundaries across 4 projects / 83 source files / 280 module references, strict types, 248 tests, production build, and direct plus simulated trusted-proxy runtime probes;
+- 248 tests comprise 17 review-governance, 21 dependency-boundary, 27 domain, 34 application, 71 adapter, and 78 web tests;
+- production build includes the new `/orders`, `/jastipper`, and `/trips/[tripId]/request` routes;
+- `pnpm audit:prod` reports no known production vulnerability;
+- lifecycle participation passed for all four required documents;
+- local built HTTP smoke checks returned `200` for discovery, filtered discovery, a trip detail, both the request route and selected Carry my item mode, customer orders, and jastipper workspace; expected simulation and non-persistence copy was present.
 
-Disposable PostgreSQL 18 proved:
+`git diff --check` and focused source/content scans are clean so far. The in-app browser runtime reported no connected browser windows, so desktop/mobile rendering, request interaction, screenshot, and visible accessibility inspection were not obtained and remain explicit blockers to visual sign-off. Immutable-head DRY review, hosted checks, and owner visual review also remain pending.
 
-- clean application of all migrations;
-- database time overrides a hostile injected application clock;
-- a delayed in-transaction reservation crossing the deadline is denied using live database wall time;
-- Shop for me and Carry my item storage constraints and exact mappings;
-- composite foreign keys bind replay ownership to the request customer and request seller/profile ownership to the exact trip;
-- active seller/profile row locks and current offer revision;
-- exact same-key replay, changed-payload conflict, and active-duplicate denial;
-- one winner for two independent final-capacity attempts;
-- rollback of capacity/version, request, audit, outbox, and idempotency on late failure.
+## 6. Boundaries and risks
 
-Also passed on the corrected candidate before the registry advisory changed:
+- The interface is a design prototype, not a parallel transaction system.
+- No address, identity, payment, credential, provider, or production data is collected or displayed.
+- The simulated request and dashboards must not be confused with implemented protected workflows.
+- Existing server-authoritative ordering-window, eligibility, session, abuse, idempotency, and exact-capacity controls remain the only mutation boundary.
+- Seller response, expiry/cancellation, and capacity release remain mandatory before real-user request activation.
+- Visual status labels cannot invent evidence or order success.
+- Browser inspection can prove rendering and local interaction only; it cannot prove provider, private-data, payment, deployment, production, load, or security readiness.
+- No deployment, paid service, provider onboarding, external message, Strix execution, real user, or launch is authorized.
 
-- `pnpm audit:prod` with no known production vulnerability at the time; this evidence was invalidated on 2026-08-17 when hosted run `31993037634` reported high-severity `GHSA-2v37-7h3g-55p8` against transitive `nanoid` `3.3.17`;
-- lifecycle participation and diff hygiene;
-- all 7 YAML files, 20 local Markdown documents, parameterized-query inventory, and high-confidence secret/log/unsafe-execution scans.
+## 7. Owner authority
 
-Current dependency-gate repair:
+BurinSN approved merging the fully governed issue #13 / pull request #14 candidate on 2026-08-17, and that merge is complete. BurinSN then instructed work to proceed to the next stage, authorizing the bounded issue #15 local UX/visual-foundation implementation and review workflow.
 
-- exact Node.js `24.18.0` and pnpm `11.17.0` changed only the centralized `nanoid` override and lockfile resolution from `3.3.17` to patched `3.3.18`;
-- frozen install, the complete `pnpm check` suite with 244 tests/build/runtime probe, and `pnpm audit:prod` now pass locally on the repaired tree; the production audit reports no known vulnerabilities;
-- hosted application run `31993491119` and lifecycle run `31993491134` passed on exact repair head `b76d701520def6a07824e5138d4cc6b5c2a392c5`; stable review-governance replacement `31993632434` also passed after transition run `31993491123` captured the pre-repin PR event payload and failed only its expected revision-equality check;
-- the repair changes dependency state, so the prior conditional merge approval is no longer sufficient even though the application quality suite itself passed before its audit step failed.
-
-Still pending:
-
-- commit and narrowly review this four-lifecycle-file fresh-approval successor, repin issue #13 and pull request #14, and repeat hosted exact-head gates;
-- squash-merge only if that successor remains lifecycle-only, every required gate passes, and GitHub remains clean and mergeable; then verify `main`, issue closure, and branch cleanup.
-
-Initial hosted state on `9c145515367f81571e7583495f88eca53b8d9abe`:
-
-- review-governance run `31467896354` passed;
-- application run `31467896319` and lifecycle run `31467896386` were in progress;
-- CodeRabbit was pending;
-- GitHub reported pull request #14 `MERGEABLE` with no review decision.
-
-Final hosted evidence on `b4bb4aee87f6bdcf190504699f91bce7f5122050`:
-
-- application run `31468141680`, lifecycle run `31468141673`, review-governance run `31468142538`, and post-inspection review-governance run `31468335555` passed with zero annotations;
-- transition review-governance run `31468141682` was cancelled only because the workflow concurrency rule selected the higher-priority waiting replacement; its sole annotation says exactly that and is not a code or governance finding;
-- CodeRabbit reported `Review rate limited`, produced a walkthrough, and created no review object or line finding;
-- GitHub reported `CLEAN` / `MERGEABLE`, no review decision, and no review objects.
-
-Final reviewed evidence head `c5fe836b27b1756b290ee32d88572e5c7458d516` was live-reverified on 2026-08-17:
-
-- application run `31468516199`, lifecycle run `31468516235`, and final review-governance run `31468677458` passed on the exact head;
-- transition review-governance run `31468516271` was cancelled by the workflow concurrency rule and its passing replacements are visible on the same head;
-- issue #13 and pull request #14 match DRY `CLEAN WITH NOTES` at the full 40-character head and Strix `NOT REQUIRED` / `NOT APPLICABLE` / `NO TARGET`;
-- local, remote-branch, and pull-request heads match; GitHub reports `CLEAN` / `MERGEABLE`, with no review object, review decision, or intervening source change;
-- CodeRabbit remains a rate-limited walkthrough with no independent finding or review object.
-
-Highest evidence is source-tested, disposable-PostgreSQL-integration-tested, production-build-tested, and local request-perimeter-runtime-tested. No browser, provider, load, staging, production, or penetration-test evidence exists.
-
-## 6. Current risks and review focus
-
-- Reservation release does not exist; real-user activation would strand capacity after rejection, expiry, or cancellation.
-- Submitted item content is private transactional data but managed encryption and production key custody do not exist.
-- The 10-gram precision and storage ceilings are technical bounds, not approved pilot, trust-tier, legal, insurance, or load limits.
-- Seven-day completed replay retention has no cleanup worker, metrics, alert, recovery command, or load evidence.
-- Seller-account/profile locks and serializable capacity behavior are proven only on disposable PostgreSQL, not managed PostgreSQL under load.
-- Shared limiter thresholds are pre-preview defaults. Edge/WAF/bot compatibility and aggregate cleanup load remain unverified.
-- A passed build or database test does not authorize deployment, payment, delivery, real data, or launch.
-- Registry advisory state is volatile. The patched `nanoid` `3.3.18` override is locally and hosted audit-clean at `b76d701520def6a07824e5138d4cc6b5c2a392c5`; later audit claims still require dated exact-head evidence.
-
-## 7. Authority
-
-BurinSN approved proceeding with the issue #13 scope and explicitly deferred payment and delivery. The first approval was correctly invalidated when hosted application run `31993037634` discovered a new high-severity registry advisory and the required `nanoid` `3.3.17` to `3.3.18` repair changed dependency state. After receiving a plain-language explanation that the repair changes only the existing transitive resolution, introduces no new dependency or application behavior, and passes all 244 tests/build/runtime/audit/governance gates, BurinSN replied "okay approved" on 2026-08-17. This is fresh owner approval to squash-merge pull request #14 from final hosted-evidence head `0dcf4f2ac21313d164dd26022f78061c0430a89c` and its approval-record-only successor, conditional on exact repinning, passing hosted gates, no actionable review finding, and `CLEAN` / `MERGEABLE` status. It does not authorize deployment, provider onboarding/configuration, payment movement, real-user testing, production data, external target testing, Strix execution, public launch, or visual production deployment.
-
-Issue #13 and pull request #14 currently record final hosted-evidence head `0dcf4f2ac21313d164dd26022f78061c0430a89c` and must be repinned after this approval successor is committed:
-
-- DRY: `CLEAN WITH NOTES` through final hosted-evidence head `0dcf4f2ac21313d164dd26022f78061c0430a89c`;
-- Strix applicability: `NOT REQUIRED`;
-- Strix status: `NOT APPLICABLE`;
-- target class: `NO TARGET`.
-
-The implementation head's complete diff passed DRY and hostile review after correcting stale transaction-start time, missing composite ownership invariants, raw-query serialization retry classification, and duplicated key grammar. The dependency repair contains only the centralized override, its lockfile resolution, and required lifecycle records; final evidence head `0dcf4f2ac21313d164dd26022f78061c0430a89c` passed local and hosted gates and both governed records carry its full 40-character SHA. The approval successor may change only the four lifecycle authorities. Any source, dependency, configuration, product, provider, security-control, scope, or finding change invalidates approval and requires fresh owner review.
+This does not constitute visual sign-off, pull-request merge approval for issue #15, deployment approval, provider approval, production approval, legal approval, payment authority, permission to collect real user data, or security-testing authority.
 
 ## 8. Exact next action
 
-Commit this fresh-approval checkpoint and confirm its delta from `0dcf4f2ac21313d164dd26022f78061c0430a89c` contains exactly `handoff.md`, `docs/changes.md`, `docs/roadmap.md`, and `docs/learning.md`. Narrowly review, repin, push, and repeat hosted checks on the exact successor. If every required context passes with no actionable annotation and GitHub remains `CLEAN` / `MERGEABLE`, squash-merge pull request #14, verify `main`, issue #13 closure, and remote branch cleanup, then create the separately governed UX/visual-foundation issue. Do not deploy or provision a provider.
+Re-run the complete gate after the final CSS/doc correction, then commit the candidate and perform exact-head DRY plus hostile review. Once an in-app browser window is connected, inspect discovery, trip detail, request preview, customer orders, and jastipper workspace at desktop and mobile widths, including request-preview interaction and obvious accessibility failures; correct and re-verify any finding. Update issue #15, push, open the focused pull request, and repeat hosted exact-head gates. Stop for BurinSN visual and merge review; do not deploy.

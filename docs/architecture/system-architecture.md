@@ -127,6 +127,8 @@ Owns:
 
 Does not own private addresses, paid commitments, or settlement.
 
+Issue #15 adds only presentation routes around this boundary: redesigned discovery and detail consume the safe `PublishedTrip` projection; `/trips/{tripId}/request` holds a non-persisting browser preview and calls no mutation; `/orders` and `/jastipper` render fixed fictional records for owner experience review. These screens do not constitute private projection adapters, authorization surfaces, order state, evidence state, or a second mutation path. Their information and visual rules are governed by `docs/product/experience-design.md`.
+
 ### Ordering
 
 Owns:
@@ -487,7 +489,7 @@ Implemented by issue #11, merged through pull request #12 as `ea4b629466df1e1e13
 - additive PostgreSQL fixed-window bucket authority shared across web instances with network, account, session/device, and compound network-target or account-target axes, deterministic lock order, bounded cleanup, generic `429`/`503`, and atomic bounded denial audits; target buckets isolate callers rather than creating a global target-denial lever;
 - no process-local limiter authority, raw stored subject, WAF/bot provider integration, operational metrics backend, dashboard, alert route, load claim, or production claim.
 
-Implemented in the issue #13 local candidate and source/disposable-database tested:
+Implemented by issue #13, merged through pull request #14 as `df0426cafedbb61d9582527c1669f3bb077125bb`, and source/disposable-database tested:
 
 - one provider-neutral `SUBMITTED` request model for Shop for me and Carry my item with integer-IDR terms, 10-gram domain/HTTP capacity units, exact PostgreSQL decimals, immutable submission declarations, and route/schedule snapshots;
 - live database-wall-time ordering-window evaluation on the locked trip row, active seller-account and profile locks, published/current offer revision checks, supported-mode and self-order denial, and conditional exact capacity decrement;
@@ -496,6 +498,12 @@ Implemented in the issue #13 local candidate and source/disposable-database test
 - one serializable consistency boundary for request, capacity, success audit, outbox, and completed idempotency result, with no provider or object-storage call;
 - one bounded protected JSON route and `order.submit.v1` shared multi-axis abuse policy;
 - no seller response, release/expiry/cancellation, accepted commercial snapshot, address, payment, delivery, evidence, dashboard, browser, provider, deployment, or production activation.
+
+Implemented locally for issue #15 and source/build tested:
+
+- one presentation-only route set for public discovery, public trip detail, local request composition, fictional customer progress, and fictional jastipper work assessment;
+- a shared route ribbon, ordering-window labels, capacity/date presentation helpers, explicit simulation notices, and responsive/focus/reduced-motion styling;
+- no request mutation from the preview, private projection adapter, persisted customer or jastipper data, account action, provider call, or production activation.
 
 Issue #3 removed its callback-only transaction interface rather than misrepresent it as atomic infrastructure. Issue #5 implemented the connection-bound serializable unit of work, and issue #13 extends it through submitted-request capacity reservation. It still does not cover seller acceptance/release, ledger, payment, provider callback, worker, or outbox delivery.
 
@@ -516,8 +524,8 @@ Not implemented:
 - provider-verified edge header overwrite/client-address compatibility and direct-origin restriction, risk, shared idempotency, browser automation, or real-browser completion for protected preview;
 - private data;
 - real providers;
-- order, payment, evidence, logistics, item moderation, dispute, or review workflows;
-- new-order eligibility, capacity reservation, archival history, or private seller and customer order dashboards;
+- seller response, payment, evidence, logistics, item moderation, dispute, or review workflows;
+- capacity release, archival history, or authoritative private seller and customer order dashboards; issue #15 includes fictional presentation examples only;
 - shared WAF, bot, idempotency, cache, worker, operational observability, alert, backup, or recovery infrastructure;
 - trusted-proxy/canonical-host configuration, privileged MFA, managed-key encryption lifecycle, cache-safety controls, or mixed-version deployment evidence;
 - runtime security configuration, load and abuse tests, provider configuration review, incident exercises, or penetration testing;

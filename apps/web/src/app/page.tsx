@@ -1,7 +1,17 @@
 import Link from "next/link";
 
-import type { PublishedTrip, ServiceMode } from "@nitipcuy/domain";
+import type { PublishedTrip } from "@nitipcuy/domain";
 
+import {
+  formatCapacity,
+  formatDateTime,
+  formatDateTimeRange,
+  orderingWindowLabel,
+  orderingWindowState,
+  serviceModeShortLabel,
+} from "@/components/presentation";
+import { RouteRibbon } from "@/components/route-ribbon";
+import { SimulationNote } from "@/components/simulation-note";
 import { application } from "@/server/composition";
 
 interface HomePageProps {
@@ -25,172 +35,259 @@ export default async function HomePage({ searchParams }: HomePageProps) {
 
   return (
     <main id="main-content">
-      <section className="hero">
-        <div className="shell hero-grid">
-          <div className="hero-copy">
-            <p className="eyebrow">Cari berdasarkan perjalanan</p>
-            <h1>Jastip yang jelas dari tujuan sampai serah terima.</h1>
-            <p className="hero-lead">
-              Lihat siapa yang bepergian, kapan pesanan dibuka dan ditutup,
-              layanan apa yang tersedia, kapasitas tersisa, dan cara barang
-              sampai ke kamu.
+      <section className="home-hero">
+        <div className="shell home-hero-grid">
+          <div className="home-hero-copy">
+            <p className="eyebrow eyebrow-light">
+              Marketplace jastip berbasis trip
             </p>
-            <div className="mode-grid" aria-label="Mode layanan">
-              <article>
-                <span className="mode-index">01</span>
-                <div>
-                  <h2>Belikan barang</h2>
-                  <p>
-                    Jastipper membeli sesuai permintaan dan bukti transaksi.
-                  </p>
-                </div>
-              </article>
-              <article>
-                <span className="mode-index">02</span>
-                <div>
-                  <h2>Bawakan barang</h2>
-                  <p>
-                    Kamu sudah punya barang dan membutuhkan bantuan membawa.
-                  </p>
-                </div>
-              </article>
-            </div>
+            <h1>
+              Barang titipan,
+              <span>jalurnya kelihatan.</span>
+            </h1>
+            <p className="hero-lead">
+              Cari orang yang memang sedang bepergian. Lihat tenggat pesanan,
+              kapasitas, tarif, dan cara serah terimanya sebelum kamu meminta
+              bantuan.
+            </p>
+            <ol
+              className="journey-steps"
+              aria-label="Cara menggunakan NitipCuy"
+            >
+              <li>
+                <span>1</span>
+                <p>
+                  <strong>Cari trip</strong> berdasarkan tujuan dan waktu.
+                </p>
+              </li>
+              <li>
+                <span>2</span>
+                <p>
+                  <strong>Baca ketentuan</strong> dari jastipper.
+                </p>
+              </li>
+              <li>
+                <span>3</span>
+                <p>
+                  <strong>Kirim permintaan</strong> lewat platform.
+                </p>
+              </li>
+            </ol>
           </div>
 
-          <form className="search-panel" method="get">
-            <div className="panel-heading">
-              <p className="eyebrow">Pencarian perjalanan</p>
-              <p className="result-count">
-                {trips.length} perjalanan ditemukan
-              </p>
+          <div className="hero-route-tag" aria-label="Contoh rute NitipCuy">
+            <div className="tag-topline">
+              <span>Rute pilihan minggu ini</span>
+              <strong>NC / 0826</strong>
             </div>
-            <label>
-              Kota tujuan
+            <RouteRibbon destination="Jakarta" origin="Guangzhou" />
+            <div className="tag-facts">
+              <div>
+                <span>Pesanan tutup</span>
+                <strong>17 Agu · 17.00 WIB</strong>
+              </div>
+              <div>
+                <span>Kapasitas</span>
+                <strong>12 kg tersedia</strong>
+              </div>
+            </div>
+            <div className="tag-perforation" aria-hidden="true" />
+            <p>
+              Belikan barang <span>atau</span> bawakan barang milikmu.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section className="finder-section" aria-labelledby="finder-title">
+        <div className="shell finder-shell">
+          <div className="finder-heading">
+            <p className="eyebrow">Mulai dari tujuan</p>
+            <h2 id="finder-title">Kamu mau barangnya tiba di mana?</h2>
+          </div>
+          <form className="trip-finder" method="get">
+            <label className="field field-destination">
+              <span>Kota tujuan</span>
               <input
                 defaultValue={destination}
                 name="destination"
-                placeholder="Contoh: Jakarta"
+                placeholder="Jakarta, Surabaya, Bandung…"
                 type="search"
               />
             </label>
-            <div className="date-grid">
-              <label>
-                Berangkat mulai
-                <input defaultValue={departureFrom} name="from" type="date" />
-              </label>
-              <label>
-                Sampai
-                <input defaultValue={departureTo} name="to" type="date" />
-              </label>
-            </div>
-            <button type="submit">Cari perjalanan</button>
-            <Link className="clear-link" href="/">
-              Hapus filter
-            </Link>
+            <label className="field">
+              <span>Berangkat mulai</span>
+              <input defaultValue={departureFrom} name="from" type="date" />
+            </label>
+            <label className="field">
+              <span>Sampai</span>
+              <input defaultValue={departureTo} name="to" type="date" />
+            </label>
+            <button
+              className="button button-primary finder-button"
+              type="submit"
+            >
+              Cari trip
+            </button>
           </form>
+          <div className="finder-meta">
+            <strong>{trips.length} trip ditemukan</strong>
+            {(destination || departureFrom || departureTo) && (
+              <Link href="/">Hapus semua filter</Link>
+            )}
+          </div>
         </div>
       </section>
 
       <section className="shell results-section" aria-labelledby="trip-heading">
         <div className="section-heading">
           <div>
-            <p className="eyebrow">Perjalanan aktif</p>
-            <h2 id="trip-heading">Pilih rute yang sesuai</h2>
+            <p className="eyebrow">Trip yang bisa kamu cek</p>
+            <h2 id="trip-heading">
+              Pilih berdasarkan jalurnya, bukan tebak-tebakan.
+            </h2>
           </div>
           <p>
-            Semua harga, jadwal, dan kapasitas di halaman ini adalah data
-            simulasi untuk menguji fondasi aplikasi.
+            Jastipper menentukan tarif dan ketentuannya sendiri. NitipCuy
+            membantu membuat detail pentingnya terbaca sebelum ada komitmen.
           </p>
         </div>
 
+        <SimulationNote>
+          Semua nama, trip, kapasitas, dan aktivitas di layar ini adalah data
+          simulasi untuk penilaian desain. Belum ada transaksi nyata.
+        </SimulationNote>
+
         {trips.length > 0 ? (
-          <div className="trip-list">
+          <div className="trip-grid">
             {trips.map((trip) => (
               <TripCard key={trip.id} trip={trip} />
             ))}
           </div>
         ) : (
           <div className="empty-state">
-            <h3>Belum ada perjalanan yang cocok.</h3>
-            <p>Coba kota tujuan atau rentang tanggal yang berbeda.</p>
+            <span className="empty-state-mark" aria-hidden="true">
+              ↗
+            </span>
+            <div>
+              <h3>Belum ada trip yang searah.</h3>
+              <p>Coba kota tujuan atau rentang tanggal yang berbeda.</p>
+            </div>
+            <Link className="button button-secondary" href="/">
+              Lihat semua trip
+            </Link>
           </div>
         )}
+      </section>
+
+      <section className="service-explainer">
+        <div className="shell service-explainer-grid">
+          <div>
+            <p className="eyebrow eyebrow-light">Dua kebutuhan, satu jalur</p>
+            <h2>Pilih bantuan yang memang kamu perlukan.</h2>
+          </div>
+          <article>
+            <span className="service-icon" aria-hidden="true">
+              ＋
+            </span>
+            <h3>Belikan barang</h3>
+            <p>
+              Jastipper membeli sesuai rincian, batas anggaran, dan aturan
+              substitusi yang kamu ajukan.
+            </p>
+          </article>
+          <article>
+            <span className="service-icon" aria-hidden="true">
+              →
+            </span>
+            <h3>Bawakan barang</h3>
+            <p>
+              Kamu sudah memiliki barangnya; jastipper menilai isi, ukuran,
+              berat, dan kelayakan rutenya.
+            </p>
+          </article>
+        </div>
       </section>
     </main>
   );
 }
 
 function TripCard({ trip }: Readonly<{ trip: PublishedTrip }>) {
+  const windowState = orderingWindowState(
+    trip.requestOpenAt,
+    trip.requestDeadline,
+  );
+
   return (
     <article className="trip-card">
-      <div className="trip-route">
-        <div>
-          <span>Asal</span>
-          <strong>{trip.originLabel}</strong>
+      <div className="trip-card-topline">
+        <div className="mode-tags">
+          {trip.serviceModes.map((mode) => (
+            <span key={mode}>{serviceModeShortLabel(mode)}</span>
+          ))}
         </div>
-        <span className="route-line" aria-hidden="true" />
+        <span
+          className={`window-status window-status-${windowState.toLowerCase()}`}
+        >
+          {orderingWindowLabel(windowState)}
+        </span>
+      </div>
+
+      <RouteRibbon
+        compact
+        destination={trip.destinationLabel}
+        origin={trip.originLabel}
+      />
+
+      <div className="trip-card-decision">
         <div>
-          <span>Tujuan</span>
-          <strong>{trip.destinationLabel}</strong>
+          <span className="fact-label">Batas permintaan</span>
+          <strong>
+            {formatDateTime(trip.requestDeadline, trip.originTimeZone)}
+          </strong>
+          <small>mengikuti waktu lokasi asal</small>
+        </div>
+        <div className="capacity-fact">
+          <span className="fact-label">Kapasitas tersisa</span>
+          <strong>{formatCapacity(trip.remainingCapacityKg)}</strong>
         </div>
       </div>
 
-      <div className="trip-meta-grid">
+      <dl className="trip-card-terms">
         <div>
-          <span>Periode di lokasi asal</span>
-          <strong>
+          <dt>Jastipper</dt>
+          <dd>
+            {trip.jastipperDisplayName} · {trip.rating.average.toFixed(1)} (
+            {trip.rating.count})
+          </dd>
+        </div>
+        <div>
+          <dt>Di lokasi asal</dt>
+          <dd>
             {formatDateTimeRange(
               trip.serviceWindowStartAt,
               trip.serviceWindowEndAt,
               trip.originTimeZone,
             )}
-          </strong>
+          </dd>
         </div>
         <div>
-          <span>Periode pesanan (waktu asal)</span>
-          <strong>
-            {formatDateTimeRange(
-              trip.requestOpenAt,
-              trip.requestDeadline,
-              trip.originTimeZone,
-            )}
-          </strong>
+          <dt>Tarif</dt>
+          <dd>{trip.rateSummary}</dd>
         </div>
         <div>
-          <span>Kapasitas</span>
-          <strong>{formatCapacity(trip.remainingCapacityKg)}</strong>
+          <dt>Serah terima</dt>
+          <dd>{trip.deliverySummary}</dd>
         </div>
-        <div>
-          <span>Lokasi jastipper</span>
-          <strong>{trip.sellerLocationLabel}</strong>
-        </div>
-      </div>
+      </dl>
 
-      <div className="mode-tags">
-        {trip.serviceModes.map((mode) => (
-          <span key={mode}>{serviceModeLabel(mode)}</span>
-        ))}
-      </div>
-
-      <div className="trip-commercial">
-        <p>
-          <span>Ketentuan tarif</span>
-          <strong>{trip.rateSummary}</strong>
-        </p>
-        <p>
-          <span>Serah terima</span>
-          <strong>{trip.deliverySummary}</strong>
-        </p>
-      </div>
-
-      <div className="trip-footer">
-        <div>
-          <strong>{trip.jastipperDisplayName}</strong>
-          <span>
-            {trip.rating.average.toFixed(1)} dari {trip.rating.count} transaksi
-          </span>
-        </div>
-        <Link href={`/trips/${trip.id}`}>Lihat perjalanan</Link>
+      <div className="trip-card-footer">
+        <span>
+          Lokasi jastipper: <strong>{trip.sellerLocationLabel}</strong>
+        </span>
+        <Link className="button button-secondary" href={`/trips/${trip.id}`}>
+          Lihat detail <span aria-hidden="true">↗</span>
+        </Link>
       </div>
     </article>
   );
@@ -206,33 +303,4 @@ function validDateValue(value: string | undefined): string | undefined {
   }
 
   return Number.isNaN(Date.parse(`${value}T00:00:00Z`)) ? undefined : value;
-}
-
-function serviceModeLabel(mode: ServiceMode): string {
-  return mode === "SHOP_FOR_ME" ? "Belikan barang" : "Bawakan barang";
-}
-
-function formatDateTimeRange(
-  start: string,
-  end: string,
-  timeZone: string,
-): string {
-  const formatter = new Intl.DateTimeFormat("id-ID", {
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-    month: "short",
-    timeZone,
-    year: "numeric",
-  });
-
-  return `${formatter.format(new Date(start))}–${formatter.format(
-    new Date(end),
-  )}`;
-}
-
-function formatCapacity(value: number): string {
-  return `${new Intl.NumberFormat("id-ID", {
-    maximumFractionDigits: 1,
-  }).format(value)} kg tersisa`;
 }

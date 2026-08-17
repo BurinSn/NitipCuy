@@ -1515,3 +1515,36 @@ A session with no material change does not invent an entry. A session that makes
   - no deployment, provider provisioning/configuration, real Google, managed data, payment movement, external target testing, Strix execution, real-user activation, public launch, or visual production deployment.
 - Next:
   - commit and narrowly review the four-lifecycle-file approval successor, repin issue #13 and pull request #14, repeat hosted exact-head gates, squash-merge if every condition remains true, then verify the merged repository and create the separate UX/visual-foundation issue.
+
+## 2026-08-17 11:50 WIB - Order-submission merge reconciled and first visual candidate implemented locally
+
+- Issues / pull request: issue #13 and pull request #14 completed; issue #15 open
+- Product: NitipCuy Stage 1 experience foundation
+- Type: Post-merge reconciliation, information architecture, visual system, responsive presentation routes, and lifecycle update
+- Status: Local quality/audit/runtime candidate clean; browser, immutable-review, hosted, owner visual, and merge evidence pending
+- Prior-state reconciliation:
+  - BurinSN's fresh approval was recorded in successor `beb23229144c5296a6671d88ce5b301e210097d6` with exactly the four lifecycle documents changed from the approved evidence head;
+  - hosted application `31994790849`, lifecycle `31994790851`, review-governance `31994790852`, and post-inspection governance `31994917695` passed on the exact successor;
+  - pull request #14 squash-merged and issue #13 closed as `df0426cafedbb61d9582527c1669f3bb077125bb`; local and remote `main` matched and the remote feature branch was removed;
+  - the old local issue #13 branch was retained because safe deletion refused after squash merge; it was not force-deleted.
+- Added for issue #15:
+  - `docs/product/experience-design.md` as the first authority for customer/jastipper decision jobs, route-level information architecture, route-ribbon signature, visual tokens, responsive/accessibility behavior, content rules, evidence, and approval boundaries;
+  - a deep-ink, route-blue, signal-orange, and evidence-mint visual system using system fonts and no new dependency;
+  - redesigned public discovery and trip detail using the safe existing `PublishedTrip` projection;
+  - a local-only request-composition preview for both service modes that calls no API and persists nothing;
+  - fictional customer timeline and jastipper capacity/work-queue screens that are explicitly not private projections;
+  - shared route, service, capacity, date/time, ordering-window, and simulation presentation components plus boundary tests;
+  - responsive collapse, visible focus, semantic status text, and reduced-motion behavior.
+- Local verification so far with exact Node.js `24.18.0` / pnpm `11.17.0`:
+  - complete `pnpm check` passed formatting, lint, dependency boundaries across 4 projects / 83 source files / 280 module references, strict types, 248 tests, production build, and direct plus simulated trusted-proxy runtime probes;
+  - 248 tests comprise 17 review-governance, 21 dependency-boundary, 27 domain, 34 application, 71 adapter, and 78 web tests;
+  - `pnpm audit:prod` reports no known production vulnerability and lifecycle participation passed;
+  - local built HTTP checks returned `200` for discovery, filtered discovery, trip detail, request preview with Carry my item selected, customer orders, and jastipper workspace, with the expected simulation/non-persistence copy;
+  - the in-app browser reported no connected window, so no desktop/mobile screenshot, request interaction, or visible accessibility evidence is claimed.
+- Scope and authority:
+  - roadmap stage, provider order, product model, architecture dependency direction, payment/delivery deferrals, and issue #13 server-authoritative controls are unchanged;
+  - the request preview never calls the protected submission endpoint, and the workspace examples contain no real account, address, identity, payment, evidence, or provider data;
+  - issue #15 remains Strix `NOT REQUIRED` / `NOT APPLICABLE` / `NO TARGET` because it introduces no external target or active security-test authorization;
+  - no visual approval, deployment, provider onboarding, real-user activation, or merge approval results from this local candidate.
+- Next:
+  - re-run the full gate after final corrections, commit, and perform exact-head DRY plus hostile review; once a browser is connected, inspect every new route at desktop and mobile widths including request interaction and obvious accessibility failures; correct and re-verify findings, then update issue #15, push, open the focused pull request, and request BurinSN visual and merge review.
