@@ -1,10 +1,11 @@
 # NitipCuy Canonical Roadmap
 
-Last reviewed: 2026-08-17 11:29 WIB
+<!-- canonical: merge-turn-only -->
+Last reviewed: 2026-08-22
 
 Current stage: Stage 1 - Platform foundation
 
-Current work item: Issue #13 and pull request #14 remain open from verified base `ea4b629466df1e1e1381f62ae5ca26722edbe4bf`. Final hosted-evidence head `0dcf4f2ac21313d164dd26022f78061c0430a89c` contains the patched `nanoid` `3.3.18` resolution and passed exact-toolchain local gates plus hosted application `31993817825`, lifecycle `31993817761`, stable governance replacement `31993977394`, and post-inspection governance `31994016258`. GitHub reports `CLEAN` / `MERGEABLE`, with no review objects or review decision. After the dependency change and its reason were explained plainly, BurinSN replied "okay approved" on 2026-08-17, granting fresh conditional squash-merge approval for this head and one approval-record-only successor. Commit/review, exact-SHA repin, repeated hosted checks, squash merge, and post-merge verification remain pending. Product scope, Stage 1 ordering, payment/delivery deferrals, and the planned post-merge UX/visual-foundation slice are unchanged.
+Current work item: Issue #13 / PR #14 is merged at `df0426cafedbb61d9582527c1669f3bb077125bb` (server-authoritative `SUBMITTED` order request and atomic capacity reservation). Two workstreams are now active in parallel: issue #15 (first owner-reviewable UX/visual foundation, draft PR #16, visual sign-off pending) and issue #17 (parallel-session coordination protocol, draft PR #18). Product scope, Stage 1 ordering, and payment/delivery deferrals are unchanged. See `docs/development/parallel-coordination.md` for the multi-session protocol and `handoff.md` §5 for active-session state.
 
 ## 1. Role, authority, and freshness contract
 
@@ -320,12 +321,36 @@ The unresolved DOKU, logistics, policy, legal, and pilot items listed in Stage 3
 
 ### Now
 
-Commit, narrowly review, and repin the final four-lifecycle-file evidence successor, then repeat hosted exact-head gates.
+Merge the parallel-coordination protocol (issue #17 / PR #18) after BurinSN approval and exact-head hosted gates. Then the `feat/15` session rebases onto the merged `main`, re-enters its state under the per-session format, and captures in-app browser/desktop/mobile + accessibility evidence for issue #15.
 
 ### Next
 
-Report the repeated final exact-head checks, hostile-review rating, CodeRabbit limitation, mergeability, and exclusions, then obtain fresh BurinSN review before any merge.
+Obtain BurinSN visual sign-off for the #15 UX/visual foundation and merge PR #16. Add the remaining protected-preview controls (provider-verified trusted proxy/direct-origin, WAF/bot, managed key custody/rotation, logging-redaction/static/safe-query scans, operational metrics/alerts, browser automation, privileged step-up/recovery, load/provider/incident evidence).
 
 ### Later
 
 Add seller acceptance/rejection, request expiry/cancellation, and capacity release before activating the reservation lifecycle. Then add accepted commercial terms and mock payment; delivery remains later. Complete the core marketplace with mock providers, integrate approved real providers, run a closed pilot, then use Threads for acquisition and continuous feedback.
+<!-- /canonical: merge-turn-only -->
+
+## 13. Parallel work items (append-only — edit ONLY your own subsection)
+
+<!-- per-session: append-only -->
+Active parallel work is tracked here. Each session updates only its own row and subsection. Stage-level status and the canonical delivery sequence remain in the canonical block above.
+
+| Issue | Session | Branch | State | Last updated |
+| --- | --- | --- | --- | --- |
+| #15 | claude | `feat/15-ux-visual-foundation` | In progress; draft PR #16; visual sign-off pending | 2026-08-22 |
+| #17 | governance | `docs/17-parallel-coordination` | In progress; draft PR #18; awaiting BurinSN approval | 2026-08-22 |
+
+### Issue #15 — claude
+
+- [ ] Capture in-app browser evidence at desktop and mobile widths for every new route, including request-preview interaction and obvious accessibility failures.
+- [ ] Obtain BurinSN visual sign-off for the UX/visual foundation.
+- [ ] Pass exact-head DRY review, hosted gates, and BurinSN merge approval; squash-merge PR #16.
+
+### Issue #17 — governance
+
+- [ ] Obtain BurinSN approval to open issue #17 and PR #18.
+- [ ] Pass hosted `lifecycle-documentation` (including `check-base-freshness.sh` and `check-canonical-blocks.mjs`), `application-quality`, and `review-governance` on the exact head.
+- [ ] BurinSN merges PR #18; the `feat/15` session then runs the rebase cascade onto the merged `main`.
+<!-- /per-session: append-only -->

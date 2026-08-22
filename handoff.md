@@ -1,13 +1,15 @@
 # NitipCuy Handoff
 
-Updated: 2026-08-17 11:29 WIB
+<!-- canonical: merge-turn-only -->
+Updated: 2026-08-22
 
 ## 1. Resume order
 
 1. Read `AGENTS.md`, `docs/roadmap.md`, this handoff, the latest `docs/changes.md` entry, and the latest `docs/learning.md` entry.
-2. Read issue [#13](https://github.com/BurinSn/NitipCuy/issues/13), the order lifecycle, master specification, system architecture, resilience, security, quality, review-governance, and Git workflow authorities.
-3. Verify branch, worktree, local head, `origin/main`, issue #13, open pull requests, and hosted checks. Volatile live state outranks this file.
-4. Preserve unexpected work. Never inspect `.env*`, credentials, keys, browser sessions, private identity data, customer data, or production secrets.
+2. When two or more sessions are active, also read `docs/development/parallel-coordination.md`.
+3. Read the order lifecycle, master specification, system architecture, resilience, security, quality, review-governance, and Git workflow authorities relevant to the active issue.
+4. Verify branch, worktree, local head, `origin/main`, the active issue, open pull requests, and hosted checks. Volatile live state outranks this file.
+5. Preserve unexpected work. Never inspect `.env*`, credentials, keys, browser sessions, private identity data, customer data, or production secrets.
 
 Useful read-only commands:
 
@@ -15,7 +17,7 @@ Useful read-only commands:
 git status --short --branch
 git rev-parse HEAD
 git rev-parse origin/main
-gh issue view 13 --repo BurinSn/NitipCuy
+gh issue list --repo BurinSn/NitipCuy --state open
 gh pr list --repo BurinSn/NitipCuy --state open
 ```
 
@@ -25,18 +27,51 @@ gh pr list --repo BurinSn/NitipCuy --state open
 |---|---|
 | Canonical repository | `https://github.com/BurinSn/NitipCuy` |
 | Default branch | `main` |
-| Current merged base | `ea4b629466df1e1e1381f62ae5ca26722edbe4bf` |
-| Local branch | `feat/13-order-submission-capacity` |
-| Local `HEAD` | final hosted-evidence head `0dcf4f2ac21313d164dd26022f78061c0430a89c`; the commit containing this fresh approval record will be its four-lifecycle-file successor and must be live-resolved |
-| Worktree | clean before this fresh approval record; live-verify before acting |
-| Active issue | #13, open |
-| Open pull requests | #14, open and not draft at `0dcf4f2ac21313d164dd26022f78061c0430a89c`; application run `31993817825`, lifecycle run `31993817761`, stable review-governance replacement `31993977394`, and post-inspection review-governance run `31994016258` passed; GitHub reports `CLEAN` / `MERGEABLE` |
-| Issue #11 / PR #12 | merged/closed as `ea4b629466df1e1e1381f62ae5ca26722edbe4bf`; feature branches removed |
-| Strix | issue #13 is `NOT REQUIRED` / `NOT APPLICABLE` / `NO TARGET`; no authorization, plan, budget, execution, report, or external Strix model action exists |
+| `origin/main` | `df0426cafedbb61d9582527c1669f3bb077125bb` (issue #13 / PR #14 squash-merged) |
+| Last merged work | #13 / PR #14 — server-authoritative `SUBMITTED` order request and atomic capacity reservation |
+| Active issues | #15 (UX/visual foundation, in progress in a separate worktree on `feat/15-ux-visual-foundation`); #17 (this parallel-coordination protocol) |
+| Open pull requests | #16 (draft, UX); #18 (draft, this protocol) — live-verify before acting |
+| Parallel coordination | introduced by issue #17 / PR #18; see `docs/development/parallel-coordination.md` |
+| Toolchain | Node.js `24.18.0`, pnpm `11.17.0` |
+| Strix | #17 is `NOT REQUIRED` / `NOT APPLICABLE` / `NO TARGET` (pure policy/docs/bash) |
 
-Do not commit on `main`, force-push, reset, clean, deploy, activate a provider, or merge without the governed workflow and fresh BurinSN approval.
+Do not commit on `main`, force-push, reset, clean, deploy, activate a provider, or merge without the governed workflow and fresh BurinSN approval. Agents never merge; BurinSN is the sole merge authority (see `docs/development/parallel-coordination.md` §7).
 
-## 3. Current objective and approved boundary
+## 3. Boundaries and risks
+
+- The UX/visual foundation (#15 / PR #16) is a design prototype, not a parallel transaction system; it has not received BurinSN visual sign-off and no in-app browser or accessibility evidence has been captured.
+- Seller acceptance/rejection, request expiry/cancellation, and capacity release remain mandatory before the reservation lifecycle activates for real users.
+- No provider, deployment, database, production account, real identity, payment, or logistics integration is active.
+- Parallel application-code sessions require each session to run the exact pinned Node/pnpm toolchain locally; the protocol's bash and node gates run on any recent Node without pnpm.
+- A passed gate or build does not authorize deployment, payment, delivery, real data, launch, or visual production deployment.
+
+## 4. Owner authority
+
+BurinSN approved merging issue #13 / PR #14 on 2026-08-17 (complete; `main` at `df0426c`) and authorized proceeding to the bounded #15 UX/visual-foundation work. BurinSN then authorized designing and implementing this parallel-session coordination protocol (issue #17 / PR #18). This does not constitute visual sign-off for #15, merge approval for #17, deployment approval, provider approval, production approval, payment authority, real-user-data authority, or security-testing authority. Fresh explicit BurinSN approval is required before merging #18 and before any merge of #16.
+<!-- /canonical: merge-turn-only -->
+
+## 5. Active sessions (append-only — edit ONLY your own subsection)
+
+<!-- per-session: append-only -->
+### Session: governance — issue #17 / PR #18 (parallel-coordination protocol)
+
+- Branch: `docs/17-parallel-coordination` from `origin/main` (`df0426c`), in worktree `../NitipCuy-17`. The primary `feat/15` worktree is untouched.
+- Scope: introduce `docs/development/parallel-coordination.md`; `scripts/check-base-freshness.sh`; `scripts/check-canonical-blocks.mjs` + `scripts/check-canonical-blocks.test.mjs`; restructure `handoff.md` and `docs/roadmap.md` into canonical (merge-turn-only) and per-session append-only zones; register the new gates in `AGENTS.md`, `README.md`, `docs/development/quality-gates.md`, `docs/development/git-workflow.md`, `docs/development/review-governance.md`, the PR template, and the `lifecycle-documentation.yml` workflow; add `package.json` `test:canonical-blocks`.
+- Exclusions: no application, provider, payment, deployment, real-user, or Strix target change; no change to `feat/15`.
+- Verification obtained: 23/23 `node --test scripts/check-canonical-blocks.test.mjs` pass on ambient Node (no pnpm); `check-base-freshness.sh` verified WARN/BLOCK/PASS in a throwaway repo; `check-canonical-blocks.mjs` is a graceful no-op on marker-free files and passes on this fresh worktree; `check-base-freshness.sh origin/main` PASS on this worktree.
+- Exact next action: obtain BurinSN approval to open issue #17 and PR #18, push, pass hosted `lifecycle-documentation` (now including the two new gates), `application-quality`, and `review-governance` on the exact head, and stop for BurinSN merge review. After merge, the `feat/15` session runs the rebase cascade onto the merged `main` (take `main`'s canonical blocks, re-enter #15 as a per-session row).
+
+### Session: claude — issue #15 / PR #16 (UX/visual foundation)
+
+- Branch: `feat/15-ux-visual-foundation` in the primary worktree; base `df0426c`; local head `4fbfe16`; dirty with the hosted-evidence lifecycle checkpoint plus uncommitted UX iteration (new components and screenshots).
+- Status: draft PR #16 open; `CLEAN` / `MERGEABLE`; owner visual sign-off pending; in-app browser/accessibility evidence pending.
+- Note: after PR #18 merges, this session must rebase onto `main` and re-enter its state here under the new per-session format. The rebase will conflict on `handoff.md` and `docs/roadmap.md` (lifecycle-doc commits predate the restructure); resolve by taking `main`'s canonical blocks and re-entering #15's state as a per-session row. See `docs/development/parallel-coordination.md` §8.
+
+### Last merged — #13 / PR #14 (historical record, preserved)
+
+The following records the pre-merge state of issue #13 / pull request #14, preserved for continuity. Authoritative material-change history lives in `docs/changes.md`.
+
+#### Current objective and approved boundary (issue #13)
 
 Issue #13 adds the first authoritative order-entry command:
 
@@ -70,7 +105,7 @@ Excluded:
 
 The reservation lifecycle must not serve real users until safe seller response, expiry/cancellation, and capacity release exist.
 
-## 4. Implementation state
+#### Implementation state
 
 Committed, pushed, and opened in pull request #14 at `9c145515367f81571e7583495f88eca53b8d9abe`:
 
@@ -93,7 +128,7 @@ Important implementation facts:
 - no provider or object-storage call occurs inside the transaction;
 - request item content is synthetic test data only. Managed encryption/key custody and real private-data activation remain unimplemented.
 
-## 5. Verification obtained
+#### Verification obtained
 
 Passed with exact Node.js `24.18.0` and pnpm `11.17.0`:
 
@@ -101,71 +136,17 @@ Passed with exact Node.js `24.18.0` and pnpm `11.17.0`:
 - formatting and lint with no reported warning;
 - dependency boundaries: 4 projects, 75 source files, 251 module references;
 - strict type checking across all four packages;
-- 244 tests:
-  - 17 review-governance;
-  - 21 dependency-boundary;
-  - 27 domain;
-  - 34 application;
-  - 71 adapter;
-  - 74 web;
+- 244 tests (17 review-governance, 21 dependency-boundary, 27 domain, 34 application, 71 adapter, 74 web);
 - clean application build; Next.js route manifest includes `/api/trips/[tripId]/requests`;
 - local built request-perimeter probe in direct and simulated trusted-proxy modes.
 
-Disposable PostgreSQL 18 proved:
+Disposable PostgreSQL 18 proved: clean application of all migrations; database time overrides a hostile injected application clock; a delayed in-transaction reservation crossing the deadline is denied using live database wall time; Shop for me and Carry my item storage constraints and exact mappings; composite foreign keys bind replay ownership to the request customer and request seller/profile ownership to the exact trip; active seller/profile row locks and current offer revision; exact same-key replay, changed-payload conflict, and active-duplicate denial; one winner for two independent final-capacity attempts; rollback of capacity/version, request, audit, outbox, and idempotency on late failure.
 
-- clean application of all migrations;
-- database time overrides a hostile injected application clock;
-- a delayed in-transaction reservation crossing the deadline is denied using live database wall time;
-- Shop for me and Carry my item storage constraints and exact mappings;
-- composite foreign keys bind replay ownership to the request customer and request seller/profile ownership to the exact trip;
-- active seller/profile row locks and current offer revision;
-- exact same-key replay, changed-payload conflict, and active-duplicate denial;
-- one winner for two independent final-capacity attempts;
-- rollback of capacity/version, request, audit, outbox, and idempotency on late failure.
-
-Also passed on the corrected candidate before the registry advisory changed:
-
-- `pnpm audit:prod` with no known production vulnerability at the time; this evidence was invalidated on 2026-08-17 when hosted run `31993037634` reported high-severity `GHSA-2v37-7h3g-55p8` against transitive `nanoid` `3.3.17`;
-- lifecycle participation and diff hygiene;
-- all 7 YAML files, 20 local Markdown documents, parameterized-query inventory, and high-confidence secret/log/unsafe-execution scans.
-
-Current dependency-gate repair:
-
-- exact Node.js `24.18.0` and pnpm `11.17.0` changed only the centralized `nanoid` override and lockfile resolution from `3.3.17` to patched `3.3.18`;
-- frozen install, the complete `pnpm check` suite with 244 tests/build/runtime probe, and `pnpm audit:prod` now pass locally on the repaired tree; the production audit reports no known vulnerabilities;
-- hosted application run `31993491119` and lifecycle run `31993491134` passed on exact repair head `b76d701520def6a07824e5138d4cc6b5c2a392c5`; stable review-governance replacement `31993632434` also passed after transition run `31993491123` captured the pre-repin PR event payload and failed only its expected revision-equality check;
-- the repair changes dependency state, so the prior conditional merge approval is no longer sufficient even though the application quality suite itself passed before its audit step failed.
-
-Still pending:
-
-- commit and narrowly review this four-lifecycle-file fresh-approval successor, repin issue #13 and pull request #14, and repeat hosted exact-head gates;
-- squash-merge only if that successor remains lifecycle-only, every required gate passes, and GitHub remains clean and mergeable; then verify `main`, issue closure, and branch cleanup.
-
-Initial hosted state on `9c145515367f81571e7583495f88eca53b8d9abe`:
-
-- review-governance run `31467896354` passed;
-- application run `31467896319` and lifecycle run `31467896386` were in progress;
-- CodeRabbit was pending;
-- GitHub reported pull request #14 `MERGEABLE` with no review decision.
-
-Final hosted evidence on `b4bb4aee87f6bdcf190504699f91bce7f5122050`:
-
-- application run `31468141680`, lifecycle run `31468141673`, review-governance run `31468142538`, and post-inspection review-governance run `31468335555` passed with zero annotations;
-- transition review-governance run `31468141682` was cancelled only because the workflow concurrency rule selected the higher-priority waiting replacement; its sole annotation says exactly that and is not a code or governance finding;
-- CodeRabbit reported `Review rate limited`, produced a walkthrough, and created no review object or line finding;
-- GitHub reported `CLEAN` / `MERGEABLE`, no review decision, and no review objects.
-
-Final reviewed evidence head `c5fe836b27b1756b290ee32d88572e5c7458d516` was live-reverified on 2026-08-17:
-
-- application run `31468516199`, lifecycle run `31468516235`, and final review-governance run `31468677458` passed on the exact head;
-- transition review-governance run `31468516271` was cancelled by the workflow concurrency rule and its passing replacements are visible on the same head;
-- issue #13 and pull request #14 match DRY `CLEAN WITH NOTES` at the full 40-character head and Strix `NOT REQUIRED` / `NOT APPLICABLE` / `NO TARGET`;
-- local, remote-branch, and pull-request heads match; GitHub reports `CLEAN` / `MERGEABLE`, with no review object, review decision, or intervening source change;
-- CodeRabbit remains a rate-limited walkthrough with no independent finding or review object.
+Dependency-gate repair: exact Node.js `24.18.0` and pnpm `11.17.0` changed only the centralized `nanoid` override and lockfile resolution from `3.3.17` to patched `3.3.18`; frozen install, the complete `pnpm check` suite, and `pnpm audit:prod` pass locally on the repaired tree; hosted application run `31993491119` and lifecycle run `31993491134` passed on exact repair head `b76d701520def6a07824e5138d4cc6b5c2a392c5`; stable review-governance replacement `31993632434` also passed.
 
 Highest evidence is source-tested, disposable-PostgreSQL-integration-tested, production-build-tested, and local request-perimeter-runtime-tested. No browser, provider, load, staging, production, or penetration-test evidence exists.
 
-## 6. Current risks and review focus
+#### Current risks and review focus (issue #13)
 
 - Reservation release does not exist; real-user activation would strand capacity after rejection, expiry, or cancellation.
 - Submitted item content is private transactional data but managed encryption and production key custody do not exist.
@@ -176,19 +157,13 @@ Highest evidence is source-tested, disposable-PostgreSQL-integration-tested, pro
 - A passed build or database test does not authorize deployment, payment, delivery, real data, or launch.
 - Registry advisory state is volatile. The patched `nanoid` `3.3.18` override is locally and hosted audit-clean at `b76d701520def6a07824e5138d4cc6b5c2a392c5`; later audit claims still require dated exact-head evidence.
 
-## 7. Authority
+#### Authority (issue #13)
 
-BurinSN approved proceeding with the issue #13 scope and explicitly deferred payment and delivery. The first approval was correctly invalidated when hosted application run `31993037634` discovered a new high-severity registry advisory and the required `nanoid` `3.3.17` to `3.3.18` repair changed dependency state. After receiving a plain-language explanation that the repair changes only the existing transitive resolution, introduces no new dependency or application behavior, and passes all 244 tests/build/runtime/audit/governance gates, BurinSN replied "okay approved" on 2026-08-17. This is fresh owner approval to squash-merge pull request #14 from final hosted-evidence head `0dcf4f2ac21313d164dd26022f78061c0430a89c` and its approval-record-only successor, conditional on exact repinning, passing hosted gates, no actionable review finding, and `CLEAN` / `MERGEABLE` status. It does not authorize deployment, provider onboarding/configuration, payment movement, real-user testing, production data, external target testing, Strix execution, public launch, or visual production deployment.
+BurinSN approved proceeding with the issue #13 scope and explicitly deferred payment and delivery. The first approval was correctly invalidated when hosted application run `31993037634` discovered a new high-severity registry advisory and the required `nanoid` `3.3.17` to `3.3.18` repair changed dependency state. After receiving a plain-language explanation that the repair changes only the existing transitive resolution, introduces no new dependency or application behavior, and passes all 244 tests/build/runtime/audit/governance gates, BurinSN replied "okay approved" on 2026-08-17. This was fresh owner approval to squash-merge pull request #14 from final hosted-evidence head `0dcf4f2ac21313d164dd26022f78061c0430a89c` and its approval-record-only successor, conditional on exact repinning, passing hosted gates, no actionable review finding, and `CLEAN` / `MERGEABLE` status. The merge is complete at `df0426c`.
 
-Issue #13 and pull request #14 currently record final hosted-evidence head `0dcf4f2ac21313d164dd26022f78061c0430a89c` and must be repinned after this approval successor is committed:
+DRY: `CLEAN WITH NOTES` through final hosted-evidence head `0dcf4f2ac21313d164dd26022f78061c0430a89c`; Strix applicability: `NOT REQUIRED`; Strix status: `NOT APPLICABLE`; target class: `NO TARGET`.
 
-- DRY: `CLEAN WITH NOTES` through final hosted-evidence head `0dcf4f2ac21313d164dd26022f78061c0430a89c`;
-- Strix applicability: `NOT REQUIRED`;
-- Strix status: `NOT APPLICABLE`;
-- target class: `NO TARGET`.
+#### Exact next action (issue #13, completed)
 
-The implementation head's complete diff passed DRY and hostile review after correcting stale transaction-start time, missing composite ownership invariants, raw-query serialization retry classification, and duplicated key grammar. The dependency repair contains only the centralized override, its lockfile resolution, and required lifecycle records; final evidence head `0dcf4f2ac21313d164dd26022f78061c0430a89c` passed local and hosted gates and both governed records carry its full 40-character SHA. The approval successor may change only the four lifecycle authorities. Any source, dependency, configuration, product, provider, security-control, scope, or finding change invalidates approval and requires fresh owner review.
-
-## 8. Exact next action
-
-Commit this fresh-approval checkpoint and confirm its delta from `0dcf4f2ac21313d164dd26022f78061c0430a89c` contains exactly `handoff.md`, `docs/changes.md`, `docs/roadmap.md`, and `docs/learning.md`. Narrowly review, repin, push, and repeat hosted checks on the exact successor. If every required context passes with no actionable annotation and GitHub remains `CLEAN` / `MERGEABLE`, squash-merge pull request #14, verify `main`, issue #13 closure, and remote branch cleanup, then create the separately governed UX/visual-foundation issue. Do not deploy or provision a provider.
+Issue #13 / PR #14 was squash-merged as `df0426cafedbb61d9582527c1669f3bb077125bb`; `main`, issue closure, and branch cleanup were verified. The separately governed UX/visual-foundation issue (#15) and this parallel-coordination protocol (#17) followed.
+<!-- /per-session: append-only -->

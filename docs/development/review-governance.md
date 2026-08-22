@@ -67,6 +67,8 @@ Only `CLEAN WITH NOTES` and `CLEAN` are merge-eligible. The PR records:
 
 A new commit invalidates the recorded review revision. Material findings are fixed or explicitly dispositioned before the final verdict; `CHANGES REQUIRED` never passes.
 
+A rebase onto a moved `main` also invalidates the recorded 40-character PR-head SHA and fails this workflow until the new head is reviewed and recorded. Under parallel work, the rebase cascade, the re-pin (clean rebase) versus scoped re-review (conflict rebase) procedure, and the cascade-cost bounds live in `docs/development/parallel-coordination.md`; this document does not duplicate them.
+
 ## 4. Strix applicability gate
 
 Strix is not a routine build command and is never launched by GitHub Actions. The issue owner classifies it:

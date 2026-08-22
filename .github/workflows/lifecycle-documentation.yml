@@ -20,3 +20,13 @@ jobs:
         env:
           BASE_REF: origin/${{ github.base_ref }}
         run: ./scripts/check-lifecycle-docs.sh "$BASE_REF"
+
+      - name: Check base freshness against the base ref
+        env:
+          BASE_REF: origin/${{ github.base_ref }}
+        run: ./scripts/check-base-freshness.sh "$BASE_REF" merge
+
+      - name: Check canonical-block edit freshness
+        env:
+          BASE_REF: origin/${{ github.base_ref }}
+        run: node scripts/check-canonical-blocks.mjs "$BASE_REF"

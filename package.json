@@ -18,8 +18,9 @@
     "format:check": "prettier --check .",
     "lint": "eslint .",
     "start": "pnpm --filter=@nitipcuy/web start",
-    "test": "pnpm test:review-governance && pnpm test:boundaries && turbo test",
+    "test": "pnpm test:review-governance && pnpm test:boundaries && pnpm test:canonical-blocks && turbo test",
     "test:boundaries": "node --test scripts/dependency-boundaries.test.mjs",
+    "test:canonical-blocks": "node --test scripts/check-canonical-blocks.test.mjs",
     "test:review-governance": "node --test scripts/review-governance.test.mjs",
     "typecheck": "turbo typecheck"
   },

@@ -1515,3 +1515,25 @@ A session with no material change does not invent an entry. A session that makes
   - no deployment, provider provisioning/configuration, real Google, managed data, payment movement, external target testing, Strix execution, real-user activation, public launch, or visual production deployment.
 - Next:
   - commit and narrowly review the four-lifecycle-file approval successor, repin issue #13 and pull request #14, repeat hosted exact-head gates, squash-merge if every condition remains true, then verify the merged repository and create the separate UX/visual-foundation issue.
+
+## 2026-08-22 - Parallel-session coordination protocol introduced
+
+- Issue / PR: Issue #17; pull request #18
+- Product: NitipCuy development governance
+- Type: New workflow/policy and tooling (docs + bash + node gates)
+- Status: Implemented locally; draft PR; BurinSN approval and merge pending
+- Base: `df0426cafedbb61d9582527c1669f3bb077125bb` (origin/main, post #13/#14)
+- Changes:
+  - added `docs/development/parallel-coordination.md` — the multi-session protocol (worktree isolation, one issue per session, base-freshness gate, lifecycle canonical/per-session single-writer, BurinSN-only serialized merge, rebase cascade, cross-feature guarantee and limit, toolchain note, Codex parity);
+  - added `scripts/check-base-freshness.sh` (bash; WARN at commit, BLOCK at merge-request) and `scripts/check-canonical-blocks.mjs` + `scripts/check-canonical-blocks.test.mjs` (node guard + 23 `node --test` cases; canonical-edit-requires-base-freshness; fail-closed on malformed markers);
+  - restructured `handoff.md` and `docs/roadmap.md` into canonical (merge-turn-only) and per-session append-only zones delimited by `<!-- canonical: merge-turn-only -->` markers;
+  - registered the new gates in `AGENTS.md`, `README.md`, `docs/development/quality-gates.md`, `docs/development/git-workflow.md`, `docs/development/review-governance.md`, `.github/PULL_REQUEST_TEMPLATE.md`, and `.github/workflows/lifecycle-documentation.yml`; added `package.json` `test:canonical-blocks`.
+- Review and scope:
+  - DRY scope is the governance diff itself; Strix is `NOT REQUIRED` / `NOT APPLICABLE` / `NO TARGET` (no runnable application target);
+  - no application, provider, payment, deployment, real-user, or `feat/15` change; product behavior, transaction contracts, roadmap stage, and delivery order are unchanged.
+- Verification:
+  - 23/23 `node --test scripts/check-canonical-blocks.test.mjs` pass on ambient Node (no pnpm);
+  - `check-base-freshness.sh` verified WARN/BLOCK/PASS in a throwaway git repo; `check-canonical-blocks.mjs` graceful no-op on marker-free files; both gates PASS on this fresh worktree;
+  - hosted `lifecycle-documentation` (now including both new gates), `application-quality`, and `review-governance` pending on the exact PR head.
+- Next:
+  - obtain BurinSN approval to open issue #17 and PR #18, push, pass exact-head hosted gates, and stop for BurinSN merge review; after merge the `feat/15` session runs the rebase cascade.

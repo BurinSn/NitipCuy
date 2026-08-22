@@ -63,9 +63,13 @@ pnpm build
 pnpm audit:prod
 pnpm check
 ./scripts/check-lifecycle-docs.sh origin/main
+./scripts/check-base-freshness.sh origin/main commit
+node scripts/check-canonical-blocks.mjs origin/main
 ```
 
 `pnpm check` runs formatting, lint, the live dependency-boundary scan, strict type checking, boundary and unit tests, the production build, and the built request-perimeter runtime probe. The production dependency audit and lifecycle check remain explicit gates so their results cannot be hidden inside a generic command.
+
+`check-base-freshness.sh` and `check-canonical-blocks.mjs` are parallel-session gates, also kept outside `pnpm check`. `check-base-freshness.sh origin/main commit` warns if another session advanced `main` since this branch's base; use `merge` mode to block before requesting merge. `check-canonical-blocks.mjs origin/main` blocks a canonical (merge-turn-only) block edit on a stale base. Both are required when two or more sessions are active; see `docs/development/parallel-coordination.md`.
 
 `pnpm check:perimeter-runtime` starts the already-built application twice with deterministic non-secret configuration: once in loopback-only direct mode and once behind a simulated trusted proxy. It verifies fresh CSP nonce propagation into rendered HTML, production CSP without `unsafe-inline` or `unsafe-eval`, browser headers, private- and denied-response `no-store`, exact unknown-trip `404`, hostile host/forwarding/prefetch denial, edge-proof enforcement, proof non-disclosure, and HSTS. The probe uses no real database, Google account, provider, preview deployment, or production secret and therefore proves only local runtime behavior.
 
@@ -186,7 +190,7 @@ Load and resilience tests:
 
 Three GitHub workflows run on pull requests:
 
-- `Lifecycle documentation` requires all four lifecycle documents.
+- `Lifecycle documentation` requires all four lifecycle documents and, for parallel-session safety, also runs `check-base-freshness.sh` in merge mode and `check-canonical-blocks.mjs` against the PR base ref.
 - `Application quality` installs the exact Node/pnpm toolchain, performs a frozen install, runs `pnpm check`, and audits production dependencies.
 - `Review governance` tests the dependency-free evidence validator, retrieves the one linked issue using read-only permissions, requires matching issue/PR states, pins the DRY verdict to the exact PR head, and exposes DRY plus Strix progress in the step summary. It never invokes Strix.
 

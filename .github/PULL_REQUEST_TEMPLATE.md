@@ -63,6 +63,8 @@ result
 - [ ] `docs/learning.md` appended with learning, correction, failure, deferral, or explicit no-new-learning
 - [ ] Relevant specialist documents
 - [ ] `scripts/check-lifecycle-docs.sh origin/main` passed
+- [ ] `./scripts/check-base-freshness.sh origin/main merge` passed (required when another session is active)
+- [ ] `node scripts/check-canonical-blocks.mjs origin/main` passed (required when another session is active)
 - [ ] `pnpm check` passed when application or toolchain code changed
 - [ ] `pnpm audit:prod` passed when dependencies or application code changed
 - [ ] Review-governance issue and PR states match

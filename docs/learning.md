@@ -1419,3 +1419,17 @@ Do not present inference, provider marketing, provisional pricing, or a future i
 ### No new product or security-control learning
 
 - This approval record changes no implementation, dependency, product model, security-control contract, provider decision, Strix applicability, stage, or delivery order.
+
+## 2026-08-22 - Parallel-session coordination design decisions
+
+### Reusable learning
+
+- The hard problem in parallel work on a heavily-governed repo is not code conflicts (git resolves those) but mutable single-writer "current state" files (`handoff.md`, `roadmap.md`); append-only logs (`changes.md`, `learning.md`) are naturally parallel-safe. Split mutable state files into a canonical (merge-turn-only) block and a per-session append-only zone so concurrent edits are either disjoint or mechanically resolvable.
+- Base-freshness (`merge-base == base ref`) is necessary but not sufficient for single-writer authority: two concurrent base-fresh sessions can both edit canonical before either merges. Close the gap with policy (designated merge-turn session) plus merge serialization (one merge at a time) plus a take-main rebase rule, not with a stronger guard. State the limitation honestly; do not claim the guard fully enforces single-writer.
+- A canonical-block guard that detects marker-delimited regions in a unified-0 diff needs both new-side and old-side range checks (old-side catches pure deletions), must fail closed on malformed markers, and must be a no-op when no markers exist (graceful bootstrap). The region/overlap logic is too fiddly for untested bash — implement it in `.mjs` with `node --test`, and use `execFileSync` with argument arrays (not a shell string) so a base-ref metacharacter cannot inject.
+- Couple canonical-edit permission to base-freshness: only a base-fresh branch may rewrite canonical state. This is the mechanical backstop for the common dangerous case (a stale session rewriting state it has not reconciled with main).
+- Keep lifecycle/base-ref gates outside `pnpm check` (explicit, not hidden) and split enforcement: policy/WARN locally, hard BLOCK in hosted CI at PR time. Do not add a hard pre-commit hook — it fires on single-session work too.
+
+### No new product or security-control learning
+
+- This protocol changes no implementation, dependency, product model, security-control contract, provider decision, Strix applicability, stage, or delivery order. It is development-process governance only.

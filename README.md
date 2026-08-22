@@ -55,7 +55,11 @@ pnpm check
 pnpm check:perimeter-runtime
 pnpm audit:prod
 ./scripts/check-lifecycle-docs.sh origin/main
+./scripts/check-base-freshness.sh origin/main commit
+node scripts/check-canonical-blocks.mjs origin/main
 ```
+
+The last two gates are required when two or more sessions work this repository in parallel; see [parallel session coordination](docs/development/parallel-coordination.md). `check-base-freshness.sh` warns if another session has advanced `main` since your branch's base (use `merge` mode to block before requesting merge). `check-canonical-blocks.mjs` blocks a canonical (merge-turn-only) block edit on a stale base.
 
 The request perimeter is fail-closed. `NITIPCUY_ABUSE_SUBJECT_HMAC_KEY_BASE64` must be a separately managed, exactly 32-byte base64 key and must never reuse the session or edge-proof secret. `LOCAL_DIRECT` is valid only for an exact loopback origin and accepts only absent or canonical loopback client-address metadata. Any non-local environment must use `TRUSTED_PROXY`, an exact HTTPS `NITIPCUY_APP_ORIGIN`, one canonical trusted client address, and a cryptographically random, separately managed `NITIPCUY_EDGE_REQUEST_SECRET` injected by an approved edge that strips client-supplied forwarding, proof, and alternate client-IP headers. Requests containing maintained alternatives such as `CF-Connecting-IP`, `True-Client-IP`, or `X-Real-IP` fail closed at the application perimeter as defense in depth. Never commit either secret. Source implementation does not prove provider configuration, direct-origin denial, key custody/rotation, aggregate cleanup load, or production rate-limit behavior.
 
@@ -93,6 +97,7 @@ The [system architecture](docs/architecture/system-architecture.md), [ADR 0003](
 | [Moderation model](docs/trust-safety/moderation-model.md) | Scanning, enforcement, evidence, and appeals |
 | [DOKU evaluation](docs/payments/doku-evaluation.md) | Payment-provider fit, costs, settlement, and blockers |
 | [Git workflow](docs/development/git-workflow.md) | Issue, branch, review, and merge governance |
+| [Parallel coordination](docs/development/parallel-coordination.md) | Multi-session worktree, base-freshness, lifecycle single-writer, and merge-serialization protocol |
 | [Changes](docs/changes.md) | Append-only material-change history |
 | [Learning](docs/learning.md) | Verified learning and corrected assumptions |
 | [Handoff](handoff.md) | Current cross-session resume point |
