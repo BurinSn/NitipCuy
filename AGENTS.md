@@ -17,6 +17,7 @@ Before planning or changing NitipCuy, read:
 9. `docs/development/quality-gates.md` before dependency, code, test, build, security, load, or CI work
 10. `docs/development/git-workflow.md` before any Git or GitHub mutation
 11. `docs/development/review-governance.md` before opening or reviewing a material issue or pull request
+12. `docs/development/parallel-coordination.md` before working in parallel with another session (human or AI) on this repository
 
 Verified live state and current explicit BurinSN direction override stale documentation.
 
@@ -88,8 +89,10 @@ Provider onboarding, legal commitments, paid services, production integrations, 
 - Repository visibility: private
 - After the explicitly authorized initial documentation baseline, material work begins from a written issue and uses a focused branch and pull request.
 - Never merge because checks pass. BurinSN product-owner approval remains required.
+- Agents (Claude, Codex, or any other) never merge, never push to `main`, and never force-push `main`. BurinSN is the sole merge authority. Under parallel work, BurinSN merges one pull request at a time; after each merge every other active session rebases and re-verifies. See `docs/development/parallel-coordination.md`.
 - Do not force-push `main`, rewrite shared history, expose secrets, or use direct feature commits on `main`.
 - Every material pull request must include all four lifecycle documents and pass the lifecycle freshness check.
 - Every material pull request must complete the exact-head DRY review and satisfy the issue's guarded-Strix applicability decision before owner approval.
 - GitHub branch protection is unavailable for this private repository on the current plan. Merge-button availability is not permission. A missing or red lifecycle check blocks merge by project policy.
-- Follow `docs/development/git-workflow.md`.
+- Run `./scripts/check-base-freshness.sh origin/main commit` before committing (warns if another session advanced `main`). Run it in `merge` mode, and `node scripts/check-canonical-blocks.mjs origin/main`, before requesting merge. The hosted lifecycle workflow enforces both on the exact PR head.
+- Follow `docs/development/git-workflow.md` and, when two or more sessions are active, `docs/development/parallel-coordination.md`.
